@@ -8,3 +8,5 @@ jira test
 jira test-hj
 
 jira push test sy
+
+jira push test jae hyun
