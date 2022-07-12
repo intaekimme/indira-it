@@ -10,3 +10,5 @@ jira test-hj
 jira push test sy
 
 jira push test jae hyun
+
+jira push test minho
