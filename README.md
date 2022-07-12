@@ -14,4 +14,5 @@ jira push test jae hyun
 jira push test minho
 
 jira push test minho
+jira push test minho33
 
