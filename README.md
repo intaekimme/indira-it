@@ -16,3 +16,4 @@ jira push test minho
 jira push test minho
 jira push test minho33
 
+jira push test sy
