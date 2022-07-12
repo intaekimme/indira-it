@@ -6,3 +6,5 @@
 jira test
 
 jira test-hj
+
+jira push test sy
