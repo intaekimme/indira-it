@@ -15,5 +15,3 @@ jira push test minho
 
 jira push test minho
 jira push test minho44
-
-test3
