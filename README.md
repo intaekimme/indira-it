@@ -15,3 +15,4 @@ jira push test minho
 
 jira push test minho
 
+jira push test sy
