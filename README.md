@@ -55,6 +55,7 @@
 - 임재현: [ERD cloud] 공연 테이블 수정.
 - 김인태: [ERD cloud] 호감도, 호감도 레벨 , 캐릭터 외형 테이블 설계
 
-# 2022.07.18(화)
+# 2022.07.19(화)
 
 - 이홍주: [Figma] 와이어프레임 메인, 유저페이지, 캐릭터 생성창, 피드목록 디자인 하기
+- 김인태: [MySQL Workbench] ERD Cloud에서 작성한 ERD MySQL 로 migration
