@@ -69,3 +69,4 @@
 - 박민호: [스터디] React 노마드코더 react-for-beginners #4~#7 완료
 - 이홍주: [스터디] JPA로 간단한 CRUD 실습하기 및 MySQL 연동해보기
 - 이홍주: [스터디] Springboot와 Amazon S3 연동하기
+- 박민호: [스터디] React 정리중
