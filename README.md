@@ -70,3 +70,6 @@
 - 이홍주: [스터디] JPA로 간단한 CRUD 실습하기 및 MySQL 연동해보기
 - 이홍주: [스터디] Springboot와 Amazon S3 연동하기
 - 박민호: [스터디] React 정리중
+
+# 2022.07.21(목)
+- 이홍주: [Setting-Backend]  Gradle 기반 Springboot와 AWS S3 연동 후 이미지 insert test(My SQL에 이미지 url 넣기)
