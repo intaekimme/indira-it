@@ -73,3 +73,4 @@
 
 # 2022.07.22(금)
 - 이홍주: [Setting-Backend]  Gradle 기반 Springboot와 AWS S3 연동 후 이미지 insert test(My SQL에 이미지 url 넣기)
+- 임재현: [Setting-Frontend] React 및 MUI 연습
