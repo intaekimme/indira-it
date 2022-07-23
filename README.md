@@ -76,6 +76,7 @@
 - 이홍주: [Setting-Backend]  Gradle 기반 Springboot와 AWS S3 연동 후 이미지 insert test(My SQL에 이미지 url 넣기)
 - 임재현: [Setting-Frontend] React 및 MUI 연습
 - 김인태: [Setting-Backend] AWS RDS 인스턴스 생성 및 local MySQL Workbench와 연동
+- 임도영: [스터디] JPA 공부하기
 
 # 2022.07.23(토)
 - 이홍주: [Setting-Backend] Querydsl 셋팅 및 test 해보기
