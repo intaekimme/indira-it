@@ -2,41 +2,41 @@
 
 ## 배열
 
-  1. const food = ["tomato", "potato"];
-  2-1. const [myFavFood, mySecondFavFood] = food;
-  2-2. const myFavFood = food[0]; const mySecondFavFood = food[1];
+	1. const food = ["tomato", "potato"];
+	2-1. const [myFavFood, mySecondFavFood] = food;
+	2-2. const myFavFood = food[0]; const mySecondFavFood = food[1];
 
 2-1과 2-2는 같음
 
 ### ...
 각 element를 할당함
 
-  const array = [1,2,3,4];
-  const abc = [2, array]; //[2,array]
-  const abcd = [2, ...array]; //[2,1,2,3,4]
+	const array = [1,2,3,4];
+	const abc = [2, array]; //[2,array]
+	const abcd = [2, ...array]; //[2,1,2,3,4]
 
 ### map
 array의 요소들을 다른값으로 변형가능
 
-  ['one', 'two', 'three', 'four', 'five'].map((item)=>item.toUpperCase());  //ONE TWO THREE FOURE FIVE
+	['one', 'two', 'three', 'four', 'five'].map((item)=>item.toUpperCase());  //ONE TWO THREE FOURE FIVE
 
 ## JSX
 JSX : Element를 HTML 형식으로 JS로 작성
 
-  const btn = <button id="btn" onClick = {()=> console.log("im clicked")}>버튼</button> //JSX
-  const btn = React.createElement(  //React형식으로 자동변환
-    "button",
-    {
-      id: "btn"`,
-      onClick: () => console.log("im clicked"),
-    },
-    "버튼"
-  );`
+	const btn = <button id="btn" onClick = {()=> console.log("im clicked")}>버튼</button> //JSX
+	const btn = React.createElement(  //React형식으로 자동변환
+		"button",
+		{
+			id: "btn"`,
+			onClick: () => console.log("im clicked"),
+		},
+		"버튼"
+	);`
 
-  <tag class=""> //X 동작안함
-  <tag className=""> //O
-  <label for=""> //X 동작안함
-  <label htmlFor=""> //O
+	<tag class=""> //X 동작안함
+	<tag className=""> //O
+	<label for=""> //X 동작안함
+	<label htmlFor=""> //O
 
 ## css 개별적용
 [name].module.css
@@ -44,39 +44,39 @@ css의 모듈화
 보통 css import 시 전체 적용됨
 .module.css로 작성하면 개별적으로 적용가능
 
-  import styled from "./Button.module.css"
-  <button className={styled.btn}>
+	import styled from "./Button.module.css"
+	<button className={styled.btn}>
 
 ## prop types
 PropTypes - props의 타입을 체크하여 에러메세지 표시
 
-  MemorizedBtn.propTypes = {
-    text: PropTypes.string.isRequired,
-    //fontSize: PropTypes.number.isRequired,
-  }
+	MemorizedBtn.propTypes = {
+		text: PropTypes.string.isRequired,
+		//fontSize: PropTypes.number.isRequired,
+	}
 
 ## React useState()
 
-  const [counter, setCounter]= React.useState(0); //counter 0으로 초기화, 반드시 setCounter를 통해 수정
-  const onClick = () => {
-    setCounter((current) => current + 1); //현재 counter 값을 기준으로 +1
-  };
+	const [counter, setCounter]= React.useState(0); //counter 0으로 초기화, 반드시 setCounter를 통해 수정
+	const onClick = () => {
+		setCounter((current) => current + 1); //현재 counter 값을 기준으로 +1
+	};
 
 ## React memo()
 리렌더링할 때 상태를 기억하여 바뀌지않은 부분은 렌더링하지 않음
 
-  //클릭 시 text1 부분의 버튼만 렌더링
-  const MemorizedBtn = React.memo(Btn);
-  function PropsApp(){
-    const [text1, setText] = React.useState("First");
-    const changeText = () => setText("Change");
-    return(
-      <div>
-        <MemorizedBtn text={text1} onClick={changeText}/>
-        <MemorizedBtn text="second"/>
-      </div>
-    );
-  }
+	//클릭 시 text1 부분의 버튼만 렌더링
+	const MemorizedBtn = React.memo(Btn);
+	function PropsApp(){
+		const [text1, setText] = React.useState("First");
+		const changeText = () => setText("Change");
+		return(
+			<div>
+				<MemorizedBtn text={text1} onClick={changeText}/>
+				<MemorizedBtn text="second"/>
+			</div>
+		);
+	}
 
 ## react router dom
 
