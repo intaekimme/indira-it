@@ -7,15 +7,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_feed")
+@Table(name = "tb_feed_save")
 @Getter
-public class Feed implements Serializable {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int feedNo;
-
+public class FeedSave implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberNo;
-    private String content;
-    private boolean isRemoved;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int feedNo;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;

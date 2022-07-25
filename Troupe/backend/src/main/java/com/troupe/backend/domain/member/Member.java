@@ -22,5 +22,5 @@ public class Member implements Serializable {
 
     private String profileImageUrl;
 
-    private boolean isRemoved;
+    private boolean isRemoved; //
 }
