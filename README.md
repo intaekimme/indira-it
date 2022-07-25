@@ -68,7 +68,7 @@
 - 박민호: [스터디] React 노마드코더 react-for-beginners #4~#7 완료
 - 이홍주: [스터디] JPA로 간단한 CRUD 실습하기 및 MySQL 연동해보기
 - 이홍주: [스터디] Springboot와 Amazon S3 연동하기
-- 박민호: [스터디] React 정리중
+- 박민호: [스터디] [React 정리중](#스터디 정리\React 민호\Readme.md)
 - 김인태: [Setting-Backend] Backend 프로젝트 세팅
 
 # 2022.07.22(금)
@@ -83,3 +83,4 @@
 - 박민호: [기능명세서] 우선순위 최소분류
 
 # 2022.07.24(일)
+- 박민호: [스터디] [React 정리완료](#스터디 정리\React 민호\Readme.md)
