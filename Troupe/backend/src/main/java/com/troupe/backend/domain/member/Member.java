@@ -1,27 +1,26 @@
 package com.troupe.backend.domain.member;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_member")
-public class Member {
+public class Member implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer memberNo;
+    private int memberNo;
 
-    String email;
+    private String email;
 
-    String password;
+    private String password;
 
-    String nickname;
+    private String nickname;
 
-    String description;
+    private String description;
 
     @Enumerated(EnumType.STRING)
-    MemberType memberType;
+    private MemberType memberType;
 
-    String profileImageUrl;
+    private String profileImageUrl;
 
-    boolean isRemoved;
-
-    // hello world 222
+    private boolean isRemoved;
 }
