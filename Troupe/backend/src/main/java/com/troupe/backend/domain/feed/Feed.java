@@ -1,4 +1,4 @@
-package com.troupe.backend.domain.member;
+package com.troupe.backend.domain.feed;
 
-public class Member {
+public class Feed {
 }
