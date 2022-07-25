@@ -133,11 +133,11 @@ Cleanup function	useEffect를 통해 오브젝트가 destroy될때도 코드실�
 
 ## 프로젝트 생성
 
-  $npx create-react-app [폴더명]
-  $cd [폴더명]
-  $npm i prop-types
-  $npm i react-router-dom
+	$npx create-react-app [폴더명]
+	$cd [폴더명]
+	$npm i prop-types
+	$npm i react-router-dom
 
 ## Router
 
-  import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+	import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
