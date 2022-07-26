@@ -13,9 +13,11 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tb_character_eye")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CharacterEye implements Serializable {
     @Id
-    Integer eyeNo;
+    private Integer eyeNo;
 
-    String eyeUrl;
+    private String eyeUrl;
 }

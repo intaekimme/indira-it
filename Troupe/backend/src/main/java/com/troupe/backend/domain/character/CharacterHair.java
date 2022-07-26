@@ -13,9 +13,13 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tb_character_hair")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CharacterHair implements Serializable {
     @Id
-    Integer hairNo;
+    private Integer hairNo;
 
-    String hairUrl;
+    private String hairUrl;
+
+
 }

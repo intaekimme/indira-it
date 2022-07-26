@@ -1,15 +1,20 @@
 package com.troupe.backend.domain.performance;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Entity
 @Table(name = "tb_performance")
-public class Performance {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Performance implements Serializable {
 
     @Id
     @Column(name = "pf_no")

@@ -13,9 +13,11 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tb_character_mouth")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CharacterMouth implements Serializable {
     @Id
-    Integer mouthNo;
+    private Integer mouthNo;
 
-    String mouthUrl;
+    private String mouthUrl;
 }

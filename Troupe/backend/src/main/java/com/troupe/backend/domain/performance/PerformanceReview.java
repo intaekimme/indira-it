@@ -1,16 +1,23 @@
 package com.troupe.backend.domain.performance;
 
+import com.troupe.backend.domain.comment.Comment;
 import com.troupe.backend.domain.member.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Table(name = "tb_pf_review")
 @Entity
-public class PerformanceReview {
+@NoArgsConstructor
+@AllArgsConstructor
+public class PerformanceReview implements Serializable {
 
     @Id
     @Column(name = "review_no")
@@ -35,5 +42,13 @@ public class PerformanceReview {
     @Size(max = 5000)
     private String content;
 
+    // 자기참조 부모 하나
+    @ManyToOne(targetEntity = PerformanceReview.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_review_no")
+    private PerformanceReview parentPerformanceReview;
+
+    // 자기참조 자식 여러개
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPerformanceReview")
+    private List<PerformanceReview> childrenPerformanceReview;
 
 }
