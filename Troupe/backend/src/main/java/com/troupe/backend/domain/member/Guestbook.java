@@ -1,20 +1,24 @@
 package com.troupe.backend.domain.member;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "tb_member_guestbook")
-public class GuestBook {
+@Getter
+public class Guestbook implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int guestbookNo;
+    Integer guestbookNo;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "host_member_no")
     private Member hostMember;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "visitor_member_no")
     private Member visitorMember;
 
