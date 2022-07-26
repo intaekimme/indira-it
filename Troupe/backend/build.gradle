@@ -47,6 +47,9 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
 
     //	Spring devtools dependency
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

@@ -1,6 +1,8 @@
 package com.troupe.backend.domain.performance;
 
+import com.troupe.backend.domain.member.Member;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
 @Getter
 @Entity
 @Table(name = "tb_performance")
@@ -19,13 +22,17 @@ public class Performance implements Serializable {
     @Id
     @Column(name = "pf_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_no")
+    private Member memberNo;
 
     private String title;
 
     private String location;
 
-    private int runtime;
+    private Integer runtime;
 
     @Size(max = 5000)
     private String description;
@@ -39,7 +46,7 @@ public class Performance implements Serializable {
     @Size(max = 1000)
     private String posterUrl;
 
-    private int codeNo;
+    private Integer codeNo;
 
     private String detailTime;
 
