@@ -16,7 +16,7 @@ public class PerformanceImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Performance.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "pf_no")
     private Performance pf;
 

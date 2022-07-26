@@ -19,7 +19,7 @@ public class PerformanceCast {
 
     private int castNo;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Performance.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "pfNo")
     private Performance pf;
 

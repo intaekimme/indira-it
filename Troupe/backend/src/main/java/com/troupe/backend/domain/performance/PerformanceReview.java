@@ -21,7 +21,7 @@ public class PerformanceReview {
     @JoinColumn(name = "pf_no")
     private Performance pfNo;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member memberNo;
 

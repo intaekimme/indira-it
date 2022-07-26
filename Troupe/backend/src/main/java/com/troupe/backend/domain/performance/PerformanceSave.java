@@ -17,11 +17,11 @@ public class PerformanceSave {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member memberNo;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Performance.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "pf_no")
     private Performance pfNo;
 
