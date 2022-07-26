@@ -192,5 +192,4 @@ Routes의 자식으로 Route만 가능하게 바뀜
 npm ERR! ERESOLVE unable to resolve dependency tree
 npm ERR! this command with --force, or --legacy-peer-deps
 
-	npm install @mui/material @emotion/react @emotion/styled --legacy-peer-deps
-	npm install @material-ui/icons --legacy-peer-deps
+	npm install @mui/material @mui/icons-material @emotion/react @emotion/styled @material-ui/core @material-ui/icons --legacy-peer-deps
