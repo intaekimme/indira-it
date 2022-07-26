@@ -1,14 +1,19 @@
 package com.troupe.backend.domain.performance;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Getter
 @Table(name = "tb_pf_price")
 @Entity
-public class PerformancePrice {
+@NoArgsConstructor
+@AllArgsConstructor
+public class PerformancePrice implements Serializable {
 
     @Id
     @Column(name = "pf_price_no")
