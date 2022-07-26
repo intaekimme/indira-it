@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 public class CharacterClothes implements Serializable {
     @Id
-    Integer clothesNo;
+    private Integer clothesNo;
 
-    String clothesUrl;
+    private String clothesUrl;
 }

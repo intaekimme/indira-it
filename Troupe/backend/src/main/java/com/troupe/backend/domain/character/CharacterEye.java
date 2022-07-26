@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 public class CharacterEye implements Serializable {
     @Id
-    Integer eyeNo;
+    private Integer eyeNo;
 
-    String eyeUrl;
+    private String eyeUrl;
 }

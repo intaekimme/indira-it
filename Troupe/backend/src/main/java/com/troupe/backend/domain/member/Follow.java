@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 public class Follow implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer followNo;
+    private Integer followNo;
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "star_member_no")

@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 public class CharacterShape implements Serializable {
     @Id
-    Integer shapeNo;
+    private Integer shapeNo;
 
-    String shapeUrl;
+    private String shapeUrl;
 }

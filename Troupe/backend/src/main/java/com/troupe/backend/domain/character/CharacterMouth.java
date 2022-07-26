@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 public class CharacterMouth implements Serializable {
     @Id
-    Integer mouthNo;
+    private Integer mouthNo;
 
-    String mouthUrl;
+    private String mouthUrl;
 }

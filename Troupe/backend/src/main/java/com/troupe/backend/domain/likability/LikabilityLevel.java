@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 public class LikabilityLevel implements Serializable {
     @Id
-    Integer level;
+    private Integer level;
 
-    Integer requiredExp;
+    private Integer requiredExp;
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 public class CharacterNose implements Serializable {
     @Id
-    Integer noseNo;
+    private Integer noseNo;
 
-    String noseUrl;
+    private String noseUrl;
 }

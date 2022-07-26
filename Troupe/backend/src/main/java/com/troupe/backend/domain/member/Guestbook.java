@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 public class Guestbook implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer guestbookNo;
+    private Integer guestbookNo;
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "host_member_no")
@@ -27,5 +27,5 @@ public class Guestbook implements Serializable {
 
     private String content;
 
-    boolean isRemoved;
+    private boolean isRemoved;
 }

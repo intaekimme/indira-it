@@ -16,29 +16,29 @@ public class Character implements Serializable {
     @Id
     @OneToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-    Member member;
+    private Member member;
 
     @ManyToOne(targetEntity = CharacterClothes.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "clothes_no")
-    CharacterClothes clothes;
+    private CharacterClothes clothes;
 
     @ManyToOne(targetEntity = CharacterEye.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "eye_no")
-    CharacterEye eye;
+    private CharacterEye eye;
 
     @ManyToOne(targetEntity = CharacterHair.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "hair_no")
-    CharacterHair hair;
+    private CharacterHair hair;
 
     @ManyToOne(targetEntity = CharacterMouth.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "mouth_no")
-    CharacterMouth mouth;
+    private CharacterMouth mouth;
 
     @ManyToOne(targetEntity = CharacterNose.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "nose_no")
-    CharacterNose nose;
+    private CharacterNose nose;
 
     @ManyToOne(targetEntity = CharacterShape.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "shape_no")
-    CharacterShape shape;
+    private CharacterShape shape;
 }
