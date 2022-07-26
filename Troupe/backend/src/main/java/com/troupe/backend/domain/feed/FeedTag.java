@@ -9,9 +9,13 @@ public class FeedTag implements Serializable {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private  int tagNo;
+    private  int feedTagNo;
 
-    @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private  int feedNo;
+    @ManyToOne(targetEntity = Tag.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_no")
+    private  Tag tag;
+
+    @ManyToOne(targetEntity = Feed.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_no")
+    private  Feed feed;
 }

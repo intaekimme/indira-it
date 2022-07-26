@@ -1,5 +1,6 @@
 package com.troupe.backend.domain.feed;
 
+import com.troupe.backend.domain.member.Member;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -13,7 +14,9 @@ public class Feed implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int feedNo;
 
-    private int memberNo;
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_no")
+    private Member member;
     private String content;
     private boolean isRemoved;
 
