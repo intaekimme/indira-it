@@ -1,7 +1,9 @@
 package com.troupe.backend.domain.feed;
 
 import com.troupe.backend.domain.member.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +12,8 @@ import java.util.Date;
 @Entity
 @Table(name = "tb_feed_save")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeedSave implements Serializable {
 
     @Id

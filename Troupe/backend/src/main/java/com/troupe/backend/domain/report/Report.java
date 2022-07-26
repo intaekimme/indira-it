@@ -4,16 +4,19 @@ import com.troupe.backend.domain.comment.Comment;
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "tb_report")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Report implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
