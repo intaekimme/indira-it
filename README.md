@@ -88,3 +88,7 @@
 # 2022.07.25(월)
 - 이홍주: [Jira] 백엔드 세분화
 - 이홍주: [Backend] 백엔드 JPA, AWS S3, JPA 테스트 및 Feed 관련 Entity 생성
+- 박민호: [Header] Material-ui 적용
+
+# 2022.07.26(화)
+- 박민호: [Header] Menu, Main, Mypage 구현
