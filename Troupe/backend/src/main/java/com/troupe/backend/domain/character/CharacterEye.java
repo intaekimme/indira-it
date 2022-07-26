@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tb_character_eye")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CharacterEye implements Serializable {
     @Id
     private Integer eyeNo;
