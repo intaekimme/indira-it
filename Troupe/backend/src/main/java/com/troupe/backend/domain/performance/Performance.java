@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Getter
 @Entity
@@ -14,25 +14,27 @@ public class Performance {
     @Id
     @Column(name = "pf_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String title;
 
     private String location;
 
-    private Integer runtime;
+    private int runtime;
 
     @Size(max = 5000)
     private String description;
 
-    private Timestamp createdTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdTime;
 
-    private Timestamp updatedTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedTime;
 
     @Size(max = 1000)
     private String posterUrl;
 
-    private Integer codeNo;
+    private int codeNo;
 
     private String detailTime;
 
