@@ -6,13 +6,14 @@ import java.util.Date;
 
 @Entity
 @Table(name = "tb_member_guestbook")
-public class GuestBook implements Serializable {
-    @Id
+public class GuestBook {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int guestbookNo;
+
     @ManyToOne
     @JoinColumn(name = "host_member_no")
     private Member hostMember;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "visitor_member_no")
     private Member visitorMember;
