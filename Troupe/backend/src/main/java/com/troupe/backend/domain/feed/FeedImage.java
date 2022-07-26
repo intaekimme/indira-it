@@ -13,6 +13,9 @@ public class FeedImage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int imageNo;
-    private int feedNo;
+
+    @ManyToOne(targetEntity = Feed.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_no")
+    private Feed feed;
     private String imageUrl;
 }
