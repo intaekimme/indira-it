@@ -2,7 +2,9 @@ package com.troupe.backend.domain.comment;
 
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.member.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +14,8 @@ import java.util.List;
 @Entity
 @Table(name = "tb_comment")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment  implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
