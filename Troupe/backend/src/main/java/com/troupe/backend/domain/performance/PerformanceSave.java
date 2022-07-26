@@ -3,6 +3,7 @@ package com.troupe.backend.domain.performance;
 
 import com.troupe.backend.domain.member.Member;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
 @Getter
 @Table(name = "tb_pf_save")
 @Entity
@@ -20,7 +22,7 @@ public class PerformanceSave implements Serializable {
     @Id
     @Column(name = "pf_save_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
