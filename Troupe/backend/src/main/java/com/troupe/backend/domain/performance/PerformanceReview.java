@@ -1,11 +1,13 @@
 package com.troupe.backend.domain.performance;
 
+import com.troupe.backend.domain.comment.Comment;
 import com.troupe.backend.domain.member.Member;
 import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Table(name = "tb_pf_review")
@@ -35,5 +37,13 @@ public class PerformanceReview {
     @Size(max = 5000)
     private String content;
 
+    // 자기참조 부모 하나
+    @ManyToOne(targetEntity = PerformanceReview.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_review_no")
+    private PerformanceReview parentPerformanceReview;
+
+    // 자기참조 자식 여러개
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPerformanceReview")
+    private List<PerformanceReview> childrenPerformanceReview;
 
 }
