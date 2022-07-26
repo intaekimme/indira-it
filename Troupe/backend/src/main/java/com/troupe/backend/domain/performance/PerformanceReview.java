@@ -2,17 +2,22 @@ package com.troupe.backend.domain.performance;
 
 import com.troupe.backend.domain.comment.Comment;
 import com.troupe.backend.domain.member.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Table(name = "tb_pf_review")
 @Entity
-public class PerformanceReview {
+@NoArgsConstructor
+@AllArgsConstructor
+public class PerformanceReview implements Serializable {
 
     @Id
     @Column(name = "review_no")
