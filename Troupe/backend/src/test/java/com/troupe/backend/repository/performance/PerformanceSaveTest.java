@@ -5,6 +5,7 @@ import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceSave;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -29,7 +30,8 @@ public class PerformanceSaveTest {
     PerformanceSaveRepository performanceSaveRepository;
 
     @Test
-    public void saveTest() throws ParseException  {
+    @DisplayName("공연 저장 테스트")
+    public void saveTest() throws ParseException {
         Member member = memberRepository.getById(3);
         Performance performance = performanceRepository.getById(2);
 
@@ -44,4 +46,13 @@ public class PerformanceSaveTest {
         PerformanceSave savePerformanceSave = performanceSaveRepository.save(performanceSave);
 
     }
+
+    @Test
+    @DisplayName("공연 저장 삭제 테스트")
+    public void deleteTest(){
+        Member member = memberRepository.findById(3).get();
+
+//        Performance performance = performanceRepository
+    }
+
 }
