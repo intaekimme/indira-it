@@ -9,11 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 @DataJpaTest
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class PerformanceTest {
 
@@ -30,15 +33,15 @@ public class PerformanceTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Performance performance = Performance.builder()
                 .memberNo(member)
-                .title("공연1")
-                .location("인천광역시 부평구 부개동")
-                .runtime(120)
-                .createdTime(dateFormat.parse("20220727"))
-                .updatedTime(dateFormat.parse("20220729"))
-                .posterUrl("http://www.abc.def")
-                .codeNo(1)
-                .detailTime("15:00")
-                .description("test test test test")
+                .title("공연2")
+                .location("인천광역시 부평구 삼산동")
+                .runtime(150)
+                .createdTime(dateFormat.parse("20220728"))
+                .updatedTime(dateFormat.parse("20220801"))
+                .posterUrl("http://www.def.ghi")
+                .codeNo(2)
+                .detailTime("17:00")
+                .description("test test test test test test test test test test test test")
                 .isRemoved(false)
                 .build();
 

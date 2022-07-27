@@ -2,14 +2,21 @@ package com.troupe.backend.domain.category;
 
 
 import com.troupe.backend.domain.member.Member;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
+@Builder
 @Getter
 @Table(name = "tb_interest_category")
 @Entity
-public class InterestCategory {
+@NoArgsConstructor
+@AllArgsConstructor
+public class InterestCategory implements Serializable {
 
     @Id
     @Column(name = "interest_category_no")
