@@ -7,10 +7,12 @@ import com.troupe.backend.domain.member.MemberType;
 import com.troupe.backend.repository.member.MemberRepository;
 //import org.junit.jupiter.api.Assertions;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -50,10 +52,12 @@ class FeedTest {
     }
 
     @Test
+    @DisplayName("피드 최신순 정렬")
     public void selectAll() {
-        List<Feed> feeds = feedRepository.findAll();
+        List<Feed> feeds = feedRepository.findAll(Sort.by(Sort.Direction.DESC,"createdTime"));
 
         Assertions.assertThat(feeds.size()).isGreaterThan(0);
+        Assertions.assertThat(feeds.get(0).getFeedNo()).isEqualTo(5);
     }
 
     @Test
