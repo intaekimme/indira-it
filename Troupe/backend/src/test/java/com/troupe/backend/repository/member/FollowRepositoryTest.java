@@ -85,5 +85,6 @@ public class FollowRepositoryTest {
 
         // A의 스타는 없음
         assertThat(resultA.size()).isEqualTo(0);
+        
     }
 }
