@@ -1,9 +1,6 @@
 package com.troupe.backend.domain.member;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +11,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Guestbook implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer guestbookNo;
