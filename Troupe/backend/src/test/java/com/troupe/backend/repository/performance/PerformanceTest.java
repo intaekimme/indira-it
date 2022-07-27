@@ -59,7 +59,7 @@ public class PerformanceTest {
     @Test
     @DisplayName("공연 수정 테스트")
     public void updateTest() throws ParseException {
-        Performance targetPerformance = performanceRepository.findById(14).get();
+        Performance targetPerformance = performanceRepository.findById(13).get();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -68,7 +68,7 @@ public class PerformanceTest {
 
         performanceRepository.save(targetPerformance);
 
-        Assertions.assertEquals("공연 4", targetPerformance.getTitle());
+        Assertions.assertEquals("공연2", targetPerformance.getTitle());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class PerformanceTest {
         performance.setRemoved(true);
         performanceRepository.save(performance);
 
-        Assertions.assertEquals(true, performance.getRemoved());
+        Assertions.assertTrue(performance.getRemoved());
     }
 
     @Test
@@ -107,5 +107,17 @@ public class PerformanceTest {
         Assertions.assertTrue(performanceList.size() > 0);
     }
 
+    @Test
+    @DisplayName("유저 id로 공연 찾기")
+    public void findByMemberNo(){
+        Member member = memberRepository.getById(3);
+
+        List<Performance> performanceList = performanceRepository.findByMemberNo(member);
+
+        for (Performance pf : performanceList){
+            System.out.println(pf.getTitle());
+        }
+        Assertions.assertTrue(performanceList.size() > 0);
+    }
 
 }
