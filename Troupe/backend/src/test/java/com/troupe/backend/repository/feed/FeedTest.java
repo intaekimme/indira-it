@@ -61,6 +61,15 @@ class FeedTest {
     }
 
     @Test
+    @DisplayName("피드 등록한 사람의 피드 목록 최신순 정렬")
+    public void selectAllByPerformer() {
+        List<Feed> feeds = feedRepository.findByMemberOrderByCreatedTimeDesc(memberRepository.getById(3));
+
+        Assertions.assertThat(feeds.size()).isEqualTo(3);
+        Assertions.assertThat(feeds.get(0).getFeedNo()).isEqualTo(5);
+    }
+
+    @Test
     public void selectById(){
         Feed feed = feedRepository.findById(3).get();
 
