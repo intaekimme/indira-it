@@ -1,9 +1,6 @@
 package com.troupe.backend.domain.member;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +10,7 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Follow implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer followNo;
@@ -30,11 +28,6 @@ public class Follow implements Serializable {
     }
 
     public void setFanMember(Member fanMember) {
-        this.fanMember = fanMember;
-    }
-
-    public Follow(Member starMember, Member fanMember) {
-        this.starMember = starMember;
         this.fanMember = fanMember;
     }
 }

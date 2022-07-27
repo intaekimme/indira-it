@@ -1,9 +1,7 @@
 package com.troupe.backend.repository.member;
 
-import com.troupe.backend.domain.character.*;
 import com.troupe.backend.domain.member.Follow;
 import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.domain.member.MemberType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,9 +28,9 @@ public class FollowRepositoryTest {
         Member C = memberRepository.save(new Member("C"));
 
         // A <- B, A <- C, B <- C로 팔로우 등록
-        Follow follow1 = followRepository.save(new Follow(A, B));
-        Follow follow2 = followRepository.save(new Follow(A, C));
-        Follow follow3 = followRepository.save(new Follow(B, C));
+        Follow follow1 = followRepository.save(Follow.builder().starMember(A).fanMember(B).build());
+        Follow follow2 = followRepository.save(Follow.builder().starMember(A).fanMember(C).build());
+        Follow follow3 = followRepository.save(Follow.builder().starMember(B).fanMember(C).build());
 
         // A를 팔로우중인 팬 리스트를 가져와서 set에 담기
         List<Follow> resultA = followRepository.findAllByStarMember(A);
@@ -63,9 +61,9 @@ public class FollowRepositoryTest {
         Member C = memberRepository.save(new Member("C"));
 
         // A <- B, A <- C, B <- C로 팔로우 등록
-        Follow follow1 = followRepository.save(new Follow(A, B));
-        Follow follow2 = followRepository.save(new Follow(A, C));
-        Follow follow3 = followRepository.save(new Follow(B, C));
+        Follow follow1 = followRepository.save(Follow.builder().starMember(A).fanMember(B).build());
+        Follow follow2 = followRepository.save(Follow.builder().starMember(A).fanMember(C).build());
+        Follow follow3 = followRepository.save(Follow.builder().starMember(B).fanMember(C).build());
 
         // C가 팔로우중인 스타 리스트를 가져와서 set에 담기
         List<Follow> resultC = followRepository.findAllByFanMember(C);
@@ -85,6 +83,6 @@ public class FollowRepositoryTest {
 
         // A의 스타는 없음
         assertThat(resultA.size()).isEqualTo(0);
-        
+
     }
 }
