@@ -15,6 +15,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Feed implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int feedNo;
