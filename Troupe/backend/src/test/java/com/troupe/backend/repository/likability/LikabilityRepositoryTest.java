@@ -3,6 +3,7 @@ package com.troupe.backend.repository.likability;
 import com.troupe.backend.domain.likability.Likability;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.repository.member.MemberRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -21,12 +22,13 @@ public class LikabilityRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
+    @DisplayName("호감도 등록/조회 테스트")
     public void saveAndFindTest () {
-        Member star1 = memberRepository.save(new Member("star1"));
-        Member star2 = memberRepository.save(new Member("star2"));
-        Member fan1 = memberRepository.save(new Member("fan1"));
-        Member fan2 = memberRepository.save(new Member("fan2"));
-        Member fan3 = memberRepository.save(new Member("fan3"));
+        Member star1 = memberRepository.save(new Member("star1", "star1"));
+        Member star2 = memberRepository.save(new Member("star2", "star2"));
+        Member fan1 = memberRepository.save(new Member("fan1","fan1"));
+        Member fan2 = memberRepository.save(new Member("fan2", "fan2"));
+        Member fan3 = memberRepository.save(new Member("fan3", "fan3"));
 
         // fan1 -> star1, fan2 -> star1, fan1 -> star2의 호감도 저장
         likabilityRepository.save(Likability.builder().starMember(star1).fanMember(fan1).exp(100).build());
@@ -79,9 +81,10 @@ public class LikabilityRepositoryTest {
     }
 
     @Test
+    @DisplayName("호감도 등록/수정 테스트")
     public void saveAndUpdateTest() {
-        Member star = memberRepository.save(new Member("star"));
-        Member fan = memberRepository.save(new Member("fan"));
+        Member star = memberRepository.save(new Member("star", "star"));
+        Member fan = memberRepository.save(new Member("fan", "fan"));
 
         Likability like = likabilityRepository.save(Likability.builder().starMember(star).fanMember(fan).exp(0).build());
         assertThat(likabilityRepository.findByStarMemberAndFanMember(star, fan).get().getExp()).isEqualTo(0);
@@ -96,9 +99,10 @@ public class LikabilityRepositoryTest {
     }
 
     @Test
+    @DisplayName("호감도 등록/삭제 테스트")
     public void saveAndDeleteTest() {
-        Member star = memberRepository.save(new Member("star"));
-        Member fan = memberRepository.save(new Member("fan"));
+        Member star = memberRepository.save(new Member("star", "star"));
+        Member fan = memberRepository.save(new Member("fan", "fan"));
 
         // 등록 후 조회시 결과 존재
         Likability like = likabilityRepository.save(Likability.builder().starMember(star).fanMember(fan).exp(0).build());

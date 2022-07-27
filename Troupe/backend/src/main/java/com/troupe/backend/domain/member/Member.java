@@ -1,7 +1,10 @@
 package com.troupe.backend.domain.member;
 
 import com.troupe.backend.domain.character.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -131,9 +134,9 @@ public class Member implements Serializable {
         this.shape = shape;
     }
 
-    /** 닉네임만 받는 생성자 */
-    public Member(String nickname) {
-        this("myemail", "mypassword", nickname, "mydescription", MemberType.AUDIENCE, "myprofileImageUrl", false,
+    /** 이메일, 닉네임만 받는 생성자 */
+    public Member(String email, String nickname) {
+        this(email, "mypassword", nickname, "mydescription", MemberType.AUDIENCE, "myprofileImageUrl", false,
                 new CharacterClothes(1, "url"),
                 new CharacterEye(1, "url"),
                 new CharacterHair(1, "url"),
