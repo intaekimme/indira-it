@@ -36,6 +36,7 @@ class FeedLikeTest {
     @Test
     @DisplayName("피드 좋아요한적 없을때 좋아요 추가 및 있다면 좋아요 스위칭")
     public void insert() {
+//        feedLikeRepository.save(FeedLike.builder().member(memberRepository.findById(3).get()).feed(feedRepository.findById(3).get()).build());
         Optional<FeedLike> feedLike = feedLikeRepository.findByMemberAndFeed(memberRepository.findById(3).get(),feedRepository.findById(3).get());
         FeedLike feedLike1 = null;
         if(feedLike.isEmpty()){
@@ -48,6 +49,8 @@ class FeedLikeTest {
         }
         // 최초 좋아요 시
         Assertions.assertThat(feedLike1.isDeleted()).isEqualTo(false);
+        // 이미 좋아요 했을 시 취소
+//        Assertions.assertThat(feedLike1.isDeleted()).isEqualTo(true);
     }
 
 }
