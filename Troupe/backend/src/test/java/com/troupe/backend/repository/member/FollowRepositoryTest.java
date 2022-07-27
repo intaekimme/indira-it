@@ -2,6 +2,7 @@ package com.troupe.backend.repository.member;
 
 import com.troupe.backend.domain.member.Follow;
 import com.troupe.backend.domain.member.Member;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,16 +17,51 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class FollowRepositoryTest {
-    @Autowired FollowRepository followRepository;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    FollowRepository followRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
-    /** 특정 멤버를 팔로우하는 팬 목록 조회 테스트 */
     @Test
+    @DisplayName("팔로우 등록/삭제 테스트")
+    public void saveAndFindTest() {
+        // 멤버 A, B 등록
+        Member A = memberRepository.save(new Member("A", "A"));
+        Member B = memberRepository.save(new Member("B", "B"));
+
+        // A <- B 팔로우 등록 후 조회 테스트
+        Follow follow = followRepository.save(Follow.builder().starMember(A).fanMember(B).build());
+        assertThat(followRepository.findByStarMemberAndFanMember(A, B).isPresent()).isEqualTo(true);
+
+        // 삭제 후 조회 테스트
+        followRepository.delete(follow);
+        assertThat(followRepository.findByStarMemberAndFanMember(A, B).isPresent()).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("팔로우 등록/조회 테스트")
+    public void saveAndDeleteTest() {
+        // 멤버 A, B 등록
+        Member A = memberRepository.save(new Member("A", "A"));
+        Member B = memberRepository.save(new Member("B", "B"));
+
+        // A <- B 팔로우 등록
+        Follow follow = followRepository.save(Follow.builder().starMember(A).fanMember(B).build());
+
+        // 관계 조회 테스트
+        assertThat(followRepository.findByStarMemberAndFanMember(A, B).isPresent()).isEqualTo(true);
+        // 삭제 테스트
+        assertThat(followRepository.findByStarMemberAndFanMember(A, A).isPresent()).isEqualTo(false);
+        assertThat(followRepository.findByStarMemberAndFanMember(B, A).isPresent()).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("특정 멤버를 팔로우하는 팬 목록 조회 테스트")
     public void fansTest() {
         // 멤버 A, B, C 등록
-        Member A = memberRepository.save(new Member("A"));
-        Member B = memberRepository.save(new Member("B"));
-        Member C = memberRepository.save(new Member("C"));
+        Member A = memberRepository.save(new Member("A", "A"));
+        Member B = memberRepository.save(new Member("B", "B"));
+        Member C = memberRepository.save(new Member("C", "C"));
 
         // A <- B, A <- C, B <- C로 팔로우 등록
         Follow follow1 = followRepository.save(Follow.builder().starMember(A).fanMember(B).build());
@@ -52,13 +88,13 @@ public class FollowRepositoryTest {
         assertThat(resultC.size()).isEqualTo(0);
     }
 
-    /** 특정 멤버가 팔로우중인 스타 목록 조회 테스트 */
     @Test
+    @DisplayName("특정 멤버가 팔로우중인 스타 목록 조회 테스트")
     public void starsTest() {
         // 멤버 A, B, C 등록
-        Member A = memberRepository.save(new Member("A"));
-        Member B = memberRepository.save(new Member("B"));
-        Member C = memberRepository.save(new Member("C"));
+        Member A = memberRepository.save(new Member("A", "A"));
+        Member B = memberRepository.save(new Member("B", "B"));
+        Member C = memberRepository.save(new Member("C", "C"));
 
         // A <- B, A <- C, B <- C로 팔로우 등록
         Follow follow1 = followRepository.save(Follow.builder().starMember(A).fanMember(B).build());

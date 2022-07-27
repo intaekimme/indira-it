@@ -2,6 +2,7 @@ package com.troupe.backend.repository.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.member.MemberType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,34 +16,27 @@ public class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    /** 저장, 조회 테스트 */
     @Test
+    @DisplayName("멤버 등록/조회 테스트")
     public void saveAndFindTest() {
-        Member savedMember = memberRepository.save(new Member("doyoung"));
+        Member savedMember = memberRepository.save(new Member("doyoung", "doyoung"));
 
         // 저장한 회원 조회
-        assertThat(savedMember.getEmail()).isEqualTo("email");
-        assertThat(savedMember.getPassword()).isEqualTo("password");
+        assertThat(savedMember.getEmail()).isEqualTo("doyoung");
         assertThat(savedMember.getNickname()).isEqualTo("doyoung");
-        assertThat(savedMember.getDescription()).isEqualTo("description");
-        assertThat(savedMember.getMemberType()).isEqualTo(MemberType.AUDIENCE);
-        assertThat(savedMember.isRemoved()).isEqualTo(false);
-        assertThat(savedMember.getClothes().getClothesNo()).isEqualTo(1);
-        assertThat(savedMember.getEye().getEyeNo()).isEqualTo(1);
-        assertThat(savedMember.getHair().getHairNo()).isEqualTo(1);
-        assertThat(savedMember.getMouth().getMouthNo()).isEqualTo(1);
-        assertThat(savedMember.getNose().getNoseNo()).isEqualTo(1);
-        assertThat(savedMember.getShape().getShapeNo()).isEqualTo(1);
+
+        assertThat(memberRepository.findByNickname("doyoung").isPresent()).isEqualTo(true);
+        assertThat(memberRepository.findByEmail("doyoung").isPresent()).isEqualTo(true);
 
         // 저장하지 않은 회원 조회
         assertThat(memberRepository.findByNickname("invalidNickname").isPresent()).isEqualTo(false);
     }
 
-    /** 저장, 수정 테스트 */
     @Test
+    @DisplayName("멤버 등록/수정 테스트")
     public void saveAndUpdateTest() {
         // 회원 저장
-        Member savedMember = memberRepository.save(new Member("oldNick"));
+        Member savedMember = memberRepository.save(new Member("oldEmail", "oldNick"));
 
         // 저장된 회원 수정
         savedMember.setNickname("newNick");
@@ -58,11 +52,11 @@ public class MemberRepositoryTest {
         assertThat(memberRepository.findByNickname("oldNick").isPresent()).isEqualTo(false);
     }
 
-    /** 저장, 삭제 테스트 */
     @Test
+    @DisplayName("멤버 등록/삭제 테스트")
     public void saveAndDeleteTest() {
         // 회원 등록
-        Member savedMember = memberRepository.save(new Member("hello"));
+        Member savedMember = memberRepository.save(new Member("hello", "hello"));
         assertThat(memberRepository.findByNickname("hello").isPresent()).isEqualTo(true);
 
         // 회원 삭제
