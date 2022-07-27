@@ -2,6 +2,7 @@ package com.troupe.backend.domain.performance;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+@Builder
 @Getter
 @Table(name = "tb_pf_image")
 @Entity
@@ -19,7 +21,7 @@ public class PerformanceImage implements Serializable {
     @Id
     @Column(name = "image_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(targetEntity = Performance.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "pf_no")
