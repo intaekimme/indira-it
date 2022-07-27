@@ -32,4 +32,28 @@ public class Guestbook implements Serializable {
     private String content;
 
     private boolean isRemoved;
+
+    public void setGuestbookNo(Integer guestbookNo) {
+        this.guestbookNo = guestbookNo;
+    }
+
+    public void setHostMember(Member hostMember) {
+        this.hostMember = hostMember;
+    }
+
+    public void setVisitorMember(Member visitorMember) {
+        this.visitorMember = visitorMember;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setRemoved(boolean removed) {
+        isRemoved = removed;
+    }
 }

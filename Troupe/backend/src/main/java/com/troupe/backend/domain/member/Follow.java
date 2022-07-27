@@ -25,4 +25,16 @@ public class Follow implements Serializable {
     @JoinColumn(name = "fan_member_no")
     private Member fanMember;
 
+    public void setStarMember(Member starMember) {
+        this.starMember = starMember;
+    }
+
+    public void setFanMember(Member fanMember) {
+        this.fanMember = fanMember;
+    }
+
+    public Follow(Member starMember, Member fanMember) {
+        this.starMember = starMember;
+        this.fanMember = fanMember;
+    }
 }
