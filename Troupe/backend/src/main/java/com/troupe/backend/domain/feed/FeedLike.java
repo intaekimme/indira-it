@@ -2,6 +2,7 @@ package com.troupe.backend.domain.feed;
 
 import com.troupe.backend.domain.member.Member;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class FeedLike implements Serializable {
 
     @Id
