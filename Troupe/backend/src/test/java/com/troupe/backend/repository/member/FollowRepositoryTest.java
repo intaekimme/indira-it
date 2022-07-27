@@ -32,6 +32,15 @@ public class FollowRepositoryTest {
         Follow follow2 = followRepository.save(Follow.builder().starMember(A).fanMember(C).build());
         Follow follow3 = followRepository.save(Follow.builder().starMember(B).fanMember(C).build());
 
+        // 각각의 관계 조회 테스트
+        assertThat(followRepository.findByStarMemberAndFanMember(A, B).isPresent()).isEqualTo(true);
+        assertThat(followRepository.findByStarMemberAndFanMember(A, C).isPresent()).isEqualTo(true);
+        assertThat(followRepository.findByStarMemberAndFanMember(B, C).isPresent()).isEqualTo(true);
+        // 없는 관계 조회 테스트
+        assertThat(followRepository.findByStarMemberAndFanMember(A, A).isPresent()).isEqualTo(false);
+        assertThat(followRepository.findByStarMemberAndFanMember(C, B).isPresent()).isEqualTo(false);
+        assertThat(followRepository.findByStarMemberAndFanMember(C, A).isPresent()).isEqualTo(false);
+
         // A를 팔로우중인 팬 리스트를 가져와서 set에 담기
         List<Follow> resultA = followRepository.findAllByStarMember(A);
         Set<String> fanNicknames = new HashSet<>();

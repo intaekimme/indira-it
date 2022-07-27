@@ -133,7 +133,7 @@ public class Member implements Serializable {
 
     /** 닉네임만 받는 생성자 */
     public Member(String nickname) {
-        this("email", "password", nickname, "description", MemberType.AUDIENCE, "profileImageUrl", false,
+        this("myemail", "mypassword", nickname, "mydescription", MemberType.AUDIENCE, "myprofileImageUrl", false,
                 new CharacterClothes(1, "url"),
                 new CharacterEye(1, "url"),
                 new CharacterHair(1, "url"),

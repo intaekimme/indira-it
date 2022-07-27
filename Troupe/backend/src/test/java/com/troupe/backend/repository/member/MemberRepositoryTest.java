@@ -21,10 +21,10 @@ public class MemberRepositoryTest {
         Member savedMember = memberRepository.save(new Member("doyoung"));
 
         // 저장한 회원 조회
-        assertThat(savedMember.getEmail()).isEqualTo("email");
-        assertThat(savedMember.getPassword()).isEqualTo("password");
+        assertThat(savedMember.getEmail()).isEqualTo("myemail");
+        assertThat(savedMember.getPassword()).isEqualTo("mypassword");
         assertThat(savedMember.getNickname()).isEqualTo("doyoung");
-        assertThat(savedMember.getDescription()).isEqualTo("description");
+        assertThat(savedMember.getDescription()).isEqualTo("mydescription");
         assertThat(savedMember.getMemberType()).isEqualTo(MemberType.AUDIENCE);
         assertThat(savedMember.isRemoved()).isEqualTo(false);
         assertThat(savedMember.getClothes().getClothesNo()).isEqualTo(1);
@@ -33,6 +33,9 @@ public class MemberRepositoryTest {
         assertThat(savedMember.getMouth().getMouthNo()).isEqualTo(1);
         assertThat(savedMember.getNose().getNoseNo()).isEqualTo(1);
         assertThat(savedMember.getShape().getShapeNo()).isEqualTo(1);
+
+        assertThat(memberRepository.findByNickname("doyoung").isPresent()).isEqualTo(true);
+        assertThat(memberRepository.findByEmail("myemail").isPresent()).isEqualTo(true);
 
         // 저장하지 않은 회원 조회
         assertThat(memberRepository.findByNickname("invalidNickname").isPresent()).isEqualTo(false);
