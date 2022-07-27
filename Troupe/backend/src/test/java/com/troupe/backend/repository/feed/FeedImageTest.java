@@ -52,38 +52,52 @@ class FeedImageTest {
 
     @Test
     @DisplayName("해당 feed_no에 해당하는 모든 image 불러오기")
-    public void selectById() throws ParseException{
+    public void selectAllById() throws ParseException{
 //        insert();
         //추가
         Feed feed = feedRepository.findById(3).get();
         FeedImage saveImage = FeedImage.builder().feed(feed).imageUrl("url").build();
         feedImageRepository.save(saveImage);
 
-        List<FeedImage> feeds = feedImageRepository.findAllByFeedNo(saveImage.getFeed());
+        List<FeedImage> feeds = feedImageRepository.findAllByFeedOrderByImageNo(saveImage.getFeed());
 
         Assertions.assertThat(feeds.size()).isGreaterThan(0);
     }
 
     @Test
-    public void updateFeed(){
+    @DisplayName("해당 피드의 사진 하나 찾아서 사진교체하기")
+    public void updateFeedImage() {
+        // 삽입
         Feed feed = feedRepository.findById(3).get();
-        Feed updateFeed = Feed.builder().member(feed.getMember()).content("update").build();
-        Feed saveFeed = feedRepository.save(updateFeed);
-        Assertions.assertThat(saveFeed.getContent()).isEqualTo("update");
+        FeedImage saveImage = FeedImage.builder().feed(feed).imageUrl("url").build();
+        feedImageRepository.save(saveImage);
+
+        // 해당 사진 찾기
+        FeedImage selectImage = feedImageRepository.findByFeedAndImageUrl(feed,"url");
+        FeedImage updateFeed =  selectImage.builder().feed(feed).imageUrl("update").build();
+        
+        // 사진 교체 저장
+        FeedImage updateImage = feedImageRepository.save(updateFeed);
+        Assertions.assertThat(updateImage.getImageUrl()).isEqualTo("update");
     }
     @Test
-    public void deleteFeed(){
+    @DisplayName("해당 피드의 사진 하나 찾아서 삭제하기")
+    public void deleteFeedImage(){
+        // 삽입
         Feed feed = feedRepository.findById(3).get();
-        feedRepository.delete(feed);
+        FeedImage saveImage = FeedImage.builder().feed(feed).imageUrl("url").build();
+        feedImageRepository.save(saveImage);
 
-        Feed feed1 = null;
+        // 해당 사진 찾기
+        FeedImage selectImage = feedImageRepository.findByFeedAndImageUrl(feed,"url");
+        feedImageRepository.delete(selectImage);
 
-        Optional<Feed> feeds = feedRepository.findById(3);
+        FeedImage feedImage1 = null;
 
-        if(feeds.isPresent()){
-            feed1 = feeds.get();
-        }
+        Optional<FeedImage> feedImage = feedImageRepository.findByImageUrl("url");
 
-        Assertions.assertThat(feed1).isNull();
+        if(feedImage.isPresent()) feedImage1 = feedImage.get();
+
+        Assertions.assertThat(feedImage1).isNull();
     }
 }
