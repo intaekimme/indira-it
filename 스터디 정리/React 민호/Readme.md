@@ -11,7 +11,9 @@
     + [React useEffect](#react-useeffect)
   * [프로젝트 생성](#프로젝트-생성)
   * [Router](#router)
-
+  * [error](#error)
+    + [is not a component All component children of must be a or](#is-not-a-component-all-component-children-of-must-be-a-or)
+    + [ERESOLVE unable to resolve dependency tree](#eresolve-unable-to-resolve-dependency-tree)
 ## 배열
 
 	1. const food = ["tomato", "potato"];
@@ -141,3 +143,53 @@ Cleanup function	useEffect를 통해 오브젝트가 destroy될때도 코드실�
 ## Router
 
 	import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+## Error
+
+### is not a component All component children of must be a or
+Routes의 자식으로 Route만 가능하게 바뀜
+아래코드처럼 수정
+
+	import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+	function App() {
+		return (
+			<div className="App">
+				<Router>
+					<Routes>
+						<Route path="/">
+							<LandingPage />
+						</Route>
+						<Route path="/login">
+							<LoginPage />
+						</Route>
+						<Route path="/register">
+							<RegisterPage />
+						</Route>
+					</Routes>
+				</Router>
+			</div>
+		);
+	}
+	export default App;
+
+	import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+	function App() {
+		return (
+			<div className="App">
+				<Router>
+					<Routes>
+						<Route path="/" element={ <LandingPage /> } />
+						<Route path="/login" element={ <LoginPage /> } />
+						<Route path="/register" element={ <RegisterPage /> } />
+					</Routes>
+				</Router>
+			</div>
+		);
+	}
+	export default App;
+
+### ERESOLVE unable to resolve dependency tree
+npm ERR! ERESOLVE unable to resolve dependency tree
+npm ERR! this command with --force, or --legacy-peer-deps
+
+	npm install @mui/material @mui/icons-material @emotion/react @emotion/styled @material-ui/core @material-ui/icons --legacy-peer-deps

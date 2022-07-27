@@ -3,6 +3,7 @@ package com.troupe.backend.domain.performance;
 import com.troupe.backend.domain.comment.Comment;
 import com.troupe.backend.domain.member.Member;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+@Builder
 @Getter
 @Table(name = "tb_pf_review")
 @Entity
@@ -22,7 +24,7 @@ public class PerformanceReview implements Serializable {
     @Id
     @Column(name = "review_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "pf_no")
