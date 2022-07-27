@@ -58,4 +58,59 @@ public class Member implements Serializable {
     @JoinColumn(name = "shape_no")
     private CharacterShape shape;
 
+    public void setMemberNo(Integer memberNo) {
+        this.memberNo = memberNo;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setMemberType(MemberType memberType) {
+        this.memberType = memberType;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public void setRemoved(boolean removed) {
+        isRemoved = removed;
+    }
+
+    public void setClothes(CharacterClothes clothes) {
+        this.clothes = clothes;
+    }
+
+    public void setEye(CharacterEye eye) {
+        this.eye = eye;
+    }
+
+    public void setHair(CharacterHair hair) {
+        this.hair = hair;
+    }
+
+    public void setMouth(CharacterMouth mouth) {
+        this.mouth = mouth;
+    }
+
+    public void setNose(CharacterNose nose) {
+        this.nose = nose;
+    }
+
+    public void setShape(CharacterShape shape) {
+        this.shape = shape;
+    }
 }
