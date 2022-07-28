@@ -40,22 +40,27 @@ public class FeedService {
 
 
     // 피드 등록
-    public void insert(FeedInsertRequest request){
-        // 피드 본문
-        Feed newFeed = feedRepository.save(request.toFeedEntity());
+    public void insert(FeedInsertRequest request)throws Exception{
+        try {
+            // 피드 본문
+            Feed newFeed = feedRepository.save(request.toFeedEntity());
 
-        // 피드 이미지
-        for(FeedImage image: request.toFeedImageEntity(newFeed)){
-            feedImageRepository.save(image);
-        }
-
-        //피드 태그
-        for(Tag tag: request.toTagEntity()){
-            Optional<Tag> tagInsert = tagRepository.findByName(tag.getName());
-            if(tagInsert.isPresent()){
-                tagRepository.save(tag);
+            // 피드 이미지
+            for(FeedImage image: request.toFeedImageEntity(newFeed)){
+                feedImageRepository.save(image);
             }
-            feedTagRepository.save(FeedTag.builder().tag(tag).feed(newFeed).build());
+
+            //피드 태그
+            for(Tag tag: request.toTagEntity()){
+                Optional<Tag> tagInsert = tagRepository.findByName(tag.getName());
+                if(tagInsert.isPresent()){
+                    tagRepository.save(tag);
+                }
+                feedTagRepository.save(FeedTag.builder().tag(tag).feed(newFeed).build());
+            }
+
+        }catch (Exception e){
+            log.info(e.toString());
         }
     }
 }
