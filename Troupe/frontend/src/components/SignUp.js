@@ -49,10 +49,10 @@ export default function SignUp() {
   //중복체크
   const sameCheck = (string) =>{
     if(string === 'email'){
-      apiClient.existEmail(email);
+      apiClient.existEmail({email: email});
     }
     else if(string === 'nickname'){
-      apiClient.existNickname(nickname);
+      apiClient.existNickname({nickname: nickname});
     }
   }
 
@@ -77,6 +77,7 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    console.log(event.currentTarget)
     console.log(formData);
 
     const data = {
@@ -87,6 +88,7 @@ export default function SignUp() {
       passwordCheck: formData.get('passwordCheck'),
       profileMessage: formData.get('profileMessage'),
     };
+    console.log(data);
 
     //입력된 값이 올바른지 확인
     if(!checkValue(data)){
@@ -110,19 +112,13 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
           <form
             onSubmit={handleSubmit}
             encType="multipart/form-data"
             style={{ textAlign: "center" }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={9}>
                 {imgUrl === "" ? (
                   <AccountCircleIcon
                     fontSize="large"
@@ -140,7 +136,7 @@ export default function SignUp() {
                   ></img>
                 )}
               </Grid>
-              <Grid item xs={4} style={{ position: "relative" }}>
+              <Grid item xs={3} style={{ position: "relative" }}>
                 <Button
                   style={{
                     position: "absolute",
