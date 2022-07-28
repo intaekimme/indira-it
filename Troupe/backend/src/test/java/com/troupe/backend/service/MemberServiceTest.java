@@ -7,9 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MemberServiceTest {
 //    @Autowired
-//    MemberService memberService;
+//    private MemberService memberService;
 //    @Autowired
-//    MemberRepository memberRepository;
+//    private MemberRepository memberRepository;
 //
 //    @Test
 //    @DisplayName("멤버 등록/조회 테스트")

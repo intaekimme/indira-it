@@ -1,6 +1,6 @@
 package com.troupe.backend.repository.feed;
 
-import com.troupe.backend.domain.character.*;
+import com.troupe.backend.domain.avatar.*;
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.member.MemberType;
@@ -32,12 +32,12 @@ class FeedTest {
 
     @Test
     public void insert() throws ParseException {
-        CharacterClothes clothes = new CharacterClothes(1,"url");
-        CharacterEye eyes = new CharacterEye(1,"url");
-        CharacterHair hair = new CharacterHair(1,"url");
-        CharacterMouth mouth = new CharacterMouth(1,"url");
-        CharacterNose nose = new CharacterNose(1,"url");
-        CharacterShape shape = new CharacterShape(1,"url");
+        AvatarClothes clothes = new AvatarClothes(1,"url");
+        AvatarEye eyes = new AvatarEye(1,"url");
+        AvatarHair hair = new AvatarHair(1,"url");
+        AvatarMouth mouth = new AvatarMouth(1,"url");
+        AvatarNose nose = new AvatarNose(1,"url");
+        AvatarShape shape = new AvatarShape(1,"url");
         Member member  = new Member(3,"email","password","nickname","description", MemberType.PERFORMER,"url",false, clothes,eyes,hair,mouth,nose,shape);
         Feed feed = new Feed(1,member,"insertTest",false,null);
         Feed feedSave = feedRepository.save(feed);
