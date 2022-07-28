@@ -1,6 +1,6 @@
-package com.troupe.backend.repository.character;
+package com.troupe.backend.repository.avatar;
 
-import com.troupe.backend.domain.character.CharacterEye;
+import com.troupe.backend.domain.avatar.AvatarEye;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,15 +10,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class CharacterEyeRepositoryTest {
+public class AvatarEyeRepositoryTest {
     @Autowired
-    CharacterEyeRepository cer;
+    AvatarEyeRepository cer;
 
     @Test
     public void saveAndFindTest () {
-        CharacterEye eye1 = cer.save(CharacterEye.builder().eyeNo(1).eyeUrl("url1").build());
-        CharacterEye eye2 = cer.save(CharacterEye.builder().eyeNo(2).eyeUrl("url2").build());
-        CharacterEye eye3 = CharacterEye.builder().eyeNo(3).eyeUrl("url3").build();
+        AvatarEye eye1 = cer.save(AvatarEye.builder().eyeNo(1).eyeUrl("url1").build());
+        AvatarEye eye2 = cer.save(AvatarEye.builder().eyeNo(2).eyeUrl("url2").build());
+        AvatarEye eye3 = AvatarEye.builder().eyeNo(3).eyeUrl("url3").build();
 
         assertThat(cer.findById(1).get()).isEqualTo(eye1);
         assertThat(cer.findById(2).get()).isEqualTo(eye2);
@@ -27,7 +27,7 @@ public class CharacterEyeRepositoryTest {
 
     @Test
     public void saveAndUpdateTest() {
-        CharacterEye eye = cer.save(CharacterEye.builder().eyeNo(1).eyeUrl("oldUrl").build());
+        AvatarEye eye = cer.save(AvatarEye.builder().eyeNo(1).eyeUrl("oldUrl").build());
         assertThat(cer.findById(1).get().getEyeUrl()).isEqualTo("oldUrl");
 
         eye.setEyeUrl("newUrl");
@@ -36,7 +36,7 @@ public class CharacterEyeRepositoryTest {
 
     @Test
     public void saveAndDeleteTest() {
-        CharacterEye eye = cer.save(CharacterEye.builder().eyeNo(1).eyeUrl("url").build());
+        AvatarEye eye = cer.save(AvatarEye.builder().eyeNo(1).eyeUrl("url").build());
         assertThat(cer.findById(1).isPresent()).isEqualTo(true);
 
         cer.delete(eye);

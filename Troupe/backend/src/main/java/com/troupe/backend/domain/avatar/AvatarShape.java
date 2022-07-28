@@ -1,4 +1,4 @@
-package com.troupe.backend.domain.character;
+package com.troupe.backend.domain.avatar;
 
 import lombok.*;
 
@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class CharacterShape implements Serializable {
+public class AvatarShape implements Serializable {
     @Id
     private Integer shapeNo;
 

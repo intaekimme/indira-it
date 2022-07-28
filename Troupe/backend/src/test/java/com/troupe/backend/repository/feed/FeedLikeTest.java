@@ -1,10 +1,6 @@
 package com.troupe.backend.repository.feed;
 
-import com.troupe.backend.domain.character.*;
-import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedLike;
-import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.domain.member.MemberType;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,11 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Sort;
 
 import javax.transaction.Transactional;
-import java.text.ParseException;
-import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
