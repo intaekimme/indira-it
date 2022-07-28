@@ -49,7 +49,7 @@ export default function SignUp() {
   //중복체크
   const sameCheck = (string) =>{
     if(string === 'email'){
-      apiClient.existEmail({email: email});
+      apiClient.existEmail({ email: email });
     }
     else if(string === 'nickname'){
       apiClient.existNickname({nickname: nickname});
@@ -176,6 +176,7 @@ export default function SignUp() {
                   id="nickname"
                   label="닉네임"
                   autoFocus
+                  onChange = { changeNickname }
                 />
               </Grid>
               <Grid item xs={3} style={{position: "relative"}}>
@@ -189,7 +190,6 @@ export default function SignUp() {
                     backgroundColor: "#CCCCCC",
                     color: "black",
                   }}
-                  onChange = { changeNickname }
                   onClick = { () => sameCheck("nickname") }
                 >
                   중복확인
@@ -212,6 +212,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange = { changeEmail }
                 />
               </Grid>
               <Grid item xs={3} style={{position: "relative"}}>
@@ -225,7 +226,6 @@ export default function SignUp() {
                     backgroundColor: "#CCCCCC",
                     color: "black",
                   }}
-                  onChange = { changeEmail }
                   onClick = { () => sameCheck("email") }
                 >
                   중복확인
