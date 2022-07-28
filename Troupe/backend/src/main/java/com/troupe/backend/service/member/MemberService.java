@@ -2,6 +2,7 @@ package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.Avatar;
+import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.exception.DuplicateMemberException;
 import com.troupe.backend.repository.member.MemberRepository;
@@ -57,6 +58,11 @@ public class MemberService {
 
         // 저장
         return memberRepository.save(member);
+    }
+
+    public Member login(LoginForm loginForm) {
+        Member foundMember = memberRepository.findByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword()).get();
+        return foundMember;
     }
 
     /**
