@@ -30,7 +30,7 @@ public class S3FileUploadService {
         return upload(uploadFile,dirName);
     }
     //S3로 파일 업로드 하기
-    private String upload(File uploadFile, String dirName){
+    public String upload(File uploadFile, String dirName){
         String fileName = dirName + "/" + UUID.randomUUID()+uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
 //        saveFile(fileName.substring(1));

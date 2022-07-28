@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 
 @Data
@@ -18,5 +19,5 @@ public class MemberForm {
     private String nickname;
     private String description;
     private MemberType memberType;
-    private MultipartFile profileImage;
+    private File profileImage;
 }
