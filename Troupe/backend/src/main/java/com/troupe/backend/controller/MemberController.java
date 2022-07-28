@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,14 +29,13 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-//    private ResponseEntity register(@RequestParam String email,
-//                                    @RequestParam String password,
-//                                    @RequestParam String nickname,
-//                                    @RequestParam String description,
-//                                    @RequestParam MultipartFile profileImage) throws IOException {
-//        MemberForm memberForm = MemberForm.builder().email(email).password(password).nickname(nickname).description(description).profileImage(profileImage).build();
-
-    private ResponseEntity register(@RequestBody MemberForm memberForm) throws IOException {
+    private ResponseEntity register(@RequestParam String email,
+                                    @RequestParam String password,
+                                    @RequestParam String nickname,
+                                    @RequestParam String description,
+                                    @RequestParam MultipartFile profileImage) throws IOException {
+        MemberForm memberForm = MemberForm.builder().email(email).password(password).nickname(nickname).description(description).profileImage(profileImage).build();
+//    private ResponseEntity register(@RequestBody MemberForm memberForm) throws IOException {
         memberService.saveMember(memberForm);
         return ResponseEntity.ok().build();
     }
@@ -52,13 +52,44 @@ public class MemberController {
     }
 
     @PatchMapping("/{memberNo}")
-    private ResponseEntity modifyMember(@RequestBody MemberForm memberForm) {
+    private ResponseEntity updateMember(@PathVariable int memberNo, @RequestBody MemberForm memberForm) throws IOException {
+        Member foundMember = memberService.findById(memberNo).get();
+        memberService.updateMember(memberNo, memberForm);
         return ResponseEntity.ok().build();
     }
 
-    private ResponseEntity deleteMember(@RequestHeader Map<String, Object> requestHeader) {
-        int memberNo = (int) requestHeader.get(MyConstant.MEMBER_NO);
+    @PatchMapping("/{memberNo}/del")
+    private ResponseEntity deleteMember(@PathVariable int memberNo) {
         memberService.deleteMember(memberNo);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/signup/email")
+    private ResponseEntity checkDuplicateEmail(@RequestBody String email) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        if (memberService.isDuplicateEmail(email)) {
+            resultMap.put(MyConstant.MESSAGE, "이미 사용 중인 이메일입니다.\n");
+            return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
+        } else {
+            resultMap.put(MyConstant.MESSAGE, "사용 가능한 이메일입니다\n");
+            return new ResponseEntity(resultMap, HttpStatus.OK);
+        }
+
+
+    }
+
+    @PostMapping("/signup/nickname")
+    private ResponseEntity checkDuplicateNickname(@RequestBody String nickname) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        if (memberService.isDuplicateNickname(nickname)) {
+            resultMap.put(MyConstant.MESSAGE, "이미 사용 중인 닉네임입니다.\n");
+            return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
+        } else {
+            resultMap.put(MyConstant.MESSAGE, "사용 가능한 닉네임입니다\n");
+            return new ResponseEntity(resultMap, HttpStatus.OK);
+        }
+    }
+
 }
