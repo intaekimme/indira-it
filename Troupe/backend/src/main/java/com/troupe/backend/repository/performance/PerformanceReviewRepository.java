@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PerformanceReviewRepository extends JpaRepository <PerformanceReview, Integer> {
     List<PerformanceReview> findByPfNo(Performance performance);
+    List<PerformanceReview> findByPfNoAndParentPerformanceReviewNo(Performance ParentPerformance, PerformanceReview performanceReview);
 }

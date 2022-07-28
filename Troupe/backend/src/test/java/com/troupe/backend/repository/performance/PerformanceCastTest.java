@@ -3,12 +3,15 @@ package com.troupe.backend.repository.performance;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceCast;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -37,4 +40,26 @@ public class PerformanceCastTest {
 //        Assertions.assertEquals("홍길동", savePerformanceCast.getName());
 
     }
+
+    /** Read */
+    @Test
+    @DisplayName("공연번호로 캐스팅 찾기")
+    void findByPf(){
+        Performance performance = pr.findById(1).get();
+        List<PerformanceCast> performanceCastList = pcr.findByPf(performance);
+
+        Assertions.assertEquals("우영우",  performanceCastList.get(1).getName());
+    }
+
+
+    @Test
+    @DisplayName("공연번호에 해당하는 캐스팅 수정")
+    void 공연번호에_해당하는_캐스팅_수정() {
+        Performance performance = pr.findById(1).get();
+        List<PerformanceCast> performanCastList = pcr.findByPf(performance);
+
+        PerformanceCast performanceCast = performanCastList.get(4);
+        performanceCast.
+    }
+
 }
