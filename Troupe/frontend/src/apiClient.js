@@ -10,6 +10,7 @@ const apiClient = {
       window.sessionStorage.setItem('loginCheck', true);
       window.sessionStorage.setItem('loginUser', data);
       alert('로그인 되었습니다.');
+      window.location.href = '/';
     }).catch((error)=>{
       alert('로그인 실패 : ' + error);
     });
@@ -24,7 +25,7 @@ const apiClient = {
   },
 
   existEmail: (data) => {
-    instance.get('/member/signup/email', data).then((data)=>{
+    instance.post('/member/signup/email', data).then((data)=>{
       alert('사용 가능합니다.' + data);
     }).catch((error)=>{
       alert('중복된 email입니다. : ' + error);
@@ -32,7 +33,7 @@ const apiClient = {
   },
 
   existNickname: (data) => {
-    instance.get('/member/signup/nickname', data).then((data)=>{
+    instance.post('/member/signup/nickname', data).then((data)=>{
       alert('사용 가능합니다.' + data);
     }).catch((error)=>{
       alert('중복된 nickname입니다. : ' + error);
