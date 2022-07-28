@@ -18,8 +18,8 @@ public class FollowService {
     /**
      * 팔로우 관계 등록
      */
-    public void follow(Member star, Member fan) {
-        followRepository.save(Follow.builder().starMember(star).fanMember(fan).build());
+    public Follow follow(Member star, Member fan) {
+        return followRepository.save(Follow.builder().starMember(star).fanMember(fan).build());
     }
 
     /**
