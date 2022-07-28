@@ -6,16 +6,18 @@ import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.exception.DuplicateMemberException;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.service.feed.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
 public class MemberService {
     private MemberRepository memberRepository;
-
     private AvatarService avatarService;
+    private S3FileUploadService s3FileUploadService;
 
     @Autowired
     public void setMemberRepository(MemberRepository memberRepository) {
@@ -27,10 +29,16 @@ public class MemberService {
         this.avatarService = avatarService;
     }
 
+    @Autowired
+    public void setS3FileUploadService(S3FileUploadService s3FileUploadService) {
+        this.s3FileUploadService = s3FileUploadService;
+    }
+
+
     /**
      * 회원 등록
      */
-    public Member saveMember(MemberForm memberForm) {
+    public Member saveMember(MemberForm memberForm) throws IOException {
         // 중복 체크
         if (isDuplicateMember(memberForm)) {
             throw new DuplicateMemberException();
@@ -39,6 +47,9 @@ public class MemberService {
         // 기본 아바타 조회
         Avatar defaultAvatar = avatarService.findDefaultAvatar();
 
+        // 프로필 사진 저장
+        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+
         // 멤버 생성
         Member member = Member.builder()
                 .email(memberForm.getEmail())
@@ -46,7 +57,7 @@ public class MemberService {
                 .nickname(memberForm.getNickname())
                 .description(memberForm.getDescription())
                 .memberType(memberForm.getMemberType())
-                .profileImageUrl(memberForm.getProfileImageUrl())
+                .profileImageUrl(imageUrl)
                 .isRemoved(false)
                 .clothes(defaultAvatar.getAvatarClothes())
                 .eye(defaultAvatar.getAvatarEye())
@@ -76,18 +87,20 @@ public class MemberService {
     /**
      * 회원 기본정보 수정
      */
-    public Member updateMember(int memberNo, MemberForm memberForm) {
+    public Member updateMember(int memberNo, MemberForm memberForm) throws IOException {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
 
         if (isDuplicateMember(foundMember.getMemberNo(), memberForm)) {
             throw new DuplicateMemberException();
         }
 
+        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+
         foundMember.setPassword(memberForm.getPassword());
         foundMember.setNickname(memberForm.getNickname());
         foundMember.setDescription(memberForm.getDescription());
         foundMember.setMemberType(memberForm.getMemberType());
-        foundMember.setProfileImageUrl(memberForm.getProfileImageUrl());
+        foundMember.setProfileImageUrl(imageUrl);
 
         return foundMember;
     }
