@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -13,13 +15,17 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity handleNoSuchElementException(NoSuchElementException e) {
         e.printStackTrace();
-        return new ResponseEntity<>(e, HttpStatus.NOT_FOUND);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("message", e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(DuplicateMemberException.class)
     public ResponseEntity handleDuplicateMemberException(DuplicateMemberException e) {
         e.printStackTrace();
-        return new ResponseEntity<>(e, HttpStatus.CONFLICT);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("message", e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
     }
 
 }
