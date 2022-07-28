@@ -54,6 +54,7 @@ public class PerformanceSaveTest {
         Member member = memberRepository.findById(3).get();
         Performance performance = performanceRepository.findById(2).get();
 
+        //  삭제할 공연
         PerformanceSave targetPerformanceSave = performanceSaveRepository.findByMemberNoAndPfNo(member, performance);
         targetPerformanceSave.setRemoved(true);
 
@@ -62,7 +63,5 @@ public class PerformanceSaveTest {
         Assertions.assertTrue(targetPerformanceSave.getRemoved());
 
     }
-
-
 
 }
