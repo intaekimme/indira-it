@@ -1,6 +1,7 @@
 package com.troupe.backend.advice;
 
 import com.troupe.backend.exception.DuplicateMemberException;
+import com.troupe.backend.util.MyConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +17,7 @@ public class GlobalExceptionAdvice {
     public ResponseEntity handleNoSuchElementException(NoSuchElementException e) {
         e.printStackTrace();
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("message", e.getMessage());
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
         return new ResponseEntity(resultMap, HttpStatus.NOT_FOUND);
     }
 
@@ -24,7 +25,7 @@ public class GlobalExceptionAdvice {
     public ResponseEntity handleDuplicateMemberException(DuplicateMemberException e) {
         e.printStackTrace();
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("message", e.getMessage());
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
         return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
     }
 
@@ -32,7 +33,7 @@ public class GlobalExceptionAdvice {
     public ResponseEntity handleDuplicateMemberException(Exception e) {
         e.printStackTrace();
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("message", e.getMessage());
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
         return new ResponseEntity(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

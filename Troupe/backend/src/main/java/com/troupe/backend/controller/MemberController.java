@@ -20,8 +20,6 @@ import java.util.Map;
 @RequestMapping("/member")
 @RestController
 public class MemberController {
-
-
     private MemberService memberService;
 
     @Autowired
@@ -55,14 +53,12 @@ public class MemberController {
 
     @PatchMapping("/{memberNo}")
     private ResponseEntity modifyMember(@RequestBody MemberForm memberForm) {
-
         return ResponseEntity.ok().build();
     }
 
     private ResponseEntity deleteMember(@RequestHeader Map<String, Object> requestHeader) {
-        int memberNo = requestHeader.get(MyConstant.MEMBER_NO);
+        int memberNo = (int) requestHeader.get(MyConstant.MEMBER_NO);
         memberService.deleteMember(memberNo);
-
         return ResponseEntity.ok().build();
     }
 }

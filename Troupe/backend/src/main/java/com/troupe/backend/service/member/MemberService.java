@@ -48,7 +48,7 @@ public class MemberService {
         Avatar defaultAvatar = avatarService.findDefaultAvatar();
 
         // 프로필 사진 저장
-        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profileImages");
+        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
 
         // 멤버 생성
         Member member = Member.builder()
@@ -94,7 +94,7 @@ public class MemberService {
             throw new DuplicateMemberException();
         }
 
-        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "static");
+        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
 
         foundMember.setPassword(memberForm.getPassword());
         foundMember.setNickname(memberForm.getNickname());
