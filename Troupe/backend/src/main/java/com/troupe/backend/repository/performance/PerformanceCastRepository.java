@@ -8,4 +8,9 @@ import java.util.List;
 
 public interface PerformanceCastRepository extends JpaRepository <PerformanceCast, Integer> {
     List<PerformanceCast> findByPf(Performance performance);
+    PerformanceCast findByPfAndName(Performance performance, String name);
+
+    PerformanceCast findByName(String name);
+
+
 }

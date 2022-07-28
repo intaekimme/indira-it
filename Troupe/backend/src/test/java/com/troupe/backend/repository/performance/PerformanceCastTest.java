@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -25,6 +26,7 @@ public class PerformanceCastTest {
     PerformanceCastRepository pcr;
 
     @Test
+    @DisplayName("캐스팅 생성")
     public void saveTest() {
         Performance performance = pr.getById(1);
 
@@ -59,7 +61,25 @@ public class PerformanceCastTest {
         List<PerformanceCast> performanCastList = pcr.findByPf(performance);
 
         PerformanceCast performanceCast = performanCastList.get(4);
-        performanceCast.
+        performanceCast.setCastNo(6);
+        performanceCast.setName("주호민(광두)");
+
+        PerformanceCast savePerformanceCast = pcr.save(performanceCast);
+        Assertions.assertEquals("주호민(광두)", savePerformanceCast.getName());
     }
+
+    @Test
+    @DisplayName("공연번호와 배우 이름으로 삭제")
+    void 공연번호와_배우_이름으로_삭제(){
+        Performance performance = pr.findById(1).get();
+
+        PerformanceCast performanceCast = pcr.findByPfAndName(performance, "주호민(광두)");
+        pcr.delete(performanceCast);
+
+        Assertions.assertEquals(Optional.empty(), pcr.findById(5));
+    }
+
+
+
 
 }
