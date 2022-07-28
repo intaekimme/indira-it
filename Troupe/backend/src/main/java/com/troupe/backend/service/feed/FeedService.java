@@ -42,9 +42,11 @@ public class FeedService {
     // 피드 등록
     public void insert(FeedInsertRequest request)throws Exception{
         try {
+            memberRepository.findById(request.getMemberNo());
             // 피드 본문
             Feed newFeed = feedRepository.save(request.toFeedEntity());
-
+            if(newFeed!=null)  System.out.println("newFeedNumber:  "+newFeed.getContent());
+            else   System.out.println("new Feed null");
             // 피드 이미지
             for(FeedImage image: request.toFeedImageEntity(newFeed)){
                 feedImageRepository.save(image);

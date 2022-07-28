@@ -32,23 +32,23 @@ class FeedTest {
 
     @Test
     public void insert() throws ParseException {
-        AvatarClothes clothes = new AvatarClothes(1,"url");
-        AvatarEye eyes = new AvatarEye(1,"url");
-        AvatarHair hair = new AvatarHair(1,"url");
-        AvatarMouth mouth = new AvatarMouth(1,"url");
-        AvatarNose nose = new AvatarNose(1,"url");
-        AvatarShape shape = new AvatarShape(1,"url");
-        Member member  = new Member(3,"email","password","nickname","description", MemberType.PERFORMER,"url",false, clothes,eyes,hair,mouth,nose,shape);
-        Feed feed = new Feed(1,member,"insertTest",false,null);
-        Feed feedSave = feedRepository.save(feed);
-        Assertions.assertThat(feedSave.getContent()).isEqualTo("insertTest");
+//        AvatarClothes clothes = new AvatarClothes(1,"url");
+//        AvatarEye eyes = new AvatarEye(1,"url");
+//        AvatarHair hair = new AvatarHair(1,"url");
+//        AvatarMouth mouth = new AvatarMouth(1,"url");
+//        AvatarNose nose = new AvatarNose(1,"url");
+//        AvatarShape shape = new AvatarShape(1,"url");
+//        Member member  = new Member(3,"email","password","nickname","description", MemberType.PERFORMER,"url",false, clothes,eyes,hair,mouth,nose,shape);
+//        Feed feed = new Feed(1,member,"insertTest",false,null);
+//        Feed feedSave = feedRepository.save(feed);
+//        Assertions.assertThat(feedSave.getContent()).isEqualTo("insertTest");
 //        Assertions.assertEquals("insertTest",feedSave.getContent());
 //        Member member = memberRepository.getById(3);
 //
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-//        Feed feed = Feed.builder().member(member).content("content").isRemoved(false).createdTime(dateFormat.parse("20220724")).build();
-//        feedRepository.save(feed);
-
+//        Feed feed = Feed.builder().member(member).content("content").isRemoved(false).build();
+        Feed feedSave =  feedRepository.save(Feed.builder().member(memberRepository.getById(3)).content("content").isRemoved(false).build());
+        Assertions.assertThat(feedSave.getContent()).isEqualTo("content");
     }
 
     @Test
