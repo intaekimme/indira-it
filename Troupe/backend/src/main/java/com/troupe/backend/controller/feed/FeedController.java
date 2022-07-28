@@ -45,8 +45,8 @@ public class FeedController {
     @PostMapping("/test")
     public String test(@RequestParam MultipartFile file) throws Exception{
         try{
-            service.upload(file,"static");
-            return "success";
+//            service.upload(file,"static");
+            return  service.upload(file,"static");
         }catch (Exception e){
             return "fail";
         }

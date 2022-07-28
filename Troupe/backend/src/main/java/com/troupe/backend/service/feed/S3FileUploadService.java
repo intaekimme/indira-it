@@ -31,11 +31,11 @@ public class S3FileUploadService {
     }
     //S3로 파일 업로드 하기
     private String upload(File uploadFile, String dirName){
-        String fileName = dirName = "/" + UUID.randomUUID()+uploadFile.getName();
+        String fileName = dirName + "/" + UUID.randomUUID()+uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
 //        saveFile(fileName.substring(1));
         removeNewFile(uploadFile);
-        return uploadImageUrl;
+        return fileName;
     }
     //S3로 업로드
     private String putS3(File uploadFile, String fileName){

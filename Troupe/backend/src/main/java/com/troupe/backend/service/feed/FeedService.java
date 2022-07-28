@@ -4,6 +4,7 @@ import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.domain.feed.FeedTag;
 import com.troupe.backend.domain.feed.Tag;
+import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.FeedEntityToDto;
 import com.troupe.backend.dto.feed.FeedInsertRequest;
 import com.troupe.backend.repository.feed.FeedImageRepository;
@@ -42,9 +43,10 @@ public class FeedService {
     // 피드 등록
     public void insert(FeedInsertRequest request)throws Exception{
         try {
-            memberRepository.findById(request.getMemberNo());
+            // 현재 로그인 한 멤버번호 가져오기
+             Optional<Member> member =  memberRepository.findById(request.getMemberNo());
             // 피드 본문
-            Feed newFeed = feedRepository.save(request.toFeedEntity());
+            Feed newFeed = feedRepository.save(request.toFeedEntity(member.get()));
             if(newFeed!=null)  System.out.println("newFeedNumber:  "+newFeed.getContent());
             else   System.out.println("new Feed null");
             // 피드 이미지
