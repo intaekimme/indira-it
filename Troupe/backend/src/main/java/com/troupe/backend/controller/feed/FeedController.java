@@ -1,4 +1,4 @@
-package com.troupe.backend.contorller2.feed;
+package com.troupe.backend.controller.feed;
 
 import com.troupe.backend.dto.feed.FeedInsertRequest;
 import com.troupe.backend.service.feed.FeedService;
