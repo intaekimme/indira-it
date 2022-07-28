@@ -17,7 +17,7 @@ public class GlobalExceptionAdvice {
         e.printStackTrace();
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("message", e.getMessage());
-        return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
+        return new ResponseEntity(resultMap, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateMemberException.class)
@@ -26,6 +26,14 @@ public class GlobalExceptionAdvice {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("message", e.getMessage());
         return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity handleDuplicateMemberException(Exception e) {
+        e.printStackTrace();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("message", e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
