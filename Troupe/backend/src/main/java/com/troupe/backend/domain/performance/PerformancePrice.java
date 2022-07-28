@@ -30,4 +30,21 @@ public class PerformancePrice implements Serializable {
     private String seat;
 
     private int price;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setPf(Performance pf) {
+        this.pf = pf;
+    }
+
+    public void setSeat(String seat) {
+        this.seat = seat;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
 }

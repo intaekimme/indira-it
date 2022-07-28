@@ -56,17 +56,17 @@ public class PerformanceReviewTest {
     }
 
     @Test
-    @DisplayName("공연후기 리스트 불러오기")
+    @DisplayName("공연번호에 해당하는 후기 리스트 불러오기")
     public void findByPfNo(){
         Performance performance = performanceRepository.findById(1).get();
 
         List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
 
-        Assertions.assertEquals(3, performanceReviewList.size());
+        Assertions.assertEquals(6, performanceReviewList.size());
     }
 
     @Test
-    @DisplayName("후기 번호 찾기")
+    @DisplayName("후기 번호로 댓글 찾기")
     public void findById(){
         PerformanceReview performanceReview = performanceReviewRepository.findById(1).get();
 
@@ -86,17 +86,37 @@ public class PerformanceReviewTest {
 
 
     @Test
-    @DisplayName("후기 번호의 대댓글들 불러오기")
-    void 후기대댓글(){
-
+    @Transactional
+    @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
+    void findByParentPerformanceReviewTest1(){
+        Performance performance = performanceRepository.findById(1).get();
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
+        for(PerformanceReview performanceReview : performanceReviewList){
+            List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
+            System.out.println(childrenPerformanceReview.size());
+        }
     }
 
     @Test
-    @DisplayName("후기 번호에 해당하는 후기 삭제")
+    @Transactional
+    @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
+    void findByParentPerformanceReviewTest2(){
+        Performance performance = performanceRepository.findById(1).get();
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
+        for(PerformanceReview performanceReview : performanceReviewList){
+            List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
+            System.out.println(childrenPerformanceReview.size());
+        }
+    }
+
+    @Test
+    @DisplayName("후기 번호에 해당하는 후기만 삭제, 대댓글은 삭제 안함")
     void 후기삭제(){
         PerformanceReview performanceReview = performanceReviewRepository.findById(1).get();
-
         performanceReview.setRemoved(true);
+        PerformanceReview savePerformanceReview = performanceReviewRepository.save(performanceReview);
+
+        Assertions.assertTrue(savePerformanceReview.getRemoved());
     }
 
 }

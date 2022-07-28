@@ -11,13 +11,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
-@Builder
+
 @Getter
+@Builder
 @Entity
 @Table(name = "tb_performance")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Performance implements Serializable {
+public class Performance implements Serializable{
 
     @Id
     @Column(name = "pf_no")
@@ -120,4 +121,5 @@ public class Performance implements Serializable {
                 ", isRemoved=" + isRemoved +
                 '}';
     }
+
 }

@@ -47,12 +47,15 @@ public class PerformanceReview implements Serializable {
     // 자기참조 부모 하나
     @ManyToOne(targetEntity = PerformanceReview.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_review_no")
-    private PerformanceReview parentPerformanceReview;
+    private PerformanceReview parentPerformanceReviewNo;
 
     // 자기참조 자식 여러개
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPerformanceReview")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPerformanceReviewNo")
     private List<PerformanceReview> childrenPerformanceReview;
 
+    public boolean getRemoved(){
+        return this.isRemoved;
+    }
 
     public void setId(Integer id) {
         this.id = id;
