@@ -1,6 +1,6 @@
 package com.troupe.backend.domain.member;
 
-import com.troupe.backend.domain.character.*;
+import com.troupe.backend.domain.avatar.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,29 +36,29 @@ public class Member implements Serializable {
 
     private boolean isRemoved;
 
-    @ManyToOne(targetEntity = CharacterClothes.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = AvatarClothes.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "clothes_no")
-    private CharacterClothes clothes;
+    private AvatarClothes clothes;
 
-    @ManyToOne(targetEntity = CharacterEye.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = AvatarEye.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "eye_no")
-    private CharacterEye eye;
+    private AvatarEye eye;
 
-    @ManyToOne(targetEntity = CharacterHair.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = AvatarHair.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "hair_no")
-    private CharacterHair hair;
+    private AvatarHair hair;
 
-    @ManyToOne(targetEntity = CharacterMouth.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = AvatarMouth.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "mouth_no")
-    private CharacterMouth mouth;
+    private AvatarMouth mouth;
 
-    @ManyToOne(targetEntity = CharacterNose.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = AvatarNose.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "nose_no")
-    private CharacterNose nose;
+    private AvatarNose nose;
 
-    @ManyToOne(targetEntity = CharacterShape.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = AvatarShape.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "shape_no")
-    private CharacterShape shape;
+    private AvatarShape shape;
 
     public void setMemberNo(Integer memberNo) {
         this.memberNo = memberNo;
@@ -92,32 +92,32 @@ public class Member implements Serializable {
         isRemoved = removed;
     }
 
-    public void setClothes(CharacterClothes clothes) {
+    public void setClothes(AvatarClothes clothes) {
         this.clothes = clothes;
     }
 
-    public void setEye(CharacterEye eye) {
+    public void setEye(AvatarEye eye) {
         this.eye = eye;
     }
 
-    public void setHair(CharacterHair hair) {
+    public void setHair(AvatarHair hair) {
         this.hair = hair;
     }
 
-    public void setMouth(CharacterMouth mouth) {
+    public void setMouth(AvatarMouth mouth) {
         this.mouth = mouth;
     }
 
-    public void setNose(CharacterNose nose) {
+    public void setNose(AvatarNose nose) {
         this.nose = nose;
     }
 
-    public void setShape(CharacterShape shape) {
+    public void setShape(AvatarShape shape) {
         this.shape = shape;
     }
 
     /** memberNo 빼고 전부 받는 생성자 */
-    public Member(String email, String password, String nickname, String description, MemberType memberType, String profileImageUrl, boolean isRemoved, CharacterClothes clothes, CharacterEye eye, CharacterHair hair, CharacterMouth mouth, CharacterNose nose, CharacterShape shape) {
+    public Member(String email, String password, String nickname, String description, MemberType memberType, String profileImageUrl, boolean isRemoved, AvatarClothes clothes, AvatarEye eye, AvatarHair hair, AvatarMouth mouth, AvatarNose nose, AvatarShape shape) {
         this.memberNo = 1;
         this.email = email;
         this.password = password;
@@ -137,12 +137,12 @@ public class Member implements Serializable {
     /** 이메일, 닉네임만 받는 생성자 */
     public Member(String email, String nickname) {
         this(email, "mypassword", nickname, "mydescription", MemberType.AUDIENCE, "myprofileImageUrl", false,
-                new CharacterClothes(1, "url"),
-                new CharacterEye(1, "url"),
-                new CharacterHair(1, "url"),
-                new CharacterMouth(1, "url"),
-                new CharacterNose(1, "url"),
-                new CharacterShape(1, "url"));
+                new AvatarClothes(1, "url"),
+                new AvatarEye(1, "url"),
+                new AvatarHair(1, "url"),
+                new AvatarMouth(1, "url"),
+                new AvatarNose(1, "url"),
+                new AvatarShape(1, "url"));
     }
 
     @Override

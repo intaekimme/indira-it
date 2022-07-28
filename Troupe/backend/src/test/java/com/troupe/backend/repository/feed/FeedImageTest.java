@@ -1,11 +1,7 @@
 package com.troupe.backend.repository.feed;
 
-import com.troupe.backend.domain.character.*;
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedImage;
-import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.domain.member.MemberType;
-import com.troupe.backend.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
