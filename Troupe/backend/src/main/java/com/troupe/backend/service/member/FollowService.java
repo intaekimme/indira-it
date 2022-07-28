@@ -6,8 +6,6 @@ import com.troupe.backend.repository.member.FollowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
-
 @Service
 public class FollowService {
     private FollowRepository followRepository;
@@ -27,7 +25,7 @@ public class FollowService {
     /**
      * 팔로우 관계 삭제
      */
-    public void unfollow(Member star, Member fan) throws NoSuchElementException {
+    public void unfollow(Member star, Member fan)  {
         followRepository.delete(followRepository.findByStarMemberAndFanMember(star, fan).get());
     }
 

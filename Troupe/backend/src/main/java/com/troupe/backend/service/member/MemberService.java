@@ -1,14 +1,13 @@
 package com.troupe.backend.service.member;
 
-import com.troupe.backend.exception.DuplicateMemberException;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.Avatar;
 import com.troupe.backend.dto.member.MemberForm;
+import com.troupe.backend.exception.DuplicateMemberException;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -30,7 +29,7 @@ public class MemberService {
     /**
      * 회원 등록
      */
-    public Member saveMember(MemberForm memberForm) throws DuplicateMemberException {
+    public Member saveMember(MemberForm memberForm) {
         // 중복 체크
         if (isDuplicateMember(memberForm)) {
             throw new DuplicateMemberException();
@@ -63,7 +62,7 @@ public class MemberService {
     /**
      * 회원 탈퇴
      */
-    public void deleteMember(int memberNo) throws NoSuchElementException {
+    public void deleteMember(int memberNo) {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
         foundMember.setRemoved(true);
     }
@@ -71,7 +70,7 @@ public class MemberService {
     /**
      * 회원 기본정보 수정
      */
-    public Member updateMember(int memberNo, MemberForm memberForm) throws DuplicateMemberException, NoSuchElementException {
+    public Member updateMember(int memberNo, MemberForm memberForm) {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
 
         if (isDuplicateMember(foundMember.getMemberNo(), memberForm)) {
