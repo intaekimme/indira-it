@@ -8,6 +8,7 @@ import com.troupe.backend.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -22,28 +23,47 @@ public class MemberService {
     }
 
     @Autowired
-    public void setCharacterService(AvatarService avatarService) {
+    public void setAvatarService(AvatarService avatarService) {
         this.avatarService = avatarService;
     }
 
     /**
      * 회원 등록
      */
-    public Member saveMember(int memberNo, MemberForm memberForm) throws DuplicateMemberException {
+    public Member saveMember(MemberForm memberForm) throws DuplicateMemberException {
+        // 중복 체크
         if (isDuplicateMember(memberForm)) {
             throw new DuplicateMemberException();
         }
 
-        Avatar defaultAvatar = avatarService.getDefaultAvatar();
-        Member member = null;
+        // 기본 아바타 조회
+        Avatar defaultAvatar = avatarService.findDefaultAvatar();
 
+        // 멤버 생성
+        Member member = Member.builder()
+                .email(memberForm.getEmail())
+                .password(memberForm.getPassword())
+                .nickname(memberForm.getNickname())
+                .description(memberForm.getDescription())
+                .memberType(memberForm.getMemberType())
+                .profileImageUrl(memberForm.getProfileImageUrl())
+                .isRemoved(false)
+                .clothes(defaultAvatar.getAvatarClothes())
+                .eye(defaultAvatar.getAvatarEye())
+                .hair(defaultAvatar.getAvatarHair())
+                .mouth(defaultAvatar.getAvatarMouth())
+                .nose(defaultAvatar.getAvatarNose())
+                .shape(defaultAvatar.getAvatarShape())
+                .build();
+
+        // 저장
         return memberRepository.save(member);
     }
 
     /**
      * 회원 탈퇴
      */
-    public void deleteMember(int memberNo) {
+    public void deleteMember(int memberNo) throws NoSuchElementException {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
         foundMember.setRemoved(true);
     }
@@ -51,10 +71,10 @@ public class MemberService {
     /**
      * 회원 기본정보 수정
      */
-    public Member updateMember(int memberNo, MemberForm memberForm) throws DuplicateMemberException {
+    public Member updateMember(int memberNo, MemberForm memberForm) throws DuplicateMemberException, NoSuchElementException {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
 
-        if (isDuplicateMember(memberNo, memberForm)) {
+        if (isDuplicateMember(foundMember.getMemberNo(), memberForm)) {
             throw new DuplicateMemberException();
         }
 
@@ -121,14 +141,23 @@ public class MemberService {
         return found.isPresent();
     }
 
+    /**
+     * 아이디로 멤버 찾기
+     */
     public Optional<Member> findById(int memberNo) {
         return memberRepository.findById(memberNo);
     }
 
+    /**
+     * 이메일로 멤버 찾기
+     */
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
 
+    /**
+     * 닉네임으로 멤버 찾기
+     */
     public Optional<Member> findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname);
     }

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** 캐릭터의 눈/코/입 등의 각 요소들이 모여서 만드는 캐릭터 전체 */
+/** 아바타의 옷/눈/머리카락/입/코/얼굴형 등의 요소들이 모여서 만드는 아바타 전체 */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
