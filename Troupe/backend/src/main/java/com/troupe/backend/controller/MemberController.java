@@ -65,14 +65,16 @@ public class MemberController {
     }
 
     @PostMapping("/signup/email")
-    private ResponseEntity checkDuplicateEmail(@RequestBody String email) {
+    private ResponseEntity checkDuplicateEmail(@RequestBody Map<String, Object> requestBody) {
+        String email = (String) requestBody.get("email");
+
         Map<String, Object> resultMap = new HashMap<>();
 
         if (memberService.isDuplicateEmail(email)) {
             resultMap.put(MyConstant.MESSAGE, "이미 사용 중인 이메일입니다.\n");
             return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
         } else {
-            resultMap.put(MyConstant.MESSAGE, "사용 가능한 이메일입니다\n");
+            resultMap.put(MyConstant.MESSAGE, "사용 가능한 이메일입니다.\n");
             return new ResponseEntity(resultMap, HttpStatus.OK);
         }
 
@@ -80,14 +82,15 @@ public class MemberController {
     }
 
     @PostMapping("/signup/nickname")
-    private ResponseEntity checkDuplicateNickname(@RequestBody String nickname) {
-        Map<String, Object> resultMap = new HashMap<>();
+    private ResponseEntity checkDuplicateNickname(@RequestBody Map<String, Object> requestBody) {
+        String nickname = (String) requestBody.get(MyConstant.NICKNAME);
 
+        Map<String, Object> resultMap = new HashMap<>();
         if (memberService.isDuplicateNickname(nickname)) {
             resultMap.put(MyConstant.MESSAGE, "이미 사용 중인 닉네임입니다.\n");
             return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
         } else {
-            resultMap.put(MyConstant.MESSAGE, "사용 가능한 닉네임입니다\n");
+            resultMap.put(MyConstant.MESSAGE, "사용 가능한 닉네임입니다.\n");
             return new ResponseEntity(resultMap, HttpStatus.OK);
         }
     }
