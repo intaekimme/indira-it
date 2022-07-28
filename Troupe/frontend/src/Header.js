@@ -1,29 +1,31 @@
 import styled from "./css/a.module.css"
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Link from '@mui/material/Link';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Link from '@mui/material/Link';
 
-const useStyles = makeStyles({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-});
+const useStyles = () => {
+  return ({
+    list: {
+      width: 250,
+    },
+    fullList: {
+      width: 'auto',
+    },
+  })
+};
 
 export default function Header() {
   const classes = useStyles();
@@ -79,12 +81,9 @@ export default function Header() {
     <div id="header" style={{ width: "100%", background: "#EEE3D0", textAlign: "center", fontSize: "50px" }}>
       <div style={{ float: "left", width: "100px"}}>
         {[{ anchor: 'left', icon: <MenuIcon fontSize="large"/> },
-          // { anchor: 'right', icon: <MenuIcon fontSize="large"/> },
-          // { anchor: 'top', icon: <MenuIcon fontSize="large"/> },
-          // { anchor: 'bottom', icon: <MenuIcon fontSize="large" /> }
         ].map((object) => (
           <React.Fragment key={object.anchor}>
-            <Button onClick={toggleDrawer(object.anchor, true)}>{object.icon}</Button>
+            <Button onClick={toggleDrawer(object.anchor, true)} className={ styled.header }>{object.icon}</Button>
             <Drawer anchor={object.anchor} open={drawer[object.anchor]} onClose={toggleDrawer(object.anchor, false)}>
               {list(object.anchor, <MenuIcon fontSize="large" />,
                 [{
@@ -97,9 +96,11 @@ export default function Header() {
       </div>
       <Link href="/" className={ styled.header }>Troupe</Link>
       <div style={{ float: "right", width: "100px" }}>
-        { login ? 
+        { login ?
+        [{ anchor: 'right', icon: <AccountCircleIcon fontSize="large"/> },
+        ].map((object) => (
           <React.Fragment key='right'>
-            <Button onClick={toggleDrawer('right', true)}><AccountCircleIcon fontSize="large" /></Button>
+            <Button onClick={toggleDrawer('right', true)} className={ styled.header }>{object.icon}</Button>
             <Drawer anchor='right' open={drawer['right']} onClose={toggleDrawer('right', false)}>
               {list("right", <AccountCircleIcon fontSize="large" />,
                 [{ text: "마이페이지", element: <Link href="/profile" className={ styled.header }>마이페이지</Link>, icon: <AccountCircleIcon fontSize="large" /> },
@@ -107,8 +108,9 @@ export default function Header() {
               }
             </Drawer>
           </React.Fragment>
-          : 
-          <Link href="/login" className={ styled.header }><AccountCircleIcon fontSize="large" /></Link>
+        ))
+        :
+        <Link href="/login" className={ styled.header }><AccountCircleIcon fontSize="large" /></Link>
         }
       </div>
     </div>

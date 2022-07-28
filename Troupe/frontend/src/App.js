@@ -1,13 +1,13 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from './Header';
-import PerfList from './routes/PerfList';
-import FeedList from './routes/FeedList';
-import Login from './routes/Login';
-import SignUp from './routes/SignUp';
-import ResetPw from './routes/ResetPw';
-import Profile from './routes/Profile';
-import Test from './routes/Test';
+import PerfList from './components/PerfList';
+import FeedList from './components/FeedList';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
+import ResetPw from './components/ResetPw';
+import Profile from './components/Profile';
+import Test from './components/Test';
 
 function App() {
   return (
