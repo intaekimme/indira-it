@@ -59,12 +59,10 @@ public class FeedInsertRequest {
 //    }
 
     //dto와 FeedEntity 연결 (current time 생략)
-    public Feed toFeedEntity(){
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    public Feed toFeedEntity(Member member){
         System.out.println("toFeedEntity -> memberNo: "+memberNo);
-        System.out.println("toFeedEntity -> memberRepository: "+memberRepository.getById(memberNo));
         return Feed.builder()
-                .member(memberRepository.getById(memberNo))
+                .member(member)
                 .content(content)
                 .isRemoved(false)
                 .build();
@@ -76,6 +74,7 @@ public class FeedInsertRequest {
 
         List<FeedImage> list = new ArrayList<>();
         for (MultipartFile file: images){
+            System.out.println("오나 파일? "+file.getName());
             // multipartFile을 url로 바꿔주는 service후 list에 FeedImage 객체로 저장
             String url = s3FileUploadService.upload(file,"feed");
             System.out.println("오나 url? "+url);
