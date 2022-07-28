@@ -81,12 +81,9 @@ export default function Header() {
     <div id="header" style={{ width: "100%", background: "#EEE3D0", textAlign: "center", fontSize: "50px" }}>
       <div style={{ float: "left", width: "100px"}}>
         {[{ anchor: 'left', icon: <MenuIcon fontSize="large"/> },
-          // { anchor: 'right', icon: <MenuIcon fontSize="large"/> },
-          // { anchor: 'top', icon: <MenuIcon fontSize="large"/> },
-          // { anchor: 'bottom', icon: <MenuIcon fontSize="large" /> }
         ].map((object) => (
           <React.Fragment key={object.anchor}>
-            <Button onClick={toggleDrawer(object.anchor, true)}>{object.icon}</Button>
+            <Button onClick={toggleDrawer(object.anchor, true)} className={ styled.header }>{object.icon}</Button>
             <Drawer anchor={object.anchor} open={drawer[object.anchor]} onClose={toggleDrawer(object.anchor, false)}>
               {list(object.anchor, <MenuIcon fontSize="large" />,
                 [{
@@ -103,7 +100,7 @@ export default function Header() {
         [{ anchor: 'right', icon: <AccountCircleIcon fontSize="large"/> },
         ].map((object) => (
           <React.Fragment key='right'>
-            <Button onClick={toggleDrawer('right', true)}><AccountCircleIcon fontSize="large" /></Button>
+            <Button onClick={toggleDrawer('right', true)} className={ styled.header }>{object.icon}</Button>
             <Drawer anchor='right' open={drawer['right']} onClose={toggleDrawer('right', false)}>
               {list("right", <AccountCircleIcon fontSize="large" />,
                 [{ text: "마이페이지", element: <Link href="/profile" className={ styled.header }>마이페이지</Link>, icon: <AccountCircleIcon fontSize="large" /> },

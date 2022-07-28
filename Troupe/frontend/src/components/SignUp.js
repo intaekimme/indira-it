@@ -76,7 +76,6 @@ export default function SignUp() {
   //회원가입버튼 클릭
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event.currentTarget);
     const formData = new FormData(event.currentTarget);
     console.log(formData);
 
