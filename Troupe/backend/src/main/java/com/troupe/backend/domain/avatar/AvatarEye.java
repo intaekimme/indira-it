@@ -9,12 +9,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_avatar_eye")
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
 public class AvatarEye implements Serializable {
     @Id
     private Integer eyeNo;

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class AvatarService {
@@ -81,34 +80,34 @@ public class AvatarService {
         return avatarShapeRepository.findAll();
     }
 
-    private AvatarClothes findClothesById(int clothesNo) throws NoSuchElementException {
+    private AvatarClothes findClothesById(int clothesNo) {
         return avatarClothesRepository.findById(clothesNo).get();
     }
 
-    private AvatarEye findEyeById(int eyeNo) throws NoSuchElementException {
+    private AvatarEye findEyeById(int eyeNo) {
         return avatarEyeRepository.findById(eyeNo).get();
     }
 
-    private AvatarHair findHairById(int hairNo) throws NoSuchElementException {
+    private AvatarHair findHairById(int hairNo) {
         return avatarHairRepository.findById(hairNo).get();
     }
 
-    private AvatarMouth findMouthById(int mouthNo) throws NoSuchElementException {
+    private AvatarMouth findMouthById(int mouthNo) {
         return avatarMouthRepository.findById(mouthNo).get();
     }
 
-    private AvatarNose findNoseById(int noseNo) throws NoSuchElementException {
+    private AvatarNose findNoseById(int noseNo) {
         return avatarNoseRepository.findById(noseNo).get();
     }
 
-    private AvatarShape findShapeById(int shapeNo) throws NoSuchElementException {
+    private AvatarShape findShapeById(int shapeNo) {
         return avatarShapeRepository.findById(shapeNo).get();
     }
 
     /**
      * 기본 아바타를 리턴
      */
-    public Avatar findDefaultAvatar() throws NoSuchElementException {
+    public Avatar findDefaultAvatar() {
         AvatarClothes clothes = findClothesById(1);
         AvatarEye eye = findEyeById(1);
         AvatarHair hair = findHairById(1);
@@ -127,7 +126,7 @@ public class AvatarService {
     /**
      * 요청받은 아바타폼으로 아바타를 찾아와서 리턴
      */
-    public Avatar findAvatar(AvatarForm avatarForm) throws NoSuchElementException {
+    public Avatar findAvatar(AvatarForm avatarForm) {
         AvatarClothes clothes = findClothesById(avatarForm.getClothesNo());
         AvatarEye eye = findEyeById(avatarForm.getEyeNo());
         AvatarHair hair = findHairById(avatarForm.getHairNo());
@@ -146,7 +145,7 @@ public class AvatarService {
     /**
      * 멤버의 아바타를 수정
      */
-    public Avatar updateMemberAvatar(int memberNo, AvatarForm avatarForm) throws NoSuchElementException {
+    public Avatar updateMemberAvatar(int memberNo, AvatarForm avatarForm) {
         Member foundMember = memberRepository.findById(memberNo).get();
 
         Avatar avatar = findAvatar(avatarForm);
