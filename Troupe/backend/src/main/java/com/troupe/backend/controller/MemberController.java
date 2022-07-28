@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +33,8 @@ public class MemberController {
                                     @RequestParam String password,
                                     @RequestParam String nickname,
                                     @RequestParam String description,
-                                    @RequestParam File profileImage) throws IOException {
+                                    @RequestParam MultipartFile profileImage) throws IOException {
         MemberForm memberForm = MemberForm.builder().email(email).password(password).nickname(nickname).description(description).profileImage(profileImage).build();
-
 //    private ResponseEntity register(@RequestBody MemberForm memberForm) throws IOException {
         memberService.saveMember(memberForm);
         return ResponseEntity.ok().build();
