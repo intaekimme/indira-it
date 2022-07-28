@@ -1,4 +1,4 @@
-package com.troupe.backend.service;
+package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Follow;
 import com.troupe.backend.domain.member.Member;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FollowService {
-    FollowRepository followRepository;
+    private FollowRepository followRepository;
 
     @Autowired
     public void setFollowRepository(FollowRepository followRepository) {

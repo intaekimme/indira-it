@@ -1,4 +1,4 @@
-package com.troupe.backend.domain.character;
+package com.troupe.backend.domain.avatar;
 
 import lombok.*;
 
@@ -8,16 +8,18 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tb_character_nose")
+@Table(name = "tb_character_hair")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class CharacterNose implements Serializable {
+public class AvatarHair implements Serializable {
     @Id
-    private Integer noseNo;
+    private Integer hairNo;
 
-    private String noseUrl;
+    private String hairUrl;
+
+
 }
