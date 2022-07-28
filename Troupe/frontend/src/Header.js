@@ -87,7 +87,7 @@ export default function Header() {
 
   return (
     <div id="header" style={{ width: "100%", background: "#EEE3D0", textAlign: "center", fontSize: "50px" }}>
-      <div style={{ float: "left", width: "100px"}}>
+      <div style={{ float: "left", width: "100px", height: "100px"}}>
         {[{ anchor: 'left', icon: <MenuIcon fontSize="large"/> },
         ].map((object) => (
           <React.Fragment key={object.anchor}>
@@ -102,7 +102,7 @@ export default function Header() {
           </React.Fragment>
           ))}
       </div>
-      <Link href="/" className={ styled.header }>Troupe</Link>
+      <div style={{height: "100px"}}><Link href="/" className={ styled.header }>Troupe</Link></div>
       <div style={{ float: "right", width: "100px" }}>
         { login ?
         [{ anchor: 'right', icon: <AccountCircleIcon fontSize="large"/> },
