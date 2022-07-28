@@ -35,4 +35,14 @@ public class PerformanceSave implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
 
+    private boolean isRemoved;
+
+    public boolean getRemoved(){
+        return this.isRemoved;
+    }
+
+    public void setRemoved(boolean isRemoved){
+        this.isRemoved = isRemoved;
+    }
+
 }
