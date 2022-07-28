@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tb_character_eye")
+@Table(name = "tb_avatar_eye")
 @Getter
 @Setter
 @AllArgsConstructor
