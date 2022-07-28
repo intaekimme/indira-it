@@ -35,8 +35,16 @@ export default function Header() {
     bottom: false,
     right: false,
   });
-  const [login, setLogin] = React.useState(false);
+  const [login, setLogin] = React.useState(window.sessionStorage.getItem('loginCheck') === "true");
 
+  const logout =  () =>{
+    window.sessionStorage.setItem('loginCheck', false);
+    window.sessionStorage.setItem('loginUser', null);
+    setLogin(false);
+    alert('로그아웃 되었습니다.');
+    console.log(login);
+    window.location.href='/';
+  }
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -104,7 +112,7 @@ export default function Header() {
             <Drawer anchor='right' open={drawer['right']} onClose={toggleDrawer('right', false)}>
               {list("right", <AccountCircleIcon fontSize="large" />,
                 [{ text: "마이페이지", element: <Link href="/profile" className={ styled.header }>마이페이지</Link>, icon: <AccountCircleIcon fontSize="large" /> },
-                { text: "로그아웃", element: <Link href="/test" className={ styled.header }>로그아웃</Link>, icon: <LogoutIcon fontSize="large" /> }])
+                { text: "로그아웃", element: <Link className={ styled.header } onClick={logout}>로그아웃</Link>, icon: <LogoutIcon fontSize="large" /> }])
               }
             </Drawer>
           </React.Fragment>
