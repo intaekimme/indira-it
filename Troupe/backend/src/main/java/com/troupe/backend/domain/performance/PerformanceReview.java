@@ -53,4 +53,33 @@ public class PerformanceReview implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPerformanceReview")
     private List<PerformanceReview> childrenPerformanceReview;
 
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setPfNo(Performance pfNo) {
+        this.pfNo = pfNo;
+    }
+
+    public void setMemberNo(Member memberNo) {
+        this.memberNo = memberNo;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setModified(boolean modified) {
+        isModified = modified;
+    }
+
+    public void setRemoved(boolean removed) {
+        isRemoved = removed;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
 }
