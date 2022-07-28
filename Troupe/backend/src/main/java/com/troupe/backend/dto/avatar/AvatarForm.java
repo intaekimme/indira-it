@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-/** 멤버가 캐릭터 수정 등을 요청했을 때 프론트로부터 받는 폼 */
+/** 멤버가 아바타 수정 등을 요청했을 때 프론트로부터 받는 폼 */
 public class AvatarForm {
     private int clothesNo;
     private int eyeNo;
