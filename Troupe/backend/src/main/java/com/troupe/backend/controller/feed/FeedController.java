@@ -22,11 +22,11 @@ public class FeedController {
     @Autowired
     private final FeedService feedService;
 
-    @Autowired
-    private final S3FileUploadService service;
+//    @Autowired
+//    private final S3FileUploadService service;
     // responsebody로 수정
     @PostMapping
-    public ResponseEntity insert(@RequestParam("images") List<MultipartFile> images,
+    public ResponseEntity insertFeed(@RequestParam("images") List<MultipartFile> images,
                                  @RequestParam("memberNo")int memberNo,
                                  @RequestParam("content") String content,
                                  @RequestParam("tags") List<String> tags) throws IOException {
@@ -45,12 +45,11 @@ public class FeedController {
     }
     // responsebody로 수정
     @PatchMapping
-    public ResponseEntity update(@RequestParam("feedNo") int feedNo,
+    public ResponseEntity updateFeed(@RequestParam("feedNo") int feedNo,
                                  @RequestParam(name = "images",required = false) List<MultipartFile> images,
                                  @RequestParam(name = "deletedImages", required = false) List<Integer> imageNo,
                                  @RequestParam(name = "content", required = false) String content,
-                                 @RequestParam(name = "tags", required = false) List<String> tags,
-                                 @RequestParam(name = "deletedTags",required = false) List<Integer> tagNo) throws IOException {
+                                 @RequestParam(name = "tags", required = false) List<String> tags) throws IOException {
 
         try {
             FeedInsertRequest request = new FeedInsertRequest();
@@ -59,7 +58,6 @@ public class FeedController {
             request.setImageNo(imageNo);
             request.setContent(content);
             request.setTags(tags);
-            request.setTagNo(tagNo);
 //            System.out.println(request.getFeedNo()+" "+request.getImageNo()+" "+request.getContent()+" "+request.getImages()+" "+request.getTags()+" "+request.getTagNo());
             feedService.update(request);
             return new ResponseEntity("Feed update SUCCESS", HttpStatus.CREATED);
@@ -69,11 +67,21 @@ public class FeedController {
         }
     }
 
-    @PatchMapping("/test")
-    public String  delete(@RequestParam String url) throws  IOException {
-        service.deleteFile(url);
-        return "success";
+    @PatchMapping("/{feedNo}/del")
+    public ResponseEntity deleteFeed(@PathVariable int feedNo) throws IOException {
+        try {
+            feedService.delete(feedNo);
+            return new ResponseEntity("Feed delete SUCCESS", HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Feed delete FAIL", HttpStatus.BAD_REQUEST);
+        }
     }
+//    @PatchMapping("/test")
+//    public String  delete(@RequestParam String url) throws  IOException {
+//        service.deleteFile(url);
+//        return "success";
+//    }
 //    @PostMapping("/test")
 //    public String test(@RequestParam MultipartFile file) throws Exception{
 //        try{

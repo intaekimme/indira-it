@@ -67,7 +67,7 @@ public class FeedConverter {
     public List<Tag> toTagEntity(List<String> tags){
         List<Tag> list = new ArrayList<>();
         for(String tagName:tags){
-            list.add(Tag.builder().name(tagName).build());
+            list.add(Tag.builder().name(tagName.trim()).build());
 //            System.out.println("toTagImageEntity -> "+tagName);
         }
         return list;

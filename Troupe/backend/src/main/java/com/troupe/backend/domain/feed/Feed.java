@@ -24,6 +24,7 @@ public class Feed implements Serializable {
     @JoinColumn(name = "member_no")
     private Member member;
     private String content;
+
     private boolean isRemoved;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,5 +34,5 @@ public class Feed implements Serializable {
         this.member = member;
         this.content = content;
     }
-
+    public void setRemoved (boolean removed) { this.isRemoved=removed; }
 }

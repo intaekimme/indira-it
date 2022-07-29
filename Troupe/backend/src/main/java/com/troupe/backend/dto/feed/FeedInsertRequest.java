@@ -15,9 +15,9 @@ import java.util.List;
 public class FeedInsertRequest {
     private int feedNo;
     private List<String> tags;
-    private List<Integer> imageNo;
+
     private List<MultipartFile> images;
-    private List<Integer> tagNo;
+    private List<Integer> imageNo;
     private int memberNo;
     private String content;
     private boolean isRemoved;
