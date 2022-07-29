@@ -2,7 +2,7 @@ package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Follow;
 import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.exception.DuplicatedFollowException;
+import com.troupe.backend.exception.member.DuplicatedFollowException;
 import com.troupe.backend.repository.member.FollowRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;

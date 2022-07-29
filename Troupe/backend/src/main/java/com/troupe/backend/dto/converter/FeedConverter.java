@@ -5,7 +5,7 @@ import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.feed.FeedInsertRequest;
-import com.troupe.backend.service.feed.S3FileUploadService;
+import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;

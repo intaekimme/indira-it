@@ -3,7 +3,7 @@ package com.troupe.backend.service.member;
 import com.troupe.backend.domain.avatar.*;
 import com.troupe.backend.dto.avatar.*;
 import com.troupe.backend.repository.avatar.*;
-import com.troupe.backend.service.feed.S3FileUploadService;
+import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

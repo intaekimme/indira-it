@@ -2,6 +2,7 @@ package com.troupe.backend.service.feed;
 
 import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.repository.feed.FeedImageRepository;
+import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
