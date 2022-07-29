@@ -3,6 +3,7 @@ package com.troupe.backend.controller.Performance;
 
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.dto.Performance.PerformanceForm;
+import com.troupe.backend.dto.Performance.PerformanceResponse;
 import com.troupe.backend.dto.Performance.PerformanceSearchForm;
 import com.troupe.backend.service.Performance.PerformancePriceService;
 import com.troupe.backend.service.Performance.PerformanceService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -73,15 +75,26 @@ public class PerformanceController {
     }
 
     /**
-     * 공연 목록 조회
+     * 공연 목록 조회, 최근 생성 순
+     * @return
+     */
+    @GetMapping("/list")
+    public ResponseEntity<List<PerformanceResponse>> performanceList(){
+        List<PerformanceResponse> performanceResponseList =  performanceService.findAll();
+        return ResponseEntity.ok().
+                body(performanceResponseList);
+    }
+
+    /**
+     * 공연 목록 조회(검색 및 필터 기능 포함)
      * @param requestHeader : id 정보
      * @param performanceSearchForm : key, queryWord, genere(?)
      * @return
      */
-    @GetMapping("/list")
-    public ResponseEntity performanceList(@RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceSearchForm performanceSearchForm){
-        return null;
-    }
+//    @GetMapping("/list")
+//    public ResponseEntity performanceList2(@RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceSearchForm performanceSearchForm){
+//        return null;
+//    }
 
     /**
      * 공연 조회 상세
@@ -92,5 +105,7 @@ public class PerformanceController {
     public ResponseEntity performanceDetail(@PathVariable int pfNo){
         return null;
     }
+
+
 
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,6 +119,16 @@ public class PerformanceTest {
             System.out.println(pf.getTitle());
         }
         Assertions.assertTrue(performanceList.size() > 0);
+    }
+
+    @Test
+    @DisplayName("공연 목록 조회, 생성 시간 순 정렬")
+    public void 공연_목록_조회_생성_시간_순_정렬(){
+        List<Performance> performanceList = performanceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdTime"));
+
+        for(Performance p : performanceList){
+            System.out.println(p.getId() +" "+p.getTitle()+" "+p.getCreatedTime());
+        }
     }
 
 }
