@@ -28,4 +28,10 @@ public class Feed implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
+
+    public Feed(Member member,String content){
+        this.member = member;
+        this.content = content;
+    }
+
 }

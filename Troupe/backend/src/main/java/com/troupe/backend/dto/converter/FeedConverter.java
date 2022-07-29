@@ -3,13 +3,17 @@ package com.troupe.backend.dto.converter;
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.domain.feed.Tag;
+import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.feed.FeedInsertRequest;
 import com.troupe.backend.service.feed.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -35,11 +39,22 @@ public class FeedConverter {
         return new FeedInsertRequest(tags,memberNo,feed.getContent(),feed.isRemoved(),feed.getCreatedTime(),images);
     }
 
-    // FeedInsertDto -> FeedImageEntity 연결 (해당 Feed 매개변수로)
+    // FeedInsertDto -> FeedEntity
+    public Feed toFeedEntity(Member member, String content){
+        LocalDate localDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        Date now = java.sql.Date.valueOf(localDate);
+        return Feed.builder()
+                .member(member)
+                .content(content)
+                .isRemoved(false)
+                .createdTime(now)
+                .build();
+    }
+    // FeedInsertDto -> FeedImageEntity
     public List<FeedImage> toFeedImageEntity(Feed feed, List<MultipartFile> images) throws  Exception{
         List<FeedImage> list = new ArrayList<>();
         for (MultipartFile file: images){
-            System.out.println("coming file? "+file.getOriginalFilename()+"   "+file);
+//            System.out.println("coming file? "+file.getOriginalFilename()+"   "+file);
 
             // multipartFile을 url로 바꿔주는 service후 list에 FeedImage 객체로 저장
             String url = s3FileUploadService.upload(file,"feed");
@@ -53,7 +68,7 @@ public class FeedConverter {
         List<Tag> list = new ArrayList<>();
         for(String tagName:tags){
             list.add(Tag.builder().name(tagName).build());
-            System.out.println("toTagImageEntity -> "+tagName);
+//            System.out.println("toTagImageEntity -> "+tagName);
         }
         return list;
     }
