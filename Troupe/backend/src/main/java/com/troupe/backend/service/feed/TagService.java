@@ -32,21 +32,23 @@ public class TagService {
             for(Tag tag: tags){
                 Optional<Tag> tagInsert = tagRepository.findByName(tag.getName());
                 if(tagInsert.isEmpty()){
-                    tagRepository.save(tag);
+                    Tag newTag = tagRepository.save(tag);
+                    feedTagRepository.save(FeedTag.builder().tag(newTag).feed(feed).build());
+                    continue;
+                }else{
+                    if(selectFeedTag(feed,tagInsert.get()) == null)
+                        feedTagRepository.save(FeedTag.builder().tag(tagInsert.get()).feed(feed).build());
                 }
-                feedTagRepository.save(FeedTag.builder().tag(tag).feed(feed).build());
             }
-
         }catch (Exception e){
             log.info(e.toString());
         }
     }
-    public void update(Feed feed){
-//        feedTagRepository.save(FeedTag.builder().feedTagNo())
-    }
-    public void delete(FeedTag feedtag){
+    public void deleteAll(Feed feed){
         try {
-            feedTagRepository.delete(feedtag);
+            List<FeedTag> feedTags = feedTagRepository.findAllByFeed(feed);
+            for(FeedTag feedtag: feedTags)
+                 feedTagRepository.delete(feedtag);
         }catch (Exception e){
             log.info(e.toString());
         }
@@ -54,11 +56,5 @@ public class TagService {
     public FeedTag selectFeedTag (Feed feed, Tag tag){
         return feedTagRepository.findByFeedAndTag(feed,tag);
     }
-    public List<Tag> selectTags(List<Integer> taglist){
-        List<Tag> list = new ArrayList<>();
-        for(Integer no:taglist){
-            list.add(tagRepository.findById(no).get());
-        }
-        return list;
-    }
+
 }

@@ -63,7 +63,7 @@ public class FeedService {
         try{
             Optional<Feed> feed = feedRepository.findById(request.getFeedNo());
             Member member =  memberRepository.findById(feed.get().getMember().getMemberNo()).get();
-            System.out.println("member, feed : "+feed.get().getFeedNo()+" "+member.getMemberNo());
+//            System.out.println("member, feed : "+feed.get().getFeedNo()+" "+member.getMemberNo());
             if(feed.isPresent()){
                 Feed updateFeed = Feed.builder().feedNo(feed.get().getFeedNo()).member(member).content(request.getContent()).build();
                 feedRepository.save(updateFeed);
@@ -71,33 +71,36 @@ public class FeedService {
 
             // 삭제된 사진 있다면
             if(request.getImageNo() !=null){
-                System.out.println("delete images size : "+request.getImageNo().size());
+//                System.out.println("delete images size : "+request.getImageNo().size());
                 feedImageService.delete(request.getImageNo());
             }
 
             // 추가된 사진 있다면
             if(request.getImages() != null){
-                System.out.println("update images : "+request.getImages().size());
+//                System.out.println("update images : "+request.getImages().size());
                 List<FeedImage> feedImageList =  converter.toFeedImageEntity(feed.get(),request.getImages());
                 feedImageService.insert(feedImageList);
             }
 
-            // 삭제된 태그 있다면
-            if(request.getTagNo()!= null){
-                System.out.println("delete tags : "+request.getTagNo().size());
-                List<Tag> tagList = tagService.selectTags(request.getTagNo());
-                for(Tag tag: tagList){
-                    FeedTag delTag = tagService.selectFeedTag(feed.get(),tag);
-                    tagService.delete(delTag);
-                }
-            }
-
-            // 추가된 태그 있다면
+            // 태그 수정
             if(request.getTags()!= null){
-                System.out.println("update tags : "+request.getTags().size());
+//                System.out.println("update tags : "+request.getTags().size());
+                // number 없는 태그들일수있따
                 List<Tag> tags = converter.toTagEntity(request.getTags());
+                tagService.deleteAll(feed.get());
                 tagService.insert(tags,feed.get());
             }
+
+        }catch (Exception e){
+            log.info(e.toString());
+        }
+    }
+
+    public void  delete(int feedNo){
+        try{
+            Feed delFeed = feedRepository.findById(feedNo).get();
+            delFeed.setRemoved(true);
+            feedRepository.save(delFeed);
         }catch (Exception e){
             log.info(e.toString());
         }
