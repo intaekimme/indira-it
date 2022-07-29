@@ -2,7 +2,7 @@ package com.troupe.backend.controller.feed;
 
 import com.troupe.backend.dto.feed.FeedInsertRequest;
 import com.troupe.backend.service.feed.FeedService;
-import com.troupe.backend.service.feed.S3FileUploadService;
+import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

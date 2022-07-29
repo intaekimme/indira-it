@@ -5,9 +5,9 @@ import com.troupe.backend.dto.avatar.Avatar;
 import com.troupe.backend.dto.avatar.AvatarForm;
 import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
-import com.troupe.backend.exception.DuplicatedMemberException;
+import com.troupe.backend.exception.member.DuplicatedMemberException;
 import com.troupe.backend.repository.member.MemberRepository;
-import com.troupe.backend.service.feed.S3FileUploadService;
+import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -177,7 +177,6 @@ public class MemberService {
      */
     public Avatar updateMemberAvatar(int memberNo, AvatarForm avatarForm) {
         Member foundMember = memberRepository.findById(memberNo).get();
-
         Avatar avatar = avatarService.findAvatar(avatarForm);
 
         foundMember.setClothes(avatar.getAvatarClothes());

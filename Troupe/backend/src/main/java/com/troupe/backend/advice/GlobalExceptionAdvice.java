@@ -29,9 +29,8 @@ public class GlobalExceptionAdvice {
         return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
     }
 
-
     @ExceptionHandler(Exception.class)
-    public ResponseEntity handleDuplicateMemberException(Exception e) {
+    public ResponseEntity handleException(Exception e) {
         e.printStackTrace();
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.MESSAGE, e.getMessage());

@@ -3,7 +3,7 @@ package com.troupe.backend.service.member;
 import com.troupe.backend.domain.member.Guestbook;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.guestbook.GuestbookForm;
-import com.troupe.backend.exception.DuplicatedGuestbookException;
+import com.troupe.backend.exception.member.DuplicatedGuestbookException;
 import com.troupe.backend.repository.member.GuestbookRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;

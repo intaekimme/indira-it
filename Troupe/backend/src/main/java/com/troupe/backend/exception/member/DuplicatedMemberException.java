@@ -1,4 +1,6 @@
-package com.troupe.backend.exception;
+package com.troupe.backend.exception.member;
+
+import com.troupe.backend.exception.DuplicatedException;
 
 public class DuplicatedMemberException extends DuplicatedException {
     public DuplicatedMemberException() {
