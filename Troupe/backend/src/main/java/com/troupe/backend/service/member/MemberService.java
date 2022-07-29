@@ -75,7 +75,7 @@ public class MemberService {
                 .shape(defaultAvatar.getAvatarShape())
                 .build();
 
-        // 저장
+        // 저장 
         return memberRepository.save(member);
     }
 
