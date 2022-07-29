@@ -1,7 +1,10 @@
 package com.troupe.backend.controller.feed;
 
+import com.troupe.backend.domain.feed.FeedLike;
 import com.troupe.backend.dto.feed.FeedInsertRequest;
 import com.troupe.backend.dto.feed.FeedResponse;
+import com.troupe.backend.service.feed.FeedILikeService;
+import com.troupe.backend.service.feed.FeedSaveService;
 import com.troupe.backend.service.feed.FeedService;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,12 @@ import java.util.List;
 public class FeedController {
     @Autowired
     private final FeedService feedService;
+
+    @Autowired
+    private final FeedILikeService feedILikeService;
+
+    @Autowired
+    private  final FeedSaveService feedSaveService;
 
 //    @Autowired
 //    private final S3FileUploadService service;
@@ -59,6 +68,17 @@ public class FeedController {
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity searchFeeds (@RequestParam(name = "tags") List<String> tags) throws IOException {
+        try {
+            List<FeedResponse> feedResponse = feedService.selectAllBySearch(tags);
+            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Feed search FAIL", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -113,6 +133,26 @@ public class FeedController {
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed delete FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PatchMapping("/{feedNo}/like")
+    public ResponseEntity likeFeed(@PathVariable int feedNo, @RequestParam int memberNo) throws IOException {
+        try {
+            boolean check = feedILikeService.insert(memberNo,feedNo);
+            return new ResponseEntity(check, HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Feed Like FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PatchMapping("/{feedNo}/save")
+    public ResponseEntity saveFeed(@PathVariable int feedNo, @RequestParam int memberNo) throws IOException {
+        try {
+            boolean check = feedSaveService.insert(memberNo,feedNo);
+            return new ResponseEntity(check, HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Feed Save FAIL", HttpStatus.BAD_REQUEST);
         }
     }
 //    @PatchMapping("/test")
