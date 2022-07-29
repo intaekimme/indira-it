@@ -83,4 +83,18 @@ public class PerformancePriceTest {
 
         Assertions.assertEquals("S", performancePrice.getSeat());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("공연 번호에 해당하는 가격 모두 삭제")
+    void 공연_번호에_해당하는_가격_모두_삭제(){
+        Performance performance = performanceRepository.findById(7).get();
+
+        List<PerformancePrice> performancePriceList = performancePriceRepository.findByPf(performance);
+
+        for(PerformancePrice p : performancePriceList){
+            performancePriceRepository.deleteById(p.getId());
+        }
+        Assertions.assertEquals(6, performancePriceRepository.findAll().size());
+    }
 }
