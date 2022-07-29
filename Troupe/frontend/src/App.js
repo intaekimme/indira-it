@@ -9,6 +9,7 @@ import SignUp from './components/SignUp';
 import ResetPw from './components/ResetPw';
 import Profile from './components/Profile';
 import Test from './components/Test';
+import PerfDetail from './components/PerfDetail';
 
 function App() {
   const loginCheck = ()=> {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/resetpw" element={ <ResetPw /> }></Route>
           <Route path="/profile" element={ <Profile /> }></Route>
           <Route path="/test" element={ <Test /> }></Route>
+          <Route path="/perf/detail" element={ <PerfDetail /> }></Route>
         </Routes>
       </Router>
     </div>

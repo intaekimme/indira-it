@@ -18,6 +18,7 @@ import Favorite from '@mui/icons-material/Favorite';
 
 
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
+// 유저 분간을 어떻게 하지
 
 function Copyright() {
   return (
@@ -34,15 +35,17 @@ function Copyright() {
 
 function TagSearchForm() {
   return (
-    console.log('gotcha')
+    <div>
+
+    </div>
   );
 }
 
 function PerfExhToggle(){
   return (
     <ButtonGroup size='large' sx={{pt:7, justifyContent:'center'}}>
-      <Button sx={{color:'black',background:'orange', fontFamily:'IBM Plex Sans KR'}}>Performance Feed</Button>
-      <Button sx={{color:'black',background:'pink', fontFamily:'IBM Plex Sans KR'}}>Exhibition Feed</Button>
+      <Button href='/perf/list' sx={{color:'black',background:'orange', fontFamily:'IBM Plex Sans KR'}}>Performance</Button>
+      <Button href='/feed/list' sx={{color:'black',background:'pink', fontFamily:'IBM Plex Sans KR'}}>Feed</Button>
     </ButtonGroup>
   )
 }
@@ -96,7 +99,7 @@ export default function Album() {
                   elevation={0}
                 >
                   <Typography gutterBottom variant="h6" component="h3">
-                    <img src='https://source.unsplash.com/random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
+                    <img src='https://source.unsplash.com/random' alt='random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                     SmartToy
                   </Typography>
                   <CardMedia 
