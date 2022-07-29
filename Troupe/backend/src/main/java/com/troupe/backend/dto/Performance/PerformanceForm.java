@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Performanceform {
+public class PerformanceForm {
 
     private String title;
     private String location;
@@ -58,7 +58,7 @@ public class Performanceform {
                 .build();
     }
 
-    public List<PerformancePrice> createPerformancePriceEntities(Performance performance){
+    public void createPerformancePriceEntities(Performance performance){
         List<Seat> seatList = this.price;
         List<PerformancePrice> entities = new ArrayList<PerformancePrice>();
         for(Seat seat : seatList){
@@ -69,7 +69,10 @@ public class Performanceform {
                     .build();
             entities.add(p);
         }
-        return entities;
+    }
+
+    public void updatePerformancePriceEntities(Performance performance){
+
     }
 
 }
