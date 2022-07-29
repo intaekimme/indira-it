@@ -329,5 +329,4 @@ public class AvatarService {
         avatarShapeRepository.delete(found);
     }
 
-
 }

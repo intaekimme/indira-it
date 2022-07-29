@@ -21,5 +21,11 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
      */
     Performance findByTitleLike(String title);
 
+    /**
+     * 유저가 등록한 공연 리스트
+     * @param member
+     * @return
+     */
     List<Performance> findByMemberNo(Member member);
+
 }
