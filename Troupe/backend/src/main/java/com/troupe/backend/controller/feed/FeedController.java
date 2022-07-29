@@ -1,6 +1,7 @@
 package com.troupe.backend.controller.feed;
 
 import com.troupe.backend.dto.feed.FeedInsertRequest;
+import com.troupe.backend.dto.feed.FeedResponse;
 import com.troupe.backend.service.feed.FeedService;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,42 @@ public class FeedController {
 
 //    @Autowired
 //    private final S3FileUploadService service;
+
+    @GetMapping("/{feedNo}")
+    public ResponseEntity selectFeed(@PathVariable int feedNo) throws IOException {
+        try{
+            FeedResponse feedResponse  = feedService.select(feedNo);
+            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Feed select FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    // 조건별 피드 목록받기
+    @GetMapping("/list/{change}")
+    public ResponseEntity selectAllFeed(@PathVariable String change) throws IOException {
+        try{
+            List<FeedResponse> feedResponse = feedService.selectAll(change);
+            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // 공연 등록자가 등록한 피드 목록 불러오기
+    @GetMapping("/list/performer/{memberNo}")
+    public ResponseEntity selectAllFeedByPerformer(@PathVariable int memberNo) throws IOException {
+        try{
+            List<FeedResponse> feedResponse = feedService.selectAllByMember(memberNo);
+            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // responsebody로 수정
     @PostMapping
     public ResponseEntity insertFeed(@RequestParam("images") List<MultipartFile> images,

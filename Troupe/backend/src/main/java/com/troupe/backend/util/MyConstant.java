@@ -19,6 +19,6 @@ public final class MyConstant {
     public static final String PROFILE_IMAGE_URL = "profileImageUrl";
     public static final String ACCESS_TOKEN = "accessToken";
     public static final String CONTENT = "content";
-    public static final String FILE_SERVER_URL = "https://hongjoo.troupe.project.s3.ap-northeast-2.amazonaws.com/";
+    public static final String FILE_SERVER_URL = "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/";
 
 }

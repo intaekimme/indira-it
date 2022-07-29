@@ -1,5 +1,6 @@
 package com.troupe.backend.service.feed;
 
+import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.repository.feed.FeedImageRepository;
 import com.troupe.backend.util.S3FileUploadService;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -44,5 +46,10 @@ public class FeedImageService {
         }catch (Exception e){
             log.info(e.toString());
         }
+    }
+
+    public List<FeedImage> selectAll(Feed feed){
+        List<FeedImage> list =  feedImageRepository.findAllByFeedOrderByImageNo(feed);
+        return list;
     }
 }

@@ -4,7 +4,8 @@ import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.dto.feed.FeedInsertRequest;
+import com.troupe.backend.dto.feed.FeedResponse;
+import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,22 +24,35 @@ public class FeedConverter {
     S3FileUploadService s3FileUploadService;
 
     // response : Feed 상세
-    public FeedInsertRequest toFeedDto(Feed feed, List<FeedImage> feedImage, List<Tag> taglist, int memberNo){
-        List<MultipartFile> images = new ArrayList<>();
-        List<String> tags = new ArrayList<>();
-        for(FeedImage insert: feedImage){
-            //parse to multipartFile
-//            MultipartFile files =
-//            images.add(files);
-
-        }
-
-        for(Tag insert: taglist){
-            tags.add(insert.getName());
-        }
-        return new FeedInsertRequest(tags,memberNo,feed.getContent(),feed.isRemoved(),feed.getCreatedTime(),images);
+    public FeedResponse feedResponse(Feed feed, List<FeedImage> feedImage, List<Tag> taglist){
+        FeedResponse response = new FeedResponse();
+        response.setFeedNo(feed.getFeedNo());
+        response.setMemberNo(feed.getMember().getMemberNo());
+        response.setNickname(feed.getMember().getNickname());
+        response.setTags(tagList(taglist));
+        response.setContent(feed.getContent());
+        // totallikecount
+        response.setImages(imageList(feedImage));
+        return response;
     }
 
+    //tag -> String tag
+    public List<String> tagList(List<Tag> taglist){
+        List<String> tagList = new ArrayList<>();
+        for(Tag tag:taglist){
+            tagList.add(tag.getName());
+        }
+        return tagList;
+    }
+
+    //feedImage -> String url
+    public List<String> imageList(List<FeedImage> imagelist){
+        List<String> imageList = new ArrayList<>();
+        for(FeedImage image:imagelist){
+            imageList.add(MyConstant.FILE_SERVER_URL +image.getImageUrl());
+        }
+        return imageList;
+    }
     // FeedInsertDto -> FeedEntity
     public Feed toFeedEntity(Member member, String content){
         LocalDate localDate = LocalDate.now(ZoneId.of("Asia/Seoul"));

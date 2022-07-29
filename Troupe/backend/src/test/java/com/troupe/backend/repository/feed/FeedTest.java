@@ -1,9 +1,6 @@
 package com.troupe.backend.repository.feed;
 
-import com.troupe.backend.domain.avatar.*;
 import com.troupe.backend.domain.feed.Feed;
-import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.domain.member.MemberType;
 import com.troupe.backend.repository.member.MemberRepository;
 //import org.junit.jupiter.api.Assertions;
 import org.assertj.core.api.Assertions;
@@ -63,7 +60,7 @@ class FeedTest {
     @Test
     @DisplayName("피드 등록한 사람의 피드 목록 최신순 정렬")
     public void selectAllByPerformer() {
-        List<Feed> feeds = feedRepository.findByMemberOrderByCreatedTimeDesc(memberRepository.getById(3));
+        List<Feed> feeds = feedRepository.findAllByMemberOrderByCreatedTimeDesc(memberRepository.getById(3));
 
         Assertions.assertThat(feeds.size()).isEqualTo(3);
         Assertions.assertThat(feeds.get(0).getFeedNo()).isEqualTo(5);
