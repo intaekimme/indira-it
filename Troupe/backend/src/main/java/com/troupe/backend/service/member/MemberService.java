@@ -10,11 +10,13 @@ import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.feed.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MemberService {
     private MemberRepository memberRepository;
     private AvatarService avatarService;
@@ -88,7 +90,7 @@ public class MemberService {
     public Member deleteMember(int memberNo) {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
         foundMember.setRemoved(true);
-        return memberRepository.save(foundMember);
+        return foundMember;
     }
 
     /**
@@ -106,13 +108,14 @@ public class MemberService {
             imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
         }
 
+        foundMember.setEmail(memberForm.getEmail());
         foundMember.setPassword(memberForm.getPassword());
         foundMember.setNickname(memberForm.getNickname());
         foundMember.setDescription(memberForm.getDescription());
         foundMember.setMemberType(memberForm.getMemberType());
         foundMember.setProfileImageUrl(imageUrl);
 
-        return memberRepository.save(foundMember);
+        return foundMember;
     }
 
     /**
@@ -169,20 +172,22 @@ public class MemberService {
         return found.isPresent();
     }
 
-    /** 멤버 아바타 수정 */
-    public Member updateAvatar(int memberNo, AvatarForm avatarForm) {
-        Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
+    /**
+     * 멤버의 아바타를 수정
+     */
+    public Avatar updateMemberAvatar(int memberNo, AvatarForm avatarForm) {
+        Member foundMember = memberRepository.findById(memberNo).get();
 
-        System.out.println(avatarForm.toString());
+        Avatar avatar = avatarService.findAvatar(avatarForm);
 
-        foundMember.setClothes(avatarService.findClothesById(avatarForm.getClothesNo()));
-        foundMember.setEye(avatarService.findEyeById(avatarForm.getEyeNo()));
-        foundMember.setHair(avatarService.findHairById(avatarForm.getHairNo()));
-        foundMember.setMouth(avatarService.findMouthById(avatarForm.getMouthNo()));
-        foundMember.setNose(avatarService.findNoseById(avatarForm.getNoseNo()));
-        foundMember.setShape(avatarService.findShapeById(avatarForm.getShapeNo()));
+        foundMember.setClothes(avatar.getAvatarClothes());
+        foundMember.setEye(avatar.getAvatarEye());
+        foundMember.setHair(avatar.getAvatarHair());
+        foundMember.setMouth(avatar.getAvatarMouth());
+        foundMember.setNose(avatar.getAvatarNose());
+        foundMember.setShape(avatar.getAvatarShape());
 
-        return memberRepository.save(foundMember);
+        return avatar;
     }
 
     /**

@@ -1,20 +1,19 @@
 package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.avatar.*;
-import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.*;
 import com.troupe.backend.repository.avatar.*;
-import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.feed.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
 
 @Service
+@Transactional
 public class AvatarService {
-    private MemberRepository memberRepository;
     private AvatarClothesRepository avatarClothesRepository;
     private AvatarEyeRepository avatarEyeRepository;
     private AvatarNoseRepository avatarNoseRepository;
@@ -22,11 +21,6 @@ public class AvatarService {
     private AvatarShapeRepository avatarShapeRepository;
     private AvatarHairRepository avatarHairRepository;
     private S3FileUploadService s3FileUploadService;
-
-    @Autowired
-    public void setMemberRepository(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
     @Autowired
     public void setAvatarClothesRepository(AvatarClothesRepository avatarClothesRepository) {
@@ -149,24 +143,6 @@ public class AvatarService {
         return avatar;
     }
 
-    /**
-     * 멤버의 아바타를 수정
-     */
-    public Avatar updateMemberAvatar(int memberNo, AvatarForm avatarForm) {
-        Member foundMember = memberRepository.findById(memberNo).get();
-
-        Avatar avatar = findAvatar(avatarForm);
-
-        foundMember.setClothes(avatar.getAvatarClothes());
-        foundMember.setEye(avatar.getAvatarEye());
-        foundMember.setHair(avatar.getAvatarHair());
-        foundMember.setMouth(avatar.getAvatarMouth());
-        foundMember.setNose(avatar.getAvatarNose());
-        foundMember.setShape(avatar.getAvatarShape());
-
-        return avatar;
-    }
-
     // 이하는 아바타 각 파트의 이미지 등록, 수정 삭제
     public AvatarClothes saveClothes(AvatarClothesForm avatarClothesForm) throws IOException {
         // 이미지 서버에 업로드
@@ -191,7 +167,7 @@ public class AvatarService {
         // DB 업데이트
         foundClothes.setClothesUrl(clothesUrl);
 
-        return avatarClothesRepository.save(foundClothes);
+        return foundClothes;
     }
 
     public void deleteClothes(int clothesNo) {
@@ -221,7 +197,7 @@ public class AvatarService {
         // DB 업데이트
         foundEye.setEyeUrl(eyeUrl);
 
-        return avatarEyeRepository.save(foundEye);
+        return foundEye;
     }
 
     public void deleteEye(int eyeNo) {
@@ -252,7 +228,7 @@ public class AvatarService {
         // DB 업데이트
         foundHair.setHairUrl(hairUrl);
 
-        return avatarHairRepository.save(foundHair);
+        return foundHair;
     }
 
     public void deleteHair(int hairNo) {
@@ -283,7 +259,7 @@ public class AvatarService {
         // DB 업데이트
         foundMouth.setMouthUrl(mouthUrl);
 
-        return avatarMouthRepository.save(foundMouth);
+        return foundMouth;
     }
 
     public void deleteMouth(int mouthNo) {
@@ -314,7 +290,7 @@ public class AvatarService {
         // DB 업데이트
         foundNose.setNoseUrl(noseUrl);
 
-        return avatarNoseRepository.save(foundNose);
+        return foundNose;
     }
 
     public void deleteNose(int noseNo) {
@@ -345,7 +321,7 @@ public class AvatarService {
         // DB 업데이트
         foundShape.setShapeUrl(shapeUrl);
 
-        return avatarShapeRepository.save(foundShape);
+        return foundShape;
     }
 
     public void deleteShape(int shapeNo) {

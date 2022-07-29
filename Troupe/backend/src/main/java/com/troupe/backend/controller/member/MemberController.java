@@ -112,7 +112,7 @@ public class MemberController {
 
     @PatchMapping("/{memberNo}/avatar")
     private ResponseEntity updateAvatar(@PathVariable int memberNo, @RequestBody AvatarForm avatarForm) {
-        memberService.updateAvatar(memberNo, avatarForm);
+        memberService.updateMemberAvatar(memberNo, avatarForm);
         return ResponseEntity.ok().build();
     }
 
