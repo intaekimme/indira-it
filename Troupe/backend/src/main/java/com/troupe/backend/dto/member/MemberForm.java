@@ -19,4 +19,6 @@ public class MemberForm {
     private String description;
     private MemberType memberType;
     private MultipartFile profileImage;
+    private boolean isRemoved;
+
 }

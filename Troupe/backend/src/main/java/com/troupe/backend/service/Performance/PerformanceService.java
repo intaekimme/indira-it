@@ -2,7 +2,7 @@ package com.troupe.backend.service.Performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
-import com.troupe.backend.dto.Performance.Performanceform;
+import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.exception.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.member.MemberRepository;
@@ -27,7 +27,7 @@ public class PerformanceService {
      * @return
      */
     @Transactional
-    public Performance addPerformance(int memberNo, Performanceform performanceform){
+    public Performance addPerformance(int memberNo, PerformanceForm performanceform){
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
        return performanceRepository.save(performanceform.createPerformanceEntity(member));
@@ -41,7 +41,7 @@ public class PerformanceService {
      * @return
      */
     @Transactional
-    public Performance updatePerformance(int memberNo, int performanceNo, Performanceform performanceform){
+    public Performance updatePerformance(int memberNo, int performanceNo, PerformanceForm performanceform){
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
         Performance performance = performanceRepository.findById(performanceNo)
@@ -56,6 +56,13 @@ public class PerformanceService {
         Performance performance = performanceRepository.findById(performanceNo)
                 .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
         performance.setRemoved(true);
+    }
+
+    @Transactional(readOnly = true)
+    public Performance findPerformanceByNo(int performanceNo){
+        Performance performance = performanceRepository.findById(performanceNo)
+                .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
+        return performance;
     }
 
 }

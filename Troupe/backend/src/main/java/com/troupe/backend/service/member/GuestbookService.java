@@ -7,11 +7,13 @@ import com.troupe.backend.repository.member.GuestbookRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class GuestbookService {
     private GuestbookRepository guestbookRepository;
 
@@ -47,9 +49,10 @@ public class GuestbookService {
     /**
      * 방명록 삭제
      */
-    public void deleteGuestbook(int guestbookNo) {
+    public Guestbook deleteGuestbook(int guestbookNo) {
         Guestbook foundGuestbook = guestbookRepository.findById(guestbookNo).get();
         foundGuestbook.setRemoved(true);
+        return guestbookRepository.save(foundGuestbook);
     }
 
     /**
@@ -59,7 +62,7 @@ public class GuestbookService {
         Guestbook foundGuestbook = findGuestBook(guestbookForm.getHostMemberNo(), guestbookForm.getVisitorMemberNo()).get();
 
         foundGuestbook.setContent(guestbookForm.getContent());
-        return foundGuestbook;
+        return guestbookRepository.save(foundGuestbook);
     }
 
     /**

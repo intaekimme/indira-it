@@ -2,6 +2,7 @@ package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.Avatar;
+import com.troupe.backend.dto.avatar.AvatarForm;
 import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.exception.DuplicateMemberException;
@@ -9,11 +10,13 @@ import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.feed.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MemberService {
     private MemberRepository memberRepository;
     private AvatarService avatarService;
@@ -39,6 +42,8 @@ public class MemberService {
      * 회원 등록
      */
     public Member saveMember(MemberForm memberForm) throws IOException {
+        System.out.println(memberForm.toString());
+
         // 중복 체크
         if (isDuplicateMember(memberForm)) {
             throw new DuplicateMemberException();
@@ -48,7 +53,10 @@ public class MemberService {
         Avatar defaultAvatar = avatarService.findDefaultAvatar();
 
         // 프로필 사진 저장
-        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+        String imageUrl = "";
+        if (memberForm.getProfileImage() != null && !memberForm.getProfileImage().isEmpty()) {
+            imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+        }
 
         // 멤버 생성
         Member member = Member.builder()
@@ -67,7 +75,7 @@ public class MemberService {
                 .shape(defaultAvatar.getAvatarShape())
                 .build();
 
-        // 저장
+        // 저장 
         return memberRepository.save(member);
     }
 
@@ -79,9 +87,10 @@ public class MemberService {
     /**
      * 회원 탈퇴
      */
-    public void deleteMember(int memberNo) {
+    public Member deleteMember(int memberNo) {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
         foundMember.setRemoved(true);
+        return foundMember;
     }
 
     /**
@@ -94,8 +103,12 @@ public class MemberService {
             throw new DuplicateMemberException();
         }
 
-        String imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+        String imageUrl = "";
+        if (memberForm.getProfileImage() != null && !memberForm.getProfileImage().isEmpty()) {
+            imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+        }
 
+        foundMember.setEmail(memberForm.getEmail());
         foundMember.setPassword(memberForm.getPassword());
         foundMember.setNickname(memberForm.getNickname());
         foundMember.setDescription(memberForm.getDescription());
@@ -157,6 +170,24 @@ public class MemberService {
 
         // 다른 사람의 이메일이라면 중복
         return found.isPresent();
+    }
+
+    /**
+     * 멤버의 아바타를 수정
+     */
+    public Avatar updateMemberAvatar(int memberNo, AvatarForm avatarForm) {
+        Member foundMember = memberRepository.findById(memberNo).get();
+
+        Avatar avatar = avatarService.findAvatar(avatarForm);
+
+        foundMember.setClothes(avatar.getAvatarClothes());
+        foundMember.setEye(avatar.getAvatarEye());
+        foundMember.setHair(avatar.getAvatarHair());
+        foundMember.setMouth(avatar.getAvatarMouth());
+        foundMember.setNose(avatar.getAvatarNose());
+        foundMember.setShape(avatar.getAvatarShape());
+
+        return avatar;
     }
 
     /**
