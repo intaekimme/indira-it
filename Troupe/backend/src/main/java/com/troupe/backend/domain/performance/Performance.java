@@ -11,13 +11,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
-@Builder
+
 @Getter
+@Builder
 @Entity
 @Table(name = "tb_performance")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Performance implements Serializable {
+public class Performance implements Serializable{
 
     @Id
     @Column(name = "pf_no")
@@ -51,5 +52,74 @@ public class Performance implements Serializable {
     private String detailTime;
 
     private boolean isRemoved;
-    
+
+    public boolean getRemoved(){
+        return this.isRemoved;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setMemberNo(Member memberNo) {
+        this.memberNo = memberNo;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setRuntime(Integer runtime) {
+        this.runtime = runtime;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
+
+    public void setCodeNo(Integer codeNo) {
+        this.codeNo = codeNo;
+    }
+
+    public void setDetailTime(String detailTime) {
+        this.detailTime = detailTime;
+    }
+
+    public void setRemoved(boolean removed) {
+        isRemoved = removed;
+    }
+
+    @Override
+    public String toString() {
+        return "Performance{" +
+                "id=" + id +
+                ", memberNo=" + memberNo +
+                ", title='" + title + '\'' +
+                ", location='" + location + '\'' +
+                ", runtime=" + runtime +
+                ", description='" + description + '\'' +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                ", posterUrl='" + posterUrl + '\'' +
+                ", codeNo=" + codeNo +
+                ", detailTime='" + detailTime + '\'' +
+                ", isRemoved=" + isRemoved +
+                '}';
+    }
+
 }

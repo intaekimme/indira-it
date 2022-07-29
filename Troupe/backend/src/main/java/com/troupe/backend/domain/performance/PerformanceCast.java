@@ -32,4 +32,19 @@ public class PerformanceCast implements Serializable {
     @Size(max = 100)
     private String name;
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setCastNo(Integer castNo) {
+        this.castNo = castNo;
+    }
+
+    public void setPf(Performance pf) {
+        this.pf = pf;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

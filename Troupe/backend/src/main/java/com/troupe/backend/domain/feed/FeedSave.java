@@ -32,4 +32,6 @@ public class FeedSave implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
+
+    private boolean isDeleted;
 }
