@@ -1,6 +1,6 @@
 package com.troupe.backend.advice;
 
-import com.troupe.backend.exception.DuplicateMemberException;
+import com.troupe.backend.exception.DuplicatedException;
 import com.troupe.backend.util.MyConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +21,14 @@ public class GlobalExceptionAdvice {
         return new ResponseEntity(resultMap, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DuplicateMemberException.class)
-    public ResponseEntity handleDuplicateMemberException(DuplicateMemberException e) {
+    @ExceptionHandler(DuplicatedException.class)
+    public ResponseEntity handleDuplicateException(DuplicatedException e) {
         e.printStackTrace();
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.MESSAGE, e.getMessage());
         return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleDuplicateMemberException(Exception e) {

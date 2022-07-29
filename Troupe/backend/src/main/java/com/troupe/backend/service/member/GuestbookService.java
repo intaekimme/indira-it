@@ -3,6 +3,7 @@ package com.troupe.backend.service.member;
 import com.troupe.backend.domain.member.Guestbook;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.guestbook.GuestbookForm;
+import com.troupe.backend.exception.DuplicatedGuestbookException;
 import com.troupe.backend.repository.member.GuestbookRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class GuestbookService {
         Member hostMember = memberRepository.findById(guestbookForm.getHostMemberNo()).get();
         Member visitorMember = memberRepository.findById(guestbookForm.getVisitorMemberNo()).get();
 
+        // 한 게스트가 한 호스트에게 하나의 게시글만 작성하도록 한다
+        if (guestbookRepository.findByHostMemberAndVisitorMember(hostMember, visitorMember).isPresent()) {
+            throw new DuplicatedGuestbookException();
+        }
+
         Guestbook guestbook = Guestbook.builder()
                 .hostMember(hostMember)
                 .visitorMember(visitorMember)
@@ -62,7 +68,7 @@ public class GuestbookService {
         Guestbook foundGuestbook = findGuestBook(guestbookForm.getHostMemberNo(), guestbookForm.getVisitorMemberNo()).get();
 
         foundGuestbook.setContent(guestbookForm.getContent());
-        return guestbookRepository.save(foundGuestbook);
+        return foundGuestbook;
     }
 
     /**
