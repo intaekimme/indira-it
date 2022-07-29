@@ -15,4 +15,5 @@ public interface FeedTagRepository extends JpaRepository<FeedTag, Integer> {
     
     // 다중 태그 검색 or(후에 querydsl로 교체..)
     List<FeedTag> findAllByTagIn(List<Tag> tags);
+    FeedTag findByFeedAndTag(Feed feed, Tag tag);
 }
