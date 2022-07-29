@@ -57,4 +57,13 @@ public class TagService {
         return feedTagRepository.findByFeedAndTag(feed,tag);
     }
 
+    public List<Tag> selectAll(Feed feed){
+        List<FeedTag> feedTags = feedTagRepository.findAllByFeed(feed);
+        List<Tag> list = new ArrayList<>();
+        for(FeedTag feedTag: feedTags){
+            list.add(feedTag.getTag());
+        }
+        return list;
+    }
+
 }

@@ -2,18 +2,20 @@ package com.troupe.backend.service.feed;
 
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedImage;
-import com.troupe.backend.domain.feed.FeedTag;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.FeedConverter;
 import com.troupe.backend.dto.feed.FeedInsertRequest;
+import com.troupe.backend.dto.feed.FeedResponse;
 import com.troupe.backend.repository.feed.FeedRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +39,39 @@ public class FeedService {
     @Autowired
     FeedConverter converter;
 
+    public FeedResponse select(int feedNo){
+        Feed feed = feedRepository.findById(feedNo).get();
+        List<FeedImage> feedImages = feedImageService.selectAll(feed);
+        List<Tag> tags = tagService.selectAll(feed);
+        FeedResponse feedResponse = converter.feedResponse(feed, feedImages,tags);
+        return feedResponse;
+    }
+
+    public List<FeedResponse> selectAll(String change){
+        List<FeedResponse> feedResponses = new ArrayList<>();
+        if(change.equals("all")){
+            List<Feed> totalList = feedRepository.findAll(Sort.by(Sort.Direction.DESC,"createdTime"));
+            for(Feed feed: totalList){
+                feedResponses.add(select(feed.getFeedNo()));
+            }
+        }else if(change.equals("follow")){
+
+
+        }else if(change.equals("save")){
+
+        }
+        return feedResponses;
+    }
+
+    public  List<FeedResponse> selectAllByMember(int memberNo){
+        Member member = memberRepository.findById(memberNo).get();
+        List<FeedResponse> feedResponses = new ArrayList<>();
+        List<Feed> totalList = feedRepository.findAllByMemberOrderByCreatedTimeDesc(member);
+        for(Feed feed: totalList){
+            feedResponses.add(select(feed.getFeedNo()));
+        }
+        return feedResponses;
+    }
     // 피드 등록
     public void insert(FeedInsertRequest request) throws Exception{
         try {
