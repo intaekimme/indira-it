@@ -1,8 +1,7 @@
 package com.troupe.backend.service.feed;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -61,6 +61,29 @@ public class S3FileUploadService {
         }
         return Optional.empty();
     }
+
+    // 파일 삭제(수정 시에도 삭제 후 upload하면 됨, AWS S3는 insert, delete 밖에 안됨)
+    public void deleteFile(String fileName){
+        DeleteObjectRequest request = new DeleteObjectRequest(this.bucket,fileName);
+        System.out.println("Deleted : "+fileName);
+        amazonS3Client.deleteObject(request);
+    }
+
+    // 폴더 삭제 (아직은 사용 보류)
+    public void removeFolder(String folderName){
+        ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request().withBucketName(bucket)
+                .withPrefix(folderName+"/");
+        ListObjectsV2Result listObjectsV2Result = amazonS3Client.listObjectsV2(listObjectsV2Request);
+        ListIterator<S3ObjectSummary> listIterator = listObjectsV2Result.getObjectSummaries().listIterator();
+
+        while (listIterator.hasNext()){
+            S3ObjectSummary objectSummary = listIterator.next();
+            DeleteObjectRequest request = new DeleteObjectRequest(bucket, objectSummary.getKey());
+            amazonS3Client.deleteObject(request);
+            System.out.println("Deleted : "+objectSummary.getKey());
+        }
+    }
+
 //    private void saveFile(String url){
 //        if(url!=null){
 //            try{
