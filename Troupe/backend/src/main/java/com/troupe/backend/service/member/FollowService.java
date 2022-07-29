@@ -5,8 +5,10 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.repository.member.FollowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class FollowService {
     private FollowRepository followRepository;
 
