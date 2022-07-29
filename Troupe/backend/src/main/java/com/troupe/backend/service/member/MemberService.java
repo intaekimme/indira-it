@@ -5,7 +5,7 @@ import com.troupe.backend.dto.avatar.Avatar;
 import com.troupe.backend.dto.avatar.AvatarForm;
 import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
-import com.troupe.backend.exception.DuplicateMemberException;
+import com.troupe.backend.exception.DuplicatedMemberException;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.feed.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class MemberService {
 
         // 중복 체크
         if (isDuplicateMember(memberForm)) {
-            throw new DuplicateMemberException();
+            throw new DuplicatedMemberException();
         }
 
         // 기본 아바타 조회
@@ -75,7 +75,7 @@ public class MemberService {
                 .shape(defaultAvatar.getAvatarShape())
                 .build();
 
-        // 저장 
+        // 저장
         return memberRepository.save(member);
     }
 
@@ -100,7 +100,7 @@ public class MemberService {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
 
         if (isDuplicateMember(foundMember.getMemberNo(), memberForm)) {
-            throw new DuplicateMemberException();
+            throw new DuplicatedMemberException();
         }
 
         String imageUrl = "";
