@@ -2,6 +2,7 @@ package com.troupe.backend.service.feed;
 
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedImage;
+import com.troupe.backend.domain.feed.FeedTag;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.FeedConverter;
@@ -69,6 +70,16 @@ public class FeedService {
         List<Feed> totalList = feedRepository.findAllByMemberOrderByCreatedTimeDesc(member);
         for(Feed feed: totalList){
             feedResponses.add(select(feed.getFeedNo()));
+        }
+        return feedResponses;
+    }
+
+    public  List<FeedResponse> selectAllBySearch(List<String> tagList){
+        List<FeedResponse> feedResponses = new ArrayList<>();
+        List<Tag> tags = converter.toTagEntity(tagList);
+        List<FeedTag> feedTags = tagService.selectAllBySearch(tags);
+        for(FeedTag feedTag:feedTags){
+            feedResponses.add(select(feedTag.getFeed().getFeedNo()));
         }
         return feedResponses;
     }

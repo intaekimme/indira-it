@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,22 @@ public class TagService {
             list.add(feedTag.getTag());
         }
         return list;
+    }
+
+    // 중복 수정
+    public List<FeedTag> selectAllBySearch(List<Tag> tagList){
+        List<FeedTag> feeds = new ArrayList<>();
+        HashSet<FeedTag> set = new HashSet<>();
+        for(Tag tag:tagList){
+            List<FeedTag> tmps = feedTagRepository.findAllByTag(tagRepository.findByName(tag.getName()).get());
+           for(FeedTag feedTag:tmps){
+               set.add(feedTag);
+           }
+        }
+        for(FeedTag feedTag:set){
+            feeds.add(feedTag);
+        }
+        return feeds;
     }
 
 }
