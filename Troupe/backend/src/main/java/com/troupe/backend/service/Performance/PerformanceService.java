@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @RequiredArgsConstructor
 @Service
@@ -32,7 +30,7 @@ public class PerformanceService {
     public Performance addPerformance(int memberNo, Performanceform performanceform){
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
-       return performanceRepository.save(performanceform.createEntity(member));
+       return performanceRepository.save(performanceform.createPerformanceEntity(member));
     }
 
     /**
@@ -48,7 +46,7 @@ public class PerformanceService {
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
         Performance performance = performanceRepository.findById(performanceNo)
                 .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
-        return performanceRepository.save(performanceform.updateEntity(member, performance));
+        return performanceRepository.save(performanceform.updatePerformanceEntity(member, performance));
     }
 
     @Transactional

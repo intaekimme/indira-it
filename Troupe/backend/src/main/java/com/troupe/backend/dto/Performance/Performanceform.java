@@ -2,14 +2,16 @@ package com.troupe.backend.dto.Performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
+import com.troupe.backend.domain.performance.PerformancePrice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -21,14 +23,13 @@ public class Performanceform {
     private String location;
     private int runtime;
     private String description;
-    private String posterUrl;
+    private String posterUrl;       //  String에서 List<MultipartFile>
     private int codeNo;
     private String detailTime;
 
-    private String seat;
-    private int price;
+   private List<Seat> price;
 
-    public Performance createEntity(Member member){
+    public Performance createPerformanceEntity(Member member){
         return Performance.builder()
                 .memberNo(member)
                 .title(this.title)
@@ -42,7 +43,7 @@ public class Performanceform {
                 .build();
     }
 
-    public Performance updateEntity(Member member, Performance performance){
+    public Performance updatePerformanceEntity(Member member, Performance performance){
         return Performance.builder()
                 .memberNo(member)
                 .title(this.title)
@@ -55,6 +56,20 @@ public class Performanceform {
                 .detailTime(this.detailTime)
                 .description(this.description)
                 .build();
+    }
+
+    public List<PerformancePrice> createPerformancePriceEntities(Performance performance){
+        List<Seat> seatList = this.price;
+        List<PerformancePrice> entities = new ArrayList<PerformancePrice>();
+        for(Seat seat : seatList){
+            PerformancePrice p = PerformancePrice.builder()
+                    .pf(performance)
+                    .seat(seat.getName())
+                    .price(seat.getPrice())
+                    .build();
+            entities.add(p);
+        }
+        return entities;
     }
 
 }
