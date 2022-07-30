@@ -40,7 +40,7 @@ public class PerformanceService {
     }
 
     /**
-     * 공연 삭제 서비스
+     * 공연 수정 서비스
      * @param memberNo
      * @param performanceNo
      * @param performanceform
@@ -55,13 +55,24 @@ public class PerformanceService {
         return performanceRepository.save(performanceform.updatePerformanceEntity(member, performance));
     }
 
+    /**
+     * 공연 삭제 서비스
+     * @param memberNo
+     * @param performanceNo
+     */
     @Transactional
     public void deletePerformance(int memberNo, int performanceNo){
-        Member member = memberRepository.findById(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
-        Performance performance = performanceRepository.findById(performanceNo)
-                .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
+//        Member member = memberRepository.findById(memberNo)
+//                .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
+//        Performance performance = performanceRepository.findById(performanceNo)
+//                .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
+//        Performance targetPerformance = performanceRepository.findByMemberNoAndId(member, performanceNo);
+//        targetPerformance.setRemoved(true);
+//        performanceRepository.save(targetPerformance);
+
+        Performance performance = performanceRepository.findById(performanceNo).get();
         performance.setRemoved(true);
+        performanceRepository.save(performance);
     }
 
     /**

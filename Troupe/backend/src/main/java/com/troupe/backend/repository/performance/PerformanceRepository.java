@@ -28,4 +28,6 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
      */
     List<Performance> findByMemberNo(Member member);
 
+
+    Performance findByMemberNoAndId(Member member, int pfNo);
 }
