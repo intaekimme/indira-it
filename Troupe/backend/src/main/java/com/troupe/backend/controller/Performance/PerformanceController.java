@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
+
 @CrossOrigin
 @Api("공연 REST API")
 @RequestMapping("/perf")
@@ -66,7 +68,7 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/del")
     public ResponseEntity delete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = (int) requestHeader.get(MyConstant.MEMBER_NO);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
         //  공연 기본 정보 삭제 서비스 호출
         performanceService.deletePerformance(memberNo, pfNo);
         //  공연 좌석 정보 삭제 서비스 호출
