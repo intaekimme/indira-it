@@ -4,7 +4,7 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.PerformanceResponse;
-import com.troupe.backend.dto.Performance.converter.toPerformanceEntity;
+import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.exception.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.member.MemberRepository;
@@ -23,15 +23,15 @@ import java.util.NoSuchElementException;
 @Service
 public class PerformanceService {
 
-    private final PerfomanceImageService perfomanceImageService;
+    private final PerformanceImageService performanceImageService;
     private final PerformanceRepository performanceRepository;
     private final MemberRepository memberRepository;
 
-    private final toPerformanceEntity toPerformanceEntity;
+    private final PerformanceConverter performanceConverter;
 
 
     /**
-     * 공연 등록 서비스
+     * 공연 기본 정보 등록 서비스
      * @param memberNo
      * @param performanceform
      * @return
@@ -43,12 +43,12 @@ public class PerformanceService {
         if(performanceform.getTitle() == null || performanceform.getTitle().isBlank())
             throw new RuntimeException("공연 제목을 입력하세요");
 
-        Performance newPerformance = toPerformanceEntity.whenCreate(performanceform, member);
+        Performance newPerformance = performanceConverter.toPerformanceEntityWhenCreate(performanceform, member);
         return performanceRepository.save(newPerformance);
     }
 
     /**
-     * 공연 수정 서비스
+     * 공연 기본 정보 수정 서비스
      * @param memberNo
      * @param performanceNo
      * @param performanceform
@@ -61,11 +61,12 @@ public class PerformanceService {
         Performance performance = performanceRepository.findById(performanceNo)
                 .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
         //  기존 정보 수정
-        return performanceRepository.save(toPerformanceEntity.whenUpdate(performanceform, member, performance));
+        Performance updatePerformance = performanceConverter.toPerformanceEntityWhenUpdate(performanceform, member, performance);
+        return performanceRepository.save(updatePerformance);
     }
 
     /**
-     * 공연 삭제 서비스
+     * 공연 기본 정보 삭제 서비스
      * @param memberNo
      * @param performanceNo
      */
@@ -86,7 +87,7 @@ public class PerformanceService {
     }
 
     /**
-     * 공연 번호로 특정 공연 찾기
+     * 공연 번호로 특정 공연 기본 정보 찾기
      * @param performanceNo
      * @return
      */
@@ -108,7 +109,7 @@ public class PerformanceService {
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
         for(Performance p : performanceList){
-            List<String> imgUrlList = perfomanceImageService.findPerformanceImagesByPerformance(p);
+            List<String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
             performanceResponseList.add(
                 PerformanceResponse.PerformanceToResponse(p, imgUrlList)
             );

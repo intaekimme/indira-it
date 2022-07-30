@@ -11,9 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ListIterator;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -23,6 +21,14 @@ public class S3FileUploadService {
     // 버킷 이름 동적 할당
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public List<String> upload(List<MultipartFile> multipartFileList, String dirName) throws IOException{
+        List<String> urlList = new ArrayList<>();
+        for(MultipartFile multipartFile : multipartFileList){
+            urlList.add(upload(multipartFile, dirName));
+        }
+        return urlList;
+    }
 
     public String upload(MultipartFile multipartFile, String dirName)throws IOException {
         File uploadFile = convert(multipartFile).orElseThrow(()-> new

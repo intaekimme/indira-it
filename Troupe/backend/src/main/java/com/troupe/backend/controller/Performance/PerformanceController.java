@@ -5,14 +5,18 @@ import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.PerformanceResponse;
 import com.troupe.backend.dto.Performance.PerformanceSearchForm;
+import com.troupe.backend.service.Performance.PerformanceImageService;
 import com.troupe.backend.service.Performance.PerformancePriceService;
 import com.troupe.backend.service.Performance.PerformanceService;
 import com.troupe.backend.util.MyConstant;
+import com.troupe.backend.util.S3FileUploadService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +31,10 @@ public class PerformanceController {
     private final PerformanceService performanceService;
     private final PerformancePriceService performancePriceService;
 
+    private final PerformanceImageService performanceImageService;
+
+    private final S3FileUploadService s3FileUploadService;
+
     /**
      * 공연 등록
      * @param requestHeader
@@ -34,10 +42,16 @@ public class PerformanceController {
      * @return
      */
     @PostMapping
-    public ResponseEntity register(@RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceForm performanceform){
+    public ResponseEntity register(@RequestHeader Map<String, Object> requestHeader,
+                                   @RequestPart(value = "performanceForm") PerformanceForm performanceform,
+                                   @RequestPart(value = "image") List<MultipartFile> multipartFileList) throws IOException {
         int memberNo = getMemberNoFromRequestHeader(requestHeader);
         //  공연 기본 정보 등록 서비스 호출
         Performance performance = performanceService.addPerformance(memberNo, performanceform);
+        //  S3 공연 이미지 업로드 서비스 호출
+        List<String> urlList = s3FileUploadService.upload(multipartFileList, "performance");
+        //  공연 이미지 정보 등록 서비스 호출
+        performanceImageService.addPerformanceImage(urlList, performance);
         //  공연 좌석 정보 등록 서비스 호출
         performancePriceService.addPerformancePrice(performanceform, performance);
         return ResponseEntity.ok().build();

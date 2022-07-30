@@ -3,7 +3,7 @@ package com.troupe.backend.service.Performance;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.Performance.PerformanceForm;
-import com.troupe.backend.dto.Performance.converter.toPerformancePriceEntity;
+import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.repository.performance.PerformancePriceRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class PerformancePriceService {
     private final PerformanceRepository performanceRepository;
     private final PerformancePriceRepository performancePriceRepository;
 
-    private final toPerformancePriceEntity toPerformancePriceEntity;
+    private final PerformanceConverter performanceConverter;
     /**
      * 좌석 등록(가격 생성)
      *
@@ -30,7 +30,7 @@ public class PerformancePriceService {
     @Transactional
     public void addPerformancePrice(PerformanceForm performanceform, Performance performance) {
         //  가격 엔티티들 생성
-        List<PerformancePrice> priceList = toPerformancePriceEntity.whenCreateOrUpdate(performanceform, performance);
+        List<PerformancePrice> priceList = performanceConverter.toPerformancePriceEntityWhenCreateOrUpdate(performanceform, performance);
         performancePriceRepository.saveAll(priceList);
 
     }
@@ -49,7 +49,7 @@ public class PerformancePriceService {
             performancePriceRepository.deleteById(price.getId());
         }
         //  변경사항 입력하기
-        List<PerformancePrice> priceList = toPerformancePriceEntity.whenCreateOrUpdate(performanceform, performance);
+        List<PerformancePrice> priceList = performanceConverter.toPerformancePriceEntityWhenCreateOrUpdate(performanceform, performance);
         performancePriceRepository.saveAll(priceList);
     }
 

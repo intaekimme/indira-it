@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +24,6 @@ public class PerformanceForm {
     private String location;
     private int runtime;
     private String description;
-    private String posterUrl;       //  String에서 List<MultipartFile>
     private int codeNo;
     private String detailTime;
     private List<Seat> price;
