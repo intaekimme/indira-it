@@ -35,11 +35,11 @@ public class PerformanceController {
      */
     @PostMapping
     public ResponseEntity register(@RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceForm performanceform){
-        int memberNo = (int) requestHeader.get(MyConstant.MEMBER_NO);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
         //  공연 기본 정보 등록 서비스 호출
         Performance performance = performanceService.addPerformance(memberNo, performanceform);
         //  공연 좌석 정보 등록 서비스 호출
-        performancePriceService.addPerformancePrice(performance, performanceform);
+        performancePriceService.addPerformancePrice(performanceform, performance);
         return ResponseEntity.ok().build();
     }
 
@@ -52,11 +52,11 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/modify")
     public ResponseEntity modify(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceForm performanceform){
-        int memberNo = (int) requestHeader.get(MyConstant.MEMBER_NO);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
         //  공연 기본 정보 수정 서비스 호출
         Performance performance = performanceService.updatePerformance(memberNo, pfNo, performanceform);
         //  공연 좌석 정보 수정 서비스 호출
-        performancePriceService.updatePerformacePrice(performance, performanceform);
+        performancePriceService.updatePerformancePrice(performanceform, performance);
         return ResponseEntity.ok().build();
     }
 

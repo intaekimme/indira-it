@@ -3,6 +3,7 @@ package com.troupe.backend.service.Performance;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.Performance.PerformanceForm;
+import com.troupe.backend.dto.Performance.converter.toPerformancePriceEntity;
 import com.troupe.backend.repository.performance.PerformancePriceRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class PerformancePriceService {
     private final PerformanceRepository performanceRepository;
     private final PerformancePriceRepository performancePriceRepository;
 
+    private final toPerformancePriceEntity toPerformancePriceEntity;
     /**
      * 좌석 등록(가격 생성)
      *
@@ -26,8 +28,11 @@ public class PerformancePriceService {
      * @param performanceform
      */
     @Transactional
-    public void addPerformancePrice(Performance performance, PerformanceForm performanceform) {
-        performanceform.createPerformancePriceEntities(performance);
+    public void addPerformancePrice(PerformanceForm performanceform, Performance performance) {
+        //  가격 엔티티들 생성
+        List<PerformancePrice> priceList = toPerformancePriceEntity.whenCreateOrUpdate(performanceform, performance);
+        performancePriceRepository.saveAll(priceList);
+
     }
 
     /**
@@ -36,7 +41,7 @@ public class PerformancePriceService {
      * @param performanceform
      */
     @Transactional
-    public void updatePerformacePrice(Performance performance, PerformanceForm performanceform) {
+    public void updatePerformancePrice(PerformanceForm performanceform, Performance performance) {
         //  공연 번호와 매치되는 좌석 모두 찾기
         List<PerformancePrice> performancePriceList = performancePriceRepository.findByPf(performance);
         //  해당 좌석들의 정보를 테이블에서 모두 삭제하기
@@ -44,8 +49,8 @@ public class PerformancePriceService {
             performancePriceRepository.deleteById(price.getId());
         }
         //  변경사항 입력하기
-        performanceform.createPerformancePriceEntities(performance);
-
+        List<PerformancePrice> priceList = toPerformancePriceEntity.whenCreateOrUpdate(performanceform, performance);
+        performancePriceRepository.saveAll(priceList);
     }
 
     /**

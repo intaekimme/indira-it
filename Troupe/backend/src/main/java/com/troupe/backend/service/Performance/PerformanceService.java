@@ -4,6 +4,7 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.PerformanceResponse;
+import com.troupe.backend.dto.Performance.converter.toPerformanceEntity;
 import com.troupe.backend.exception.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.member.MemberRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @RequiredArgsConstructor
@@ -24,6 +26,8 @@ public class PerformanceService {
     private final PerfomanceImageService perfomanceImageService;
     private final PerformanceRepository performanceRepository;
     private final MemberRepository memberRepository;
+
+    private final toPerformanceEntity toPerformanceEntity;
 
 
     /**
@@ -35,8 +39,12 @@ public class PerformanceService {
     @Transactional
     public Performance addPerformance(int memberNo, PerformanceForm performanceform){
         Member member = memberRepository.findById(memberNo)
-                .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
-       return performanceRepository.save(performanceform.createPerformanceEntity(member));
+                .orElseThrow(() -> new NoSuchElementException("존재 하지 않는 유저입니다."));
+        if(performanceform.getTitle() == null || performanceform.getTitle().isBlank())
+            throw new RuntimeException("공연 제목을 입력하세요");
+
+        Performance newPerformance = toPerformanceEntity.whenCreate(performanceform, member);
+        return performanceRepository.save(newPerformance);
     }
 
     /**
@@ -52,7 +60,8 @@ public class PerformanceService {
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
         Performance performance = performanceRepository.findById(performanceNo)
                 .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
-        return performanceRepository.save(performanceform.updatePerformanceEntity(member, performance));
+        //  기존 정보 수정
+        return performanceRepository.save(toPerformanceEntity.whenUpdate(performanceform, member, performance));
     }
 
     /**
@@ -62,15 +71,16 @@ public class PerformanceService {
      */
     @Transactional
     public void deletePerformance(int memberNo, int performanceNo){
-//        Member member = memberRepository.findById(memberNo)
-//                .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
-//        Performance performance = performanceRepository.findById(performanceNo)
-//                .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
-//        Performance targetPerformance = performanceRepository.findByMemberNoAndId(member, performanceNo);
-//        targetPerformance.setRemoved(true);
-//        performanceRepository.save(targetPerformance);
+        //  로그인 로직 대비
+        Member member = memberRepository.findById(memberNo)
+                .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
 
+        //  공연이 이미 삭제되면 예외 처리
         Performance performance = performanceRepository.findById(performanceNo).get();
+        if (performance.getRemoved())
+            throw new PerformanceNotFoundException("존재 하지 않는 공연입니다.");
+
+        //  아니라면 삭제 처리
         performance.setRemoved(true);
         performanceRepository.save(performance);
     }

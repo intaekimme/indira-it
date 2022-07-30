@@ -1,6 +1,8 @@
 package com.troupe.backend.exception.performance;
 
-public class PerformanceNotFoundException extends RuntimeException{
+import java.util.NoSuchElementException;
+
+public class PerformanceNotFoundException extends NoSuchElementException {
     public PerformanceNotFoundException(String message){
         super(message);
     }
