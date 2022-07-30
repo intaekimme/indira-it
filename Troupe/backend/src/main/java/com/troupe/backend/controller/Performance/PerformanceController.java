@@ -45,15 +45,7 @@ public class PerformanceController {
     public ResponseEntity register(@RequestHeader Map<String, Object> requestHeader,
                                    @RequestPart(value = "performanceForm") PerformanceForm performanceform,
                                    @RequestPart(value = "image") List<MultipartFile> multipartFileList) throws IOException {
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        //  공연 기본 정보 등록 서비스 호출
-        Performance performance = performanceService.addPerformance(memberNo, performanceform);
-        //  S3 공연 이미지 업로드 서비스 호출
-        List<String> urlList = s3FileUploadService.upload(multipartFileList, "performance");
-        //  공연 이미지 정보 등록 서비스 호출
-        performanceImageService.addPerformanceImage(urlList, performance);
-        //  공연 좌석 정보 등록 서비스 호출
-        performancePriceService.addPerformancePrice(performanceform, performance);
+        performanceService.register(requestHeader, performanceform, multipartFileList);
         return ResponseEntity.ok().build();
     }
 
@@ -66,11 +58,7 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/modify")
     public ResponseEntity modify(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceForm performanceform){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        //  공연 기본 정보 수정 서비스 호출
-        Performance performance = performanceService.updatePerformance(memberNo, pfNo, performanceform);
-        //  공연 좌석 정보 수정 서비스 호출
-        performancePriceService.updatePerformancePrice(performanceform, performance);
+        performanceService.modify(pfNo, requestHeader, performanceform);
         return ResponseEntity.ok().build();
     }
 
@@ -82,11 +70,7 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/del")
     public ResponseEntity delete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        //  공연 기본 정보 삭제 서비스 호출
-        performanceService.deletePerformance(memberNo, pfNo);
-        //  공연 좌석 정보 삭제 서비스 호출
-        performancePriceService.deletePerformancePrice(pfNo);
+        performanceService.delete(pfNo, requestHeader);
         return ResponseEntity.ok().build();
     }
 

@@ -9,14 +9,24 @@ import com.troupe.backend.exception.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
+import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+
+import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
 
 @RequiredArgsConstructor
@@ -24,11 +34,51 @@ import java.util.NoSuchElementException;
 public class PerformanceService {
 
     private final PerformanceImageService performanceImageService;
+    private final PerformancePriceService performancePriceService;
+    private final S3FileUploadService s3FileUploadService;
     private final PerformanceRepository performanceRepository;
     private final MemberRepository memberRepository;
 
     private final PerformanceConverter performanceConverter;
 
+
+    @Transactional
+    public void register(Map<String, Object> requestHeader,
+                         PerformanceForm performanceform,
+                         List<MultipartFile> multipartFileList) throws IOException{
+
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        //  공연 기본 정보 등록 서비스 호출
+        Performance performance = addPerformance(memberNo, performanceform);
+        //  S3 공연 이미지 업로드 서비스 호출
+        List<String> urlList = s3FileUploadService.upload(multipartFileList, "performance");
+        //  공연 이미지 정보 등록 서비스 호출
+        performanceImageService.addPerformanceImage(urlList, performance);
+        //  공연 좌석 정보 등록 서비스 호출
+        performancePriceService.addPerformancePrice(performanceform, performance);
+    }
+
+    @Transactional
+    public void modify(int pfNo, Map<String, Object> requestHeader, PerformanceForm performanceform){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        //  공연 기본 정보 수정 서비스 호출
+        Performance performance = updatePerformance(memberNo, pfNo, performanceform);
+        //  공연 좌석 정보 수정 서비스 호출
+        performancePriceService.updatePerformancePrice(performanceform, performance);
+    }
+
+    @Transactional
+    public void delete(int pfNo, Map<String, Object> requestHeader){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        //  공연 기본 정보 삭제 서비스 호출
+        Performance deletedPerformance = deletePerformance(memberNo, pfNo);
+        //  기본적인 예외처리 통과함, 공연 번호로 바로
+
+        //  공연 이미지 정보 삭제 서비스 호출
+        performanceImageService.deletePerformanceImage(deletedPerformance);
+        //  공연 좌석 정보 삭제 서비스 호출
+        performancePriceService.deletePerformancePrice(deletedPerformance);
+    }
 
     /**
      * 공연 기본 정보 등록 서비스
@@ -71,19 +121,25 @@ public class PerformanceService {
      * @param performanceNo
      */
     @Transactional
-    public void deletePerformance(int memberNo, int performanceNo){
-        //  로그인 로직 대비
+    public Performance deletePerformance(int memberNo, int performanceNo){
+
+        //  로그인 로직 대비, 인증되지 않은 유저는 삭제하면 안됨.
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
 
+        //  요청으로 보낸 공연번호로 찾은 공연의 유저 정보와 헤더로 넘어온 로그인 유저 정보가 다르면 삭제하면 안됨.
+        Performance found = performanceRepository.findById(performanceNo).get();
+        if(!found.getMemberNo().equals(member))
+            throw new NoSuchElementException("존재 하지 않는 공연입니다.");
+
         //  공연이 이미 삭제되면 예외 처리
-        Performance performance = performanceRepository.findById(performanceNo).get();
-        if (performance.getRemoved())
+        if (found.getRemoved())
             throw new PerformanceNotFoundException("존재 하지 않는 공연입니다.");
 
         //  아니라면 삭제 처리
-        performance.setRemoved(true);
-        performanceRepository.save(performance);
+        found.setRemoved(true);
+        performanceRepository.save(found);
+        return found;
     }
 
     /**

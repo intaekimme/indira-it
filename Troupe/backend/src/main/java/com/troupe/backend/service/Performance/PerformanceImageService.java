@@ -2,8 +2,10 @@ package com.troupe.backend.service.Performance;
 
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceImage;
+import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.repository.performance.PerformanceImageRepository;
+import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class PerformanceImageService {
 
+    private final S3FileUploadService s3FileUploadService;
     private final PerformanceImageRepository performanceImageRepository;
 
     private final PerformanceConverter performanceConverter;
@@ -40,5 +43,19 @@ public class PerformanceImageService {
     public void addPerformanceImage(List<String> urlList, Performance performance) {
         List<PerformanceImage> performanceImageList = performanceConverter.toPerformanceImageEntityWhenCreate(urlList, performance);
         performanceImageRepository.saveAll(performanceImageList);
+    }
+
+    public void deletePerformanceImage(Performance targetPerformance) {
+        //  삭제할 공연 번호에 해당하는 이미지 모두 찾기
+        List<PerformanceImage> performanceImageList = performanceImageRepository.findByPf(targetPerformance);
+        //  S3에서 해당 이미지들 삭제
+        for(PerformanceImage p : performanceImageList) {
+            s3FileUploadService.deleteFile(p.getImageUrl());
+        }
+
+        //  해당 좌석들의 정보를 테이블에서 모두 삭제하기
+        for (PerformanceImage image : performanceImageList) {
+            performanceImageRepository.deleteById(image.getId());
+        }
     }
 }

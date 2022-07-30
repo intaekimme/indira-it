@@ -4,6 +4,7 @@ import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.converter.PerformanceConverter;
+import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.performance.PerformancePriceRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class PerformancePriceService {
-    private final PerformanceService performanceService;
 
     private final PerformanceRepository performanceRepository;
     private final PerformancePriceRepository performancePriceRepository;
@@ -55,13 +55,11 @@ public class PerformancePriceService {
 
     /**
      * 좌석 삭제(가격 삭제)
-     * @param performanceNo
+     * @param targetPerformance
      */
     @Transactional
-    public void deletePerformancePrice(int performanceNo){
-        //  공연 번호와 매치되는 좌석 모두 찾기
-        Performance performance = performanceService.findPerformanceByNo(performanceNo);
-        List<PerformancePrice> performancePriceList = performancePriceRepository.findByPf(performance);
+    public void deletePerformancePrice(Performance targetPerformance){
+        List<PerformancePrice> performancePriceList = performancePriceRepository.findByPf(targetPerformance);
         //  해당 좌석들의 정보를 테이블에서 모두 삭제하기
         for (PerformancePrice price : performancePriceList) {
             performancePriceRepository.deleteById(price.getId());
