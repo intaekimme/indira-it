@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface FeedLikeRepository extends JpaRepository<FeedLike, Integer> {
     Optional<FeedLike> findByMemberAndFeed(Member member, Feed feed);
     //    @Query(value = "select count(feed_no) from tb_feed_like group by feed_no having is_deleted=false ")
-    FeedLike FeedLikeCount(int feedNo);
+//    FeedLike FeedLikeCount(int feedNo);
 
 }

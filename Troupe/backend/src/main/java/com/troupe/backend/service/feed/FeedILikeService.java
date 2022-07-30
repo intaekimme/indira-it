@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,14 +38,17 @@ public class FeedILikeService {
          Member member = memberRepository.findById(memberNo).get();
          Feed feed = feedRepository.findById(feedNo).get();
          Optional<FeedLike> feedLike = feedLikeRepository.findByMemberAndFeed(member,feed);
+         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+         Date now = java.sql.Timestamp.valueOf(localDateTime);
          if(feedLike.isEmpty()){
              // 최초 좋아요 시
-             FeedLike feedLike1 = feedLikeRepository.save(FeedLike.builder().member(member).feed(feed).build());
+             FeedLike feedLike1 = feedLikeRepository.save(FeedLike.builder().member(member).feed(feed).createdTime(now).build());
              return feedLike1.isDeleted();
          }else{
              // 좋아요 스위칭
              boolean check = feedLike.get().isDeleted();
              feedLike.get().setDeleted(!check);
+             feedLike.get().setCreatedTime(now);
              FeedLike feedLike1 = feedLikeRepository.save(feedLike.get());
              return feedLike1.isDeleted();
          }

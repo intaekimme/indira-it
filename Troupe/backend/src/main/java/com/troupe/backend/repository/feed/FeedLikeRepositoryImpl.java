@@ -15,16 +15,16 @@ public abstract class FeedLikeRepositoryImpl implements FeedLikeRepository{
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    @Override
-     public FeedLike FeedLikeCount(int feedNo){
-        QFeedLike qFeedLike = QFeedLike.feedLike;
-        return jpaQueryFactory.selectFrom(qFeedLike)
-                .groupBy(qFeedLike.feed.feedNo)
-                .select(
-                        Projections.bean(
-                                FeedLike.class
-                                ,qFeedLike.feed.feedNo.sum().as("totalSum")
-                        )
-                ).where(qFeedLike.isDeleted.eq(false)).fetchOne();
-    }
+//    @Override
+//     public FeedLike FeedLikeCount(int feedNo){
+//        QFeedLike qFeedLike = QFeedLike.feedLike;
+//        return jpaQueryFactory.selectFrom(qFeedLike)
+//                .groupBy(qFeedLike.feed.feedNo)
+//                .select(
+//                        Projections.bean(
+//                                FeedLike.class
+//                                ,qFeedLike.feed.feedNo.sum().as("totalSum")
+//                        )
+//                ).where(qFeedLike.isDeleted.eq(false)).fetchOne();
+//    }
 }

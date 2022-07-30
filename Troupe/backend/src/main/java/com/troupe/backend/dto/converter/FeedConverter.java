@@ -5,14 +5,13 @@ import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.feed.FeedResponse;
-import com.troupe.backend.repository.feed.FeedLikeRepositoryImpl;
 import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,8 +60,8 @@ public class FeedConverter {
     }
     // FeedInsertDto -> FeedEntity
     public Feed toFeedEntity(Member member, String content){
-        LocalDate localDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        Date now = java.sql.Date.valueOf(localDate);
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
         return Feed.builder()
                 .member(member)
                 .content(content)
