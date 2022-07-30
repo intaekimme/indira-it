@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,5 +21,7 @@ public class FeedResponse {
     private List<String> tags;
     private String content;
     private int likeTotalCount;
+    private Date createdTime;
+
     public void setLikeTotalCount(int count){this.likeTotalCount = count;}
 }

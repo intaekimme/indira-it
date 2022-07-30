@@ -5,6 +5,7 @@ import com.troupe.backend.domain.feed.FeedImage;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.feed.FeedResponse;
+import com.troupe.backend.repository.feed.FeedLikeRepositoryImpl;
 import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class FeedConverter {
     @Autowired
     S3FileUploadService s3FileUploadService;
 
+//    @Autowired
+//    FeedLikeRepositoryImpl feedLikeRepository;
+
     // response : Feed 상세
     public FeedResponse feedResponse(Feed feed, List<FeedImage> feedImage, List<Tag> taglist){
         FeedResponse response = new FeedResponse();
@@ -32,7 +36,9 @@ public class FeedConverter {
         response.setTags(tagList(taglist));
         response.setContent(feed.getContent());
         // totallikecount
+//        response.setLikeTotalCount(feedLikeRepository.FeedLikeCount(feed.getFeedNo()));
         response.setImages(imageList(feedImage));
+        response.setCreatedTime(feed.getCreatedTime());
         return response;
     }
 

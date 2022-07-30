@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -44,5 +45,12 @@ public class FeedSaveService {
              FeedSave feedSave1 = feedSaveRepository.save(feedSave.get());
              return feedSave1.isDeleted();
          }
+     }
+
+     public List<FeedSave> selectAllByMember(Member member){
+         Optional<List<FeedSave>> saveList = feedSaveRepository.findAllByMemberAndIsDeletedOrderByCreatedTime(member,false);
+        if(saveList.isPresent()){
+            return saveList.get();
+        }else return null;
      }
 }

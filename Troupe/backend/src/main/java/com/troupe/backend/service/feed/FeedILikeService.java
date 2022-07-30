@@ -47,4 +47,8 @@ public class FeedILikeService {
              return feedLike1.isDeleted();
          }
      }
+
+//     public List<FeedLike> totalLikeCount(int feedNo){
+//         return feedLikeRepository.FeedLikeCount(feedNo);
+//     }
 }

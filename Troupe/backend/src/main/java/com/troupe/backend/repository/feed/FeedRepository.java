@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface FeedRepository extends JpaRepository<Feed, Integer> {
     Optional<Feed> findById(int feedNo);
+
+    Optional<List<Feed>> findAllByIsRemovedOrderByCreatedTimeDesc(boolean isRemoved);
     List<Feed> findAllByMemberOrderByCreatedTimeDesc(Member member);
 
 }

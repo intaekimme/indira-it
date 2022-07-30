@@ -1,9 +1,6 @@
 package com.troupe.backend.service.feed;
 
-import com.troupe.backend.domain.feed.Feed;
-import com.troupe.backend.domain.feed.FeedImage;
-import com.troupe.backend.domain.feed.FeedTag;
-import com.troupe.backend.domain.feed.Tag;
+import com.troupe.backend.domain.feed.*;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.FeedConverter;
 import com.troupe.backend.dto.feed.FeedInsertRequest;
@@ -38,6 +35,9 @@ public class FeedService {
     FeedImageService feedImageService;
 
     @Autowired
+    FeedSaveService feedSaveService;
+
+    @Autowired
     FeedConverter converter;
 
     public FeedResponse select(int feedNo){
@@ -48,10 +48,10 @@ public class FeedService {
         return feedResponse;
     }
 
-    public List<FeedResponse> selectAll(String change){
+    public List<FeedResponse> selectAll(String change, int memberNo){
         List<FeedResponse> feedResponses = new ArrayList<>();
         if(change.equals("all")){
-            List<Feed> totalList = feedRepository.findAll(Sort.by(Sort.Direction.DESC,"createdTime"));
+            List<Feed> totalList = feedRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false).get();
             for(Feed feed: totalList){
                 feedResponses.add(select(feed.getFeedNo()));
             }
@@ -59,7 +59,10 @@ public class FeedService {
 
 
         }else if(change.equals("save")){
-
+            List<FeedSave> saveLIst =  feedSaveService.selectAllByMember(memberRepository.findById(memberNo).get());
+            for(FeedSave save:saveLIst){
+                feedResponses.add(select(save.getFeed().getFeedNo()));
+            }
         }
         return feedResponses;
     }
