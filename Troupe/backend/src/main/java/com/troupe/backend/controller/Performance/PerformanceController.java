@@ -2,11 +2,13 @@ package com.troupe.backend.controller.Performance;
 
 
 import com.troupe.backend.domain.performance.Performance;
+import com.troupe.backend.dto.Performance.PerformanceDetailResponse;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.PerformanceResponse;
 import com.troupe.backend.dto.Performance.PerformanceSearchForm;
 import com.troupe.backend.service.Performance.PerformanceImageService;
 import com.troupe.backend.service.Performance.PerformancePriceService;
+import com.troupe.backend.service.Performance.PerformanceSaveService;
 import com.troupe.backend.service.Performance.PerformanceService;
 import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
@@ -30,9 +32,8 @@ import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 public class PerformanceController {
     private final PerformanceService performanceService;
     private final PerformancePriceService performancePriceService;
-
     private final PerformanceImageService performanceImageService;
-
+    private final PerformanceSaveService performanceSaveService;
     private final S3FileUploadService s3FileUploadService;
 
     /**
@@ -102,10 +103,28 @@ public class PerformanceController {
      * @return
      */
     @GetMapping("/{pfNo}")
-    public ResponseEntity performanceDetail(@PathVariable int pfNo){
-        return null;
+    public ResponseEntity<PerformanceDetailResponse> performanceDetail(@PathVariable int pfNo){
+        PerformanceDetailResponse performanceDetailResponse = performanceService.detail(pfNo);
+        return ResponseEntity.ok()
+                .body(performanceDetailResponse);
     }
 
+    /**
+     * 공연 북마크 저장
+     * @param pfNo
+     * @param requestHeader
+     * @return
+     */
+    @PostMapping("/{pfNo}/save")
+    public ResponseEntity performanceSave(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
+        performanceSaveService.save(pfNo, requestHeader);
+        return ResponseEntity.ok().build();
+    }
 
+    @PatchMapping("/{pfNo}/save/del")
+    public ResponseEntity performanceSaveDelete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
+        performanceSaveService.delete(pfNo, requestHeader);
+        return ResponseEntity.ok().build();
+    }
 
 }

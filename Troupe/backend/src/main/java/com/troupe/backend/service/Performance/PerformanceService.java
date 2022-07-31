@@ -2,6 +2,7 @@ package com.troupe.backend.service.Performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
+import com.troupe.backend.dto.Performance.PerformanceDetailResponse;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.PerformanceResponse;
 import com.troupe.backend.dto.converter.PerformanceConverter;
@@ -174,4 +175,40 @@ public class PerformanceService {
         return performanceResponseList;
     }
 
+    /**
+     * 공연 상세 정보
+     * 공연 번호로 요청이 들어오면
+     * 해당 공연 기본 정보와 이미지 저장 url을 받아 반환
+     * @param pfNo
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public PerformanceDetailResponse detail(int pfNo) {
+        //  등록되지 않은 공연 조회
+        Performance performance = performanceRepository.findById(pfNo)
+                .orElseThrow(() -> new NoSuchElementException("존재 하지 않는 공연입니다."));
+
+        //  삭제된 공연 조회
+        if(performance.getRemoved())
+            throw new NoSuchElementException("삭제된 공연 입니다");
+
+        //  공연을 찾으면, url을 찾고
+        List<String> urlList = performanceImageService.findPerformanceImagesByPerformance(performance);
+
+        //  응답 폼으로 만들어 반환
+        return PerformanceDetailResponse.builder()
+                .pfNo(pfNo)
+                .imageUrl(urlList)
+                .memberNo(performance.getMemberNo().getMemberNo())
+                .title(performance.getTitle())
+                .location(performance.getLocation())
+                .runtime(performance.getRuntime())
+                .description(performance.getDescription())
+                .createdTime(performance.getCreatedTime())
+                .updatedTime(performance.getUpdatedTime())
+                .codeNo(performance.getCodeNo())
+                .detailTime(performance.getDetailTime())
+                .isRemoved(performance.getRemoved())
+                .build();
+    }
 }
