@@ -17,6 +17,7 @@ public class FeedResponse {
     private int feedNo;
     private int memberNo;
     private String nickname;
+    private String profileImageUrl;
     private List<String> images;
     private List<String> tags;
     private String content;
