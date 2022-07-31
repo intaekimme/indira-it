@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,16 +23,22 @@ public class FeedConverter {
     @Autowired
     S3FileUploadService s3FileUploadService;
 
+//    @Autowired
+//    FeedLikeRepositoryImpl feedLikeRepository;
+
     // response : Feed 상세
     public FeedResponse feedResponse(Feed feed, List<FeedImage> feedImage, List<Tag> taglist){
         FeedResponse response = new FeedResponse();
         response.setFeedNo(feed.getFeedNo());
         response.setMemberNo(feed.getMember().getMemberNo());
         response.setNickname(feed.getMember().getNickname());
+        response.setProfileImageUrl(feed.getMember().getProfileImageUrl());
         response.setTags(tagList(taglist));
         response.setContent(feed.getContent());
         // totallikecount
+//        response.setLikeTotalCount(feedLikeRepository.FeedLikeCount(feed.getFeedNo()));
         response.setImages(imageList(feedImage));
+        response.setCreatedTime(feed.getCreatedTime());
         return response;
     }
 
@@ -55,8 +61,8 @@ public class FeedConverter {
     }
     // FeedInsertDto -> FeedEntity
     public Feed toFeedEntity(Member member, String content){
-        LocalDate localDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        Date now = java.sql.Date.valueOf(localDate);
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
         return Feed.builder()
                 .member(member)
                 .content(content)

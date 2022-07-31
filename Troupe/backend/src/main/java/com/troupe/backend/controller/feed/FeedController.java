@@ -49,9 +49,9 @@ public class FeedController {
     
     // 조건별 피드 목록받기
     @GetMapping("/list/{change}")
-    public ResponseEntity selectAllFeed(@PathVariable String change) throws IOException {
+    public ResponseEntity selectAllFeed(@PathVariable String change, @RequestParam int memberNo) throws IOException {
         try{
-            List<FeedResponse> feedResponse = feedService.selectAll(change);
+            List<FeedResponse> feedResponse = feedService.selectAll(change, memberNo);
             return new ResponseEntity(feedResponse, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);

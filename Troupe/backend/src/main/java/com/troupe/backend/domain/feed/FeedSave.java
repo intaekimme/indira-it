@@ -36,4 +36,5 @@ public class FeedSave implements Serializable {
     private boolean isDeleted;
 
     public void setDeleted(boolean isDeleted){this.isDeleted = isDeleted; }
+    public void setCreatedTime(Date createdTime){this.createdTime = createdTime;}
 }
