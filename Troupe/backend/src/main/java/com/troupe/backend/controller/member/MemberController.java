@@ -2,14 +2,15 @@ package com.troupe.backend.controller.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.AvatarForm;
-import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.AvatarResponse;
+import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.dto.member.MemberInfoResponse;
+import com.troupe.backend.security.JwtTokenProvider;
 import com.troupe.backend.service.member.MemberService;
 import com.troupe.backend.util.MyConstant;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,11 @@ import java.util.Map;
 @Api("회원정보 REST API")
 @RequestMapping("/member")
 @RestController
+@RequiredArgsConstructor
 public class MemberController {
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @Autowired
-    public void setMemberService(MemberService memberService) {
-        this.memberService = memberService;
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/signup")
 //    private ResponseEntity register(@RequestParam String email,
@@ -48,10 +47,13 @@ public class MemberController {
     private ResponseEntity login(@RequestBody LoginForm loginForm) {
         Member member = memberService.login(loginForm);
 
+        String token = jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.MEMBER_NO, member.getMemberNo());
-        resultMap.put(MyConstant.ACCESS_TOKEN, "1234");
+        resultMap.put(MyConstant.ACCESS_TOKEN, token);
         resultMap.put(MyConstant.MESSAGE, MyConstant.SUCCESS);
+
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 
