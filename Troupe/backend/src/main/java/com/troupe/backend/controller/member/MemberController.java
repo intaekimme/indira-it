@@ -52,7 +52,6 @@ public class MemberController {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.MEMBER_NO, member.getMemberNo());
         resultMap.put(MyConstant.ACCESS_TOKEN, token);
-        resultMap.put(MyConstant.MESSAGE, MyConstant.SUCCESS);
 
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
