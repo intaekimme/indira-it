@@ -1,4 +1,5 @@
 # 목차
+  * [for](#for)
   * [배열](#배열)
     + [...](#점점점)
     + [map](#map)
@@ -14,6 +15,33 @@
   * [error](#error)
     + [is not a component All component children of must be a or](#is-not-a-component-all-component-children-of-must-be-a-or)
     + [ERESOLVE unable to resolve dependency tree](#eresolve-unable-to-resolve-dependency-tree)
+## for
+index 읽기, index 조절, break문 가능
+
+	for(int i=0;i<array.length; ++i
+		console.log('basic' + array[i]
+
+index 읽기, break문 가능
+
+	for(const i in array)
+		console.log('basic' + array[i]
+
+break문 가능
+
+	for(const v of array)
+		console.log('of' + v)
+
+break문 가능
+
+	array.som(v=> {
+		console.log('some' + v);
+		return (v==3);
+	})
+
+전부 조절 불가능
+
+	array.forEach(v=> console.log('each' + v));
+
 ## 배열
 
 	1. const food = ["tomato", "potato"];
