@@ -46,6 +46,8 @@ public class PerformanceConverter {
                 .codeNo(performanceForm.getCodeNo())
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
+                .startDate(performanceForm.getStartDate())
+                .updatedTime(performanceForm.getEndDate())
                 .build();
     }
 

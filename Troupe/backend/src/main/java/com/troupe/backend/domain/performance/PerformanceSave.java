@@ -45,4 +45,6 @@ public class PerformanceSave implements Serializable {
         this.isRemoved = isRemoved;
     }
 
+    public void setCreatedTime(Date createdTime) { this.createdTime = createdTime; }
+
 }

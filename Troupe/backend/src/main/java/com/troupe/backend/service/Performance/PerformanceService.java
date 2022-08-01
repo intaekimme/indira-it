@@ -5,6 +5,7 @@ import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.dto.Performance.PerformanceDetailResponse;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.PerformanceResponse;
+import com.troupe.backend.dto.Performance.ProfilePfResponse;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.exception.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
@@ -15,17 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
@@ -44,11 +38,10 @@ public class PerformanceService {
 
 
     @Transactional
-    public void register(Map<String, Object> requestHeader,
+    public void register(int memberNo,
                          PerformanceForm performanceform,
                          List<MultipartFile> multipartFileList) throws IOException{
 
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
         //  공연 기본 정보 등록 서비스 호출
         Performance performance = addPerformance(memberNo, performanceform);
         //  S3 공연 이미지 업로드 서비스 호출
@@ -60,8 +53,7 @@ public class PerformanceService {
     }
 
     @Transactional
-    public void modify(int pfNo, Map<String, Object> requestHeader, PerformanceForm performanceform){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+    public void modify(int pfNo, int memberNo, PerformanceForm performanceform){
         //  공연 기본 정보 수정 서비스 호출
         Performance performance = updatePerformance(memberNo, pfNo, performanceform);
         //  공연 좌석 정보 수정 서비스 호출
@@ -69,8 +61,7 @@ public class PerformanceService {
     }
 
     @Transactional
-    public void delete(int pfNo, Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+    public void delete(int pfNo, int memberNo){
         //  공연 기본 정보 삭제 서비스 호출
         Performance deletedPerformance = deletePerformance(memberNo, pfNo);
         //  기본적인 예외처리 통과함, 공연 번호로 바로
@@ -168,7 +159,13 @@ public class PerformanceService {
         for(Performance p : performanceList){
             List<String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
             performanceResponseList.add(
-                PerformanceResponse.PerformanceToResponse(p, imgUrlList)
+                PerformanceResponse.builder()
+                        .pfNo(p.getId())
+                        .description(p.getDescription())
+                        .image(imgUrlList)
+                        .location(p.getLocation())
+                        .detailTime(p.getDetailTime())
+                        .build()
             );
         }
 
@@ -210,5 +207,27 @@ public class PerformanceService {
                 .detailTime(performance.getDetailTime())
                 .isRemoved(performance.getRemoved())
                 .build();
+    }
+
+    //  =================================================================================
+    //  profile service
+    //  =================================================================================
+
+    @Transactional(readOnly = true)
+    public List<ProfilePfResponse> findRegisteredList(int memberNo) {
+        Member member = memberRepository.findById(memberNo).get();
+        List<Performance> performanceList = performanceRepository.findByMemberNo(member);
+
+        List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
+        for(Performance p : performanceList){
+            profilePfResponseList.add(ProfilePfResponse.builder()
+                    .perfPoster(p.getPosterUrl())
+                    .perfName(p.getTitle())
+                    .perfStartDate(p.getStartDate())
+                    .perfEndDate(p.getEndDate())
+                    .build()
+            );
+        }
+        return profilePfResponseList;
     }
 }

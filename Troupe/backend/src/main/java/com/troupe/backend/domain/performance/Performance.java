@@ -50,6 +50,8 @@ public class Performance implements Serializable{
     private Integer codeNo;
 
     private String detailTime;
+    private Date startDate;
+    private Date endDate;
 
     private boolean isRemoved;
 
@@ -103,7 +105,12 @@ public class Performance implements Serializable{
     public void setRemoved(boolean removed) {
         isRemoved = removed;
     }
-
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
     @Override
     public String toString() {
         return "Performance{" +
