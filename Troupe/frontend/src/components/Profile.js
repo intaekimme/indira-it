@@ -8,8 +8,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import Stage from "../img/stage.jpg";
 import PerfList from "./PerfList";
-import UserInfoCard from "./UserInfoCard";
-import Tab from "./CenterTab";
+import FeedList from "./FeedList";
+import ProfileUserInfo from "./ProfileUserInfo";
+import ProfileAnalyze from "./ProfileAnalyze";
+import ProfileTabs from "./ProfileTabs";
 
 const theme = createTheme();
 
@@ -18,15 +20,15 @@ function Profile(userNo) {
   const [widthSize, setWidthSize] = React.useState(0);
   //화면 width에 따른 화면분할여부
   const [gridItemxs, setGridItemxs] = React.useState(6);
-  window.onresize = (e) => {
+  window.addEventListener("resize", (e) => {
     const size = window.innerWidth;
     setWidthSize(size);
-    if (size < 640) {
+    if (size < 1000) {
       setGridItemxs(12);
     } else {
       setGridItemxs(6);
     }
-  };
+  });
 
   const profile = {
     image: (
@@ -45,13 +47,13 @@ function Profile(userNo) {
 
   //공연자/일반 판단
   // const performer = props.member_type==="performer";
-  const performer = profile.member_type === true;
+  const performer = true;
 
-  const tag = performer ? [] : [];
-
+  const tabContent = performer ? [<PerfList/>, <FeedList/>, <PerfList/>, <FeedList/>] : [<PerfList/>, <FeedList/>];
+  const tabText = performer ? ["공연/전시 목록", "피드 목록", "공연/전시 북마크", "피드 북마크"] : ["공연/전시 북마크", "피드 북마크"];
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xl">
+      <Container component="main" maxWidth="1920px">
         <Grid container spacing={2} style={{ textAlign: "center" }}>
           <Grid
             item
@@ -80,7 +82,7 @@ function Profile(userNo) {
                 //프로필
               }
               <Grid item xs={12}>
-                <UserInfoCard
+                <ProfileUserInfo
                   width="100%"
                   userNo={userNo}
                   profile={profile.image}
@@ -93,13 +95,13 @@ function Profile(userNo) {
                 //개인분석
               }
               <Grid item xs={12}>
-                <Card content="abc" />
+                <ProfileAnalyze nickname={profile.nickname} performer={performer}/>
               </Grid>
               {
                 //공연/전시, 피드 목록
               }
               <Grid item xs={12}>
-                <Tab />
+                <ProfileTabs tabContent={tabContent} tabText = {tabText}/>
               </Grid>
             </Grid>
           </Grid>
