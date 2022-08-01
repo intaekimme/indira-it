@@ -3,7 +3,7 @@ package com.troupe.backend.controller.member;
 import com.troupe.backend.domain.avatar.*;
 import com.troupe.backend.service.member.AvatarService;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,13 +17,9 @@ import java.util.List;
 @Api("아바타 REST API")
 @RequestMapping("/avatar")
 @RestController
+@RequiredArgsConstructor
 public class AvatarController {
-    AvatarService avatarService;
-
-    @Autowired
-    public void setAvatarService(AvatarService avatarService) {
-        this.avatarService = avatarService;
-    }
+    private final AvatarService avatarService;
 
     @GetMapping("/clothes")
     private ResponseEntity getClothesList() {

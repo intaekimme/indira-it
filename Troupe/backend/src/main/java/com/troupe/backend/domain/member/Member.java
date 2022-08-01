@@ -2,18 +2,25 @@ package com.troupe.backend.domain.member;
 
 import com.troupe.backend.domain.avatar.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_member")
+@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Member implements Serializable {
+public class Member implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer memberNo;
@@ -57,63 +64,9 @@ public class Member implements Serializable {
     @JoinColumn(name = "shape_no")
     private AvatarShape shape;
 
-    public void setMemberNo(Integer memberNo) {
-        this.memberNo = memberNo;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setMemberType(MemberType memberType) {
-        this.memberType = memberType;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
-    public void setRemoved(boolean removed) {
-        isRemoved = removed;
-    }
-
-    public void setClothes(AvatarClothes clothes) {
-        this.clothes = clothes;
-    }
-
-    public void setEye(AvatarEye eye) {
-        this.eye = eye;
-    }
-
-    public void setHair(AvatarHair hair) {
-        this.hair = hair;
-    }
-
-    public void setMouth(AvatarMouth mouth) {
-        this.mouth = mouth;
-    }
-
-    public void setNose(AvatarNose nose) {
-        this.nose = nose;
-    }
-
-    public void setShape(AvatarShape shape) {
-        this.shape = shape;
-    }
-
-    /** memberNo 빼고 전부 받는 생성자 */
+    /**
+     * memberNo 빼고 전부 받는 생성자 (테스트용)
+     */
     public Member(String email, String password, String nickname, String description, MemberType memberType, String profileImageUrl, boolean isRemoved, AvatarClothes clothes, AvatarEye eye, AvatarHair hair, AvatarMouth mouth, AvatarNose nose, AvatarShape shape) {
         this.memberNo = 1;
         this.email = email;
@@ -131,7 +84,9 @@ public class Member implements Serializable {
         this.shape = shape;
     }
 
-    /** 이메일, 닉네임만 받는 생성자 */
+    /**
+     * 이메일, 닉네임만 받는 생성자 (테스트용)
+     */
     public Member(String email, String nickname) {
         this(email, "mypassword", nickname, "mydescription", MemberType.AUDIENCE, "myprofileImageUrl", false,
                 new AvatarClothes(1, "url"),
@@ -153,5 +108,54 @@ public class Member implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(memberNo);
+    }
+
+    // Spring Security 사용을 위해 UserDetails 상속받아 메소드 오버라이딩
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> ret = new ArrayList<>();
+        ret.add(new SimpleGrantedAuthority(this.memberType.name()));
+        return ret;
+    }
+
+    /**
+     * userName은 PK인 memberNo를 의미하도록 한다
+     */
+    @Override
+    public String getUsername() {
+        return String.valueOf(this.memberNo);
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !(this.isRemoved);
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !(this.isRemoved);
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !(this.isRemoved);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !(this.isRemoved);
+    }
+
+    public List<String> getRoles() {
+        List<String> ret = new ArrayList<>();
+
+        ret.add(this.memberType.name());
+
+        return ret;
     }
 }

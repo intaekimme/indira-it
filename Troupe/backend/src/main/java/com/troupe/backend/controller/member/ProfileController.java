@@ -8,7 +8,7 @@ import com.troupe.backend.service.member.LikabilityService;
 import com.troupe.backend.service.member.MemberService;
 import com.troupe.backend.util.MyConstant;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,28 +23,13 @@ import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 @Api("회원 프로필 REST API")
 @RequestMapping("/profile")
 @RestController
+@RequiredArgsConstructor
 public class ProfileController {
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    private FollowService followService;
+    private final FollowService followService;
 
-    private LikabilityService likabilityService;
-
-    @Autowired
-    public void setMemberService(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
-    @Autowired
-    public void setFollowService(FollowService followService) {
-        this.followService = followService;
-    }
-
-    @Autowired
-    public void setLikabilityService(LikabilityService likabilityService) {
-        this.likabilityService = likabilityService;
-    }
-
+    private final LikabilityService likabilityService;
 
     @PostMapping("/{profileMemberNo}/follow")
     public ResponseEntity follow(@RequestHeader Map<String, Object> requestHeader, @PathVariable int profileMemberNo) {

@@ -8,7 +8,10 @@ import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.exception.member.DuplicatedMemberException;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.util.S3FileUploadService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,26 +20,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class MemberService {
-    private MemberRepository memberRepository;
-    private AvatarService avatarService;
-    private S3FileUploadService s3FileUploadService;
-
-    @Autowired
-    public void setMemberRepository(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
-    @Autowired
-    public void setAvatarService(AvatarService avatarService) {
-        this.avatarService = avatarService;
-    }
-
-    @Autowired
-    public void setS3FileUploadService(S3FileUploadService s3FileUploadService) {
-        this.s3FileUploadService = s3FileUploadService;
-    }
-
+@RequiredArgsConstructor
+public class MemberService implements UserDetailsService {
+    private final MemberRepository memberRepository;
+    private final AvatarService avatarService;
+    private final S3FileUploadService s3FileUploadService;
 
     /**
      * 회원 등록
@@ -208,5 +196,14 @@ public class MemberService {
      */
     public Optional<Member> findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname);
+    }
+
+    /**
+     * 스프링 시큐리티에서 관리하는 UserDetailsService의 메소드 오버라이딩 구현
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return memberRepository.findById(Integer.parseInt(username))
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 }
