@@ -107,12 +107,12 @@ public class PerformanceSaveService {
      * @param requestHeader
      * @return
      */
-    @Transactional(readOnly = true)
-    public List<PerformanceSave> list(Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        Member member = memberRepository.findById(memberNo).get();
-
-        return performanceSaveRepository.findByMemberNoAndRemovedFalse(member);
-    }
+//    @Transactional(readOnly = true)
+//    public List<PerformanceSave> list(Map<String, Object> requestHeader){
+//        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+//        Member member = memberRepository.findById(memberNo).get();
+//
+//        return performanceSaveRepository.findByMemberNoAndRemovedFalse(member);
+//    }
 
 }

@@ -48,20 +48,20 @@ public class PerformanceSaveTest {
 
     }
 
-    @Test
-    @DisplayName("공연 저장 삭제 테스트")
-    public void deleteTest(){
-        Member member = memberRepository.findById(3).get();
-        Performance performance = performanceRepository.findById(2).get();
-
-        //  삭제할 공연
-        PerformanceSave targetPerformanceSave = performanceSaveRepository.findByMemberNoAndPfNo(member, performance);
-        targetPerformanceSave.setRemoved(true);
-
-        performanceSaveRepository.save(targetPerformanceSave);
-
-        Assertions.assertTrue(targetPerformanceSave.getRemoved());
-
-    }
+//    @Test
+//    @DisplayName("공연 저장 삭제 테스트")
+//    public void deleteTest(){
+//        Member member = memberRepository.findById(3).get();
+//        Performance performance = performanceRepository.findById(2).get();
+//
+//        //  삭제할 공연
+//        PerformanceSave targetPerformanceSave = performanceSaveRepository.findByMemberNoAndPfNo(member, performance);
+//        targetPerformanceSave.setRemoved(true);
+//
+//        performanceSaveRepository.save(targetPerformanceSave);
+//
+//        Assertions.assertTrue(targetPerformanceSave.getRemoved());
+//
+//    }
 
 }
