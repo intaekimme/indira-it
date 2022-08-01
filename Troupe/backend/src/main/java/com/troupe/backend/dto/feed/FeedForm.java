@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedInsertRequest {
+public class FeedForm {
     private int feedNo;
     private List<String> tags;
 
@@ -23,7 +23,7 @@ public class FeedInsertRequest {
     private boolean isRemoved;
     private Date createdTime;
 
-    public FeedInsertRequest(List<String> tags, int memberNo, String content, boolean removed, Date createdTime, List<MultipartFile> images) {
+    public FeedForm(List<String> tags, int memberNo, String content, boolean removed, Date createdTime, List<MultipartFile> images) {
         this.tags = tags;
         this.memberNo = memberNo;
         this.content = content;

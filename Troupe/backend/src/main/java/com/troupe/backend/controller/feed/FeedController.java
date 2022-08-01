@@ -1,12 +1,10 @@
 package com.troupe.backend.controller.feed;
 
-import com.troupe.backend.domain.feed.FeedLike;
-import com.troupe.backend.dto.feed.FeedInsertRequest;
+import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
 import com.troupe.backend.service.feed.FeedILikeService;
 import com.troupe.backend.service.feed.FeedSaveService;
 import com.troupe.backend.service.feed.FeedService;
-import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -89,7 +86,7 @@ public class FeedController {
                                  @RequestParam("content") String content,
                                  @RequestParam("tags") List<String> tags) throws IOException {
         try{
-            FeedInsertRequest request = new FeedInsertRequest();
+            FeedForm request = new FeedForm();
             request.setImages(images);
             request.setMemberNo(memberNo);
             request.setContent(content);
@@ -110,7 +107,7 @@ public class FeedController {
                                  @RequestParam(name = "tags", required = false) List<String> tags) throws IOException {
 
         try {
-            FeedInsertRequest request = new FeedInsertRequest();
+            FeedForm request = new FeedForm();
             request.setFeedNo(feedNo);
             request.setImages(images);
             request.setImageNo(imageNo);
