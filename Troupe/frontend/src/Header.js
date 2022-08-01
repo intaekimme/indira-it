@@ -102,7 +102,7 @@ export default function Header() {
           </React.Fragment>
           ))}
       </div>
-      <Link href="/" className={ styled.header } sx={{fontFamily:'Faster One'}}>Troupe</Link>
+      <Link href="/" className={ styled.header } sx={{fontFamily:'Mainstay'}}>Troupe</Link>
       <div style={{ float: "right", width: "100px" }}>
         { login ?
         [{ anchor: 'right', icon: <AccountCircleIcon fontSize="large"/> },

@@ -13,8 +13,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
-import { ButtonGroup } from '@mui/material';
 import Favorite from '@mui/icons-material/Favorite';
+import PerfFeedToggle from './MainButton';
 
 
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
@@ -22,7 +22,7 @@ import Favorite from '@mui/icons-material/Favorite';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
+    <Typography color="text.secondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="/">
         Troupe
@@ -41,15 +41,6 @@ function TagSearchForm() {
   );
 }
 
-function PerfExhToggle(){
-  return (
-    <ButtonGroup size='large' sx={{pt:7, justifyContent:'center'}}>
-      <Button href='/perf/list' sx={{color:'black',background:'orange', fontFamily:'IBM Plex Sans KR'}}>Performance</Button>
-      <Button href='/feed/list' sx={{color:'black',background:'pink', fontFamily:'IBM Plex Sans KR'}}>Feed</Button>
-    </ButtonGroup>
-  )
-}
-
 function range(start, end) {
   let array = [];
   for (let i = start; i < end; ++i) {
@@ -59,8 +50,7 @@ function range(start, end) {
   return array;
 }
 
-let pages = 6
-// let cards = [1, 2, 3, 4, 5, 6]; //여기로 받아오기
+
 
 const theme = createTheme();
 
@@ -79,6 +69,7 @@ export default function Album() {
   }
 
   function handleCard() {
+    let pages = 6
     pages=pages + 6
     setCard(range(0, pages))
   }
@@ -87,8 +78,9 @@ export default function Album() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div style={{display:'flex', justifyContent:'center'}}>
-        <PerfExhToggle></PerfExhToggle>
+        <PerfFeedToggle></PerfFeedToggle>
       </div>
+
       <main>
         <Container sx={{ py: 10 }} maxWidth="md">
           <Grid container spacing={4}>
@@ -98,7 +90,7 @@ export default function Album() {
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                   elevation={0}
                 >
-                  <Typography gutterBottom variant="h6" component="h3">
+                  <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}}>
                     <img src='https://source.unsplash.com/random' alt='random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                     SmartToy
                   </Typography>

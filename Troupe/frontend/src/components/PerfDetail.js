@@ -6,11 +6,11 @@ import { Button } from '@mui/material'
 import MUICarousel from 'react-material-ui-carousel';
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box';
+import axios from 'axios';
 // import Chip from '@mui/material/Chip'
 
 // 제목, 기간, 시간, 장소, 티켓가격
 // MUI칩이 갑자기 오류가 났다,,,,
-// 모달로 포스터 크게 하기
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
@@ -20,18 +20,8 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
+//포스터 슬라이드
 function Carousel(props)
 {
   function CarouselItem(props)
@@ -83,16 +73,34 @@ function Carousel(props)
     )
 }
 
-
+// 목록 수정 삭제 버튼
 function ModifyDeleteButton() {
   const [user, setUser] = React.useState(true)
+
+  function handleUser() {
+    setUser(!user)
+  }
+
+  function onRemove() {
+    if(window.confirm('삭제하시겠습니까?')){
+
+      alert('삭제되었습니다.');
+    }else{
+      alert('취소하였습니다.')
+    }
+  }
+
   return (
     <div style = {{float:'right', backgroundColor:'#FFF'}}>
             <Button variant='outlined' href='/perf/list' style={{margin: '8px', backgroundColor:'beige', fontFamily: 'IBM Plex Sans KR'}}>목록</Button>
         { user? (
         <Fragment>
             <Button variant='outlined' href='/feed/list' style={{margin: '8px', backgroundColor:'skyblue', fontFamily: 'IBM Plex Sans KR'}}>수정</Button>
-            <Button variant='outlined' style={{margin: '8px', backgroundColor:'pink', fontFamily: 'IBM Plex Sans KR'}}>삭제</Button>
+            <Button 
+            variant='outlined' 
+            style={{margin: '8px', backgroundColor:'pink', fontFamily: 'IBM Plex Sans KR'}}
+            onClick={onRemove}
+            >삭제</Button>
         </Fragment>):('')
         }
     </div>
@@ -101,11 +109,14 @@ function ModifyDeleteButton() {
 
 
 function PerfDetail() {
+  const [title, setTitle] = React.useState('')
+  const [price, setPrice] = React.useState([])
+  const [time, setTime] = React.useState('')
+  const [date, setDate] = React.useState('')
+  const [location, setLocation] = React.useState('')
+
   return (
-    <div style={{height:'100vh', width:'100vw', background:'#FFFF', fontFamily:'IBM Plex Sans KR'}}>
-      {/* <h1 style={{margin:'0px'}}>
-        Performance Detail
-      </h1> */}
+    <div style={{background:'#FFFF', fontFamily:'IBM Plex Sans KR'}}>
         <ModifyDeleteButton/>
       <div>
         <Grid container spacing={4}>
@@ -125,7 +136,7 @@ function PerfDetail() {
                   짱아
                   </a>
                 </li>
-                <li>제목: 햄릿</li>
+                <li>제목: 짱아</li>
                 <br></br>
                 <li>가격: 전석 33,000원</li>
                 <br></br>
