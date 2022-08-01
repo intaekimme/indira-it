@@ -1,13 +1,14 @@
 import apiClient from '../apiClient';
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
+import React, { Fragment } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -20,14 +21,16 @@ export default function PerfNew() {
   const [imgUrl, setImgUrl] = React.useState([]);
   //공연 제목
   const [perfName, setPerfName] = React.useState("");
-  //공연기간
-  const [perfDate, setPerfDate] = React.useState("");
+  //공연시작 일자
+  const [perfStartDate, setPerfStartDate] = React.useState("");
+  //공연 종료 일자
+  const [perfEndDate, setPerfEndDate] = React.useState('');
   //공연시간
   const [runtime, setRuntime] = React.useState(0);
-  //가격
-  const [price, setPrice] = React.useState(0);
-  //좌석
-  const [seat, setSeat] = React.useState('');
+  //가격, 좌석
+  const [seatPrice, setSeatPrice] = React.useState([{firstName:'', lastName:''}]);
+  //공연 장르
+  const [genre, setGenre] = React.useState('')
 
   
   //image 업로드
@@ -49,22 +52,61 @@ export default function PerfNew() {
 
   //공연제목 Change
   const changePerfName = (e) =>{
-    setPerfName(e.target.value);
+     setPerfName(e.target.value);
   }
 
-  //공연기간 Change
-  const changePerfDate = (e) =>{
-    setPerfDate(e.target.value);
+  //공연시작일 Change
+  const changePerfStartDate = (e) =>{
+    setPerfStartDate(e.target.value);
+    console.log(e.target.value);
   }
 
-  const addPrice = (e) =>{
-
+  //공연종료일 Change
+  const changePerfEndDate = (e) =>{
+    setPerfEndDate(e.target.value);
+    console.log(e.target.value)
   }
 
-  const addSeat = (e) => {
-    
+  const changeGenre = (e) => {
+    setGenre(e.target.value)
+    console.log(e.target.value)
   }
 
+  const handleSeatPrice = (e, index) =>{
+    const { name, value } = e.target;
+    const list = [...seatPrice];
+    list[index][name] = value;
+    setSeatPrice(list);
+  }
+
+  const addSeatPrice = (e) =>{
+    setSeatPrice([...seatPrice, { firstName: "", lastName: "" }]);
+  }
+
+  const deleteSeatPrice = (index) => {
+    const list = [...seatPrice];
+    list.splice(index, 1);
+    setSeatPrice(list);
+  }
+
+  // 공연 제목 길이 체크
+  function titleLength(e){
+    if(e.target.value.length > 100){
+      alert('글자수 초과!')
+      e.target.value = e.target.value.substring(0,100);
+      e.target.focus();
+    }
+  }
+
+  // 공연 소개 길이 체크
+  function descriptionLength(e){
+    if(e.target.value.length > 1000){
+      alert('글자수 초과!')
+      e.target.value = e.target.value.substring(0,1000);
+      e.target.focus();
+    }
+  }
+  
   //회원가입버튼 클릭
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -94,7 +136,7 @@ export default function PerfNew() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="md">
+      <Container maxWidth="md">
         <CssBaseline />
         <Box
           sx={{
@@ -109,7 +151,7 @@ export default function PerfNew() {
             encType="multipart/form-data"
             style={{ textAlign: "center" }}
           >
-            <Grid container spacing={2} sx={{gridTemplateRows:'repeat(5, 2fr)'}}>
+            <Grid container spacing={2}>
               <Grid item xs={11}> 
                 {imgUrl ? (
                     <div>
@@ -157,42 +199,80 @@ export default function PerfNew() {
                 <TextField
                   autoComplete="given-name"
                   name="nickname"
-                  required
                   fullWidth
+                  required
                   id="nickname"
                   label="공연 제목"
                   autoFocus
                   onChange = { changePerfName }
+                  onKeyUp = {titleLength}
                 />
               </Grid>
-
-              <Grid item xs={10}>
+              <Grid item xs={12}>
+                {seatPrice.map((x, i) => {
+          return (
+            <div className="box">
+              <input
+                name="firstName"
+                placeholder="Enter First Name"
+                value={x.firstName}
+                onChange={e => handleSeatPrice(e, i)}
+              />
+              <input
+                className="ml10"
+                name="lastName"
+                placeholder="Enter Last Name"
+                value={x.lastName}
+                onChange={e => handleSeatPrice(e, i)}
+              />
+              <div className="btn-box">
+                {seatPrice.length !== 1 && <button
+                  className="mr10"
+                  onClick={() => deleteSeatPrice(i)}>Remove</button>}
+                {seatPrice.length - 1 === i && <button onClick={addSeatPrice}>Add</button>}
+              </div>
+            </div>
+          );
+        })}
+              </Grid>
+              {/* <Grid item xs={5}>
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="공연 가격"
-                  name="email"
-                  autoComplete="email"
+                  id="seat"
+                  label="좌석"
+                  name="seat"
+                  autoComplete="seat"
                   onChange = { changePerfName }
                 />
-              </Grid>
-
-              <Grid item xs={2}>
-                <Button>+</Button>
-                <Button>-</Button>
               </Grid>
 
               <Grid item xs={5}>
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="시작기간-달력으로 하기"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
+                  id="price"
+                  label="공연 가격"
+                  name="price"
+                  autoComplete="price"
                 />
+              </Grid>
+
+              <Grid item xs={2}>
+                <Button onClick={addSeatPrice}>+</Button>
+                <Button onClick={deleteSeatPrice}>-</Button>
+              </Grid> */}
+
+              <Grid item xs={5}>
+              <input 
+                required
+                type="date" 
+                id="start" 
+                name="trip-start"
+                label='starting date'
+                min="2020-01-01" 
+                max="2025-12-31"
+                onChange={changePerfStartDate}></input>
               </Grid>
             
               <Grid item xs={2}>
@@ -200,18 +280,35 @@ export default function PerfNew() {
               </Grid>
 
               <Grid item xs={5}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="종료기간-달력으로 하기"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
+              <input 
+                required
+                type="date" 
+                id="end" 
+                name="trip-end"
+                label='end date'
+                min="2020-01-01" 
+                max="2025-12-31"
+                onChange={changePerfEndDate}></input>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">장르</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={genre}
+                  label="장르"
+                  onChange={changeGenre}
+                >
+                  <MenuItem value={'뮤지컬'}>뮤지컬</MenuItem>
+                  <MenuItem value={'연극'}>연극</MenuItem>
+                  <MenuItem value={'국악'}>국악</MenuItem>
+                </Select>
+              </FormControl>
+              </Grid>
+
+              <Grid item xs={6}>
                 <TextField
                   required
                   fullWidth
@@ -229,8 +326,9 @@ export default function PerfNew() {
                   multiline
                   id="profileMessage"
                   label="공연 소개"
+                  rows={6}
                   name="profileMessage"
-                  style={{height:'500px'}}
+                  onKeyUp={descriptionLength}
                 />
               </Grid>
 
@@ -251,6 +349,7 @@ export default function PerfNew() {
                 variant="contained"
                 color='error'
                 sx={{ mt: 3, mb: 2 }}
+                href='/perf/list'
                 >
                 취소하기
                 </Button>

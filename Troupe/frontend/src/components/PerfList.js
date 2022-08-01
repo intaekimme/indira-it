@@ -16,6 +16,7 @@ import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import Favorite from '@mui/icons-material/Favorite';
 import SearchBar from './SearchBar'
 import PerfFeedToggle from './MainButton';
+import apiClient from '../apiClient';
 
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
 // 유저 분간을 어떻게 하지
@@ -40,16 +41,16 @@ function range(start, end) {
   }  return array;
 }
 
-let pages = 6
-// let cards = [1, 2, 3, 4, 5, 6]; //여기로 받아오기
-
 const theme = createTheme();
 
 export default function Album() {
 
+  const perfList = apiClient.getPerfList()
+  console.log(perfList);
+
   const [like, setLike] = React.useState(false)
   const [save, setSave] = React.useState(false)
-  let [cards, setCard] = React.useState([1,2,3,4,5,6])
+  let [cards, setCard] = React.useState([])
 
   function handleLike() {
     setLike(!like)
@@ -60,6 +61,7 @@ export default function Album() {
   }
 
   function handleCard() {
+    let pages = 6
     pages=pages + 6
     setCard(range(0, pages))
   }
@@ -83,7 +85,7 @@ export default function Album() {
       <div style={{display:'flex', justifyContent:'center'}}>
         <PerfFeedToggle></PerfFeedToggle>
       </div>
-      <main>
+      <div>
         <Container sx={{ py: 10 }} maxWidth="md">
           <Grid container spacing={4}>
             {cards.map((card) => (
@@ -138,12 +140,11 @@ export default function Album() {
             ))}
           </Grid>
         </Container>
-      </main>
+      </div>
       {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 4 }} component="footer">
+      <Box sx={{ bgcolor: 'background.paper', p: 4 }}>
         <div style={{display:'flex', justifyContent:'center', pb:7}}>
           <Button variant='outlined' color='primary' size='large' onClick={handleCard}>더보기</Button> 
-          {/* 여기에 axios 사용 */}
         </div>
         <Typography
           variant="subtitle1"

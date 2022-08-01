@@ -89,6 +89,50 @@ const apiClient = {
         return null;
       });
   },
+
+  //공연 삭제하기
+  perfRemove: (data) => {if (window.confirm('삭제하시겠습니까?'))
+  {
+    instance
+    .delete(`/perf/${data.pfNo}/del`)
+    .then((response) => {
+      alert('공연이 삭제되었습니다' + response);
+    })
+    .catch((error) => {
+      alert(data + '공연삭제 실패 :' + error);
+    })
+  } else {
+    alert('취소합니다.')
+  }
+  },
+
+  //공연 목록 불러오기
+  getPerfList: () => {
+    instance
+    .get(`/perf/list`)
+    .then((response)=> {
+      alert('불러오기 성공');
+      return response;
+    })
+    .catch( (error) => {
+      alert('공연 불러오기 실패' + error);
+      return null;
+    })
+  },
+
+    //피드 목록 불러오기
+    getFeedList: () => {
+      instance
+      .get(`/feed/list`)
+      .then((response)=> {
+        alert('불러오기 성공');
+        return response;
+      })
+      .catch( (error) => {
+        alert('피드 불러오기 실패' + error);
+        return null;
+      })
+    }
 };
 
 export default apiClient;
