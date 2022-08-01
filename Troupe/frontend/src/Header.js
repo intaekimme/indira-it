@@ -216,7 +216,7 @@ export default function Header() {
           href="/"
           className={styled.header}
           style={{ verticalAlign: "middle" }}
-          sx={{fontFamily:'Faster One'}}
+          sx={{fontFamily:'Mainstay'}}
         >
           Troupe
         </Link>
