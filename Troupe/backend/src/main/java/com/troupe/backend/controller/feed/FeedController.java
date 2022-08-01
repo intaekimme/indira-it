@@ -8,6 +8,8 @@ import com.troupe.backend.service.comment.CommentService;
 import com.troupe.backend.service.feed.FeedILikeService;
 import com.troupe.backend.service.feed.FeedSaveService;
 import com.troupe.backend.service.feed.FeedService;
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin
+@Api("피드 REST API")
 @RestController
 @RequiredArgsConstructor
 @EnableWebMvc
@@ -36,6 +40,7 @@ public class FeedController {
     @Autowired
     private final CommentService commentService;
 
+    @Operation(summary = "피드 상세 조회", description = "파라미터: 피드 번호")
     @GetMapping("/{feedNo}")
     public ResponseEntity selectFeed(@PathVariable int feedNo) throws IOException {
         try{
@@ -46,8 +51,8 @@ public class FeedController {
             return new ResponseEntity("Feed select FAIL", HttpStatus.BAD_REQUEST);
         }
     }
-    
-    // 조건별 피드 목록받기
+
+    @Operation(summary = "조건별 피드 목록 조회", description = "파라미터: {change} = [all,save,follow] (후에 profileController로 이전-피드저장부분)")
     @GetMapping("/list/{change}")
     public ResponseEntity selectAllFeed(@PathVariable String change, @RequestParam int memberNo) throws IOException {
         try{
@@ -59,7 +64,7 @@ public class FeedController {
         }
     }
 
-    // 공연 등록자가 등록한 피드 목록 불러오기
+    @Operation(summary = "공연 등록자가 등록한 피드 목록 조회", description = "파라미터: 공연자 멤버 번호(후에 profileController로 이전)")
     @GetMapping("/{profileMemberNo}/myfeed/list")
     public ResponseEntity selectAllFeedByPerformer(@PathVariable(name = "profileMemberNo") int memberNo) throws IOException {
         try{
@@ -70,7 +75,7 @@ public class FeedController {
             return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
         }
     }
-
+    @Operation(summary = "태그로 인한 피드 검색", description = "파라미터: 태그명 리스트")
     @GetMapping("/search")
     public ResponseEntity searchFeeds (@RequestParam(name = "tags") List<String> tags) throws IOException {
         try {
@@ -83,8 +88,9 @@ public class FeedController {
     }
 
     // responsebody로 수정
+    @Operation(summary = "피드 등록", description = "파라미터: 이미지 파일들, 멤버번호, 내용, 태그명들")
     @PostMapping
-    public ResponseEntity insertFeed(@RequestParam("images") List<MultipartFile> images,
+    public ResponseEntity insertFeed(@RequestPart("images") List<MultipartFile> images,
                                  @RequestParam("memberNo")int memberNo,
                                  @RequestParam("content") String content,
                                  @RequestParam("tags") List<String> tags) throws IOException {
@@ -102,6 +108,7 @@ public class FeedController {
         }
     }
     // responsebody로 수정
+    @Operation(summary = "피드 수정", description = "파라미터: 피드 번호, 이미지파일들, 삭제된 이미지 url들, 변경된 내용, 태그리스트들")
     @PatchMapping("/{feedNo}/modify")
     public ResponseEntity updateFeed(@PathVariable int feedNo,
                                  @RequestParam(name = "images",required = false) List<MultipartFile> images,
@@ -125,6 +132,7 @@ public class FeedController {
         }
     }
 
+    @Operation(summary = "피드 삭제", description = "파라미터: 피드 번호")
     @PatchMapping("/{feedNo}/del")
     public ResponseEntity deleteFeed(@PathVariable int feedNo) throws IOException {
         try {
@@ -135,6 +143,8 @@ public class FeedController {
             return new ResponseEntity("Feed delete FAIL", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Operation(summary = "피드 좋아요 스위칭(처음엔 insert, 그 뒤는 update)", description = "파라미터: 피드번호, 멤버번호")
     @PatchMapping("/{feedNo}/like")
     public ResponseEntity likeFeed(@PathVariable int feedNo, @RequestParam int memberNo) throws IOException {
         try {
@@ -145,6 +155,8 @@ public class FeedController {
             return new ResponseEntity("Feed Like FAIL", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Operation(summary = "피드 저장", description = "파라미터: 피드 번호, 멤버 번호")
     @PatchMapping("/{feedNo}/save")
     public ResponseEntity saveFeed(@PathVariable int feedNo, @RequestParam int memberNo) throws IOException {
         try {
@@ -157,6 +169,7 @@ public class FeedController {
     }
 
     // 아래로 피드 댓글
+    @Operation(summary = "피드 댓글 등록", description = "파라미터: 피드번호, 멤버번호, 내용, 부모댓글번호-선택")
     @PostMapping("/{feedNo}/comment")
     public ResponseEntity insertComment(@RequestParam int memberNo,
                                      @RequestParam String content,
@@ -177,6 +190,7 @@ public class FeedController {
         }
     }
 
+    @Operation(summary = "피드 댓글 수정", description = "파라미터: 피드 번호, 댓글 번호, 수정된 내용")
     @PatchMapping("/{feedNo}/comment/{commentNo}")
     public ResponseEntity updateComment(@PathVariable int feedNo,
                                         @PathVariable int commentNo,
@@ -194,6 +208,7 @@ public class FeedController {
         }
     }
 
+    @Operation(summary = "피드 댓글 삭제", description = "파라미터: 피드 번호, 댓글 번호")
     @PatchMapping("/{feedNo}/comment/{commentNo}/del")
     public ResponseEntity deleteComment(@PathVariable int feedNo,
                                         @PathVariable int commentNo) throws IOException {
@@ -209,6 +224,7 @@ public class FeedController {
         }
     }
 
+    @Operation(summary = "피드 댓글 목록(대댓글x)", description = "파라미터: 피드 번호")
     @GetMapping("/{feedNo}/comment/list")
     public ResponseEntity selectAllComment(@PathVariable int feedNo) throws IOException {
         try{
@@ -220,6 +236,7 @@ public class FeedController {
         }
     }
 
+    @Operation(summary = "피드 대댓글 목록", description = "파라미터: 피드 번호, 댓글 번호")
     @GetMapping("/{feedNo}/comment/{commentNo}")
     public ResponseEntity selectAllCommentByParent(@PathVariable int feedNo,
                                                    @PathVariable int commentNo) throws IOException {
