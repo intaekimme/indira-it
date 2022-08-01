@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,6 +18,11 @@ public class FollowService {
     private FollowRepository followRepository;
 
     private MemberRepository memberRepository;
+
+    @Autowired
+    public void setMemberRepository(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     @Autowired
     public void setFollowRepository(FollowRepository followRepository) {
@@ -59,17 +65,29 @@ public class FollowService {
     /**
      * 스타가 팔로우를 받은 팬들의 목록 조회
      */
-    public List<Follow> findFans(int starMemberNo) {
+    public List<Member> findAllFans(int starMemberNo) {
         Member starMember = memberRepository.findById(starMemberNo).get();
-        return followRepository.findAllByStarMember(starMember);
+        List<Follow> follows = followRepository.findAllByStarMember(starMember);
+        List<Member> ret = new ArrayList<>();
+        for (Follow f : follows) {
+            ret.add(f.getFanMember());
+        }
+
+        return ret;
     }
 
     /**
      * 팬이 팔로우를 누른 스타들의 목록 조회
      */
-    public List<Follow> findStars(int fanMemberNo) {
+    public List<Member> findAllStars(int fanMemberNo) {
         Member fanMember = memberRepository.findById(fanMemberNo).get();
-        return followRepository.findAllByFanMember(fanMember);
+        List<Follow> follows = followRepository.findAllByFanMember(fanMember);
+        List<Member> ret = new ArrayList<>();
+        for (Follow f : follows) {
+            ret.add(f.getStarMember());
+        }
+
+        return ret;
     }
 
     /**
@@ -81,5 +99,14 @@ public class FollowService {
         } else {
             follow(starMemberNo, fanMemberNo);
         }
+
+    }
+
+    /**
+     * 팬 수를 카운트
+     */
+    public int countFans (int starMemberNo) {
+        // TODO : select count(*) from follow where starMemberNo = "XXX" 형태의 쿼리가 나가도록 만들어야 하지만, 일단 돌아가게 짬
+        return findAllFans(starMemberNo).size();
     }
 }
