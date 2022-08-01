@@ -46,4 +46,6 @@ public class Comment  implements Serializable {
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
+
+    public void setRemoved(boolean isRemoved){this.isRemoved=isRemoved;}
 }
