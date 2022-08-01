@@ -5,7 +5,7 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.exception.member.DuplicatedFollowException;
 import com.troupe.backend.repository.member.FollowRepository;
 import com.troupe.backend.repository.member.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,20 +14,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class FollowService {
-    private FollowRepository followRepository;
+    private final FollowRepository followRepository;
 
-    private MemberRepository memberRepository;
-
-    @Autowired
-    public void setMemberRepository(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
-    @Autowired
-    public void setFollowRepository(FollowRepository followRepository) {
-        this.followRepository = followRepository;
-    }
+    private final MemberRepository memberRepository;
 
     /**
      * 팔로우 관계 등록

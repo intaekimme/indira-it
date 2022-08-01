@@ -6,7 +6,7 @@ import com.troupe.backend.dto.guestbook.GuestbookForm;
 import com.troupe.backend.exception.member.DuplicatedGuestbookException;
 import com.troupe.backend.repository.member.GuestbookRepository;
 import com.troupe.backend.repository.member.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +15,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class GuestbookService {
-    private GuestbookRepository guestbookRepository;
+    private final GuestbookRepository guestbookRepository;
 
-    private MemberRepository memberRepository;
-
-    @Autowired
-    public void setGuestbookRepository(GuestbookRepository guestbookRepository) {
-        this.guestbookRepository = guestbookRepository;
-    }
-
-    @Autowired
-    public void setMemberRepository(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    private final MemberRepository memberRepository;
 
     /**
      * 방명록 저장

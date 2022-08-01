@@ -9,20 +9,20 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider} from '@mui/material/styles';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
-import { ButtonGroup } from '@mui/material';
 import Favorite from '@mui/icons-material/Favorite';
-
+import SearchBar from './SearchBar'
+import PerfFeedToggle from './MainButton';
 
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
 // 유저 분간을 어떻게 하지
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
+    <Typography color="text.secondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="/">
         Troupe
@@ -33,30 +33,11 @@ function Copyright() {
   );
 }
 
-function TagSearchForm() {
-  return (
-    <div>
-
-    </div>
-  );
-}
-
-function PerfExhToggle(){
-  return (
-    <ButtonGroup size='large' sx={{pt:7, justifyContent:'center'}}>
-      <Button href='/perf/list' sx={{color:'black',background:'orange', fontFamily:'IBM Plex Sans KR'}}>Performance</Button>
-      <Button href='/feed/list' sx={{color:'black',background:'pink', fontFamily:'IBM Plex Sans KR'}}>Feed</Button>
-    </ButtonGroup>
-  )
-}
-
 function range(start, end) {
   let array = [];
   for (let i = start; i < end; ++i) {
     array.push(i);
-  }
-  console.log(array)
-  return array;
+  }  return array;
 }
 
 let pages = 6
@@ -83,11 +64,24 @@ export default function Album() {
     setCard(range(0, pages))
   }
 
+  // const setCards = ((current)=>{
+  //   for(let i=0;i<6;i++){
+  //     current.push(
+  //     <Grid>
+
+  //     </Grid>
+  //     );
+  //   }
+  // });
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div style={{display:'flex', justifyContent:'center'}}>
-        <PerfExhToggle></PerfExhToggle>
+        <SearchBar></SearchBar>
+      </div>
+      <div style={{display:'flex', justifyContent:'center'}}>
+        <PerfFeedToggle></PerfFeedToggle>
       </div>
       <main>
         <Container sx={{ py: 10 }} maxWidth="md">
@@ -98,9 +92,9 @@ export default function Album() {
                   sx={{ position:'relative', height: '100%', display: 'flex', flexDirection: 'column' }}
                   elevation={0}
                 >
-                  <Typography gutterBottom variant="h6" component="h3">
+                  <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}}>
                     <img src='https://source.unsplash.com/random' alt='random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
-                    SmartToy
+                    Author
                   </Typography>
                   <Box style={{ fontFamily:'IBM Plex Sans KR', background:'pink', borderRadius:'10%', position:'absolute', top:'45px', right:'5px', zIndex:'3'}}>상영 중</Box>
                   <Box style={{ fontFamily:'IBM Plex Sans KR', background:'skyblue', borderRadius:'10%', position:'absolute', top:'45px', right:'60px', zIndex:'3'}}>뮤지컬</Box>

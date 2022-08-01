@@ -4,7 +4,7 @@ import com.troupe.backend.domain.likability.Likability;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.repository.likability.LikabilityRepository;
 import com.troupe.backend.repository.member.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,20 +13,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class LikabilityService {
-    private LikabilityRepository likabilityRepository;
+    private final LikabilityRepository likabilityRepository;
 
-    private MemberRepository memberRepository;
-
-    @Autowired
-    public void setLikabilityRepository(LikabilityRepository likabilityRepository) {
-        this.likabilityRepository = likabilityRepository;
-    }
-
-    @Autowired
-    public void setMemberRepository(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    private final MemberRepository memberRepository;
 
     /**
      * 스타 멤버 번호와 팬 멤버 번호를 받아서 둘의 호감도를 리턴
@@ -84,4 +75,5 @@ public class LikabilityService {
 
 
     }
+
 }

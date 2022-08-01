@@ -10,6 +10,7 @@ import ResetPw from './components/ResetPw';
 import Profile from './components/Profile';
 import Test from './components/Test';
 import PerfDetail from './components/PerfDetail';
+import PerfNew from './components/PerfNew'
 
 function App() {
   const loginCheck = ()=> {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/profile" element={ <Profile /> }></Route>
           <Route path="/test" element={ <Test /> }></Route>
           <Route path="/perf/detail" element={ <PerfDetail /> }></Route>
+          <Route path="/perf/new" element={ <PerfNew /> }></Route>
         </Routes>
       </Router>
     </div>
