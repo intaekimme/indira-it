@@ -3,6 +3,7 @@ package com.troupe.backend.domain.comment;
 import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.member.Member;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Comment  implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +27,7 @@ public class Comment  implements Serializable {
     @JoinColumn(name = "feed_no")
     private Feed feed;
 
+    private String content;
     // 자기참조 부모 하나
     @ManyToOne(targetEntity = Comment.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_comment_no")
@@ -43,4 +46,6 @@ public class Comment  implements Serializable {
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
+
+    public void setRemoved(boolean isRemoved){this.isRemoved=isRemoved;}
 }
