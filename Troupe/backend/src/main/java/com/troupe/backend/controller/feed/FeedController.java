@@ -60,8 +60,8 @@ public class FeedController {
     }
 
     // 공연 등록자가 등록한 피드 목록 불러오기
-    @GetMapping("/list/performer/{memberNo}")
-    public ResponseEntity selectAllFeedByPerformer(@PathVariable int memberNo) throws IOException {
+    @GetMapping("/{profileMemberNo}/myfeed/list")
+    public ResponseEntity selectAllFeedByPerformer(@PathVariable(name = "profileMemberNo") int memberNo) throws IOException {
         try{
             List<FeedResponse> feedResponse = feedService.selectAllByMember(memberNo);
             return new ResponseEntity(feedResponse, HttpStatus.CREATED);
@@ -102,8 +102,8 @@ public class FeedController {
         }
     }
     // responsebody로 수정
-    @PatchMapping
-    public ResponseEntity updateFeed(@RequestParam("feedNo") int feedNo,
+    @PatchMapping("/{feedNo}/modify")
+    public ResponseEntity updateFeed(@PathVariable int feedNo,
                                  @RequestParam(name = "images",required = false) List<MultipartFile> images,
                                  @RequestParam(name = "deletedImages", required = false) List<Integer> imageNo,
                                  @RequestParam(name = "content", required = false) String content,
