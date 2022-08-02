@@ -127,4 +127,61 @@ public class PerformanceController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 공연후기작성
+     * @param pfNo
+     * @param requestHeader
+     * @param content
+     * @return
+     */
+    @PostMapping("/{pfNo}/review")
+    public ResponseEntity registerReview(@PathVariable int pfNo,
+                                         @RequestHeader Map<String, Object> requestHeader,
+                                         @RequestParam String content){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        performanceReviewService.add(pfNo, memberNo, content);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{pfNo}/review/{reviewNo}/del")
+    public ResponseEntity deleteReview(@PathVariable int pfNo,
+                                       @PathVariable int reviewNo){
+        performanceReviewService.delete(pfNo, reviewNo);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{pfNo}/review/list")
+    public ResponseEntity<List<PfReviewResponse>> findPfReviewList(@PathVariable int pfNo,
+                                             @RequestHeader Map<String, Object> requestHeader){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfReviewList(pfNo, memberNo);
+        return ResponseEntity.ok().body(pfReviewResponseList);
+    }
+
+    //  =================================================================================
+    //  profile controller
+    //  =================================================================================
+
+    /**
+     * 프로필 주인의 공연 북마크 목록
+     * @param profileMemberNo
+     * @param requestHeader
+     * @return
+     */
+    @GetMapping("/{profileMemberNo}/saveperf/list")
+    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(@PathVariable int profileMemberNo, @RequestHeader Map<String, Object> requestHeader){
+        //  profile service
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        List<ProfilePfSaveResponse> profileSaveResponseList = performanceSaveService.findSavedList(memberNo);
+        return ResponseEntity.ok().body(profileSaveResponseList);
+    }
+
+    //  프로필 주인이 등록한 공연 목록 불러오기
+    @GetMapping("/{profileMemberNo}/myperf/list")
+    public ResponseEntity<List<ProfilePfResponse>> profilePfList(@PathVariable int profileMemberNo, @RequestHeader Map<String, Object> requestHeader){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(memberNo);
+        return ResponseEntity.ok().body(profilePfResponseList);
+    }
+
 }
