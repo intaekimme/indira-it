@@ -20,10 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-
-import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
 @CrossOrigin
 @Api("피드 REST API")
@@ -58,9 +57,9 @@ public class FeedController {
 
     @Operation(summary = "조건별 피드 목록 조회", description = "파라미터: {change} = [all,save,follow] (후에 profileController로 이전-피드저장부분)")
     @GetMapping("/list/{change}")
-    public ResponseEntity selectAllFeed(@PathVariable String change, @RequestParam int memberNo) throws IOException {
+    public ResponseEntity selectAllFeed(@PathVariable String change, Principal principal) throws IOException {
         try{
-            List<FeedResponse> feedResponse = feedService.selectAll(change, memberNo);
+            List<FeedResponse> feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()));
             return new ResponseEntity(feedResponse, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
@@ -94,11 +93,11 @@ public class FeedController {
     // responsebody로 수정
     @Operation(summary = "피드 등록", description = "파라미터: 이미지 파일들, 멤버번호, 내용, 태그명들")
     @PostMapping
-    public ResponseEntity insertFeed(@RequestPart("images") List<MultipartFile> images,
-                                     @RequestHeader Map<String,Object> requestHeader,
+    public ResponseEntity insertFeed(Principal principal,
+                                     @RequestPart("images") List<MultipartFile> images,
                                      @RequestBody(required = false) FeedForm feedForm) throws IOException {
         try{
-            feedForm.setMemberNo(getMemberNoFromRequestHeader(requestHeader));
+            feedForm.setMemberNo(Integer.parseInt(principal.getName()));
             feedForm.setImages(images);
             feedService.insert(feedForm);
             return new ResponseEntity("Feed Insert SUCCESS", HttpStatus.CREATED);
@@ -146,9 +145,9 @@ public class FeedController {
 
     @Operation(summary = "피드 좋아요 스위칭(처음엔 insert, 그 뒤는 update)", description = "파라미터: 피드번호, 멤버번호")
     @PatchMapping("/{feedNo}/like")
-    public ResponseEntity likeFeed(@PathVariable int feedNo, @RequestParam int memberNo) throws IOException {
+    public ResponseEntity likeFeed(@PathVariable int feedNo, Principal principal) throws IOException {
         try {
-            boolean check = feedILikeService.insert(memberNo,feedNo);
+            boolean check = feedILikeService.insert(Integer.parseInt(principal.getName()),feedNo);
             return new ResponseEntity(check, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
@@ -158,9 +157,9 @@ public class FeedController {
 
     @Operation(summary = "피드 저장", description = "파라미터: 피드 번호, 멤버 번호")
     @PatchMapping("/{feedNo}/save")
-    public ResponseEntity saveFeed(@PathVariable int feedNo, @RequestParam int memberNo) throws IOException {
+    public ResponseEntity saveFeed(@PathVariable int feedNo, Principal principal) throws IOException {
         try {
-            boolean check = feedSaveService.insert(memberNo,feedNo);
+            boolean check = feedSaveService.insert(Integer.parseInt(principal.getName()),feedNo);
             return new ResponseEntity(check, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
@@ -171,13 +170,13 @@ public class FeedController {
     // 아래로 피드 댓글
     @Operation(summary = "피드 댓글 등록", description = "파라미터: 피드번호, 멤버번호, 내용, 부모댓글번호-선택")
     @PostMapping("/{feedNo}/comment")
-    public ResponseEntity insertComment(@RequestParam int memberNo,
+    public ResponseEntity insertComment(Principal principal,
                                      @RequestParam String content,
                                      @RequestParam(required = false) Integer parentCommentNo,
                                         @PathVariable int feedNo) throws IOException {
         try{
             CommentForm request = new CommentForm();
-            request.setMemberNo(memberNo);
+            request.setMemberNo(Integer.parseInt(principal.getName()));
             request.setContent(content);
             if(parentCommentNo!=null)  request.setParentCommentNo(parentCommentNo);
             else request.setParentCommentNo(0);
