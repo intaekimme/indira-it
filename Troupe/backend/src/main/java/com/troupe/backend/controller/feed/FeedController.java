@@ -1,5 +1,6 @@
 package com.troupe.backend.controller.feed;
 
+import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.dto.comment.CommentForm;
 import com.troupe.backend.dto.comment.CommentResponse;
 import com.troupe.backend.dto.feed.FeedForm;
@@ -242,6 +243,18 @@ public class FeedController {
         try{
             List<CommentResponse> responses = commentService.selectAllByParent(commentNo);
             return new ResponseEntity(responses, HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Comment selectAllByParent FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "피드별 좋아요 개수 ", description = "파라미터: 피드 번호")
+    @GetMapping("/{feedNo}/like")
+    public ResponseEntity getCountLike (@PathVariable int feedNo) throws IOException {
+        try{
+            int totalCount = feedILikeService.countTotalLike(feedNo);
+            return new ResponseEntity(totalCount, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Comment selectAllByParent FAIL", HttpStatus.BAD_REQUEST);

@@ -59,7 +59,7 @@ public class FeedService {
                 feedResponses.add(select(feed.getFeedNo()));
             }
         }else if(change.equals("follow")){
-
+            List<Member> followings = followService.findAllStars(memberNo);
 
         }else if(change.equals("save")){
             List<FeedSave> saveLIst =  feedSaveService.selectAllByMember(memberRepository.findById(memberNo).get());

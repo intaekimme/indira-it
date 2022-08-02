@@ -35,6 +35,9 @@ public class FeedLike implements Serializable {
 
     private boolean isDeleted;
 
+    @Transient
+    private int totalLikeCount;
+
     public void setDeleted(boolean isDeleted){this.isDeleted = isDeleted; }
     public void setCreatedTime(Date createdTime){this.createdTime = createdTime;}
 }
