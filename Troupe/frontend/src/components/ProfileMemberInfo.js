@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import apiClient from "../apiClient";
 import LoginPopup from "./LoginPopup";
@@ -22,38 +23,35 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function UserInfoCard(props) {
-  //카드펼치기 핸들러
-  // const [expanded, setExpanded] = React.useState(false);
-
-  // const handleExpandClick = () => {
-  //   setExpanded(!expanded);
-  // };
+export default function MemberInfoCard(props) {
+  //이 member의 팔로우 수
+  // const followerCount = apiClient.getFollowerCount(props.memberInfo.memberNo);
+  const followerCount = 123123123;
 
   // 자신의 유저페이지인지 판단
-  // const [mypage, setMypage] = React.useState(window.sessionStorage.getItem('loginUser').userNo === props.userNo);
+  // const [mypage, setMypage] = React.useState(window.sessionStorage.getItem('loginMember').memberNo === props.memberInfo.memberNo);
   const [mypage, setMypage] = React.useState(false);
+
   // 이 유저를 팔로우 했는지 판단
-  const [followThisUser, setFollowThisUser] = React.useState(true);
+  //const [isFollowing, setIsFollowing] = apiClient.isFollowing({
+  //  profileMemberNo: props.memberInfo.memberNo,
+  //  fanMamberNo: 1,
+  //  // fanMamberNo: sessionStorage.getItem("loginMember").memberNo,
+  //});
+  const [isFollowing, setIsFollowing] = React.useState(true);
+
   // follow/unfollow 버튼클릭
   const followClick = () => {
-    const currnetFollow = followThisUser;
-    setFollowThisUser((current) => !current);
+    const currnetFollow = isFollowing;
+    setIsFollowing((current) => !current);
     const data = {
-      follow: !currnetFollow,
-      userNo: props.userNo,
-      currentUser: 1,
+      isFollowing: !currnetFollow,
+      profileMemberNo: props.memberInfo.memberNo,
+      fanMemberNo: 1,
+      // fanMamberNo: sessionStorage.getItem("loginUser"),
     };
     apiClient.follow(data);
   };
-  // React.useEffect(() => {
-  //   const data = {
-  //     follow: followThisUser,
-  //     userNo: props.userNo,
-  //     currentUser: 1,
-  //   };
-  //   apiClient.follow(data);
-  // });
 
   return (
     <Card
@@ -75,8 +73,20 @@ export default function UserInfoCard(props) {
           >
             신고하기
           </Button>
-          <div>{props.profile}</div>
-          <div style={{ padding: "20px" }}>{props.nickname}</div>
+          <div>
+            {
+              <img
+                src={props.memberInfo.profileImageUrl}
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+              />
+            }
+          </div>
+          <div style={{ padding: "20px" }}>{props.memberInfo.nickname}</div>
           <div
             style={{
               float: "right",
@@ -87,7 +97,7 @@ export default function UserInfoCard(props) {
               textAlign: "right",
             }}
           >
-            <Button>{NumberFilter(props.follower)}</Button>
+            <Button>{NumberFilter(followerCount)}</Button>
             {mypage ? (
               <Button
                 style={{
@@ -101,24 +111,13 @@ export default function UserInfoCard(props) {
               >
                 프로필수정
               </Button>
-            ) : followThisUser ? (
-              <Button
-                className={styledButton.btn}
-                // style={{
-                //   width: "100px",
-                //   fontSize: "12px",
-                //   backgroundColor: "#AAAAAA",
-                //   color: "white",
-                //   borderRadius: "15px",
-                //   margin: "10px",
-                // }}
-                onClick={followClick}
-              >
+            ) : isFollowing ? (
+              <Button className={styledButton.btn} onClick={followClick}>
                 -UnFollow
               </Button>
             ) : (
               <Button
-              className={styledButton.btn}
+                className={styledButton.btn}
                 style={{
                   backgroundColor: "#45E3C6",
                   color: "black",
@@ -131,7 +130,7 @@ export default function UserInfoCard(props) {
           </div>
         </div>
         <Typography variant="body2" color="text.secondary">
-          {props.content}
+          {props.memberInfo.description}
         </Typography>
       </CardContent>
     </Card>
