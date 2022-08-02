@@ -19,15 +19,4 @@ public class PerformanceResponse {
     List<String> image;
     String location;
     String detailTime;
-
-    public static PerformanceResponse PerformanceToResponse(Performance p, List<String> imgUrlList){
-        return PerformanceResponse.builder()
-                .pfNo(p.getId())
-                .description(p.getDescription())
-                .image(imgUrlList)
-                .location(p.getLocation())
-                .detailTime(p.getDetailTime())
-                .build();
-    }
-
 }

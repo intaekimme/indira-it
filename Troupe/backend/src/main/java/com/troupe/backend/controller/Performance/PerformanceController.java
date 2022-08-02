@@ -1,16 +1,8 @@
 package com.troupe.backend.controller.Performance;
 
 
-import com.troupe.backend.domain.performance.Performance;
-import com.troupe.backend.dto.Performance.PerformanceDetailResponse;
-import com.troupe.backend.dto.Performance.PerformanceForm;
-import com.troupe.backend.dto.Performance.PerformanceResponse;
-import com.troupe.backend.dto.Performance.PerformanceSearchForm;
-import com.troupe.backend.service.Performance.PerformanceImageService;
-import com.troupe.backend.service.Performance.PerformancePriceService;
-import com.troupe.backend.service.Performance.PerformanceSaveService;
-import com.troupe.backend.service.Performance.PerformanceService;
-import com.troupe.backend.util.MyConstant;
+import com.troupe.backend.dto.Performance.*;
+import com.troupe.backend.service.Performance.*;
 import com.troupe.backend.util.S3FileUploadService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +26,7 @@ public class PerformanceController {
     private final PerformancePriceService performancePriceService;
     private final PerformanceImageService performanceImageService;
     private final PerformanceSaveService performanceSaveService;
+    private final PerformanceReviewService performanceReviewService;
     private final S3FileUploadService s3FileUploadService;
 
     /**
@@ -46,7 +39,8 @@ public class PerformanceController {
     public ResponseEntity register(@RequestHeader Map<String, Object> requestHeader,
                                    @RequestPart(value = "performanceForm") PerformanceForm performanceform,
                                    @RequestPart(value = "image") List<MultipartFile> multipartFileList) throws IOException {
-        performanceService.register(requestHeader, performanceform, multipartFileList);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        performanceService.register(memberNo, performanceform, multipartFileList);
         return ResponseEntity.ok().build();
     }
 
@@ -59,7 +53,8 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/modify")
     public ResponseEntity modify(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceForm performanceform){
-        performanceService.modify(pfNo, requestHeader, performanceform);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        performanceService.modify(pfNo, memberNo, performanceform);
         return ResponseEntity.ok().build();
     }
 
@@ -71,7 +66,8 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/del")
     public ResponseEntity delete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        performanceService.delete(pfNo, requestHeader);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        performanceService.delete(pfNo, memberNo);
         return ResponseEntity.ok().build();
     }
 
@@ -117,14 +113,57 @@ public class PerformanceController {
      */
     @PostMapping("/{pfNo}/save")
     public ResponseEntity performanceSave(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        performanceSaveService.save(pfNo, requestHeader);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        performanceSaveService.save(pfNo, memberNo);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 공연 북마크 저장 삭제
+     * @param pfNo
+     * @param requestHeader
+     * @return
+     */
     @PatchMapping("/{pfNo}/save/del")
     public ResponseEntity performanceSaveDelete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        performanceSaveService.delete(pfNo, requestHeader);
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        performanceSaveService.delete(pfNo, memberNo);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{pfNo}/review")
+    public ResponseEntity registerReview(@PathVariable int pfNo,
+                                         @RequestHeader Map<String, Object> requestHeader,
+                                         @RequestBody String content){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        performanceReviewService.add(pfNo, memberNo, content);
+        return ResponseEntity.ok().build();
+    }
+
+    //  =================================================================================
+    //  profile controller
+    //  =================================================================================
+
+    /**
+     * 프로필 주인의 공연 북마크 목록
+     * @param profileMemberNo
+     * @param requestHeader
+     * @return
+     */
+    @GetMapping("/{profileMemberNo}/saveperf/list")
+    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(@PathVariable int profileMemberNo, @RequestHeader Map<String, Object> requestHeader){
+        //  profile service
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        List<ProfilePfSaveResponse> profileSaveResponseList = performanceSaveService.findSavedList(memberNo);
+        return ResponseEntity.ok().body(profileSaveResponseList);
+    }
+
+    //  프로필 주인이 등록한 공연 목록 불러오기
+    @GetMapping("/{profileMemberNo}/myperf/list")
+    public ResponseEntity<List<ProfilePfResponse>> profilePfList(@PathVariable int profileMemberNo, @RequestHeader Map<String, Object> requestHeader){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(memberNo);
+        return ResponseEntity.ok().body(profilePfResponseList);
     }
 
 }

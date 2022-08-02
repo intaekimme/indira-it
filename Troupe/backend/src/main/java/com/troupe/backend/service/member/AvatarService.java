@@ -4,7 +4,7 @@ import com.troupe.backend.domain.avatar.*;
 import com.troupe.backend.dto.avatar.*;
 import com.troupe.backend.repository.avatar.*;
 import com.troupe.backend.util.S3FileUploadService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,49 +13,15 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AvatarService {
-    private AvatarClothesRepository avatarClothesRepository;
-    private AvatarEyeRepository avatarEyeRepository;
-    private AvatarNoseRepository avatarNoseRepository;
-    private AvatarMouthRepository avatarMouthRepository;
-    private AvatarShapeRepository avatarShapeRepository;
-    private AvatarHairRepository avatarHairRepository;
-    private S3FileUploadService s3FileUploadService;
-
-    @Autowired
-    public void setAvatarClothesRepository(AvatarClothesRepository avatarClothesRepository) {
-        this.avatarClothesRepository = avatarClothesRepository;
-    }
-
-    @Autowired
-    public void setAvatarEyeRepository(AvatarEyeRepository avatarEyeRepository) {
-        this.avatarEyeRepository = avatarEyeRepository;
-    }
-
-    @Autowired
-    public void setAvatarNoseRepository(AvatarNoseRepository avatarNoseRepository) {
-        this.avatarNoseRepository = avatarNoseRepository;
-    }
-
-    @Autowired
-    public void setAvatarMouthRepository(AvatarMouthRepository avatarMouthRepository) {
-        this.avatarMouthRepository = avatarMouthRepository;
-    }
-
-    @Autowired
-    public void setAvatarShapeRepository(AvatarShapeRepository avatarShapeRepository) {
-        this.avatarShapeRepository = avatarShapeRepository;
-    }
-
-    @Autowired
-    public void setAvatarHairRepository(AvatarHairRepository avatarHairRepository) {
-        this.avatarHairRepository = avatarHairRepository;
-    }
-
-    @Autowired
-    public void setS3FileUploadService(S3FileUploadService s3FileUploadService) {
-        this.s3FileUploadService = s3FileUploadService;
-    }
+    private final AvatarClothesRepository avatarClothesRepository;
+    private final AvatarEyeRepository avatarEyeRepository;
+    private final AvatarNoseRepository avatarNoseRepository;
+    private final AvatarMouthRepository avatarMouthRepository;
+    private final AvatarShapeRepository avatarShapeRepository;
+    private final AvatarHairRepository avatarHairRepository;
+    private final S3FileUploadService s3FileUploadService;
 
     public List<AvatarClothes> findAllClothes() {
         return avatarClothesRepository.findAll();

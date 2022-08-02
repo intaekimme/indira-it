@@ -7,7 +7,7 @@ import com.troupe.backend.service.member.GuestbookService;
 import com.troupe.backend.service.member.MemberService;
 import com.troupe.backend.util.MyConstant;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,20 +23,11 @@ import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 @Api("방명록 REST API")
 @RequestMapping("/guestbook")
 @RestController
+@RequiredArgsConstructor
 public class GuestbookController {
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    private GuestbookService guestbookService;
-
-    @Autowired
-    public void setMemberService(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
-    @Autowired
-    public void setGuestbookService(GuestbookService guestbookService) {
-        this.guestbookService = guestbookService;
-    }
+    private final GuestbookService guestbookService;
 
     /**
      * host의 모든 방명록 조회

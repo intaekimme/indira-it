@@ -3,14 +3,13 @@ package com.troupe.backend.service.feed;
 import com.troupe.backend.domain.feed.*;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.FeedConverter;
-import com.troupe.backend.dto.feed.FeedInsertRequest;
+import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
 import com.troupe.backend.repository.feed.FeedRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,13 +37,13 @@ public class FeedService {
     FeedSaveService feedSaveService;
 
     @Autowired
-    FeedConverter converter;
+    FeedConverter feedConverter;
 
     public FeedResponse select(int feedNo){
         Feed feed = feedRepository.findById(feedNo).get();
         List<FeedImage> feedImages = feedImageService.selectAll(feed);
         List<Tag> tags = tagService.selectAll(feed);
-        FeedResponse feedResponse = converter.feedResponse(feed, feedImages,tags);
+        FeedResponse feedResponse = feedConverter.feedResponse(feed, feedImages,tags);
         return feedResponse;
     }
 
@@ -79,7 +78,7 @@ public class FeedService {
 
     public  List<FeedResponse> selectAllBySearch(List<String> tagList){
         List<FeedResponse> feedResponses = new ArrayList<>();
-        List<Tag> tags = converter.toTagEntity(tagList);
+        List<Tag> tags = feedConverter.toTagEntity(tagList);
         List<FeedTag> feedTags = tagService.selectAllBySearch(tags);
         for(FeedTag feedTag:feedTags){
             feedResponses.add(select(feedTag.getFeed().getFeedNo()));
@@ -87,19 +86,19 @@ public class FeedService {
         return feedResponses;
     }
     // 피드 등록
-    public void insert(FeedInsertRequest request) throws Exception{
+    public void insert(FeedForm request) throws Exception{
         try {
             // 현재 로그인 한 멤버번호 가져오기
              Optional<Member> member =  memberRepository.findById(request.getMemberNo());
             // 피드 본문 insert
-            Feed newFeed = feedRepository.save(converter.toFeedEntity(member.get(),request.getContent()));
+            Feed newFeed = feedRepository.save(feedConverter.toFeedEntity(member.get(),request.getContent()));
 
             // 피드 이미지들 저장
-            List<FeedImage> feedImageList =  converter.toFeedImageEntity(newFeed,request.getImages());
+            List<FeedImage> feedImageList =  feedConverter.toFeedImageEntity(newFeed,request.getImages());
             feedImageService.insert(feedImageList);
 
             //피드 태그 insert
-            List<Tag> tags = converter.toTagEntity(request.getTags());
+            List<Tag> tags = feedConverter.toTagEntity(request.getTags());
             tagService.insert(tags,newFeed);
 
         }catch (Exception e){
@@ -108,13 +107,13 @@ public class FeedService {
     }
 
     // 피드 수정
-    public void update(FeedInsertRequest request) {
+    public void update(FeedForm request) {
         try{
             Optional<Feed> feed = feedRepository.findById(request.getFeedNo());
             Member member =  memberRepository.findById(feed.get().getMember().getMemberNo()).get();
 //            System.out.println("member, feed : "+feed.get().getFeedNo()+" "+member.getMemberNo());
             if(feed.isPresent()){
-                Feed updateFeed = Feed.builder().feedNo(feed.get().getFeedNo()).member(member).content(request.getContent()).build();
+                Feed updateFeed = Feed.builder().feedNo(feed.get().getFeedNo()).member(member).content(request.getContent()).createdTime(feed.get().getCreatedTime()).build();
                 feedRepository.save(updateFeed);
             }else return;
 
@@ -127,7 +126,7 @@ public class FeedService {
             // 추가된 사진 있다면
             if(request.getImages() != null){
 //                System.out.println("update images : "+request.getImages().size());
-                List<FeedImage> feedImageList =  converter.toFeedImageEntity(feed.get(),request.getImages());
+                List<FeedImage> feedImageList =  feedConverter.toFeedImageEntity(feed.get(),request.getImages());
                 feedImageService.insert(feedImageList);
             }
 
@@ -135,7 +134,7 @@ public class FeedService {
             if(request.getTags()!= null){
 //                System.out.println("update tags : "+request.getTags().size());
                 // number 없는 태그들일수있따
-                List<Tag> tags = converter.toTagEntity(request.getTags());
+                List<Tag> tags = feedConverter.toTagEntity(request.getTags());
                 tagService.deleteAll(feed.get());
                 tagService.insert(tags,feed.get());
             }

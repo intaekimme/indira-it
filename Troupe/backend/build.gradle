@@ -29,7 +29,7 @@ dependencies {
     //	Spring data JPA dependency
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     //	Spring Security dependency
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     //	Spring Validation dependency
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     //	Spring Web dependency
@@ -45,7 +45,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
