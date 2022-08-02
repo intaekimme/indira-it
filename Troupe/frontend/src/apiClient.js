@@ -89,6 +89,34 @@ const apiClient = {
         return null;
       });
   },
+
+  //관심카테고리 불러오기
+  getInterestCategory: (userNo) => {
+    instance
+      .get(`/profile/${userNo}/interest/category`)
+      .then((response) => {
+        alert("category : " + response);
+        return response;
+      })
+      .catch((error) => {
+        alert("category 정보를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
+
+  //호감도 순위정보
+  getLikeabilityData: (userNo) => {
+    instance
+      .get(`/profile/${userNo}/likability/topstars/`)
+      .then((response) => {
+        alert("likability data : " + response);
+        return response;
+      })
+      .catch((error) => {
+        alert("likability data를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
 };
 
 export default apiClient;
