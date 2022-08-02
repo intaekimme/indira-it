@@ -20,6 +20,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
 @CrossOrigin
 @Api("피드 REST API")
@@ -91,16 +94,12 @@ public class FeedController {
     @Operation(summary = "피드 등록", description = "파라미터: 이미지 파일들, 멤버번호, 내용, 태그명들")
     @PostMapping
     public ResponseEntity insertFeed(@RequestPart("images") List<MultipartFile> images,
-                                 @RequestParam("memberNo")int memberNo,
-                                 @RequestParam("content") String content,
-                                 @RequestParam("tags") List<String> tags) throws IOException {
+                                     @RequestHeader Map<String,Object> requestHeader,
+                                     @RequestBody(required = false) FeedForm feedForm) throws IOException {
         try{
-            FeedForm request = new FeedForm();
-            request.setImages(images);
-            request.setMemberNo(memberNo);
-            request.setContent(content);
-            request.setTags(tags);
-            feedService.insert(request);
+            feedForm.setMemberNo(getMemberNoFromRequestHeader(requestHeader));
+            feedForm.setImages(images);
+            feedService.insert(feedForm);
             return new ResponseEntity("Feed Insert SUCCESS", HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);

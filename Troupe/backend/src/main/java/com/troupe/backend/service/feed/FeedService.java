@@ -7,6 +7,7 @@ import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
 import com.troupe.backend.repository.feed.FeedRepository;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.service.member.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class FeedService {
     FeedSaveService feedSaveService;
 
     @Autowired
+    FollowService followService;
+
+    @Autowired
     FeedConverter feedConverter;
 
     public FeedResponse select(int feedNo){
@@ -50,8 +54,8 @@ public class FeedService {
     public List<FeedResponse> selectAll(String change, int memberNo){
         List<FeedResponse> feedResponses = new ArrayList<>();
         if(change.equals("all")){
-            List<Feed> totalList = feedRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false).get();
-            for(Feed feed: totalList){
+            List<Feed> feedList = feedRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false).get();
+            for(Feed feed: feedList){
                 feedResponses.add(select(feed.getFeedNo()));
             }
         }else if(change.equals("follow")){
