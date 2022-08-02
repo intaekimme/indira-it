@@ -80,23 +80,21 @@ public class PerformanceReviewService {
     /**
      * 공연 후기 리스트 반환
      * @param pfNo
-     * @param memberNo
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PfReviewResponse> findPfReviewList(int pfNo, int memberNo){
-        Member member = memberRepository.findById(memberNo)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+    public List<PfReviewResponse> findPfReviewList(int pfNo){
         Performance performance = performanceRepository.findById(pfNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
         List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
         List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
-        for (PerformanceReview performanceReview : performanceReviewList){
+        for (PerformanceReview review : performanceReviewList){
+            Member member = review.getMemberNo();
             pfReviewResponseList.add( PfReviewResponse.builder()
-                    .memberNo(memberNo)
+                    .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())
                     .profileImageUrl(member.getProfileImageUrl())
-                    .comment(performanceReview.getContent())
+                    .comment(review.getContent())
                     .build()
             );
         }
@@ -104,4 +102,54 @@ public class PerformanceReviewService {
     }
 
 
+    /**
+     * 공연후기수정, 수정 요청 당시에는 공연 존재, 요청 이 후 삭제된 것은 논외
+     * @param pfNo
+     * @param reviewNo
+     * @param content
+     */
+    @Transactional
+    public void modify(int pfNo, int reviewNo, String content) {
+        //  공연 엔티티를 하나 불러오고
+        Performance performance = performanceRepository.findById(pfNo).get();
+        //  리뷰테이블에서 공연 엔티티와 id: reviewNo로 리뷰 엔티티를 찾고
+        PerformanceReview performanceReview = performanceReviewRepository.findBypfNoAndId(performance, reviewNo).get();
+        //  is_modified 값과, content 값만 변경해서 set 해주고, 나머지는 그대로
+        performanceReview.setModified(true);
+        performanceReview.setContent(content);
+        //  save
+        performanceReviewRepository.save(performanceReview);
+    }
+
+    /**
+     * 공연후기대댓글
+     * @param pfNo
+     * @param reviewNo
+     * @param memberNo
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<PfReviewResponse> findPfChildReviewList(int pfNo, int reviewNo, int memberNo) {
+        //  공연 엔티티를 하나 불러오고
+        Performance performance = performanceRepository.findById(pfNo).get();
+        //  리뷰테이블에서 공연 엔티티와 id: reviewNo로 리뷰 엔티티를 찾고
+        PerformanceReview performanceReview = performanceReviewRepository.findBypfNoAndId(performance, reviewNo).get();
+        //  리뷰 엔티티에서 대댓글 리스트를 불러오고
+        List<PerformanceReview> childReviewList = performanceReview.getChildrenPerformanceReview();
+
+        //  리뷰 하나를 반환 폼으로 만듦
+        List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
+        for (PerformanceReview review : childReviewList){
+            Member member = review.getMemberNo();
+            pfReviewResponseList.add(PfReviewResponse.builder()
+                    .memberNo(member.getMemberNo())
+                    .nickname(member.getNickname())
+                    .profileImageUrl(member.getProfileImageUrl())
+                    .comment(review.getContent())
+                    .build()
+            );
+        }
+
+        return pfReviewResponseList;
+    }
 }

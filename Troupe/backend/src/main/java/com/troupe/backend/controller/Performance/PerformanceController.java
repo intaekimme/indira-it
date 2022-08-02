@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
-import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
+
 
 @CrossOrigin
 @Api("공연 REST API")
@@ -31,15 +31,17 @@ public class PerformanceController {
 
     /**
      * 공연 등록
-     * @param requestHeader
+     * @param principal
      * @param performanceform
+     * @param multipartFileList
      * @return
+     * @throws IOException
      */
     @PostMapping
-    public ResponseEntity register(@RequestHeader Map<String, Object> requestHeader,
+    public ResponseEntity register(Principal principal,
                                    @RequestPart(value = "performanceForm") PerformanceForm performanceform,
                                    @RequestPart(value = "image") List<MultipartFile> multipartFileList) throws IOException {
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        int memberNo = Integer.parseInt(principal.getName());
         performanceService.register(memberNo, performanceform, multipartFileList);
         return ResponseEntity.ok().build();
     }
@@ -47,27 +49,31 @@ public class PerformanceController {
 
     /**
      * 공연 수정
-     * @param requestHeader
+     * @param principal
+     * @param pfNo
      * @param performanceform
      * @return
      */
     @PatchMapping("{pfNo}/modify")
-    public ResponseEntity modify(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceForm performanceform){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceService.modify(pfNo, memberNo, performanceform);
+    public ResponseEntity modify(Principal principal,
+                                 @PathVariable int pfNo,
+                                 @RequestBody PerformanceForm performanceform){
+        int memberNo = Integer.parseInt(principal.getName());
+        performanceService.modify(memberNo, pfNo, performanceform);
         return ResponseEntity.ok().build();
     }
 
     /**
-     * 공연삭제
+     * 공연 삭제
+     * @param principal
      * @param pfNo
-     * @param requestHeader
      * @return
      */
     @PatchMapping("{pfNo}/del")
-    public ResponseEntity delete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceService.delete(pfNo, memberNo);
+    public ResponseEntity delete(Principal principal,
+                                 @PathVariable int pfNo){
+        int memberNo = Integer.parseInt(principal.getName());
+        performanceService.delete(memberNo, pfNo);
         return ResponseEntity.ok().build();
     }
 
@@ -107,58 +113,98 @@ public class PerformanceController {
 
     /**
      * 공연 북마크 저장
+     * @param principal
      * @param pfNo
-     * @param requestHeader
      * @return
      */
     @PostMapping("/{pfNo}/save")
-    public ResponseEntity performanceSave(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceSaveService.save(pfNo, memberNo);
+    public ResponseEntity performanceSave(Principal principal,
+                                          @PathVariable int pfNo){
+        int memberNo = Integer.parseInt(principal.getName());
+        performanceSaveService.save(memberNo, pfNo);
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * 공연 북마크 저장 삭제
-     * @param pfNo
-     * @param requestHeader
-     * @return
-     */
     @PatchMapping("/{pfNo}/save/del")
-    public ResponseEntity performanceSaveDelete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceSaveService.delete(pfNo, memberNo);
+    public ResponseEntity performanceSaveDelete(Principal principal,
+                                                @PathVariable int pfNo){
+        int memberNo = Integer.parseInt(principal.getName());
+        performanceSaveService.delete(memberNo, pfNo);
         return ResponseEntity.ok().build();
     }
 
     /**
      * 공연후기작성
+     * @param principal
      * @param pfNo
-     * @param requestHeader
      * @param content
      * @return
      */
     @PostMapping("/{pfNo}/review")
-    public ResponseEntity registerReview(@PathVariable int pfNo,
-                                         @RequestHeader Map<String, Object> requestHeader,
+    public ResponseEntity registerReview(Principal principal,
+                                         @PathVariable int pfNo,
                                          @RequestParam String content){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        int memberNo = Integer.parseInt(principal.getName());
         performanceReviewService.add(pfNo, memberNo, content);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 공연후기삭제
+     * @param principal
+     * @param pfNo
+     * @param reviewNo
+     * @return
+     */
     @PatchMapping("/{pfNo}/review/{reviewNo}/del")
-    public ResponseEntity deleteReview(@PathVariable int pfNo,
+    public ResponseEntity deleteReview(Principal principal,
+                                       @PathVariable int pfNo,
                                        @PathVariable int reviewNo){
+        int memberNo = Integer.parseInt(principal.getName());
         performanceReviewService.delete(pfNo, reviewNo);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 공연후기목록
+     * @param pfNo
+     * @return
+     */
     @GetMapping("/{pfNo}/review/list")
-    public ResponseEntity<List<PfReviewResponse>> findPfReviewList(@PathVariable int pfNo,
-                                             @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfReviewList(pfNo, memberNo);
+    public ResponseEntity<List<PfReviewResponse>> findPfReviewList(@PathVariable int pfNo){
+        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfReviewList(pfNo);
+        return ResponseEntity.ok().body(pfReviewResponseList);
+    }
+
+    /**
+     * 공연후기수정
+     * @param pfNo
+     * @param reviewNo
+     * @param content
+     * @return
+     */
+    @PatchMapping("/{pfNo}/review/{reviewNo}/modify")
+    public ResponseEntity modifyPfReview(Principal principal,
+                                         @PathVariable int pfNo,
+                                         @PathVariable int reviewNo,
+                                         @RequestParam String content){
+        performanceReviewService.modify(pfNo, reviewNo, content);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 공연 후기 대댓글 목록
+     * @param principal
+     * @param pfNo
+     * @param reviewNo
+     * @return
+     */
+    @GetMapping("/{pfNo}/review/{reviewNo}/list")
+    public ResponseEntity<List<PfReviewResponse>> findPfChildReviewList(Principal principal,
+                                                                        @PathVariable int pfNo,
+                                                                        @PathVariable int reviewNo){
+        int memberNo = Integer.parseInt(principal.getName());
+        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfChildReviewList(pfNo, reviewNo, memberNo);
         return ResponseEntity.ok().body(pfReviewResponseList);
     }
 
@@ -168,22 +214,29 @@ public class PerformanceController {
 
     /**
      * 프로필 주인의 공연 북마크 목록
+     * @param principal
      * @param profileMemberNo
-     * @param requestHeader
      * @return
      */
     @GetMapping("/{profileMemberNo}/saveperf/list")
-    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(@PathVariable int profileMemberNo, @RequestHeader Map<String, Object> requestHeader){
+    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(Principal principal,
+                                                                         @PathVariable int profileMemberNo){
         //  profile service
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        int memberNo = Integer.parseInt(principal.getName());
         List<ProfilePfSaveResponse> profileSaveResponseList = performanceSaveService.findSavedList(memberNo);
         return ResponseEntity.ok().body(profileSaveResponseList);
     }
 
-    //  프로필 주인이 등록한 공연 목록 불러오기
+    /**
+     * 프로필 주인이 등록한 공연 목록 불러오기
+     * @param principal
+     * @param profileMemberNo
+     * @return
+     */
     @GetMapping("/{profileMemberNo}/myperf/list")
-    public ResponseEntity<List<ProfilePfResponse>> profilePfList(@PathVariable int profileMemberNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+    public ResponseEntity<List<ProfilePfResponse>> profilePfList(Principal principal,
+                                                                 @PathVariable int profileMemberNo){
+        int memberNo = Integer.parseInt(principal.getName());
         List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(memberNo);
         return ResponseEntity.ok().body(profilePfResponseList);
     }

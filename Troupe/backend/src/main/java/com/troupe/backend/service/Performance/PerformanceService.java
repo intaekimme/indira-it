@@ -19,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
-import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
 
 @RequiredArgsConstructor
@@ -38,12 +39,12 @@ public class PerformanceService {
 
 
     @Transactional
-    public void register(int memberNo,
+    public void register(int member,
                          PerformanceForm performanceform,
                          List<MultipartFile> multipartFileList) throws IOException{
 
         //  공연 기본 정보 등록 서비스 호출
-        Performance performance = addPerformance(memberNo, performanceform);
+        Performance performance = addPerformance(member, performanceform);
         //  S3 공연 이미지 업로드 서비스 호출
         List<String> urlList = s3FileUploadService.upload(multipartFileList, "performance");
         //  공연 이미지 정보 등록 서비스 호출
@@ -53,7 +54,7 @@ public class PerformanceService {
     }
 
     @Transactional
-    public void modify(int pfNo, int memberNo, PerformanceForm performanceform){
+    public void modify(int memberNo, int pfNo, PerformanceForm performanceform){
         //  공연 기본 정보 수정 서비스 호출
         Performance performance = updatePerformance(memberNo, pfNo, performanceform);
         //  공연 좌석 정보 수정 서비스 호출
@@ -61,7 +62,7 @@ public class PerformanceService {
     }
 
     @Transactional
-    public void delete(int pfNo, int memberNo){
+    public void delete(int memberNo, int pfNo){
         //  공연 기본 정보 삭제 서비스 호출
         Performance deletedPerformance = deletePerformance(memberNo, pfNo);
         //  기본적인 예외처리 통과함, 공연 번호로 바로
@@ -159,13 +160,13 @@ public class PerformanceService {
         for(Performance p : performanceList){
             List<String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
             performanceResponseList.add(
-                PerformanceResponse.builder()
-                        .pfNo(p.getId())
-                        .description(p.getDescription())
-                        .image(imgUrlList)
-                        .location(p.getLocation())
-                        .detailTime(p.getDetailTime())
-                        .build()
+                    PerformanceResponse.builder()
+                            .pfNo(p.getId())
+                            .description(p.getDescription())
+                            .image(imgUrlList)
+                            .location(p.getLocation())
+                            .detailTime(p.getDetailTime())
+                            .build()
             );
         }
 
@@ -209,9 +210,9 @@ public class PerformanceService {
                 .build();
     }
 
-    //  =================================================================================
-    //  profile service
-    //  =================================================================================
+//  =================================================================================
+//  profile service
+//  =================================================================================
 
     @Transactional(readOnly = true)
     public List<ProfilePfResponse> findRegisteredList(int memberNo) {

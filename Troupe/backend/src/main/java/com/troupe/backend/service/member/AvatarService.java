@@ -2,6 +2,7 @@ package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.avatar.*;
 import com.troupe.backend.dto.avatar.*;
+import com.troupe.backend.dto.avatar.form.*;
 import com.troupe.backend.repository.avatar.*;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;

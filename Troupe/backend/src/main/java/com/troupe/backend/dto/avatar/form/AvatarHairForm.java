@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.avatar;
+package com.troupe.backend.dto.avatar.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AvatarMouthForm {
-    int mouthNo;
-    MultipartFile mouthImage;
+public class AvatarHairForm {
+    int hairNo;
+    MultipartFile hairImage;
 }

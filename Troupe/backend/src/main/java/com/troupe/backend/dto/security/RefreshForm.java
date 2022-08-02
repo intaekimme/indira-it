@@ -1,16 +1,15 @@
-package com.troupe.backend.dto.avatar;
+package com.troupe.backend.dto.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AvatarEyeForm {
-    int eyeNo;
-    MultipartFile eyeImage;
+public class RefreshForm {
+    int memberNo;
+    String refreshToken;
 }
