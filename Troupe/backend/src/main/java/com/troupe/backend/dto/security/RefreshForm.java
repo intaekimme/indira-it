@@ -1,4 +1,4 @@
-package com.troupe.backend.security;
+package com.troupe.backend.dto.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TokenResponse {
-    private int memberNo;
-    private String accessToken;
-    private String refreshToken;
+public class RefreshForm {
+    int memberNo;
+    String refreshToken;
 }

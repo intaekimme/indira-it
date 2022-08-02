@@ -1,10 +1,8 @@
-package com.troupe.backend.security;
+package com.troupe.backend.domain.security;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "tb_refresh_token")
@@ -14,7 +12,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Builder
 public class RefreshToken {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long refreshTokenNo;
 
     private String refreshToken;

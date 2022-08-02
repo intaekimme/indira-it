@@ -36,5 +36,4 @@ public final class MyConstant {
 
     // 파일 서버 주소
     public static final String FILE_SERVER_URL = "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/";
-
 }

@@ -1,5 +1,6 @@
-package com.troupe.backend.security;
+package com.troupe.backend.filter;
 
+import com.troupe.backend.service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

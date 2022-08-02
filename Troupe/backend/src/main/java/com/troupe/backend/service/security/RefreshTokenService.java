@@ -1,5 +1,7 @@
-package com.troupe.backend.security;
+package com.troupe.backend.service.security;
 
+import com.troupe.backend.repository.security.RefreshTokenRepository;
+import com.troupe.backend.domain.security.RefreshToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +32,7 @@ public class RefreshTokenService {
     /**
      * DB에서 리프레시 토큰을 조회
      */
-    public Optional<RefreshToken> getRefreshToken(String refreshToken) {
+    public Optional<RefreshToken> findRefreshToken(String refreshToken) {
         return refreshTokenRepository.findByRefreshToken(refreshToken);
     }
 

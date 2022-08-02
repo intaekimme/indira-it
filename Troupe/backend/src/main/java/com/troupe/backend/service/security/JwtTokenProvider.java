@@ -1,5 +1,7 @@
-package com.troupe.backend.security;
+package com.troupe.backend.service.security;
 
+import com.troupe.backend.domain.security.RefreshToken;
+import com.troupe.backend.dto.security.TokenResponse;
 import com.troupe.backend.util.MyConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -37,8 +39,6 @@ public class JwtTokenProvider {
     private long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14일
 
     private final UserDetailsService userDetailsService;
-
-    private final RefreshTokenRepository refreshTokenRepository;
 
     /**
      * 객체 초기화, secretKey를 Base64로 인코딩
@@ -124,7 +124,7 @@ public class JwtTokenProvider {
         // 리프레시 토큰의 유효성, 만료 여부 검증
         if (!claims.getBody().getExpiration().before(new Date())) {
             // DB에 리프레시 토큰 존재 여부 확인
-            Optional<RefreshToken> found = refreshTokenRepository.findByRefreshToken(refreshToken);
+            Optional<RefreshToken> found = refreshTokenService.findRefreshToken(refreshToken);
             if (found.isPresent()) {
                 int memberNoFromDB = found.get().getMemberNo();
 

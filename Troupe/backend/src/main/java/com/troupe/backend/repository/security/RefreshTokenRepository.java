@@ -1,5 +1,6 @@
-package com.troupe.backend.security;
+package com.troupe.backend.repository.security;
 
+import com.troupe.backend.domain.security.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
