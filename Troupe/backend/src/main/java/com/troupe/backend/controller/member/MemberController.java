@@ -1,12 +1,13 @@
 package com.troupe.backend.controller.member;
 
 import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.dto.avatar.AvatarForm;
+import com.troupe.backend.dto.avatar.form.AvatarForm;
 import com.troupe.backend.dto.member.AvatarResponse;
 import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.dto.member.MemberInfoResponse;
-import com.troupe.backend.security.JwtTokenProvider;
+import com.troupe.backend.service.security.JwtTokenProvider;
+import com.troupe.backend.dto.security.TokenResponse;
 import com.troupe.backend.service.member.MemberService;
 import com.troupe.backend.util.MyConstant;
 import io.swagger.annotations.Api;
@@ -47,19 +48,13 @@ public class MemberController {
     private ResponseEntity login(@RequestBody LoginForm loginForm) {
         Member member = memberService.login(loginForm);
 
-        String token = jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        TokenResponse tokenResponse = jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(MyConstant.MEMBER_NO, member.getMemberNo());
-        resultMap.put(MyConstant.ACCESS_TOKEN, token);
-        resultMap.put(MyConstant.MESSAGE, MyConstant.SUCCESS);
-
-        return new ResponseEntity(resultMap, HttpStatus.OK);
+        return new ResponseEntity(tokenResponse, HttpStatus.OK);
     }
 
     @PatchMapping("/{memberNo}")
     private ResponseEntity updateMember(@PathVariable int memberNo, @RequestBody MemberForm memberForm) throws IOException {
-        System.out.println(memberForm.toString());
         memberService.updateMember(memberNo, memberForm);
         return ResponseEntity.ok().build();
     }

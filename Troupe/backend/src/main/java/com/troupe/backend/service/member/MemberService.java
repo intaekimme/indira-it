@@ -2,7 +2,7 @@ package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.Avatar;
-import com.troupe.backend.dto.avatar.AvatarForm;
+import com.troupe.backend.dto.avatar.form.AvatarForm;
 import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.exception.member.DuplicatedMemberException;

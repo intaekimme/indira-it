@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.avatar;
+package com.troupe.backend.dto.avatar.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

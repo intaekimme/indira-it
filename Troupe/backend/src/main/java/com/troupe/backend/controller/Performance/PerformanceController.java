@@ -1,8 +1,16 @@
 package com.troupe.backend.controller.Performance;
 
 
-import com.troupe.backend.dto.Performance.*;
-import com.troupe.backend.service.Performance.*;
+import com.troupe.backend.domain.performance.Performance;
+import com.troupe.backend.dto.Performance.PerformanceDetailResponse;
+import com.troupe.backend.dto.Performance.PerformanceForm;
+import com.troupe.backend.dto.Performance.PerformanceResponse;
+import com.troupe.backend.dto.Performance.PerformanceSearchForm;
+import com.troupe.backend.service.Performance.PerformanceImageService;
+import com.troupe.backend.service.Performance.PerformancePriceService;
+import com.troupe.backend.service.Performance.PerformanceSaveService;
+import com.troupe.backend.service.Performance.PerformanceService;
+import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +34,6 @@ public class PerformanceController {
     private final PerformancePriceService performancePriceService;
     private final PerformanceImageService performanceImageService;
     private final PerformanceSaveService performanceSaveService;
-    private final PerformanceReviewService performanceReviewService;
     private final S3FileUploadService s3FileUploadService;
 
     /**
@@ -39,8 +46,7 @@ public class PerformanceController {
     public ResponseEntity register(@RequestHeader Map<String, Object> requestHeader,
                                    @RequestPart(value = "performanceForm") PerformanceForm performanceform,
                                    @RequestPart(value = "image") List<MultipartFile> multipartFileList) throws IOException {
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceService.register(memberNo, performanceform, multipartFileList);
+        performanceService.register(requestHeader, performanceform, multipartFileList);
         return ResponseEntity.ok().build();
     }
 
@@ -53,8 +59,7 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/modify")
     public ResponseEntity modify(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceForm performanceform){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceService.modify(pfNo, memberNo, performanceform);
+        performanceService.modify(pfNo, requestHeader, performanceform);
         return ResponseEntity.ok().build();
     }
 
@@ -66,8 +71,7 @@ public class PerformanceController {
      */
     @PatchMapping("{pfNo}/del")
     public ResponseEntity delete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceService.delete(pfNo, memberNo);
+        performanceService.delete(pfNo, requestHeader);
         return ResponseEntity.ok().build();
     }
 
@@ -113,21 +117,13 @@ public class PerformanceController {
      */
     @PostMapping("/{pfNo}/save")
     public ResponseEntity performanceSave(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceSaveService.save(pfNo, memberNo);
+        performanceSaveService.save(pfNo, requestHeader);
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * 공연 북마크 저장 삭제
-     * @param pfNo
-     * @param requestHeader
-     * @return
-     */
     @PatchMapping("/{pfNo}/save/del")
     public ResponseEntity performanceSaveDelete(@PathVariable int pfNo, @RequestHeader Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
-        performanceSaveService.delete(pfNo, memberNo);
+        performanceSaveService.delete(pfNo, requestHeader);
         return ResponseEntity.ok().build();
     }
 

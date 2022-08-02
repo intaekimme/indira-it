@@ -1,16 +1,15 @@
-package com.troupe.backend.dto.avatar;
+package com.troupe.backend.dto.avatar.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AvatarClothesForm {
+public class AvatarClothesResponse {
     int clothesNo;
-    MultipartFile clothesImage;
+    String clothesUrl;
 }

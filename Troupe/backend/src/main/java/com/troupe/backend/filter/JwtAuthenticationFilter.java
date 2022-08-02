@@ -1,5 +1,6 @@
-package com.troupe.backend.security;
+package com.troupe.backend.filter;
 
+import com.troupe.backend.service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,13 +22,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 헤더에서 JWT 를 받아온다.
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);
 
-        // 토큰이 유효하면 토큰으로부터 유저 정보를 받아오고, SecurityContext 에 저장한다.
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        // 액세스 토큰이 유효하면 토큰으로부터 유저 정보를 받아오고, SecurityContext 에 저장한다.
+        if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
         chain.doFilter(request, response);
     }
 }
