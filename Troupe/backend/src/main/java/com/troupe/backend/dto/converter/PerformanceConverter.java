@@ -6,6 +6,7 @@ import com.troupe.backend.domain.performance.PerformanceImage;
 import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.Seat;
+import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -107,7 +108,7 @@ public class PerformanceConverter {
         List<PerformanceImage> performanceImageList = new ArrayList<>();
         for (String url : urlList){
             PerformanceImage p = PerformanceImage.builder()
-                    .imageUrl(url)
+                    .imageUrl(MyConstant.FILE_SERVER_URL + url)
                     .pf(performance)
                     .build();
 
