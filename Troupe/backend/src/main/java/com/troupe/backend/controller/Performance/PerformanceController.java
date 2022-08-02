@@ -131,13 +131,35 @@ public class PerformanceController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 공연후기작성
+     * @param pfNo
+     * @param requestHeader
+     * @param content
+     * @return
+     */
     @PostMapping("/{pfNo}/review")
     public ResponseEntity registerReview(@PathVariable int pfNo,
                                          @RequestHeader Map<String, Object> requestHeader,
-                                         @RequestBody String content){
+                                         @RequestParam String content){
         int memberNo = getMemberNoFromRequestHeader(requestHeader);
         performanceReviewService.add(pfNo, memberNo, content);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{pfNo}/review/{reviewNo}/del")
+    public ResponseEntity deleteReview(@PathVariable int pfNo,
+                                       @PathVariable int reviewNo){
+        performanceReviewService.delete(pfNo, reviewNo);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{pfNo}/review/list")
+    public ResponseEntity<List<PfReviewResponse>> findPfReviewList(@PathVariable int pfNo,
+                                             @RequestHeader Map<String, Object> requestHeader){
+        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfReviewList(pfNo, memberNo);
+        return ResponseEntity.ok().body(pfReviewResponseList);
     }
 
     //  =================================================================================
