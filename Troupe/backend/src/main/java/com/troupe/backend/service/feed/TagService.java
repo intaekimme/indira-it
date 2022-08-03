@@ -68,21 +68,8 @@ public class TagService {
 
     // 중복 수정
     public List<FeedTag> selectAllBySearch(List<String> tags){
-
         int size = tags.size();
-        System.out.println("size: "+size);
         List<FeedTag> feeds =feedTagRepository.findAllByTagsIn(tags,size);
-//        HashSet<FeedTag> set = new HashSet<>();
-//        for(Tag tag:tagList){
-//            List<FeedTag> tmps = feedTagRepository.findAllByTag(tagRepository.findByName(tag.getName()).get());
-//           for(FeedTag feedTag:tmps){
-//               set.add(feedTag);
-//           }
-//        }
-//        for(FeedTag feedTag:set){
-//            feeds.add(feedTag);
-//        }
-        System.out.println("come??? "+feeds.get(0).getFeed().getFeedNo());
         return feeds;
     }
 

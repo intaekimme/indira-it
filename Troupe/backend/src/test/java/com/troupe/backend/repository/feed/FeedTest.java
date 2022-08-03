@@ -1,6 +1,5 @@
 package com.troupe.backend.repository.feed;
 
-import com.querydsl.core.QueryFactory;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.troupe.backend.domain.feed.Feed;
@@ -16,10 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -55,7 +52,7 @@ class FeedTest {
     @Test
     @DisplayName("피드 등록한 사람의 피드 목록 최신순 정렬")
     public void selectAllByPerformer() {
-        List<Feed> feeds = feedRepository.findAllByMemberOrderByCreatedTimeDesc(memberRepository.getById(3));
+        List<Feed> feeds = feedRepository.findAllByMemberAndIsRemovedOrderByCreatedTimeDesc(memberRepository.getById(3),false);
 
         Assertions.assertThat(feeds.size()).isEqualTo(3);
         Assertions.assertThat(feeds.get(0).getFeedNo()).isEqualTo(5);

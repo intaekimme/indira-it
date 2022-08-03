@@ -5,11 +5,9 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.FeedConverter;
 import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
-import com.troupe.backend.dto.feed.TagForm;
 import com.troupe.backend.repository.feed.FeedRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.member.FollowService;
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +60,10 @@ public class FeedService {
             }
         }else if(change.equals("follow")){
             List<Member> followings = followService.findAllStars(memberNo);
-
+            List<Feed> feedList = feedRepository.findAllByIsRemovedAndMemberInOrderByCreatedTimeDesc(false, followings);
+            for(Feed feed: feedList){
+                feedResponses.add(select(feed.getFeedNo()));
+            }
         }else if(change.equals("save")){
             List<FeedSave> saveLIst =  feedSaveService.selectAllByMember(memberRepository.findById(memberNo).get());
             for(FeedSave save:saveLIst){
@@ -75,7 +76,7 @@ public class FeedService {
     public  List<FeedResponse> selectAllByMember(int memberNo){
         Member member = memberRepository.findById(memberNo).get();
         List<FeedResponse> feedResponses = new ArrayList<>();
-        List<Feed> totalList = feedRepository.findAllByMemberOrderByCreatedTimeDesc(member);
+        List<Feed> totalList = feedRepository.findAllByMemberAndIsRemovedOrderByCreatedTimeDesc(member,false);
         for(Feed feed: totalList){
             feedResponses.add(select(feed.getFeedNo()));
         }
