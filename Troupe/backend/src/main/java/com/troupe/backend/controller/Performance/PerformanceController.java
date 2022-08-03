@@ -3,17 +3,17 @@ package com.troupe.backend.controller.Performance;
 
 import com.troupe.backend.dto.Performance.*;
 import com.troupe.backend.service.Performance.*;
-import com.troupe.backend.util.S3FileUploadService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-
+import java.util.NoSuchElementException;
 
 
 @CrossOrigin
@@ -23,26 +23,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PerformanceController {
     private final PerformanceService performanceService;
-    private final PerformancePriceService performancePriceService;
-    private final PerformanceImageService performanceImageService;
     private final PerformanceSaveService performanceSaveService;
     private final PerformanceReviewService performanceReviewService;
-    private final S3FileUploadService s3FileUploadService;
+
 
     /**
-     * 공연 등록
+     *
      * @param principal
      * @param performanceform
-     * @param multipartFileList
      * @return
      * @throws IOException
      */
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity register(Principal principal,
-                                   @RequestPart(value = "performanceForm") PerformanceForm performanceform,
-                                   @RequestPart(value = "image") List<MultipartFile> multipartFileList) throws IOException {
+                                   @ModelAttribute @Valid PerformanceForm performanceform)
+            throws IOException {
         int memberNo = Integer.parseInt(principal.getName());
-        performanceService.register(memberNo, performanceform, multipartFileList);
+        performanceService.register(memberNo, performanceform);
         return ResponseEntity.ok().build();
     }
 
@@ -51,15 +48,16 @@ public class PerformanceController {
      * 공연 수정
      * @param principal
      * @param pfNo
-     * @param performanceform
+     * @param performanceModifyForm
      * @return
      */
-    @PatchMapping("{pfNo}/modify")
+    @PostMapping(value = "{pfNo}/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity modify(Principal principal,
                                  @PathVariable int pfNo,
-                                 @RequestBody PerformanceForm performanceform){
+                                 @ModelAttribute @Valid PerformanceModifyForm performanceModifyForm)
+    throws NoSuchElementException {
         int memberNo = Integer.parseInt(principal.getName());
-        performanceService.modify(memberNo, pfNo, performanceform);
+        performanceService.modify(memberNo, pfNo, performanceModifyForm);
         return ResponseEntity.ok().build();
     }
 
@@ -81,23 +79,26 @@ public class PerformanceController {
      * 공연 목록 조회, 최근 생성 순
      * @return
      */
-    @GetMapping("/list")
-    public ResponseEntity<List<PerformanceResponse>> performanceList(){
-        List<PerformanceResponse> performanceResponseList =  performanceService.findAll();
+    @GetMapping("/list/{startNo}")
+    public ResponseEntity<List<PerformanceResponse>> performanceList(@PathVariable int startNo){
+        List<PerformanceResponse> performanceResponseList =  performanceService.findAll(startNo);
         return ResponseEntity.ok().
                 body(performanceResponseList);
     }
 
     /**
      * 공연 목록 조회(검색 및 필터 기능 포함)
-     * @param requestHeader : id 정보
-     * @param performanceSearchForm : key, queryWord, genere(?)
+     * @param condition 필터 (이름으로 검색 {condition : nickname}, 제목+내용으로 검색 {condition : title})
+     * @param keyword 질의어
      * @return
      */
-//    @GetMapping("/list")
-//    public ResponseEntity performanceList2(@RequestHeader Map<String, Object> requestHeader, @RequestBody PerformanceSearchForm performanceSearchForm){
-//        return null;
-//    }
+    @GetMapping("/list/search")
+    public ResponseEntity<List<PerformanceResponse>> performanceQueryList(@RequestParam String condition,
+                                           @RequestParam String keyword){
+        List<PerformanceResponse> performanceResponseList =  performanceService.findQueryAll(condition, keyword);
+        return ResponseEntity.ok()
+                .body(performanceResponseList);
+    }
 
     /**
      * 공연 조회 상세
@@ -125,6 +126,12 @@ public class PerformanceController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 공연 북마크 삭제
+     * @param principal
+     * @param pfNo
+     * @return
+     */
     @PatchMapping("/{pfNo}/save/del")
     public ResponseEntity performanceSaveDelete(Principal principal,
                                                 @PathVariable int pfNo){

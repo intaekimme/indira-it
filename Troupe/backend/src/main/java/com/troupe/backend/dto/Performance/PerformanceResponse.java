@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +17,7 @@ import java.util.List;
 public class PerformanceResponse {
     int pfNo;
     String description;
-    List<String> image;
+    Map<Integer, String> image;
     String location;
     String detailTime;
 }
