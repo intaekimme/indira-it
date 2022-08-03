@@ -5,6 +5,7 @@ import com.troupe.backend.dto.comment.CommentForm;
 import com.troupe.backend.dto.comment.CommentResponse;
 import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
+import com.troupe.backend.dto.feed.TagForm;
 import com.troupe.backend.service.comment.CommentService;
 import com.troupe.backend.service.feed.FeedILikeService;
 import com.troupe.backend.service.feed.FeedSaveService;
@@ -48,7 +49,7 @@ public class FeedController {
     public ResponseEntity selectFeed(@PathVariable int feedNo) throws IOException {
         try{
             FeedResponse feedResponse  = feedService.select(feedNo);
-            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+            return new ResponseEntity(feedResponse, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed select FAIL", HttpStatus.BAD_REQUEST);
@@ -60,7 +61,7 @@ public class FeedController {
     public ResponseEntity selectAllFeed(@PathVariable String change, Principal principal) throws IOException {
         try{
             List<FeedResponse> feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()));
-            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+            return new ResponseEntity(feedResponse, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
@@ -78,18 +79,6 @@ public class FeedController {
             return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
         }
     }
-    @Operation(summary = "태그로 인한 피드 검색", description = "파라미터: 태그명 리스트")
-    @GetMapping("/search")
-    public ResponseEntity searchFeeds (@RequestParam(name = "tags") List<String> tags) throws IOException {
-        try {
-            List<FeedResponse> feedResponse = feedService.selectAllBySearch(tags);
-            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
-        }catch (Exception e){
-            System.out.println(e);
-            return new ResponseEntity("Feed search FAIL", HttpStatus.BAD_REQUEST);
-        }
-    }
-
     // responsebody로 수정
     @Operation(summary = "피드 등록", description = "파라미터: 이미지 파일들, 멤버번호, 내용, 태그명들")
     @PostMapping
@@ -228,7 +217,7 @@ public class FeedController {
     public ResponseEntity selectAllComment(@PathVariable int feedNo) throws IOException {
         try{
             List<CommentResponse> responses = commentService.selectAll(feedNo);
-            return new ResponseEntity(responses, HttpStatus.CREATED);
+            return new ResponseEntity(responses, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Comment selectAll FAIL", HttpStatus.BAD_REQUEST);
@@ -241,7 +230,7 @@ public class FeedController {
                                                    @PathVariable int commentNo) throws IOException {
         try{
             List<CommentResponse> responses = commentService.selectAllByParent(commentNo);
-            return new ResponseEntity(responses, HttpStatus.CREATED);
+            return new ResponseEntity(responses, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Comment selectAllByParent FAIL", HttpStatus.BAD_REQUEST);
@@ -253,10 +242,22 @@ public class FeedController {
     public ResponseEntity getCountLike (@PathVariable int feedNo) throws IOException {
         try{
             int totalCount = feedILikeService.countTotalLike(feedNo);
-            return new ResponseEntity(totalCount, HttpStatus.CREATED);
+            return new ResponseEntity(totalCount, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
-            return new ResponseEntity("Comment selectAllByParent FAIL", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("like totalcount FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "피드 태그 검색 ", description = "파라미터: 태그명들 ")
+    @GetMapping("/search")
+    public ResponseEntity tagSearch (@RequestParam List<String> tags) throws IOException {
+        try{
+             List<FeedResponse> list = feedService.selectAllBySearch(tags);
+            return new ResponseEntity(list, HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("search FAIL", HttpStatus.BAD_REQUEST);
         }
     }
 //    @PatchMapping("/test")

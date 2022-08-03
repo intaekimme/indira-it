@@ -5,9 +5,11 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.FeedConverter;
 import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
+import com.troupe.backend.dto.feed.TagForm;
 import com.troupe.backend.repository.feed.FeedRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.member.FollowService;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,12 +82,16 @@ public class FeedService {
         return feedResponses;
     }
 
-    public  List<FeedResponse> selectAllBySearch(List<String> tagList){
+    public  List<FeedResponse> selectAllBySearch(List<String> tags){
         List<FeedResponse> feedResponses = new ArrayList<>();
-        List<Tag> tags = feedConverter.toTagEntity(tagList);
-        List<FeedTag> feedTags = tagService.selectAllBySearch(tags);
-        for(FeedTag feedTag:feedTags){
-            feedResponses.add(select(feedTag.getFeed().getFeedNo()));
+        try{
+            List<FeedTag> feedTags = tagService.selectAllBySearch(tags);
+            for(FeedTag feedTag:feedTags){
+                feedResponses.add(select(feedTag.getFeed().getFeedNo()));
+            }
+            return feedResponses;
+        }catch (Exception e){
+            log.info(e.toString());
         }
         return feedResponses;
     }
