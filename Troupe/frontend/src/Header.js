@@ -40,8 +40,9 @@ export default function Header() {
   );
 
   const logout = () => {
-    window.sessionStorage.setItem("loginCheck", false);
-    window.sessionStorage.setItem("loginUser", null);
+    window.sessionStorage.removeItem("loginCheck");
+    window.sessionStorage.removeItem("loginMember");
+    window.sessionStorage.removeItem("accessToken");
     setLogin(false);
     alert("로그아웃 되었습니다.");
     console.log(login);
@@ -160,7 +161,7 @@ export default function Header() {
               icon: (
                 <AccountCircleIcon
                   fontSize="large"
-                  sx={{ fontSize: "6px" }}
+                  sx={{ fontSize: "60px" }}
                   style={{ verticalAlign: "middle" }}
                 />
               ),
@@ -182,7 +183,12 @@ export default function Header() {
                   {
                     text: "마이페이지",
                     element: (
-                      <Link href="/profile" className={styled.header}>
+                      <Link
+                        href={`/profile/${sessionStorage.getItem(
+                          "loginMember"
+                        )}`}
+                        className={styled.header}
+                      >
                         마이페이지
                       </Link>
                     ),
@@ -216,7 +222,7 @@ export default function Header() {
           href="/"
           className={styled.header}
           style={{ verticalAlign: "middle" }}
-          sx={{fontFamily:'Mainstay'}}
+          sx={{ fontFamily: "Mainstay" }}
         >
           Troupe
         </Link>

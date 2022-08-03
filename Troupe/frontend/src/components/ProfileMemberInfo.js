@@ -1,8 +1,7 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
+import React from "react";
+import { useParams } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -12,45 +11,97 @@ import LoginPopup from "./LoginPopup";
 import NumberFilter from "../function/NumberFilter.js";
 import styledButton from "../css/button.module.css";
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+export default function ProfileMemberInfo(props) {
+  //memberNo
+  const { memberNo } = useParams();
 
-export default function MemberInfoCard(props) {
-  //이 member의 팔로우 수
-  // const followerCount = apiClient.getFollowerCount(props.memberInfo.memberNo);
-  const followerCount = 123123123;
+  //프로필 이미지 초기화
+  const [profileImageUrl, setProfileImageUrl] = React.useState(
+    props.memberInfo.profileImageUrl
+  );
+  //프로필 이미지 update
+  React.useEffect(() => {
+    if (
+      props.memberInfo.profileImageUrl &&
+      props.memberInfo.profileImageUrl !== "" &&
+      props.memberInfo.profileImageUrl !== null
+    ) {
+      //프로필이미지 세팅
+      setProfileImageUrl(
+        <img
+          src={props.memberInfo.profileImageUrl}
+          alt={props.memberInfo.profileImageUrl}
+          style={{
+            width: "200px",
+            height: "200px",
+            objectFit: "cover",
+            borderRadius: "50%",
+          }}
+        />
+      );
+    } else {
+      //기본이미지 세팅
+      setProfileImageUrl(
+        <AccountCircleIcon
+          fontSize="large"
+          sx={{ fontSize: "200px" }}
+        ></AccountCircleIcon>
+      );
+    }
+  }, [props.memberInfo.profileImageUrl]);
+
+  //이 member의 팔로워 수 초기화
+  const [followerCount, setFollowerCount] = React.useState("");
+  //이 member의 관심태그 초기화
+  const [interestTag, setInterestTag] = React.useState("");
+  //memberNo update 시 이 member의 팔로워 수, 관심태그 update
+  React.useEffect(() => {
+    apiClient.getFollowerCount(memberNo).then((data) => {
+      setFollowerCount(data.fanCount);
+    });
+    // apiClient.getInterestTag(memberNo).then((data) => {
+    //   setInterestTag(data);
+    // });
+  }, [memberNo]);
+  // const followerCount = 123123123;
 
   // 자신의 유저페이지인지 판단
-  // const [mypage, setMypage] = React.useState(window.sessionStorage.getItem('loginMember').memberNo === props.memberInfo.memberNo);
-  const [mypage, setMypage] = React.useState(false);
+  const myPage = props.myPage;
 
   // 이 유저를 팔로우 했는지 판단
-  //const [isFollowing, setIsFollowing] = apiClient.isFollowing({
-  //  profileMemberNo: props.memberInfo.memberNo,
-  //  fanMamberNo: 1,
-  //  // fanMamberNo: sessionStorage.getItem("loginMember").memberNo,
-  //});
-  const [isFollowing, setIsFollowing] = React.useState(true);
+  // const [isFollowing, setIsFollowing] = React.useState(false);
+  // // 이 유저를 팔로우 했는지 판단 update
+  // React.useEffect(() => {
+  //   apiClient
+  //     .isFollowing({
+  //       profileMemberNo: memberNo,
+  //       fanMamberNo: sessionStorage.getItem("loginMember"),
+  //     })
+  //     .then((data) => {
+  //       setIsFollowing(data.isFollowing);
+  //     });
+  // }, []);
+  const [isFollowing, setIsFollowing] = React.useState(false);
 
   // follow/unfollow 버튼클릭
   const followClick = () => {
-    const currnetFollow = isFollowing;
-    setIsFollowing((current) => !current);
-    const data = {
-      isFollowing: !currnetFollow,
-      profileMemberNo: props.memberInfo.memberNo,
-      fanMemberNo: 1,
-      // fanMamberNo: sessionStorage.getItem("loginUser"),
-    };
-    apiClient.follow(data);
+    if (!sessionStorage.getItem("loginCheck")) {
+      window.location.href = "/login";
+    } else {
+      const currnetFollow = isFollowing;
+      setIsFollowing(!isFollowing);
+      const followData = {
+        isFollowing: !currnetFollow,
+        profileMemberNo: props.memberInfo.memberNo,
+        // fanMemberNo: 1,
+        fanMamberNo: sessionStorage.getItem("loginMember"),
+      };
+      apiClient.follow(followData).then((data) => {
+        if (!data) {
+          setIsFollowing(currnetFollow);
+        }
+      });
+    }
   };
 
   return (
@@ -73,19 +124,7 @@ export default function MemberInfoCard(props) {
           >
             신고하기
           </Button>
-          <div>
-            {
-              <img
-                src={props.memberInfo.profileImageUrl}
-                style={{
-                  width: "200px",
-                  height: "200px",
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                }}
-              />
-            }
-          </div>
+          <div>{profileImageUrl}</div>
           <div style={{ padding: "20px" }}>{props.memberInfo.nickname}</div>
           <div
             style={{
@@ -98,7 +137,7 @@ export default function MemberInfoCard(props) {
             }}
           >
             <Button>{NumberFilter(followerCount)}</Button>
-            {mypage ? (
+            {myPage ? (
               <Button
                 style={{
                   width: "100px",
