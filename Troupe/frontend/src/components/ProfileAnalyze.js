@@ -12,6 +12,12 @@ import LikeabilityRank from "./LikeabilityRank";
 import styledTooltip from "../css/tooltip.module.css";
 
 export default function ProfileAnalyze(props) {
+  const [loginCheck, setLoginCheck] = React.useState(
+    sessionStorage.getItem("loginCheck")
+  );
+  React.useEffect(() => {
+    setLoginCheck(sessionStorage.getItem("loginCheck"));
+  }, [sessionStorage.getItem("loginCheck")]);
   //memberNo
   const { memberNo } = useParams();
 
@@ -143,7 +149,7 @@ export default function ProfileAnalyze(props) {
               </div>
             </Grid>
             <Grid item xs={6}>
-              {myPage || !performer ? (
+              {myPage || !performer || !loginCheck ? (
                 <div></div>
               ) : (
                 <div style={{ position: "relative", textAlign: "right" }}>

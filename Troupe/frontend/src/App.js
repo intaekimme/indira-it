@@ -26,18 +26,9 @@ function App() {
           <Route path="/" element={<PerfList />}></Route>
           <Route path="/perf/list" element={<PerfList />}></Route>
           <Route path="/feed/list" element={<FeedList />}></Route>
-          <Route
-            path="/login"
-            element={loginCheck() ? <Navigate to="/" /> : <Login />}
-          ></Route>
-          <Route
-            path="/signup"
-            element={loginCheck() ? <Navigate to="/" /> : <SignUp />}
-          ></Route>
-          <Route
-            path="/resetpw"
-            element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}
-          ></Route>
+          <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
+          <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <SignUp />}></Route>
+          <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
           <Route path="/profile/:memberNo" element={<Profile />}></Route>
           <Route path="/test" element={<Test />}></Route>
           <Route path="/perf/detail" element={<PerfDetail />}></Route>

@@ -46,7 +46,7 @@ export default function Header() {
     setLogin(false);
     alert("로그아웃 되었습니다.");
     console.log(login);
-    window.location.href = "/";
+    window.location.href = window.location.href;
   };
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -57,6 +57,10 @@ export default function Header() {
     }
 
     setDrawer({ ...drawer, [anchor]: open });
+  };
+
+  const saveCurrentHref = () => {
+    sessionStorage.setItem("currentHref", window.location.href);
   };
 
   const list = (anchor, repIcon, listObject) => (
@@ -208,7 +212,11 @@ export default function Header() {
             </React.Fragment>
           ))
         ) : (
-          <Link href="/login" className={styled.header}>
+          <Link
+            href="/login"
+            className={styled.header}
+            onClick={saveCurrentHref}
+          >
             <AccountCircleIcon
               fontSize="large"
               sx={{ fontSize: "60px" }}
