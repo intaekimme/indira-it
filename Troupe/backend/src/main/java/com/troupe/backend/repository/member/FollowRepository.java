@@ -13,6 +13,10 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
 
     /** 스타를 팔로우하는 리스트 조회 */
     List<Follow> findAllByStarMember(Member starMember);
+
     /** 팬이 팔로우하는 리스트 조회 */
     List<Follow> findAllByFanMember(Member fanMember);
+
+    /** 스타의 팬 수 카운트 */
+    Long countByStarMember(Member starMember);
 }

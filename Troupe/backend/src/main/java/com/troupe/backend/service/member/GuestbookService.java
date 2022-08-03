@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +36,13 @@ public class GuestbookService {
             throw new DuplicatedGuestbookException();
         }
 
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
         Guestbook guestbook = Guestbook.builder()
                 .hostMember(hostMember)
                 .visitorMember(visitorMember)
                 .content(guestbookForm.getContent())
+                .createdTime(now)
                 .isRemoved(false)
                 .build();
 
