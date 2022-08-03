@@ -14,7 +14,9 @@ const apiClient = {
         window.sessionStorage.setItem("loginMember", response.data.memberNo);
         window.sessionStorage.setItem("accessToken", response.data.accessToken);
         alert("로그인 되었습니다.");
-        window.location.href = "/";
+        const href = sessionStorage.getItem("currentHref");
+        sessionStorage.removeItem("currentHref");
+        window.location.href = href;
       })
       .catch((error) => {
         alert("로그인 실패 : " + error);
@@ -179,59 +181,59 @@ const apiClient = {
   },
 
   //공연 삭제하기
-  perfRemove: (data) => {if (window.confirm('삭제하시겠습니까?'))
-  {
-    instance
-    .delete(`/perf/${data.pfNo}/del`)
-    .then((response) => {
-      alert('공연이 삭제되었습니다' + response);
-    })
-    .catch((error) => {
-      alert(data + '공연삭제 실패 :' + error);
-    })
-  } else {
-    alert('취소합니다.')
-  }
-  },
-
-    //공연 등록
-    perfNew: (data) => {
+  perfRemove: (data) => {
+    if (window.confirm("삭제하시겠습니까?")) {
       instance
-        .post("/perf", data)
+        .delete(`/perf/${data.pfNo}/del`)
         .then((response) => {
-          alert("공연등록 되었습니다." + response);
+          alert("공연이 삭제되었습니다" + response);
         })
         .catch((error) => {
-          alert("공연등록 실패 : " + error);
+          alert(data + "공연삭제 실패 :" + error);
         });
-    },
+    } else {
+      alert("취소합니다.");
+    }
+  },
+
+  //공연 등록
+  perfNew: (data) => {
+    instance
+      .post("/perf", data)
+      .then((response) => {
+        alert("공연등록 되었습니다." + response);
+      })
+      .catch((error) => {
+        alert("공연등록 실패 : " + error);
+      });
+  },
 
   //공연 목록 불러오기
   getPerfList: () => {
     return instance
-    .get("/perf/list")
-    .then((response)=> {
-      alert('공연 불러오기 성공');
-      return response.data
-    })
-    .catch( (error) => {
-      alert('공연 불러오기 실패' + error);
-    })
+      .get("/perf/list")
+      .then((response) => {
+        alert("공연 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("공연 불러오기 실패" + error);
+      });
   },
 
-    //피드 목록 불러오기
-    getFeedList: () => {
-      instance
+  //피드 목록 불러오기
+  getFeedList: () => {
+    instance
       .get("/feed/list")
-      .then((response)=> {
-        alert('불러오기 성공');
+      .then((response) => {
+        alert("불러오기 성공");
         return response;
       })
-      .catch( (error) => {
-        alert('피드 불러오기 실패' + error);
+      .catch((error) => {
+        alert("피드 불러오기 실패" + error);
         return null;
-      })
-    }
+      });
+  },
 };
 
 export default apiClient;

@@ -18,7 +18,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component="span">{children}</Typography>
         </Box>
       )}
     </div>
@@ -60,16 +60,13 @@ export default function CenterTab(props) {
           ))}
         </Tabs>
       </Box>
-      {/* {tabContent.map((content, index) => (
+      {tabContent.map((content, index) => (
         <div key={`content${index}`}>
-          <TabPanel
-            value={value}
-            index={index}
-          >
+          <TabPanel value={value} index={index}>
             {content}
           </TabPanel>
         </div>
-      ))} */}
+      ))}
     </Box>
   );
 }
