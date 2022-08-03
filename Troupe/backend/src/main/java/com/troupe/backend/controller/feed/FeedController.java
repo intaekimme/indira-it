@@ -14,6 +14,10 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +27,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin
@@ -58,11 +64,15 @@ public class FeedController {
 
     @Operation(summary = "조건별 피드 목록 조회(+공연자가 등록한 피드 목록 조회)", description = "파라미터: {change} = [all,save,follow] (후에 profileController로 이전-피드저장부분)")
     @GetMapping("/list/{change}")
-    public ResponseEntity selectAllFeed(@PathVariable(required = false) String change, Principal principal, @RequestParam(name = "memberNo",required = false) Integer memberNo)  {
+    public ResponseEntity selectAllFeed(@PathVariable(required = false) String change, Principal principal, @RequestParam(name = "memberNo",required = false) Integer memberNo,
+                                        int pageNumber)  {
         try{
-            List<FeedResponse> feedResponse = null;
-            if(memberNo==null) feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()));
-            else feedResponse = feedService.selectAllByMember(memberNo);
+            PageRequest pageRequest = PageRequest.of(pageNumber,6);
+//            Slice<FeedResponse> feedResponses = null;
+            List<FeedResponse> feedResponse = new ArrayList<>();
+            if(change.equals("all")) feedResponse = feedService.selectAll(change, 0,pageRequest);
+            else if(memberNo==null ) feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()),pageRequest);
+            else feedResponse = feedService.selectAllByMember(memberNo,pageRequest);
             return new ResponseEntity(feedResponse, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
@@ -75,11 +85,12 @@ public class FeedController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity insertFeed(Principal principal,@ModelAttribute @Valid FeedVO feedVO) throws IOException {
         try{
-            FeedForm feedForm = FeedForm.builder().memberNo(Integer.parseInt(principal.getName()))
-                    .content(feedVO.getContent())
-                            .images(feedVO.getImages())
-                                    .tags(feedVO.getTags())
-                                            .build();
+            FeedForm feedForm = new FeedForm();
+            if(principal.getName()!=null) feedForm.setMemberNo(Integer.parseInt(principal.getName()));
+            if(feedVO.getContent()==null) feedVO.setContent("");
+            if(feedVO.getTags()!=null) feedForm.setTags(feedVO.getTags());
+            if(feedVO.getImages()!=null) feedForm.setImages(feedVO.getImages());
+            feedForm.setContent(feedVO.getContent());
             feedService.insert(feedForm);
             return new ResponseEntity("Feed Insert SUCCESS", HttpStatus.CREATED);
         }catch (Exception e){

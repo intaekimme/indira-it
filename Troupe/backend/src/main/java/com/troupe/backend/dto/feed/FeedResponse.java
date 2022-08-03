@@ -18,7 +18,8 @@ public class FeedResponse {
     private int memberNo;
     private String nickname;
     private String profileImageUrl;
-    private List<String> images;
+//    private List<String> images;
+    private HashMap<Integer,String> images;
     private List<String> tags;
     private String content;
     private int likeTotalCount;

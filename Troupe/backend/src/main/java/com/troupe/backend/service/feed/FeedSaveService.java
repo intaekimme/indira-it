@@ -9,6 +9,8 @@ import com.troupe.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -51,8 +53,8 @@ public class FeedSaveService {
          }
      }
 
-     public List<FeedSave> selectAllByMember(Member member){
-         Optional<List<FeedSave>> saveList = feedSaveRepository.findAllByMemberAndIsDeletedOrderByCreatedTimeDesc(member,false);
+     public Slice<FeedSave> selectAllByMember(Member member, Pageable pageable){
+         Optional<Slice<FeedSave>> saveList = feedSaveRepository.findAllByMemberAndIsDeletedOrderByCreatedTimeDesc(member,false, pageable);
         if(saveList.isPresent()){
             return saveList.get();
         }else return null;
