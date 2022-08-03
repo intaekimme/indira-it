@@ -15,12 +15,16 @@ export default function ProfileMemberInfo(props) {
   //memberNo
   const { memberNo } = useParams();
 
+  //memberInfo
+  const [memberInfo, setMemberInfo] = React.useState("");
+
   //프로필 이미지 초기화
   const [profileImageUrl, setProfileImageUrl] = React.useState(
     props.memberInfo.profileImageUrl
   );
   //프로필 이미지 update
   React.useEffect(() => {
+    setMemberInfo(props.memberInfo);
     if (
       props.memberInfo.profileImageUrl &&
       props.memberInfo.profileImageUrl !== "" &&
@@ -48,7 +52,7 @@ export default function ProfileMemberInfo(props) {
         ></AccountCircleIcon>
       );
     }
-  }, [props.memberInfo.profileImageUrl]);
+  }, [props.memberInfo]);
 
   //이 member의 팔로워 수 초기화
   const [followerCount, setFollowerCount] = React.useState("");
@@ -92,7 +96,7 @@ export default function ProfileMemberInfo(props) {
       setIsFollowing(!isFollowing);
       const followData = {
         isFollowing: !currnetFollow,
-        profileMemberNo: props.memberInfo.memberNo,
+        profileMemberNo: memberInfo.memberNo,
         // fanMemberNo: 1,
         fanMamberNo: sessionStorage.getItem("loginMember"),
       };
@@ -103,6 +107,14 @@ export default function ProfileMemberInfo(props) {
       });
     }
   };
+
+  //프로필 수정 버튼 클릭
+  const modifyProfile = () => {
+    sessionStorage.setItem("memberData", {
+      memberInfo: memberInfo,
+    });
+    window.location.href = `/profile/${memberNo}/modify`;
+  }
 
   return (
     <Card
@@ -125,7 +137,7 @@ export default function ProfileMemberInfo(props) {
             신고하기
           </Button>
           <div>{profileImageUrl}</div>
-          <div style={{ padding: "20px" }}>{props.memberInfo.nickname}</div>
+          <div style={{ padding: "20px" }}>{memberInfo.nickname}</div>
           <div
             style={{
               float: "right",
@@ -147,6 +159,7 @@ export default function ProfileMemberInfo(props) {
                   borderRadius: "15px",
                   margin: "10px",
                 }}
+                onClick={ modifyProfile }
               >
                 프로필수정
               </Button>
@@ -169,7 +182,7 @@ export default function ProfileMemberInfo(props) {
           </div>
         </div>
         <Typography variant="body2" color="text.secondary">
-          {props.memberInfo.description}
+          {memberInfo.description}
         </Typography>
       </CardContent>
     </Card>

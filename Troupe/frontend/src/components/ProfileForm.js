@@ -1,5 +1,6 @@
 import apiClient from "../apiClient";
 import React from "react";
+import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -12,9 +13,11 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
+import styledButton from "../css/button.module.css";
+
 const theme = createTheme();
 
-export default function SignUp() {
+export default function ProfileForm() {
   //frontend image update
   const [imgUrl, setImgUrl] = React.useState("");
   //nickname update
@@ -27,6 +30,27 @@ export default function SignUp() {
   const [pwLength, setPwLength] = React.useState(true);
   //password 일치확인
   const [pwSame, setPwSame] = React.useState(true);
+
+  //memberNo
+  const { memberNo } = useParams();
+  //memberInfo 초기화
+  const [memberInfo, setMemberInfo] = React.useState({
+    memberNo: -1,
+    email: "",
+    nickname: "",
+    description: "",
+    memberType: "",
+    profileImageUrl: "",
+    removed: false,
+  });
+  //memberInfo 화면분할 update 시 불러오기
+  React.useEffect(() => {
+    if (memberNo) {
+      apiClient.getMemberInfo(memberNo).then((data) => {
+        setMemberInfo(data);
+      });
+    }
+  }, [memberNo]);
 
   //image 업로드
   const changeImage = (e) => {
@@ -90,9 +114,18 @@ export default function SignUp() {
     if (!checkValue(data)) {
       return;
     }
-    apiClient.signup(data);
+    if (memberNo) {
+      apiClient.modifyProfile(data);
+    }
+    else {
+      apiClient.signup(data);
+    }
   };
 
+  //취소버튼
+  const cancel = () => {
+    window.location.href = `/profile/${memberNo}`;
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="xs">
@@ -111,25 +144,47 @@ export default function SignUp() {
             style={{ textAlign: "center" }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={9}>
-                {imgUrl === "" ? (
-                  <AccountCircleIcon
-                    fontSize="large"
-                    sx={{ fontSize: "100px" }}
-                  ></AccountCircleIcon>
-                ) : (
-                  <img
-                    src={imgUrl}
-                    alt=""
-                    style={{
-                      objectFit: "cover",
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "40%",
-                    }}
-                  ></img>
-                )}
-              </Grid>
+              {memberNo ? (
+                <Grid item xs={9}>
+                  {imgUrl === "" ? (
+                    <AccountCircleIcon
+                      fontSize="large"
+                      sx={{ fontSize: "100px" }}
+                    ></AccountCircleIcon>
+                  ) : (
+                    <img
+                      src={memberInfo.profileImageUrl}
+                      alt=""
+                      style={{
+                        objectFit: "cover",
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "40%",
+                      }}
+                    ></img>
+                  )}
+                </Grid>
+              ) : (
+                <Grid item xs={9}>
+                  {imgUrl === "" ? (
+                    <AccountCircleIcon
+                      fontSize="large"
+                      sx={{ fontSize: "100px" }}
+                    ></AccountCircleIcon>
+                  ) : (
+                    <img
+                      src={imgUrl}
+                      alt=""
+                      style={{
+                        objectFit: "cover",
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "40%",
+                      }}
+                    ></img>
+                  )}
+                </Grid>
+              )}
               <Grid item xs={3} style={{ position: "relative" }}>
                 <Button
                   style={{
@@ -161,6 +216,31 @@ export default function SignUp() {
                   onChange={changeImage}
                 />
               </Grid>
+              {memberNo ? (
+                false ? (
+                  <Grid item xs={12} style={{ textAlign: "right" }}>
+                    <Button
+                      style={{
+                        width: "80px",
+                        height: "30px",
+                        bottom: "0px",
+                        right: "0px",
+                        backgroundColor: "#CCCCCC",
+                        color: "black",
+                      }}
+                      // onClick={() => sameCheck("nickname")}
+                    >
+                      본인인증
+                    </Button>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} style={{ textAlign: "left" }}>
+                    본인인증이 완료되었습니다.
+                  </Grid>
+                )
+              ) : (
+                <div></div>
+              )}
               <Grid item xs={9}>
                 <TextField
                   autoComplete="given-name"
@@ -169,6 +249,7 @@ export default function SignUp() {
                   fullWidth
                   id="nickname"
                   label="닉네임"
+                  value={memberInfo.nickname}
                   autoFocus
                   onChange={changeNickname}
                 />
@@ -198,33 +279,55 @@ export default function SignUp() {
                   </div>
                 </Grid>
               )}
-              <Grid item xs={9}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={changeEmail}
-                />
-              </Grid>
-              <Grid item xs={3} style={{ position: "relative" }}>
-                <Button
-                  style={{
-                    position: "absolute",
-                    width: "80px",
-                    height: "30px",
-                    bottom: "0px",
-                    right: "0px",
-                    backgroundColor: "#CCCCCC",
-                    color: "black",
-                  }}
-                  onClick={() => sameCheck("email")}
-                >
-                  중복확인
-                </Button>
-              </Grid>
+              {memberNo ? (
+                <Grid item xs={12}>
+                  <TextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    style={{ backgroundColor: "#777777" }}
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    value={memberInfo.email}
+                    name="email"
+                    autoComplete="email"
+                    onChange={changeEmail}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={9}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={changeEmail}
+                  />
+                </Grid>
+              )}
+              {memberNo ? (
+                <div></div>
+              ) : (
+                <Grid item xs={3} style={{ position: "relative" }}>
+                  <Button
+                    style={{
+                      position: "absolute",
+                      width: "80px",
+                      height: "30px",
+                      bottom: "0px",
+                      right: "0px",
+                      backgroundColor: "#CCCCCC",
+                      color: "black",
+                    }}
+                    onClick={() => sameCheck("email")}
+                  >
+                    중복확인
+                  </Button>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -271,34 +374,72 @@ export default function SignUp() {
                   multiline
                   id="profileMessage"
                   label="소개글 입력"
+                  value={memberInfo.description}
                   name="profileMessage"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  required
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="이메일 전송에 동의합니다."
-                />
-              </Grid>
+              {memberNo ? (
+                <div></div>
+              ) : (
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    required
+                    control={
+                      <Checkbox value="allowExtraEmails" color="primary" />
+                    }
+                    label="이메일 전송에 동의합니다."
+                  />
+                </Grid>
+              )}
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/login" variant="body2">
-                  로그인
-                </Link>
+            {memberNo ? (
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Button
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    className={styledButton.btn}
+                    onClick={cancel}
+                  >
+                    취소
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    type="submit"
+                    className={styledButton.btn}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "#45E3C6",
+                      color: "black",
+                    }}
+                  >
+                    프로필수정
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
+            ) : (
+              <div>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign Up
+                </Button>
+                <Grid container justifyContent="flex-end">
+                  <Grid item>
+                    <Link href="/login" variant="body2">
+                      로그인
+                    </Link>
+                  </Grid>
+                </Grid>
+              </div>
+            )}
           </form>
         </Box>
       </Container>
