@@ -55,7 +55,7 @@ public class PerformanceController {
     public ResponseEntity modify(Principal principal,
                                  @PathVariable int pfNo,
                                  @ModelAttribute @Valid PerformanceModifyForm performanceModifyForm)
-    throws NoSuchElementException {
+    throws Exception {
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.modify(memberNo, pfNo, performanceModifyForm);
         return ResponseEntity.ok().build();
