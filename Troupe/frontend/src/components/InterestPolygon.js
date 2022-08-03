@@ -1,31 +1,51 @@
 import React from "react";
 import styledPoly from "../css/poly.module.css";
 export default function InterestPolygon(props) {
-  const [width, setWidth] = React.useState(200);
+  //가로길이 보정
+  const widthCut = 50;
+  //window 가로길이
+  const windowWidth = window.innerWidth;
+  //poly 구역 가로길이 초기화
+  const [width, setWidth] = React.useState(() => {
+    if (windowWidth < 1000) {
+      return windowWidth / 2 - widthCut;
+    } else {
+      return windowWidth / 4 - widthCut;
+    }
+  });
+  //다각형 단위길이 초기화
+  const [unitLength, setUnitLength] = React.useState(() => {
+    if (windowWidth < 1000) {
+      return windowWidth / 4 / 10;
+    } else {
+      return windowWidth / 8 / 10;
+    }
+  });
   //유저의 관심사
-  const interest = [...props.interest];
-  //다각형 단위길이
-  const [unitLength, setUnitLength] = React.useState(30);
+  const interest = [...props.data];
   //수치 단위길이
   const interestUnit = (unitLength / 2) * Math.sqrt(6.76);
   //svg 구역 높이
   const height = unitLength * 10 + 200;
   //n각형
-  const poly = 8;
-  //가로길이 보정
-  const widthCut = 50;
+  const poly = interest.length;
   //다각형 회전시작각도
-  const startDeg = -22.5;
-  React.useEffect(()=>{
+  const startDeg = -180 / poly;
+  //가로길이, 단위길이 update
+  const changeWidth = () => {
     const size = window.innerWidth;
     if (size < 1000) {
       setWidth(size / 2 - widthCut);
-      setUnitLength(size/4/10);
+      setUnitLength(size / 4 / 10);
     } else {
       setWidth(size / 4 - widthCut);
-      setUnitLength(size/8/10);
+      setUnitLength(size / 8 / 10);
     }
-  },[window.innerWidth]);
+  };
+  //window size가 변할때마다 가로길이, 단위길이 update
+  React.useEffect(() => {
+    window.addEventListener("resize", changeWidth);
+  }, [window.innerWidth]);
 
   //회전각
   let deg = 360 / poly;
@@ -67,7 +87,7 @@ export default function InterestPolygon(props) {
         transform={`rotate(${deg * i})`}
         transform-origin={`${width / 2} ${height / 2}`}
         d={`M ${width / 2} ${height / 2}
-        L ${width / 2} ${height / 2 - ((interestUnit*0.05) * interest[i])}`}
+        L ${width / 2} ${height / 2 - interestUnit * 0.05 * interest[i]}`}
       ></path>
     );
   }

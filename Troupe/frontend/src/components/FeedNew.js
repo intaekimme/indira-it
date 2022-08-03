@@ -1,17 +1,13 @@
-import apiClient from '../apiClient';
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import apiClient from "../apiClient";
+import React from "react";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
@@ -27,58 +23,53 @@ export default function PerfNew() {
   //가격
   const [price, setPrice] = React.useState(0);
   //좌석
-  const [seat, setSeat] = React.useState('');
+  const [seat, setSeat] = React.useState("");
 
-  
   //image 업로드
   const changeImage = (e) => {
     const imageLists = e.target.files;
     let imageUrlLists = [...imgUrl];
 
-    for (let i = 0; i < imageLists.length; i++){
-        const currentImageUrl = URL.createObjectURL(imageLists[i]);
-        imageUrlLists.push(currentImageUrl);
+    for (let i = 0; i < imageLists.length; i++) {
+      const currentImageUrl = URL.createObjectURL(imageLists[i]);
+      imageUrlLists.push(currentImageUrl);
     }
 
-    if (imageUrlLists.length > 10){
-        imageUrlLists = imageUrlLists.slice(0,10);
+    if (imageUrlLists.length > 10) {
+      imageUrlLists = imageUrlLists.slice(0, 10);
     }
 
     setImgUrl(imageUrlLists);
   };
 
   //공연제목 Change
-  const changePerfName = (e) =>{
+  const changePerfName = (e) => {
     setPerfName(e.target.value);
-  }
+  };
 
   //공연기간 Change
-  const changePerfDate = (e) =>{
+  const changePerfDate = (e) => {
     setPerfDate(e.target.value);
-  }
+  };
 
-  const addPrice = (e) =>{
+  const addPrice = (e) => {};
 
-  }
-
-  const addSeat = (e) => {
-    
-  }
+  const addSeat = (e) => {};
 
   //회원가입버튼 클릭
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    console.log(event.currentTarget)
+    console.log(event.currentTarget);
     console.log(formData);
 
     const data = {
-      profileImage: formData.get('imgUpload'),
-      nickname: formData.get('nickname'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      passwordCheck: formData.get('passwordCheck'),
-      profileMessage: formData.get('profileMessage'),
+      profileImage: formData.get("imgUpload"),
+      nickname: formData.get("nickname"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+      passwordCheck: formData.get("passwordCheck"),
+      profileMessage: formData.get("profileMessage"),
     };
     console.log(data);
 
@@ -88,9 +79,6 @@ export default function PerfNew() {
     // }
     apiClient.signup(data);
   };
-
-  
-  
 
   return (
     <ThemeProvider theme={theme}>
@@ -109,16 +97,24 @@ export default function PerfNew() {
             encType="multipart/form-data"
             style={{ textAlign: "center" }}
           >
-            <Grid container spacing={2} sx={{gridTemplateRows:'repeat(5, 2fr)'}}>
-              <Grid item xs={11}> 
+            <Grid
+              container
+              spacing={2}
+              sx={{ gridTemplateRows: "repeat(5, 2fr)" }}
+            >
+              <Grid item xs={11}>
                 {imgUrl ? (
-                    <div>
-                    { imgUrl.map((image, id) => (
-                        <img src={image} alt='' style={{height:'70px', width:'70px'}}></img>
+                  <div>
+                    {imgUrl.map((image, id) => (
+                      <img
+                        src={image}
+                        alt=""
+                        style={{ height: "70px", width: "70px" }}
+                      ></img>
                     ))}
-                    </div>
-                ): (
-                <Box style={{height:'100px', width:'100px'}}></Box>
+                  </div>
+                ) : (
+                  <Box style={{ height: "100px", width: "100px" }}></Box>
                 )}
               </Grid>
               <Grid item xs={1} style={{ position: "relative" }}>
@@ -162,7 +158,7 @@ export default function PerfNew() {
                   id="nickname"
                   label="공연 제목"
                   autoFocus
-                  onChange = { changePerfName }
+                  onChange={changePerfName}
                 />
               </Grid>
 
@@ -174,7 +170,7 @@ export default function PerfNew() {
                   label="공연 가격"
                   name="email"
                   autoComplete="email"
-                  onChange = { changePerfName }
+                  onChange={changePerfName}
                 />
               </Grid>
 
@@ -194,9 +190,13 @@ export default function PerfNew() {
                   autoComplete="new-password"
                 />
               </Grid>
-            
+
               <Grid item xs={2}>
-                  <Typography style={{fontSize:'large', fontFamily:'IBM Plex Sans KR'}}>~</Typography>
+                <Typography
+                  style={{ fontSize: "large", fontFamily: "IBM Plex Sans KR" }}
+                >
+                  ~
+                </Typography>
               </Grid>
 
               <Grid item xs={5}>
@@ -235,23 +235,23 @@ export default function PerfNew() {
 
               <Grid item xs={3}>
                 <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                등록하기
+                  등록하기
                 </Button>
               </Grid>
               <Grid item xs={3}>
                 <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color='error'
-                sx={{ mt: 3, mb: 2 }}
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="error"
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                취소하기
+                  취소하기
                 </Button>
               </Grid>
             </Grid>

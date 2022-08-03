@@ -1,8 +1,9 @@
-import apiClient from "../apiClient";
 import React from "react";
+import { useParams } from "react-router-dom";
+import apiClient from "../apiClient";
+
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import { Card } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Stage from "../img/stage.jpg";
@@ -14,49 +15,60 @@ import ProfileTabs from "./ProfileTabs";
 
 const theme = createTheme();
 
-export default function Profile(memberNo) {
-  //화면 width
-  const [widthSize, setWidthSize] = React.useState(0);
+function Profile(props) {
+  //memberNo
+  const { memberNo } = useParams();
+
   //화면 width에 따른 화면분할여부
   const [gridItemxs, setGridItemxs] = React.useState(6);
-  window.addEventListener("resize", (e) => {
+
+  //memberInfo 초기화
+  const [memberInfo, setMemberInfo] = React.useState("");
+  //memberInfo 화면분할 update 시 불러오기
+  React.useEffect(() => {
+    apiClient.getMemberInfo(memberNo).then((data) => {
+      setMemberInfo(data);
+    });
+  }, [memberNo]);
+
+  //공연자/일반 판단 초기화
+  const [performer, setPerformer] = React.useState(false);
+  //공연자/일반 판단 memberInfo update 시 update
+  React.useEffect(() => {
+    setPerformer(memberInfo.memberType === "PERFORMER");
+  }, [memberInfo]);
+
+  // 자신의 유저페이지인지 판단 초기화
+  const [myPage, setMypage] = React.useState(false);
+  // 자신의 유저페이지인지 판단 update
+  React.useEffect(() => {
+    setMypage(sessionStorage.getItem("loginMember") === memberNo);
+  }, [sessionStorage.getItem("loginMember"), memberNo]);
+
+  //1000보다 큰경우 2화면분할
+  const handleGrid = () => {
     const size = window.innerWidth;
-    setWidthSize(size);
     if (size < 1000) {
       setGridItemxs(12);
     } else {
       setGridItemxs(6);
     }
-  });
-
-  //회원 기본정보 요청
-  // const profile = apiClient.getMemberInfo(memberNo);
-  const memberInfo = {
-    memberNo: 1,
-    email: "abc@naver.com",
-    nickname: "이것은닉네임이다",
-    description:
-      "가나다라마바사 아자차카타파하 에헤 이야이야이야 가나다라마바사 아자차카타파하 에헤 이야이야이야",
-    memberType: "performer",
-    profileImageUrl: Stage,
-    // "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/static/94d60d59-bdc3-4322-9042-7be3e184ed2acute.jpg",
   };
+  //화면분할 update
+  React.useEffect(() => {
+    window.addEventListener("resize", handleGrid);
+  }, [window.innerWidth]);
 
-  //공연자/일반 판단
-  // const performer = memberInfo.memberType==="performer";
-  const performer = true;
-
-  //ProfileTabs.js 전달
   const tabContent = performer
     ? [
-        <PerfList memberNo={memberInfo.memberNo} />,
-        <FeedList memberNo={memberInfo.memberNo} />,
-        <PerfList memberNo={memberInfo.memberNo} save={true} />,
-        <FeedList memberNo={memberInfo.memberNo} save={true} />,
+        <PerfList memberInfo={memberInfo} />,
+        <FeedList memberInfo={memberInfo} />,
+        <PerfList memberInfo={memberInfo} save={true} />,
+        <FeedList memberInfo={memberInfo} save={true} />,
       ]
     : [
-        <PerfList memberNo={memberInfo.memberNo} save={true} />,
-        <FeedList memberNo={memberInfo.memberNo} save={true} />,
+        <PerfList memberInfo={memberInfo} save={true} />,
+        <FeedList memberInfo={memberInfo} save={true} />,
       ];
   const tabText = performer
     ? ["공연/전시 목록", "피드 목록", "공연/전시 북마크", "피드 북마크"]
@@ -92,7 +104,11 @@ export default function Profile(memberNo) {
                 //프로필
               }
               <Grid item xs={12}>
-                <ProfileMemberInfo width="100%" memberInfo={memberInfo} />
+                <ProfileMemberInfo
+                  width="100%"
+                  memberInfo={memberInfo}
+                  myPage={myPage}
+                />
               </Grid>
               {
                 //개인분석
@@ -101,6 +117,7 @@ export default function Profile(memberNo) {
                 <ProfileAnalyze
                   nickname={memberInfo.nickname}
                   performer={performer}
+                  myPage={myPage}
                 />
               </Grid>
               {
@@ -116,3 +133,4 @@ export default function Profile(memberNo) {
     </ThemeProvider>
   );
 }
+export default Profile;

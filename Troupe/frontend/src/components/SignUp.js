@@ -1,19 +1,16 @@
-import apiClient from '../apiClient';
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import apiClient from "../apiClient";
+import React from "react";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const theme = createTheme();
 
@@ -30,75 +27,71 @@ export default function SignUp() {
   const [pwLength, setPwLength] = React.useState(true);
   //password 일치확인
   const [pwSame, setPwSame] = React.useState(true);
-  
+
   //image 업로드
   const changeImage = (e) => {
     setImgUrl(URL.createObjectURL(e.target.files[0]));
   };
 
   //nickname Change
-  const changeNickname = (e) =>{
+  const changeNickname = (e) => {
     setNickname(e.target.value);
-  }
+  };
 
   //email Change
-  const changeEmail = (e) =>{
+  const changeEmail = (e) => {
     setEmail(e.target.value);
-  }
+  };
 
   //중복체크
-  const sameCheck = (string) =>{
-    if(string === 'email'){
+  const sameCheck = (string) => {
+    if (string === "email") {
       apiClient.existEmail({ email: email });
+    } else if (string === "nickname") {
+      apiClient.existNickname({ nickname: nickname });
     }
-    else if(string === 'nickname'){
-      apiClient.existNickname({nickname: nickname});
-    }
-  }
+  };
 
   //입력된 값이 올바른지 확인
   const checkValue = (data) => {
     //닉네임 2~20자
     const nicknameLength = data.nickname.length;
-    const nicknameCheck = nicknameLength>=2 && nicknameLength<=20;
+    const nicknameCheck = nicknameLength >= 2 && nicknameLength <= 20;
     setNicknameLength(nicknameCheck);
     //password 8~20자
     const pwLength = data.password.length;
-    const pwCheck = pwLength>=8 && pwLength<=20;
+    const pwCheck = pwLength >= 8 && pwLength <= 20;
     setPwLength(pwCheck);
     //paswword 일치확인
     const pwSame = data.password === data.passwordCheck;
     setPwSame(pwSame);
 
-    return (nicknameCheck && pwCheck && pwSame);
-  }
+    return nicknameCheck && pwCheck && pwSame;
+  };
 
   //회원가입버튼 클릭
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    console.log(event.currentTarget)
+    console.log(event.currentTarget);
     console.log(formData);
 
     const data = {
-      profileImage: formData.get('imgUpload'),
-      nickname: formData.get('nickname'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      passwordCheck: formData.get('passwordCheck'),
-      profileMessage: formData.get('profileMessage'),
+      profileImage: formData.get("imgUpload"),
+      nickname: formData.get("nickname"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+      passwordCheck: formData.get("passwordCheck"),
+      profileMessage: formData.get("profileMessage"),
     };
     console.log(data);
 
     //입력된 값이 올바른지 확인
-    if(!checkValue(data)){
+    if (!checkValue(data)) {
       return;
     }
     apiClient.signup(data);
   };
-
-  
-  
 
   return (
     <ThemeProvider theme={theme}>
@@ -127,6 +120,7 @@ export default function SignUp() {
                 ) : (
                   <img
                     src={imgUrl}
+                    alt=""
                     style={{
                       objectFit: "cover",
                       width: "100px",
@@ -176,10 +170,10 @@ export default function SignUp() {
                   id="nickname"
                   label="닉네임"
                   autoFocus
-                  onChange = { changeNickname }
+                  onChange={changeNickname}
                 />
               </Grid>
-              <Grid item xs={3} style={{position: "relative"}}>
+              <Grid item xs={3} style={{ position: "relative" }}>
                 <Button
                   style={{
                     position: "absolute",
@@ -190,7 +184,7 @@ export default function SignUp() {
                     backgroundColor: "#CCCCCC",
                     color: "black",
                   }}
-                  onClick = { () => sameCheck("nickname") }
+                  onClick={() => sameCheck("nickname")}
                 >
                   중복확인
                 </Button>
@@ -212,10 +206,10 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  onChange = { changeEmail }
+                  onChange={changeEmail}
                 />
               </Grid>
-              <Grid item xs={3} style={{position: "relative"}}>
+              <Grid item xs={3} style={{ position: "relative" }}>
                 <Button
                   style={{
                     position: "absolute",
@@ -226,7 +220,7 @@ export default function SignUp() {
                     backgroundColor: "#CCCCCC",
                     color: "black",
                   }}
-                  onClick = { () => sameCheck("email") }
+                  onClick={() => sameCheck("email")}
                 >
                   중복확인
                 </Button>
