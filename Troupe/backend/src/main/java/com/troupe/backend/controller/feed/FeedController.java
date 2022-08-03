@@ -1,10 +1,11 @@
 package com.troupe.backend.controller.feed;
 
-import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.dto.comment.CommentForm;
 import com.troupe.backend.dto.comment.CommentResponse;
 import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
+import com.troupe.backend.dto.feed.FeedUpdateVO;
+import com.troupe.backend.dto.feed.FeedVO;
 import com.troupe.backend.service.comment.CommentService;
 import com.troupe.backend.service.feed.FeedILikeService;
 import com.troupe.backend.service.feed.FeedSaveService;
@@ -14,15 +15,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @Api("피드 REST API")
@@ -48,7 +50,7 @@ public class FeedController {
     public ResponseEntity selectFeed(@PathVariable int feedNo) throws IOException {
         try{
             FeedResponse feedResponse  = feedService.select(feedNo);
-            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+            return new ResponseEntity(feedResponse, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed select FAIL", HttpStatus.BAD_REQUEST);
@@ -60,7 +62,7 @@ public class FeedController {
     public ResponseEntity selectAllFeed(@PathVariable String change, Principal principal) throws IOException {
         try{
             List<FeedResponse> feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()));
-            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
+            return new ResponseEntity(feedResponse, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
@@ -78,27 +80,16 @@ public class FeedController {
             return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
         }
     }
-    @Operation(summary = "태그로 인한 피드 검색", description = "파라미터: 태그명 리스트")
-    @GetMapping("/search")
-    public ResponseEntity searchFeeds (@RequestParam(name = "tags") List<String> tags) throws IOException {
-        try {
-            List<FeedResponse> feedResponse = feedService.selectAllBySearch(tags);
-            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
-        }catch (Exception e){
-            System.out.println(e);
-            return new ResponseEntity("Feed search FAIL", HttpStatus.BAD_REQUEST);
-        }
-    }
-
     // responsebody로 수정
     @Operation(summary = "피드 등록", description = "파라미터: 이미지 파일들, 멤버번호, 내용, 태그명들")
-    @PostMapping
-    public ResponseEntity insertFeed(Principal principal,
-                                     @RequestPart("images") List<MultipartFile> images,
-                                     @RequestBody(required = false) FeedForm feedForm) throws IOException {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity insertFeed(Principal principal,@ModelAttribute @Valid FeedVO feedVO) throws IOException {
         try{
-            feedForm.setMemberNo(Integer.parseInt(principal.getName()));
-            feedForm.setImages(images);
+            FeedForm feedForm = FeedForm.builder().memberNo(Integer.parseInt(principal.getName()))
+                    .content(feedVO.getContent())
+                            .images(feedVO.getImages())
+                                    .tags(feedVO.getTags())
+                                            .build();
             feedService.insert(feedForm);
             return new ResponseEntity("Feed Insert SUCCESS", HttpStatus.CREATED);
         }catch (Exception e){
@@ -108,20 +99,15 @@ public class FeedController {
     }
     // responsebody로 수정
     @Operation(summary = "피드 수정", description = "파라미터: 피드 번호, 이미지파일들, 삭제된 이미지 url들, 변경된 내용, 태그리스트들")
-    @PatchMapping("/{feedNo}/modify")
-    public ResponseEntity updateFeed(@PathVariable int feedNo,
-                                 @RequestParam(name = "images",required = false) List<MultipartFile> images,
-                                 @RequestParam(name = "deletedImages", required = false) List<Integer> imageNo,
-                                 @RequestParam(name = "content", required = false) String content,
-                                 @RequestParam(name = "tags", required = false) List<String> tags) throws IOException {
-
+    @PostMapping(value = "/{feedNo}/modify",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity updateFeed(@PathVariable int feedNo,@ModelAttribute @Valid FeedUpdateVO feedUpdateVO) throws IOException {
         try {
             FeedForm request = new FeedForm();
             request.setFeedNo(feedNo);
-            request.setImages(images);
-            request.setImageNo(imageNo);
-            request.setContent(content);
-            request.setTags(tags);
+            if(feedUpdateVO.getImages()!=null)  request.setImages(feedUpdateVO.getImages());
+            if(feedUpdateVO.getImageNo()!=null) request.setImageNo(feedUpdateVO.getImageNo());
+            if(feedUpdateVO.getImageNo()!=null) request.setContent(feedUpdateVO.getContent());
+            if(feedUpdateVO.getTags()!=null)  request.setTags(feedUpdateVO.getTags());
 //            System.out.println(request.getFeedNo()+" "+request.getImageNo()+" "+request.getContent()+" "+request.getImages()+" "+request.getTags()+" "+request.getTagNo());
             feedService.update(request);
             return new ResponseEntity("Feed update SUCCESS", HttpStatus.CREATED);
@@ -228,7 +214,7 @@ public class FeedController {
     public ResponseEntity selectAllComment(@PathVariable int feedNo) throws IOException {
         try{
             List<CommentResponse> responses = commentService.selectAll(feedNo);
-            return new ResponseEntity(responses, HttpStatus.CREATED);
+            return new ResponseEntity(responses, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Comment selectAll FAIL", HttpStatus.BAD_REQUEST);
@@ -241,7 +227,7 @@ public class FeedController {
                                                    @PathVariable int commentNo) throws IOException {
         try{
             List<CommentResponse> responses = commentService.selectAllByParent(commentNo);
-            return new ResponseEntity(responses, HttpStatus.CREATED);
+            return new ResponseEntity(responses, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Comment selectAllByParent FAIL", HttpStatus.BAD_REQUEST);
@@ -253,10 +239,22 @@ public class FeedController {
     public ResponseEntity getCountLike (@PathVariable int feedNo) throws IOException {
         try{
             int totalCount = feedILikeService.countTotalLike(feedNo);
-            return new ResponseEntity(totalCount, HttpStatus.CREATED);
+            return new ResponseEntity(totalCount, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
-            return new ResponseEntity("Comment selectAllByParent FAIL", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("like totalcount FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "피드 태그 검색 ", description = "파라미터: 태그명들 ")
+    @GetMapping("/search")
+    public ResponseEntity tagSearch (@RequestParam List<String> tags) throws IOException {
+        try{
+             List<FeedResponse> list = feedService.selectAllBySearch(tags);
+            return new ResponseEntity(list, HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("search FAIL", HttpStatus.BAD_REQUEST);
         }
     }
 //    @PatchMapping("/test")

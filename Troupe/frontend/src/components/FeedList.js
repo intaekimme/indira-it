@@ -15,6 +15,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import Favorite from '@mui/icons-material/Favorite';
 import PerfFeedToggle from './MainButton';
+import apiClient from '../apiClient';
 
 
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
@@ -73,6 +74,9 @@ export default function Album() {
     pages=pages + 6
     setCard(range(0, pages))
   }
+
+  const feedList = apiClient.getFeedList()
+  console.log(feedList)
 
   return (
     <ThemeProvider theme={theme}>
