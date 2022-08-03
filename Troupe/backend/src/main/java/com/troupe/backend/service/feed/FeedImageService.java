@@ -27,6 +27,7 @@ public class FeedImageService {
         try {
             // 피드 이미지들 저장
             for(FeedImage image: feedImageList){
+//                System.out.println("feedImage:  "+ image.getImageUrl());
                 feedImageRepository.save(image);
             }
         }catch (Exception e){
@@ -38,7 +39,7 @@ public class FeedImageService {
         try{
             // 피드 이미지들 DB 삭제
             for(Integer imageNo : feedImageList){
-                System.out.println("delete imageNo : "+imageNo);
+//                System.out.println("delete imageNo : "+imageNo);
                 // delete access denied 뜸..
                 s3FileUploadService.deleteFile(feedImageRepository.findById(imageNo).get().getImageUrl());
                 feedImageRepository.delete(feedImageRepository.findById(imageNo).get());

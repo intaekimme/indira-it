@@ -11,6 +11,7 @@ public interface FeedRepository extends JpaRepository<Feed, Integer> {
 //    Optional<Feed> findById(int feedNo);
 
     Optional<List<Feed>> findAllByIsRemovedOrderByCreatedTimeDesc(boolean isRemoved);
-    List<Feed> findAllByMemberOrderByCreatedTimeDesc(Member member);
+    List<Feed> findAllByMemberAndIsRemovedOrderByCreatedTimeDesc(Member member, boolean isRemoved);
 
+    List<Feed> findAllByIsRemovedAndMemberInOrderByCreatedTimeDesc(boolean isRemoved,List<Member> member);
 }
