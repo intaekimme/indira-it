@@ -45,9 +45,7 @@ const theme = createTheme();
 
 export default function Album() {
 
-  const perfList = apiClient.getPerfList()
-  console.log(perfList);
-
+  let [perfList, setPerfList] = React.useState(apiClient.getPerfList());
   const [like, setLike] = React.useState(false)
   const [save, setSave] = React.useState(false)
   let [cards, setCard] = React.useState([])
@@ -61,21 +59,14 @@ export default function Album() {
   }
 
   function handleCard() {
-    let pages = 6
-    pages=pages + 6
-    setCard(range(0, pages))
+    setCard(range(0, perfList.length))
   }
 
-  // const setCards = ((current)=>{
-  //   for(let i=0;i<6;i++){
-  //     current.push(
-  //     <Grid>
-
-  //     </Grid>
-  //     );
-  //   }
-  // });
-
+  async function handlePerfList() {
+    const MyData = await apiClient.getPerfList()
+    setPerfList(MyData)
+  }
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

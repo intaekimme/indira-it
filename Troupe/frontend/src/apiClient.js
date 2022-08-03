@@ -106,24 +106,35 @@ const apiClient = {
   }
   },
 
+    //공연 등록
+    perfNew: (data) => {
+      instance
+        .post("/perf", data)
+        .then((response) => {
+          alert("공연등록 되었습니다." + response);
+        })
+        .catch((error) => {
+          alert("공연등록 실패 : " + error);
+        });
+    },
+
   //공연 목록 불러오기
   getPerfList: () => {
-    instance
-    .get(`/perf/list`)
+    return instance
+    .get("/perf/list")
     .then((response)=> {
-      alert('불러오기 성공');
-      return response;
+      alert('공연 불러오기 성공');
+      return response.data
     })
     .catch( (error) => {
       alert('공연 불러오기 실패' + error);
-      return null;
     })
   },
 
     //피드 목록 불러오기
     getFeedList: () => {
       instance
-      .get(`/feed/list`)
+      .get("/feed/list")
       .then((response)=> {
         alert('불러오기 성공');
         return response;

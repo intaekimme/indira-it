@@ -28,7 +28,7 @@ export default function PerfNew() {
   //공연시간
   const [runtime, setRuntime] = React.useState(0);
   //가격, 좌석
-  const [seatPrice, setSeatPrice] = React.useState([{firstName:'', lastName:''}]);
+  const [seatPrice, setSeatPrice] = React.useState([{seat:'', price:0}]);
   //공연 장르
   const [genre, setGenre] = React.useState('')
 
@@ -66,12 +66,13 @@ export default function PerfNew() {
     setPerfEndDate(e.target.value);
     console.log(e.target.value)
   }
-
+  //공연 장르 change
   const changeGenre = (e) => {
     setGenre(e.target.value)
     console.log(e.target.value)
   }
 
+  // 좌석 가격 change
   const handleSeatPrice = (e, index) =>{
     const { name, value } = e.target;
     const list = [...seatPrice];
@@ -79,10 +80,12 @@ export default function PerfNew() {
     setSeatPrice(list);
   }
 
+  // 좌석 가격 field 추가
   const addSeatPrice = (e) =>{
-    setSeatPrice([...seatPrice, { firstName: "", lastName: "" }]);
+    setSeatPrice([...seatPrice, { seat: "", price: 0 }]);
   }
 
+  //좌석 가격 field 삭제
   const deleteSeatPrice = (index) => {
     const list = [...seatPrice];
     list.splice(index, 1);
@@ -115,20 +118,17 @@ export default function PerfNew() {
     console.log(formData);
 
     const data = {
-      profileImage: formData.get('imgUpload'),
-      nickname: formData.get('nickname'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      passwordCheck: formData.get('passwordCheck'),
-      profileMessage: formData.get('profileMessage'),
+      perfImage: formData.get('imgUpload'),
+      title: formData.get('title'),
+      startDate: formData.get('start'),
+      endDate: formData.get('end'),
+      seatPrice: seatPrice,
+      genre: formData.get('genre'),
+      description: formData.get('description'),
     };
     console.log(data);
 
-    //입력된 값이 올바른지 확인
-    // if(!checkValue(data)){
-    //   return;
-    // }
-    apiClient.signup(data);
+    apiClient.perfNew(data);
   };
 
   
@@ -197,11 +197,10 @@ export default function PerfNew() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="nickname"
+                  name="title"
                   fullWidth
                   required
-                  id="nickname"
+                  id="title"
                   label="공연 제목"
                   autoFocus
                   onChange = { changePerfName }
@@ -211,64 +210,36 @@ export default function PerfNew() {
               <Grid item xs={12}>
                 {seatPrice.map((x, i) => {
           return (
-            <div className="box">
+            <div>
               <input
-                name="firstName"
-                placeholder="Enter First Name"
-                value={x.firstName}
+                id='seat'
+                name="seat"
+                placeholder="좌석명"
+                value={x.seat}
                 onChange={e => handleSeatPrice(e, i)}
               />
               <input
+                id='price'
                 className="ml10"
-                name="lastName"
-                placeholder="Enter Last Name"
-                value={x.lastName}
+                name="price"
+                placeholder="가격"
                 onChange={e => handleSeatPrice(e, i)}
               />
-              <div className="btn-box">
                 {seatPrice.length !== 1 && <button
                   className="mr10"
                   onClick={() => deleteSeatPrice(i)}>Remove</button>}
                 {seatPrice.length - 1 === i && <button onClick={addSeatPrice}>Add</button>}
-              </div>
             </div>
           );
         })}
               </Grid>
-              {/* <Grid item xs={5}>
-                <TextField
-                  required
-                  fullWidth
-                  id="seat"
-                  label="좌석"
-                  name="seat"
-                  autoComplete="seat"
-                  onChange = { changePerfName }
-                />
-              </Grid>
-
-              <Grid item xs={5}>
-                <TextField
-                  required
-                  fullWidth
-                  id="price"
-                  label="공연 가격"
-                  name="price"
-                  autoComplete="price"
-                />
-              </Grid>
-
-              <Grid item xs={2}>
-                <Button onClick={addSeatPrice}>+</Button>
-                <Button onClick={deleteSeatPrice}>-</Button>
-              </Grid> */}
 
               <Grid item xs={5}>
               <input 
                 required
                 type="date" 
                 id="start" 
-                name="trip-start"
+                name="start"
                 label='starting date'
                 min="2020-01-01" 
                 max="2025-12-31"
@@ -284,7 +255,7 @@ export default function PerfNew() {
                 required
                 type="date" 
                 id="end" 
-                name="trip-end"
+                name="end"
                 label='end date'
                 min="2020-01-01" 
                 max="2025-12-31"
@@ -293,10 +264,11 @@ export default function PerfNew() {
 
               <Grid item xs={6}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">장르</InputLabel>
+                <InputLabel id="genre">장르</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  name='genre'
+                  labelId="genre"
+                  id="genre"
                   value={genre}
                   label="장르"
                   onChange={changeGenre}
@@ -312,11 +284,9 @@ export default function PerfNew() {
                 <TextField
                   required
                   fullWidth
-                  name="passwordCheck"
+                  name="runtime"
                   label="공연 시간"
-                  type="password"
-                  id="passwordCheck"
-                  autoComplete="new-password"
+                  id="runtime"
                 />
               </Grid>
 
@@ -324,10 +294,10 @@ export default function PerfNew() {
                 <TextField
                   fullWidth
                   multiline
-                  id="profileMessage"
+                  id="description"
                   label="공연 소개"
                   rows={6}
-                  name="profileMessage"
+                  name="description"
                   onKeyUp={descriptionLength}
                 />
               </Grid>
@@ -344,7 +314,6 @@ export default function PerfNew() {
               </Grid>
               <Grid item xs={3}>
                 <Button
-                type="submit"
                 fullWidth
                 variant="contained"
                 color='error'
