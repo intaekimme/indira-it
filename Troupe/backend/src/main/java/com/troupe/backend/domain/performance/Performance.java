@@ -111,6 +111,7 @@ public class Performance implements Serializable{
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
     @Override
     public String toString() {
         return "Performance{" +
@@ -125,8 +126,9 @@ public class Performance implements Serializable{
                 ", posterUrl='" + posterUrl + '\'' +
                 ", codeNo=" + codeNo +
                 ", detailTime='" + detailTime + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 ", isRemoved=" + isRemoved +
                 '}';
     }
-
 }

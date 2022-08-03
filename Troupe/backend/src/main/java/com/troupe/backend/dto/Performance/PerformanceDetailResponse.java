@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.util.List;
 @Builder
 public class PerformanceDetailResponse {
     int pfNo;
-    List<String> imageUrl;
+    Map<Integer, String> imageUrl;
     int memberNo;
     String title;
     String location;

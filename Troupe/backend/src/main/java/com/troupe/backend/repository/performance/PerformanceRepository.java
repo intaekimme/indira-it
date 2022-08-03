@@ -3,6 +3,7 @@ package com.troupe.backend.repository.performance;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -30,4 +31,14 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
 
 
     Performance findByMemberNoAndId(Member member, int pfNo);
+
+    @Query(nativeQuery = true, value = "select * from tb_performance pf join tb_member m on pf.member_no = m.member_no where m.nickname like :keyword order by pf.created_time ")
+    List<Performance> findByNickName(String keyword);
+
+    @Query(nativeQuery = true, value = "(select * from tb_performance pf where pf.title like %:keyword%) " +
+            "union "+
+            "(select * from tb_performance pf where pf.description like %:keyword%) "+
+            "order by created_time ")
+    List<Performance> findByTitleAndDescription(String keyword);
+
 }

@@ -3,6 +3,7 @@ package com.troupe.backend.service.Performance;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.Performance.PerformanceForm;
+import com.troupe.backend.dto.Performance.PerformanceModifyForm;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.performance.PerformancePriceRepository;
@@ -30,7 +31,7 @@ public class PerformancePriceService {
     @Transactional
     public void addPerformancePrice(PerformanceForm performanceform, Performance performance) {
         //  가격 엔티티들 생성
-        List<PerformancePrice> priceList = performanceConverter.toPerformancePriceEntityWhenCreateOrUpdate(performanceform, performance);
+        List<PerformancePrice> priceList = performanceConverter.toPerformancePriceEntityWhenCreate(performanceform, performance);
         performancePriceRepository.saveAll(priceList);
 
     }
@@ -38,10 +39,10 @@ public class PerformancePriceService {
     /**
      * 좌석 수정(가격 수정)
      * @param performance
-     * @param performanceform
+     * @param performanceModifyForm
      */
     @Transactional
-    public void updatePerformancePrice(PerformanceForm performanceform, Performance performance) {
+    public void updatePerformancePrice(PerformanceModifyForm performanceModifyForm, Performance performance) {
         //  공연 번호와 매치되는 좌석 모두 찾기
         List<PerformancePrice> performancePriceList = performancePriceRepository.findByPf(performance);
         //  해당 좌석들의 정보를 테이블에서 모두 삭제하기
@@ -49,7 +50,7 @@ public class PerformancePriceService {
             performancePriceRepository.deleteById(price.getId());
         }
         //  변경사항 입력하기
-        List<PerformancePrice> priceList = performanceConverter.toPerformancePriceEntityWhenCreateOrUpdate(performanceform, performance);
+        List<PerformancePrice> priceList = performanceConverter.toPerformancePriceEntityWhenUpdate(performanceModifyForm, performance);
         performancePriceRepository.saveAll(priceList);
     }
 
