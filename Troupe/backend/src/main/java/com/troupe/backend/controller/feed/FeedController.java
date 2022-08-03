@@ -14,16 +14,21 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin
@@ -57,11 +62,17 @@ public class FeedController {
         }
     }
 
-    @Operation(summary = "조건별 피드 목록 조회", description = "파라미터: {change} = [all,save,follow] (후에 profileController로 이전-피드저장부분)")
+    @Operation(summary = "조건별 피드 목록 조회(+공연자가 등록한 피드 목록 조회)", description = "파라미터: {change} = [all,save,follow] (후에 profileController로 이전-피드저장부분)")
     @GetMapping("/list/{change}")
-    public ResponseEntity selectAllFeed(@PathVariable String change, Principal principal) throws IOException {
+    public ResponseEntity selectAllFeed(@PathVariable(required = false) String change, Principal principal, @RequestParam(name = "memberNo",required = false) Integer memberNo,
+                                        int pageNumber)  {
         try{
-            List<FeedResponse> feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()));
+            PageRequest pageRequest = PageRequest.of(pageNumber,6);
+//            Slice<FeedResponse> feedResponses = null;
+            List<FeedResponse> feedResponse = new ArrayList<>();
+            if(change.equals("all")) feedResponse = feedService.selectAll(change, 0,pageRequest);
+            else if(memberNo==null ) feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()),pageRequest);
+            else feedResponse = feedService.selectAllByMember(memberNo,pageRequest);
             return new ResponseEntity(feedResponse, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
@@ -69,27 +80,17 @@ public class FeedController {
         }
     }
 
-    @Operation(summary = "공연 등록자가 등록한 피드 목록 조회", description = "파라미터: 공연자 멤버 번호(후에 profileController로 이전)")
-    @GetMapping("/{profileMemberNo}/myfeed/list")
-    public ResponseEntity selectAllFeedByPerformer(@PathVariable(name = "profileMemberNo") int memberNo) throws IOException {
-        try{
-            List<FeedResponse> feedResponse = feedService.selectAllByMember(memberNo);
-            return new ResponseEntity(feedResponse, HttpStatus.CREATED);
-        }catch (Exception e){
-            System.out.println(e);
-            return new ResponseEntity("Feed select All FAIL", HttpStatus.BAD_REQUEST);
-        }
-    }
     // responsebody로 수정
     @Operation(summary = "피드 등록", description = "파라미터: 이미지 파일들, 멤버번호, 내용, 태그명들")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity insertFeed(Principal principal,@ModelAttribute @Valid FeedVO feedVO) throws IOException {
         try{
-            FeedForm feedForm = FeedForm.builder().memberNo(Integer.parseInt(principal.getName()))
-                    .content(feedVO.getContent())
-                            .images(feedVO.getImages())
-                                    .tags(feedVO.getTags())
-                                            .build();
+            FeedForm feedForm = new FeedForm();
+            if(principal.getName()!=null) feedForm.setMemberNo(Integer.parseInt(principal.getName()));
+            if(feedVO.getContent()==null) feedVO.setContent("");
+            if(feedVO.getTags()!=null) feedForm.setTags(feedVO.getTags());
+            if(feedVO.getImages()!=null) feedForm.setImages(feedVO.getImages());
+            feedForm.setContent(feedVO.getContent());
             feedService.insert(feedForm);
             return new ResponseEntity("Feed Insert SUCCESS", HttpStatus.CREATED);
         }catch (Exception e){
@@ -129,7 +130,7 @@ public class FeedController {
         }
     }
 
-    @Operation(summary = "피드 좋아요 스위칭(처음엔 insert, 그 뒤는 update)", description = "파라미터: 피드번호, 멤버번호")
+    @Operation(summary = "피드 좋아요 스위칭", description = "파라미터: 피드번호, 멤버번호 (처음엔 insert, 그 뒤는 update)")
     @PatchMapping("/{feedNo}/like")
     public ResponseEntity likeFeed(@PathVariable int feedNo, Principal principal) throws IOException {
         try {
@@ -141,7 +142,7 @@ public class FeedController {
         }
     }
 
-    @Operation(summary = "피드 저장", description = "파라미터: 피드 번호, 멤버 번호")
+    @Operation(summary = "피드 저장 스위칭", description = "파라미터: 피드 번호, 멤버 번호")
     @PatchMapping("/{feedNo}/save")
     public ResponseEntity saveFeed(@PathVariable int feedNo, Principal principal) throws IOException {
         try {
@@ -257,18 +258,5 @@ public class FeedController {
             return new ResponseEntity("search FAIL", HttpStatus.BAD_REQUEST);
         }
     }
-//    @PatchMapping("/test")
-//    public String  delete(@RequestParam String url) throws  IOException {
-//        service.deleteFile(url);
-//        return "success";
-//    }
-//    @PostMapping("/test")
-//    public String test(@RequestParam MultipartFile file) throws Exception{
-//        try{
-////            service.upload(file,"static");
-//            return  service.upload(file,"static");
-//        }catch (Exception e){
-//            return "fail";
-//        }
-//    }
+
 }
