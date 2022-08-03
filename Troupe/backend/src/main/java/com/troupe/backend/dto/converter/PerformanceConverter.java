@@ -5,6 +5,7 @@ import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceImage;
 import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.Performance.PerformanceForm;
+import com.troupe.backend.dto.Performance.PerformanceModifyForm;
 import com.troupe.backend.dto.Performance.Seat;
 import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
@@ -47,8 +48,8 @@ public class PerformanceConverter {
                 .codeNo(performanceForm.getCodeNo())
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
-                .startDate(performanceForm.getStartDate())
-                .updatedTime(performanceForm.getEndDate())
+//                .startDate(performanceForm.getStartDate())
+//                .updatedTime(performanceForm.getEndDate())
                 .build();
     }
 
@@ -56,12 +57,12 @@ public class PerformanceConverter {
      * Update
      * PerformanceForm -> PerformanceEntity
      * 폼과 앞서 조회한 공연 정보와 유저 정보를 가지고 공연 엔티티로 변환
-     * @param performanceForm
+     * @param performanceModifyForm
      * @param member
      * @param performance
      * @return
      */
-    public Performance toPerformanceEntityWhenUpdate(PerformanceForm performanceForm, Member member, Performance performance){
+    public Performance toPerformanceEntityWhenUpdate(PerformanceModifyForm performanceModifyForm, Member member, Performance performance){
         // 1. LocalDateTime 객체 생성(현재 시간)
         LocalDateTime localDateTime = LocalDateTime.now();
         // 2. LocalDateTime -> Date 변환
@@ -69,28 +70,27 @@ public class PerformanceConverter {
 
         return Performance.builder()
                 .memberNo(member)
-                .title(performanceForm.getTitle())
-                .location(performanceForm.getLocation())
-                .runtime(performanceForm.getRuntime())
+                .title(performanceModifyForm.getTitle())
+                .location(performanceModifyForm.getLocation())
+                .runtime(performanceModifyForm.getRuntime())
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(now)
-//                .posterUrl(performanceForm.getPosterUrl())
-                .codeNo(performanceForm.getCodeNo())
-                .detailTime(performanceForm.getDetailTime())
-                .description(performanceForm.getDescription())
+                .codeNo(performanceModifyForm.getCodeNo())
+                .detailTime(performanceModifyForm.getDetailTime())
+                .description(performanceModifyForm.getDescription())
                 .build();
     }
 
 
     /**
-     * Create, Update
+     * Create
      * PerformanceForm -> PerformancePriceEntity
      * 폼과 앞서 조회한 공연 정보를 가지고 좌석 엔티티로 변환
      * @param performanceForm
      * @param performance
      * @return
      */
-    public List<PerformancePrice> toPerformancePriceEntityWhenCreateOrUpdate(PerformanceForm performanceForm, Performance performance){
+    public List<PerformancePrice> toPerformancePriceEntityWhenCreate(PerformanceForm performanceForm, Performance performance){
         List<Seat> seatList = performanceForm.getPrice();
         List<PerformancePrice> entities = new ArrayList<PerformancePrice>();
         for(Seat seat : seatList){
@@ -104,6 +104,27 @@ public class PerformanceConverter {
         return entities;
     }
 
+    /**
+     * Update
+     * PerformanceForm -> PerformancePriceEntity
+     * 폼과 앞서 조회한 공연 정보를 가지고 좌석 엔티티로 변환
+     * @param performanceModifyForm
+     * @param performance
+     * @return
+     */
+    public List<PerformancePrice> toPerformancePriceEntityWhenUpdate(PerformanceModifyForm performanceModifyForm, Performance performance){
+        List<Seat> seatList = performanceModifyForm.getPrice();
+        List<PerformancePrice> entities = new ArrayList<PerformancePrice>();
+        for(Seat seat : seatList){
+            PerformancePrice p = PerformancePrice.builder()
+                    .pf(performance)
+                    .seat(seat.getName())
+                    .price(seat.getPrice())
+                    .build();
+            entities.add(p);
+        }
+        return entities;
+    }
     public List<PerformanceImage> toPerformanceImageEntityWhenCreate(List<String> urlList, Performance performance){
         List<PerformanceImage> performanceImageList = new ArrayList<>();
         for (String url : urlList){

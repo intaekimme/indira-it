@@ -3,15 +3,22 @@ package com.troupe.backend.service.Performance;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceImage;
 import com.troupe.backend.domain.performance.PerformancePrice;
+import com.troupe.backend.dto.Performance.PerformanceModifyForm;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.repository.performance.PerformanceImageRepository;
+import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -20,18 +27,22 @@ public class PerformanceImageService {
 
     private final S3FileUploadService s3FileUploadService;
     private final PerformanceImageRepository performanceImageRepository;
+    private final PerformanceRepository performanceRepository;
 
     private final PerformanceConverter performanceConverter;
     /**
-     * 찾으려는 공연에 등록된 이미지 url 리스트 반환
+     * 찾으려는 공연에 등록된 이미지 url Map 반환
      * @param performance
      * @return
      */
     @Transactional(readOnly = true)
-    public List<String> findPerformanceImagesByPerformance(Performance performance){
-        return performanceImageRepository.findByPf(performance).stream()
-                .map(PerformanceImage::getImageUrl)
-                .collect(Collectors.toList());
+    public Map<Integer, String> findPerformanceImagesByPerformance(Performance performance){
+        List<PerformanceImage> performanceImageList = performanceImageRepository.findByPf(performance);
+        Map<Integer, String> imageUrlMap = new HashMap<>();
+        for(PerformanceImage p : performanceImageList){
+            imageUrlMap.put(p.getId(), p.getImageUrl());
+        }
+        return imageUrlMap;
     }
 
     /**
@@ -42,9 +53,46 @@ public class PerformanceImageService {
     @Transactional
     public void addPerformanceImage(List<String> urlList, Performance performance) {
         List<PerformanceImage> performanceImageList = performanceConverter.toPerformanceImageEntityWhenCreate(urlList, performance);
+        // 포스터 url 설정
+        performance.setPosterUrl(performanceImageList.get(0).getImageUrl());
+        performanceRepository.save(performance);
         performanceImageRepository.saveAll(performanceImageList);
     }
 
+    /**
+     * 공연 이미지 수정
+     * @param performanceModifyForm
+     * @param performance
+     * @throws IOException
+     */
+    public void updatePerformanceImage(PerformanceModifyForm performanceModifyForm, Performance performance)
+    throws IOException {
+        //  삭제할 목록이 존재하면
+        if(performanceModifyForm.getRemovedImages() != null){
+            List<Integer> removedImages = performanceModifyForm.getRemovedImages();
+            for(Integer imageNo : removedImages){
+                //  S3에서 해당 이미지들 삭제하고
+                PerformanceImage deleteImage = performanceImageRepository.findById(imageNo).get();
+                s3FileUploadService.deleteFile(deleteImage.getImageUrl());
+                //  테이블에서도 지운다.
+                performanceImageRepository.deleteById(imageNo);
+            }
+        }
+        //  추가할 이미지들이 존재하면
+        if(performanceModifyForm.getNewImages() != null){
+            List<MultipartFile> newImages = performanceModifyForm.getNewImages();
+            //  url을 생성 후
+            List<String> urlList = s3FileUploadService.upload(newImages, "performance");
+            //  엔티티 변환 후 저장
+            List<PerformanceImage> performanceImageList = performanceConverter.toPerformanceImageEntityWhenCreate(urlList, performance);
+            performanceImageRepository.saveAll(performanceImageList);
+
+            //  수정 후 공연에 저장된 이미지들 중 1번째를 포스터로 지정
+            List<PerformanceImage> performanceImages = performanceImageRepository.findByPf(performance);
+            performance.setPosterUrl(performanceImages.get(0).getImageUrl());
+            performanceRepository.save(performance);
+        }
+    }
     public void deletePerformanceImage(Performance targetPerformance) {
         //  삭제할 공연 번호에 해당하는 이미지 모두 찾기
         List<PerformanceImage> performanceImageList = performanceImageRepository.findByPf(targetPerformance);

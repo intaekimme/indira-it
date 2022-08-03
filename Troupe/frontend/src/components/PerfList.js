@@ -23,7 +23,7 @@ import apiClient from '../apiClient';
 
 function Copyright() {
   return (
-    <Typography color="text.secondary" align="center">
+    <Typography color="text.secondary" align="center" component="span">
       {'Copyright © '}
       <Link color="inherit" href="/">
         Troupe
@@ -45,7 +45,10 @@ const theme = createTheme();
 
 export default function Album() {
 
-  let [perfList, setPerfList] = React.useState(apiClient.getPerfList());
+  let [perfList, setPerfList] = React.useState("");
+  React.useEffect(() => {
+    apiClient.getPerfList().then((data)=>{setPerfList(data)});
+  }, []);
   const [like, setLike] = React.useState(false)
   const [save, setSave] = React.useState(false)
   let [cards, setCard] = React.useState([])
@@ -85,7 +88,7 @@ export default function Album() {
                   sx={{ position:'relative', height: '100%', display: 'flex', flexDirection: 'column' }}
                   elevation={0}
                 >
-                  <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}}>
+                  <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
                     <img src='https://source.unsplash.com/random' alt='random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                     Author
                   </Typography>
@@ -141,7 +144,7 @@ export default function Album() {
           variant="subtitle1"
           align="center"
           color="text.secondary"
-          component="p"
+          component="span"
         >
           Troupe
         </Typography>
