@@ -96,8 +96,8 @@ public class FollowService {
     /**
      * 팬 수를 카운트
      */
-    public int countFans (int starMemberNo) {
-        // TODO : select count(*) from follow where starMemberNo = "XXX" 형태의 쿼리가 나가도록 만들어야 하지만, 일단 돌아가게 짬
-        return findAllFans(starMemberNo).size();
+    public long countFans (int starMemberNo) {
+        Member starMember = memberRepository.findById(starMemberNo).get();
+        return followRepository.countByStarMember(starMember);
     }
 }
