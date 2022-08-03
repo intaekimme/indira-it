@@ -80,7 +80,7 @@ public class ProfileController {
 
     @GetMapping("/{profileMemberNo}/follow/fans/count")
     public ResponseEntity getFanCount(@PathVariable int profileMemberNo) {
-        int fanCount = followService.countFans(profileMemberNo);
+        int fanCount = (int) followService.countFans(profileMemberNo);
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.FAN_COUNT, fanCount);

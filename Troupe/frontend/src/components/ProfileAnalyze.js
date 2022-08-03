@@ -1,72 +1,98 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
+import React from "react";
+import { useParams } from "react-router-dom";
+import apiClient from "../apiClient";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-import apiClient from "../apiClient";
 import InterestPolygon from "./InterestPolygon";
 import LikeabilityRank from "./LikeabilityRank";
 import styledTooltip from "../css/tooltip.module.css";
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
 export default function ProfileAnalyze(props) {
+  //memberNo
+  const { memberNo } = useParams();
+
+  //공연자/일반 판단 초기화
+  const performer = props.performer;
+
   // 자신의 유저페이지인지 판단
-  // const [mypage, setMypage] = React.useState(window.sessionStorage.getItem('loginMember').memberNo === props.memberNo);
-  const [mypage, setMypage] = React.useState(false);
-  // 이 유저를 팔로우 했는지 판단
-  const [followThisMember, setFollowThisMember] = React.useState(true);
+  const myPage = props.myPage;
+
   //나와의 호감도보기
   const [likeabilityWithMember, setLikeabilityWithMember] =
     React.useState(false);
+
   //개인분석 결과
-  const [interest, setInterest] = React.useState([
+  // //이 member의 관심카테고리
+  // const [interestCategory, setInterestCategory] = React.useState("");
+  // React.useEffect(() => {
+  //   apiClient.getInterestCategory(memberNo).then((data) => {
+  //     setInterestCategory(data);
+  //   });
+  // });
+  const [interestCategory, setInterestCategory] = React.useState([
     10, 20, 30, 40, 50, 60, 70, 80,
   ]);
-  //호감도 순위
-  // const [likeabilityData, setLikeabilityData] = React.useState([apiClient.getLikeabilityData]);
-  const [likeabilityData, setLikeabilityData] = React.useState([
+
+  //이 member의 호감도 data
+  // const [performerLikeabilityData, setPerformerLikeabilityData] = React.useState("");
+  // React.useEffect(() => {
+  //   apiClient.getPerformerLikeabilityData(memberNo).then((data) => {
+  //     setPerformerLikeabilityData(data);
+  //   });
+  // });
+  const [performerLikeabilityData, setPerformerLikeabilityData] =
+    React.useState([
+      {
+        memberNo: 1,
+        nickname: "첫번째",
+        exp: 1520,
+      },
+      {
+        memberNo: 2,
+        nickname: "두번째",
+        exp: 1250,
+      },
+      {
+        memberNo: 3,
+        nickname: "세번째",
+        exp: 970,
+      },
+    ]);
+  // 이 member에 대한 나의 호감도 data
+  // const [myLikeabilityData, setMyLikeabilityData] = React.useState("");
+  // React.useEffect(() => {
+  //   apiClient.getMyLikeabilityData(memberNo).then((data) => {
+  //     setMyLikeabilityData(data);
+  //   });
+  // });
+  const [myLikeabilityData, setMyLikeabilityData] = React.useState([
     {
-      starMemberNo: 1,
-      nickname: "첫번째",
-      exp: 1520,
-    },
-    {
-      starMemberNo: 2,
-      nickname: "두번째",
-      exp: 1250,
-    },
-    {
-      starMemberNo: 1,
-      nickname: "세번째",
-      exp: 970,
+      memberNo: sessionStorage.getItem("loginMember"),
+      nickname: props.nickname,
+      exp: 1222,
+      rank: 78,
     },
   ]);
-  // setInterest(apiClient.interest(props.memberNo));
+  //이 member에 대한 나의 호감도 exp
+  const [myLikeabilityExp, setMyLikeabilityExp] = React.useState(1222);
+  //이 member에 대한 나의 호감도 순위
+  const [myLikeabilityRank, setMyLikeabilityRank] = React.useState(78);
+
+  // 나와의 호감도/ 이유저의 호감도 보기 노출여부 설정
+  React.useEffect(() => {
+    if (!performer) {
+      setLikeabilityWithMember(false);
+    }
+  }, [performer]);
+
   // 나와의 호감도/ 이유저의 호감도 보기 버튼클릭
   const changeLikeability = () => {
     setLikeabilityWithMember((current) => !current);
   };
-
-  React.useEffect(() => {
-    if (!props.performer) {
-      setLikeabilityWithMember(false);
-    }
-  }, [props.performer]);
 
   return (
     <Card
@@ -95,23 +121,29 @@ export default function ProfileAnalyze(props) {
                 </div>
               </div>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ position: "relative" }}>
               <LikeabilityRank
                 nickname={props.nickname}
                 likeabilityWithMember={likeabilityWithMember}
-                likeabilityData={likeabilityData}
+                likeabilityData={myLikeabilityData}
+                style={{ position: "absolute", top: "50%" }}
               ></LikeabilityRank>
             </Grid>
           </Grid>
         ) : (
-          <Grid container spacing={2} style={{ textAlign: "center" }}>
+          <Grid
+            container
+            spacing={2}
+            alignItems="center"
+            style={{ textAlign: "center" }}
+          >
             <Grid item xs={6}>
               <div style={{ position: "relative", textAlign: "left" }}>
                 <div>{props.nickname} 님의 관심사</div>
               </div>
             </Grid>
             <Grid item xs={6}>
-              {mypage || !props.performer ? (
+              {myPage || !performer ? (
                 <div></div>
               ) : (
                 <div style={{ position: "relative", textAlign: "right" }}>
@@ -138,16 +170,22 @@ export default function ProfileAnalyze(props) {
             <Grid item xs={6}>
               <InterestPolygon
                 nickname={props.nickname}
-                interest={interest}
+                data={interestCategory}
               ></InterestPolygon>
             </Grid>
             <Grid item xs={6}>
               <LikeabilityRank
                 nickname={props.nickname}
                 likeabilityWithMember={likeabilityWithMember}
-                likeabilityData={likeabilityData}
+                likeabilityData={performerLikeabilityData}
                 width={props.width}
               ></LikeabilityRank>
+            </Grid>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
+              <div style={{ position: "relative", bottom: "0%" }}>
+                {props.nickname} 님의 호감도 순위
+              </div>
             </Grid>
           </Grid>
         )}
