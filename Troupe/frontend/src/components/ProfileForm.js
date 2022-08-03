@@ -18,19 +18,6 @@ import styledButton from "../css/button.module.css";
 const theme = createTheme();
 
 export default function ProfileForm() {
-  //frontend image update
-  const [imgUrl, setImgUrl] = React.useState("");
-  //nickname update
-  const [nickname, setNickname] = React.useState("");
-  //email update
-  const [email, setEmail] = React.useState("");
-  //nickname 길이확인
-  const [nicknameLength, setNicknameLength] = React.useState(true);
-  //password 길이확인
-  const [pwLength, setPwLength] = React.useState(true);
-  //password 일치확인
-  const [pwSame, setPwSame] = React.useState(true);
-
   //memberNo
   const { memberNo } = useParams();
   //memberInfo 초기화
@@ -43,11 +30,26 @@ export default function ProfileForm() {
     profileImageUrl: "",
     removed: false,
   });
+  //frontend image update
+  const [imgUrl, setImgUrl] = React.useState("");
+  //nickname update
+  const [nickname, setNickname] = React.useState("");
+  //email update
+  const [email, setEmail] = React.useState("");
+  //nickname 길이확인
+  const [nicknameLength, setNicknameLength] = React.useState(true);
+  //password 길이확인
+  const [pwLength, setPwLength] = React.useState(true);
+  //password 일치확인
+  const [pwSame, setPwSame] = React.useState(true);
   //memberInfo 화면분할 update 시 불러오기
   React.useEffect(() => {
     if (memberNo) {
       apiClient.getMemberInfo(memberNo).then((data) => {
         setMemberInfo(data);
+        setNickname(data.nickname);
+        setEmail(data.email);
+        setImgUrl(data.profileImageUrl);
       });
     }
   }, [memberNo]);
@@ -249,8 +251,7 @@ export default function ProfileForm() {
                   fullWidth
                   id="nickname"
                   label="닉네임"
-                  value={memberInfo.nickname}
-                  autoFocus
+                  defaultValue={memberInfo.nickname}
                   onChange={changeNickname}
                 />
               </Grid>
@@ -337,6 +338,7 @@ export default function ProfileForm() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  autoFocus
                 />
               </Grid>
               {pwLength ? (
@@ -374,7 +376,7 @@ export default function ProfileForm() {
                   multiline
                   id="profileMessage"
                   label="소개글 입력"
-                  value={memberInfo.description}
+                  defaultValue={memberInfo.description}
                   name="profileMessage"
                 />
               </Grid>
@@ -385,7 +387,7 @@ export default function ProfileForm() {
                   <FormControlLabel
                     required
                     control={
-                      <Checkbox value="allowExtraEmails" color="primary" />
+                      <Checkbox defaultValue="allowExtraEmails" color="primary" />
                     }
                     label="이메일 전송에 동의합니다."
                   />
