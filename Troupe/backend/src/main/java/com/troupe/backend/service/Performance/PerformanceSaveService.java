@@ -9,6 +9,9 @@ import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceSaveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,9 +126,13 @@ public class PerformanceSaveService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ProfilePfSaveResponse> findSavedList(int memberNo) {
+    public List<ProfilePfSaveResponse> findSavedList(int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
-        List<PerformanceSave> performanceSaveList = performanceSaveRepository.findByMemberNoAndRemovedFalse(member);
+        Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findByMemberNoAndRemovedFalse(member, pageable);
+//        Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findAllByMemberNoAndIsRemovedOrderByCreatedTimeDesc(member, false,pageable);
+        for(PerformanceSave p: performanceSaveList){
+            log.info(p.toString());
+        }
 
         List<ProfilePfSaveResponse> profileSaveResponseList = new ArrayList<>();
         for (PerformanceSave performanceSave : performanceSaveList) {
