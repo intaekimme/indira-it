@@ -58,34 +58,35 @@ export default function ProfileMemberInfo(props) {
   const [followerCount, setFollowerCount] = React.useState("");
   //이 member의 관심태그 초기화
   const [interestTag, setInterestTag] = React.useState("");
-  //memberNo update 시 이 member의 팔로워 수, 관심태그 update
+  // 이 유저를 팔로우 했는지 판단초기화
+  const [isFollowing, setIsFollowing] = React.useState(false);
+  //memberNo update 시
   React.useEffect(() => {
+    //이 member의 팔로워 수 update
     apiClient.getFollowerCount(memberNo).then((data) => {
       setFollowerCount(data.fanCount);
     });
+    //이 member의 관심태그 update
     // apiClient.getInterestTag(memberNo).then((data) => {
     //   setInterestTag(data);
     // });
+
+    // 이 유저를 팔로우 했는지 판단 update
+    if(sessionStorage.getItem("loginCheck")){
+      apiClient.isFollowing({
+        profileMemberNo: memberNo,
+        fanMamberNo: sessionStorage.getItem("loginMember"),
+      })
+      .then((data) => {
+        setIsFollowing(data.isFollowing);
+      });
+    }
   }, [memberNo]);
   // const followerCount = 123123123;
 
   // 자신의 유저페이지인지 판단
   const myPage = props.myPage;
-
-  // 이 유저를 팔로우 했는지 판단
   // const [isFollowing, setIsFollowing] = React.useState(false);
-  // // 이 유저를 팔로우 했는지 판단 update
-  // React.useEffect(() => {
-  //   apiClient
-  //     .isFollowing({
-  //       profileMemberNo: memberNo,
-  //       fanMamberNo: sessionStorage.getItem("loginMember"),
-  //     })
-  //     .then((data) => {
-  //       setIsFollowing(data.isFollowing);
-  //     });
-  // }, []);
-  const [isFollowing, setIsFollowing] = React.useState(false);
 
   // follow/unfollow 버튼클릭
   const followClick = () => {
@@ -94,13 +95,7 @@ export default function ProfileMemberInfo(props) {
     } else {
       const currnetFollow = isFollowing;
       setIsFollowing(!isFollowing);
-      const followData = {
-        isFollowing: !currnetFollow,
-        profileMemberNo: memberInfo.memberNo,
-        // fanMemberNo: 1,
-        fanMamberNo: sessionStorage.getItem("loginMember"),
-      };
-      apiClient.follow(followData).then((data) => {
+      apiClient.follow({currentFollow: currnetFollow}).then((data) => {
         if (!data) {
           setIsFollowing(currnetFollow);
         }

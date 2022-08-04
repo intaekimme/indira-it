@@ -15,23 +15,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import styledButton from "../css/button.module.css";
 
-import Stage from "../img/stage.jpg"
-
 const theme = createTheme();
 
 export default function ProfileForm() {
-  //memberNo
-  const { memberNo } = useParams();
-  //memberInfo 초기화
-  const [memberInfo, setMemberInfo] = React.useState({
-    memberNo: -1,
-    email: "123",
-    nickname: "123123",
-    description: "123123123",
-    memberType: "PERFORMER",
-    profileImageUrl: "Stage",
-    removed: false,
-  });
   //frontend image update
   const [imgUrl, setImgUrl] = React.useState("");
   //nickname update
@@ -44,18 +30,6 @@ export default function ProfileForm() {
   const [pwLength, setPwLength] = React.useState(true);
   //password 일치확인
   const [pwSame, setPwSame] = React.useState(true);
-  //memberInfo 화면분할 update 시 불러오기
-  React.useEffect(() => {
-    // apiClient.getMemberInfo(memberNo).then((data) => {
-    //   setMemberInfo(data);
-      // setNickname(data.nickname);
-      // setEmail(data.email);
-      // setImgUrl(data.profileImageUrl);
-    // });
-    setNickname(memberInfo.nickname);
-    setEmail(memberInfo.email);
-    setImgUrl(memberInfo.profileImageUrl);
-  }, [memberNo]);
 
   //image 업로드
   const changeImage = (e) => {
@@ -74,11 +48,11 @@ export default function ProfileForm() {
 
   //중복체크
   const sameCheck = (string) => {
-    // if (string === "email") {
-    //   apiClient.existEmail({ email: email });
-    // } else if (string === "nickname") {
-    //   apiClient.existNickname({ nickname: nickname });
-    // }
+    if (string === "email") {
+      apiClient.existEmail({ email: email });
+    } else if (string === "nickname") {
+      apiClient.existNickname({ nickname: nickname });
+    }
   };
 
   //입력된 값이 올바른지 확인
@@ -119,13 +93,9 @@ export default function ProfileForm() {
     if (!checkValue(data)) {
       return;
     }
-    // apiClient.modifyProfile(data);
+    apiClient.signup(data);
   };
 
-  //취소버튼
-  const cancel = () => {
-    window.location.href = `/profile/${memberNo}`;
-  };
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="xs">
@@ -194,44 +164,6 @@ export default function ProfileForm() {
                   onChange={changeImage}
                 />
               </Grid>
-
-              {false ? (
-                <Grid item xs={12} style={{ textAlign: "right" }}>
-                  <Button
-                    style={{
-                      width: "80px",
-                      height: "30px",
-                      bottom: "0px",
-                      right: "0px",
-                      backgroundColor: "#CCCCCC",
-                      color: "black",
-                    }}
-                    // onClick={() => sameCheck("nickname")}
-                  >
-                    본인인증
-                  </Button>
-                </Grid>
-              ) : (
-                <Grid item xs={12} style={{ textAlign: "left" }}>
-                  본인인증이 완료되었습니다.
-                </Grid>
-              )}
-              <Grid item xs={12} style={{margin: "10px", textAlign: "left", fontSize:"20px"}}>
-                {/* <TextField
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  style={{ backgroundColor: "#777777" }}
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  value={memberInfo.email}
-                  name="email"
-                  autoComplete="email"
-                  onChange={changeEmail}
-                /> */}
-                {`email : ${memberInfo.email}`}
-              </Grid>
               <Grid item xs={9}>
                 <TextField
                   autoComplete="given-name"
@@ -240,7 +172,6 @@ export default function ProfileForm() {
                   fullWidth
                   id="nickname"
                   label="닉네임"
-                  defaultValue={memberInfo.nickname}
                   onChange={changeNickname}
                 />
               </Grid>
@@ -269,25 +200,43 @@ export default function ProfileForm() {
                   </div>
                 </Grid>
               )}
+              <Grid item xs={9}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  onChange={changeEmail}
+                />
+              </Grid>
+              <Grid item xs={3} style={{ position: "relative" }}>
+                <Button
+                  style={{
+                    position: "absolute",
+                    width: "80px",
+                    height: "30px",
+                    bottom: "0px",
+                    right: "0px",
+                    backgroundColor: "#CCCCCC",
+                    color: "black",
+                  }}
+                  onClick={() => sameCheck("email")}
+                >
+                  중복확인
+                </Button>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="currentpassword"
-                  label="현재 비밀번호"
-                  type="password"
-                  id="currentpassword"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
                   name="password"
-                  label="새 비밀번호"
+                  label="비밀번호"
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  autoFocus
                 />
               </Grid>
               {pwLength ? (
@@ -301,9 +250,10 @@ export default function ProfileForm() {
               )}
               <Grid item xs={12}>
                 <TextField
+                  required
                   fullWidth
                   name="passwordCheck"
-                  label="새 비밀번호 확인"
+                  label="비밀번호 확인"
                   type="password"
                   id="passwordCheck"
                   autoComplete="new-password"
@@ -324,39 +274,36 @@ export default function ProfileForm() {
                   multiline
                   id="profileMessage"
                   label="소개글 입력"
-                  defaultValue={memberInfo.description}
                   name="profileMessage"
                 />
               </Grid>
-            </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Button
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  className={styledButton.btn}
-                  onClick={cancel}
-                >
-                  취소
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button
-                  type="submit"
-                  className={styledButton.btn}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "#45E3C6",
-                    color: "black",
-                  }}
-                >
-                  프로필수정
-                </Button>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  required
+                  control={
+                    <Checkbox defaultValue="allowExtraEmails" color="primary" />
+                  }
+                  label="이메일 전송에 동의합니다."
+                />
               </Grid>
             </Grid>
+            <div>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="/login" variant="body2">
+                    로그인
+                  </Link>
+                </Grid>
+              </Grid>
+            </div>
           </form>
         </Box>
       </Container>
