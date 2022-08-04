@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -22,9 +23,6 @@ public class FeedConverter {
 
     @Autowired
     S3FileUploadService s3FileUploadService;
-
-//    @Autowired
-//    FeedLikeRepositoryImpl feedLikeRepository;
 
     // response : Feed 상세
     public FeedResponse feedResponse(Feed feed, List<FeedImage> feedImage, List<Tag> taglist){
@@ -35,8 +33,6 @@ public class FeedConverter {
         response.setProfileImageUrl(feed.getMember().getProfileImageUrl());
         response.setTags(tagList(taglist));
         response.setContent(feed.getContent());
-        // totallikecount
-//        response.setLikeTotalCount(feedLikeRepository.FeedLikeCount(feed.getFeedNo()));
         response.setImages(imageList(feedImage));
         response.setCreatedTime(feed.getCreatedTime());
         return response;
@@ -52,10 +48,18 @@ public class FeedConverter {
     }
 
     //feedImage -> String url
-    public List<String> imageList(List<FeedImage> imagelist){
-        List<String> imageList = new ArrayList<>();
+//    public List<String> imageList(List<FeedImage> imagelist){
+//        List<String> imageList = new ArrayList<>();
+//        for(FeedImage image:imagelist){
+//            imageList.add(MyConstant.FILE_SERVER_URL +image.getImageUrl());
+//        }
+//        return imageList;
+//    }
+
+    public HashMap<Integer,String> imageList(List<FeedImage> imagelist){
+        HashMap<Integer,String>imageList = new HashMap<>();
         for(FeedImage image:imagelist){
-            imageList.add(MyConstant.FILE_SERVER_URL +image.getImageUrl());
+            imageList.put(image.getImageNo(),MyConstant.FILE_SERVER_URL +image.getImageUrl());
         }
         return imageList;
     }
@@ -92,4 +96,5 @@ public class FeedConverter {
         }
         return list;
     }
+
 }

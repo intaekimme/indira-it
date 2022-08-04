@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -18,7 +18,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component="span">{children}</Typography>
         </Box>
       )}
     </div>
@@ -62,10 +62,7 @@ export default function CenterTab(props) {
       </Box>
       {tabContent.map((content, index) => (
         <div key={`content${index}`}>
-          <TabPanel
-            value={value}
-            index={index}
-          >
+          <TabPanel value={value} index={index}>
             {content}
           </TabPanel>
         </div>

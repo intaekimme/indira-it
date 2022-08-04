@@ -1,7 +1,7 @@
 package com.troupe.backend.config;
 
-import com.troupe.backend.security.JwtAuthenticationFilter;
-import com.troupe.backend.security.JwtTokenProvider;
+import com.troupe.backend.filter.JwtAuthenticationFilter;
+import com.troupe.backend.service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;

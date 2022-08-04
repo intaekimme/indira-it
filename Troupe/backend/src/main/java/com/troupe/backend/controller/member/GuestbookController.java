@@ -12,12 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
 @CrossOrigin
 @Api("방명록 REST API")
@@ -53,8 +52,9 @@ public class GuestbookController {
      * host에게 내가 쓴 방명록 조회
      */
     @GetMapping("/{hostMemberNo}")
-    private ResponseEntity getGuestbook(@RequestHeader Map<String, Object> requestHeader, @PathVariable int hostMemberNo) {
-        int visitorMemberNo = getMemberNoFromRequestHeader(requestHeader);
+    private ResponseEntity getGuestbook(Principal principal, @PathVariable int hostMemberNo) {
+        int visitorMemberNo = Integer.parseInt(principal.getName());
+
         Optional<Guestbook> found = guestbookService.findGuestBook(hostMemberNo, visitorMemberNo);
 
         if (found.isPresent()) {
@@ -71,8 +71,8 @@ public class GuestbookController {
      * 방명록 등록
      */
     @PostMapping("/{hostMemberNo}")
-    private ResponseEntity saveGuestbook(@RequestHeader Map<String, Object> requestHeader, @RequestBody Map<String, Object> requestBody, @PathVariable int hostMemberNo) {
-        int visitorMemberNo = getMemberNoFromRequestHeader(requestHeader);
+    private ResponseEntity saveGuestbook(Principal principal, @RequestBody Map<String, Object> requestBody, @PathVariable int hostMemberNo) {
+        int visitorMemberNo = Integer.parseInt(principal.getName());
         String content = (String) requestBody.get(MyConstant.CONTENT);
 
         GuestbookForm guestbookForm = GuestbookForm.builder()
@@ -89,8 +89,8 @@ public class GuestbookController {
      * 방명록 수정
      */
     @PatchMapping("/{hostMemberNo}")
-    private ResponseEntity updateGuestbook(@RequestHeader Map<String, Object> requestHeader, @RequestBody Map<String, Object> requestBody, @PathVariable int hostMemberNo) {
-        int visitorMemberNo = getMemberNoFromRequestHeader(requestHeader);
+    private ResponseEntity updateGuestbook(Principal principal, @RequestBody Map<String, Object> requestBody, @PathVariable int hostMemberNo) {
+        int visitorMemberNo = Integer.parseInt(principal.getName());
         String content = (String) requestBody.get(MyConstant.CONTENT);
 
         GuestbookForm guestbookForm = GuestbookForm.builder()
@@ -107,8 +107,8 @@ public class GuestbookController {
      * 방명록 삭제
      */
     @PatchMapping("/{hostMemberNo}/del")
-    private ResponseEntity updateGuestbook(@RequestHeader Map<String, Object> requestHeader, @PathVariable int hostMemberNo) {
-        int visitorMemberNo = getMemberNoFromRequestHeader(requestHeader);
+    private ResponseEntity updateGuestbook(Principal principal, @PathVariable int hostMemberNo) {
+        int visitorMemberNo = Integer.parseInt(principal.getName());
 
         int guestbookNo = guestbookService.findGuestBook(hostMemberNo, visitorMemberNo).get().getGuestbookNo();
         guestbookService.deleteGuestbook(guestbookNo);

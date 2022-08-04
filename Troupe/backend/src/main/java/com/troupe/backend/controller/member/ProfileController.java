@@ -13,11 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
 @CrossOrigin
 @Api("회원 프로필 REST API")
@@ -32,8 +31,8 @@ public class ProfileController {
     private final LikabilityService likabilityService;
 
     @PostMapping("/{profileMemberNo}/follow")
-    public ResponseEntity follow(@RequestHeader Map<String, Object> requestHeader, @PathVariable int profileMemberNo) {
-        int fanMemberNo = getMemberNoFromRequestHeader(requestHeader);
+    public ResponseEntity follow(Principal principal, @PathVariable int profileMemberNo) {
+        int fanMemberNo = Integer.parseInt(principal.getName());
         int starMemberNo = profileMemberNo;
 
         followService.follow(starMemberNo, fanMemberNo);
@@ -41,8 +40,8 @@ public class ProfileController {
     }
 
     @DeleteMapping("/{profileMemberNo}/follow")
-    public ResponseEntity unfollow(@RequestHeader Map<String, Object> requestHeader, @PathVariable int profileMemberNo) {
-        int fanMemberNo = getMemberNoFromRequestHeader(requestHeader);
+    public ResponseEntity unfollow(Principal principal, @PathVariable int profileMemberNo) {
+        int fanMemberNo = Integer.parseInt(principal.getName());
         int starMemberNo = profileMemberNo;
 
         followService.unfollow(starMemberNo, fanMemberNo);
@@ -50,8 +49,8 @@ public class ProfileController {
     }
 
     @GetMapping("/{profileMemberNo}/follow")
-    public ResponseEntity isFollowing(@RequestHeader Map<String, Object> requestHeader, @PathVariable int profileMemberNo) {
-        int fanMemberNo = getMemberNoFromRequestHeader(requestHeader);
+    public ResponseEntity isFollowing(Principal principal, @PathVariable int profileMemberNo) {
+        int fanMemberNo = Integer.parseInt(principal.getName());
         int starMemberNo = profileMemberNo;
 
         Map<String, Object> resultMap = new HashMap<>();
@@ -81,7 +80,7 @@ public class ProfileController {
 
     @GetMapping("/{profileMemberNo}/follow/fans/count")
     public ResponseEntity getFanCount(@PathVariable int profileMemberNo) {
-        int fanCount = followService.countFans(profileMemberNo);
+        int fanCount = (int) followService.countFans(profileMemberNo);
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.FAN_COUNT, fanCount);

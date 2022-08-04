@@ -12,6 +12,9 @@
     + [React useEffect](#react-useeffect)
   * [프로젝트 생성](#프로젝트-생성)
   * [Router](#router)
+    + [react-router-dom useParams](#useparams)
+  * [Axios](#axios)
+    + [Promise 반환](#promise)
   * [error](#error)
     + [is not a component All component children of must be a or](#is-not-a-component-all-component-children-of-must-be-a-or)
     + [ERESOLVE unable to resolve dependency tree](#eresolve-unable-to-resolve-dependency-tree)
@@ -171,6 +174,46 @@ Cleanup function	useEffect를 통해 오브젝트가 destroy될때도 코드실�
 ## Router
 
 	import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+### useParams
+: 를 통해 path에 params 설정 후 useParams()를 통해 params의 이름과 같은 변수에 data 저장
+
+route
+
+	import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+	<Route path="/profile/:memberNo" element={<PerfList />}></Route>
+
+element
+
+	import { useParams } from "react-router-dom";
+	const { memberNo } = useParams();
+
+## Axios
+### Promise
+axios 요청
+
+	getMemberInfo: (memberNo) => {
+		return instance
+		.get(`/member/${memberNo}`)
+		.then((response) => {
+			console.log(response.data);
+			return response.data;
+		})
+		.catch((error) => {
+			alert("Member 정보를 불러오는데 실패하였습니다 : " + error);
+			return null;
+		});
+	},
+
+외부에서 axios data받을 때 Promise 객체로 반환되므로 then을 통해 data 처리
+
+	const [memberInfo, setMemberInfo] = React.useState("");
+	React.useEffect(() => {
+		console.log(memberNo);
+		apiClient.getMemberInfo(memberNo).then((data) => {
+		setMemberInfo(data);
+		});
+	}, [memberNo]);
 
 ## Error
 

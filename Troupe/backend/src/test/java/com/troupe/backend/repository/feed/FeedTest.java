@@ -1,8 +1,14 @@
 package com.troupe.backend.repository.feed;
 
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.troupe.backend.domain.feed.Feed;
+import com.troupe.backend.domain.feed.QFeed;
+import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.domain.member.QMember;
 import com.troupe.backend.repository.member.MemberRepository;
 //import org.junit.jupiter.api.Assertions;
+import com.troupe.backend.service.member.FollowService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +19,7 @@ import org.springframework.data.domain.Sort;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,21 +36,6 @@ class FeedTest {
 
     @Test
     public void insert() throws ParseException {
-//        AvatarClothes clothes = new AvatarClothes(1,"url");
-//        AvatarEye eyes = new AvatarEye(1,"url");
-//        AvatarHair hair = new AvatarHair(1,"url");
-//        AvatarMouth mouth = new AvatarMouth(1,"url");
-//        AvatarNose nose = new AvatarNose(1,"url");
-//        AvatarShape shape = new AvatarShape(1,"url");
-//        Member member  = new Member(3,"email","password","nickname","description", MemberType.PERFORMER,"url",false, clothes,eyes,hair,mouth,nose,shape);
-//        Feed feed = new Feed(1,member,"insertTest",false,null);
-//        Feed feedSave = feedRepository.save(feed);
-//        Assertions.assertThat(feedSave.getContent()).isEqualTo("insertTest");
-//        Assertions.assertEquals("insertTest",feedSave.getContent());
-//        Member member = memberRepository.getById(3);
-//
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-//        Feed feed = Feed.builder().member(member).content("content").isRemoved(false).build();
         Feed feedSave =  feedRepository.save(Feed.builder().member(memberRepository.getById(3)).content("content").isRemoved(false).build());
         Assertions.assertThat(feedSave.getContent()).isEqualTo("content");
     }
@@ -60,10 +52,10 @@ class FeedTest {
     @Test
     @DisplayName("피드 등록한 사람의 피드 목록 최신순 정렬")
     public void selectAllByPerformer() {
-        List<Feed> feeds = feedRepository.findAllByMemberOrderByCreatedTimeDesc(memberRepository.getById(3));
-
-        Assertions.assertThat(feeds.size()).isEqualTo(3);
-        Assertions.assertThat(feeds.get(0).getFeedNo()).isEqualTo(5);
+//        List<Feed> feeds = feedRepository.findAllByMemberAndIsRemovedOrderByCreatedTimeDesc(memberRepository.getById(3),false);
+//
+//        Assertions.assertThat(feeds.size()).isEqualTo(3);
+//        Assertions.assertThat(feeds.get(0).getFeedNo()).isEqualTo(5);
     }
 
     @Test
@@ -95,4 +87,31 @@ class FeedTest {
 
         Assertions.assertThat(feed1).isNull();
     }
+
+    @Autowired
+    FollowService followService;
+
+    @Autowired
+    JPAQueryFactory queryFactory;
+    @Test
+    public void selectAllByFollwing(){
+        Member member = memberRepository.findById(377).get();
+        QFeed feed = QFeed.feed;
+        List<Member> list = followService.findAllStars(member.getMemberNo());
+        List<QMember> memberList = new ArrayList<>();
+
+//        memberList.addAll(list);
+        QMember memberSub =new QMember("memberSub");
+
+        List<Feed> result = queryFactory
+                .selectFrom(feed)
+                .where(feed.member.memberNo.in(
+                        JPAExpressions
+                                .select(memberSub.memberNo)
+                                .from()
+                                .where(memberSub.memberNo.eq(member.getMemberNo()))
+                ))
+                .fetch();
+    }
+
 }

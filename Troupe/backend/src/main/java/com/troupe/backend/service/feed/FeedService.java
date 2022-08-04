@@ -7,9 +7,14 @@ import com.troupe.backend.dto.feed.FeedForm;
 import com.troupe.backend.dto.feed.FeedResponse;
 import com.troupe.backend.repository.feed.FeedRepository;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.service.member.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +42,9 @@ public class FeedService {
     FeedSaveService feedSaveService;
 
     @Autowired
+    FollowService followService;
+
+    @Autowired
     FeedConverter feedConverter;
 
     public FeedResponse select(int feedNo){
@@ -47,41 +55,55 @@ public class FeedService {
         return feedResponse;
     }
 
-    public List<FeedResponse> selectAll(String change, int memberNo){
+    public List<FeedResponse> selectAll(String change, int memberNo, Pageable pageable){
         List<FeedResponse> feedResponses = new ArrayList<>();
         if(change.equals("all")){
-            List<Feed> totalList = feedRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false).get();
-            for(Feed feed: totalList){
+            Slice<Feed> feedList = feedRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false,pageable).get();
+            for(Feed feed: feedList){
                 feedResponses.add(select(feed.getFeedNo()));
             }
+//            Slice<FeedResponse> feedResponses = feedList.map(m->
+//                    select(m.getFeedNo())
+//                    );
+//            return feedResponses;
         }else if(change.equals("follow")){
-
-
+            List<Member> followings = followService.findAllStars(memberNo);
+            Slice<Feed> feedList = feedRepository.findAllByIsRemovedAndMemberInOrderByCreatedTimeDesc(false, followings, pageable);
+            for(Feed feed: feedList){
+                feedResponses.add(select(feed.getFeedNo()));
+            }
         }else if(change.equals("save")){
-            List<FeedSave> saveLIst =  feedSaveService.selectAllByMember(memberRepository.findById(memberNo).get());
-            for(FeedSave save:saveLIst){
+            Slice<FeedSave> saveLIst =  feedSaveService.selectAllByMember(memberRepository.findById(memberNo).get(), pageable);
+            for(FeedSave save:saveLIst) {
                 feedResponses.add(select(save.getFeed().getFeedNo()));
             }
         }
         return feedResponses;
     }
 
-    public  List<FeedResponse> selectAllByMember(int memberNo){
+    public  List<FeedResponse> selectAllByMember(int memberNo,Pageable pageable){
         Member member = memberRepository.findById(memberNo).get();
         List<FeedResponse> feedResponses = new ArrayList<>();
-        List<Feed> totalList = feedRepository.findAllByMemberOrderByCreatedTimeDesc(member);
+        Slice<Feed> totalList = feedRepository.findAllByMemberAndIsRemovedOrderByCreatedTimeDesc(member,false, pageable);
         for(Feed feed: totalList){
             feedResponses.add(select(feed.getFeedNo()));
         }
+//        Slice<FeedResponse> feedResponses =  totalList.map(m->
+//                select(m.getFeedNo())
+//        );
         return feedResponses;
     }
 
-    public  List<FeedResponse> selectAllBySearch(List<String> tagList){
+    public  List<FeedResponse> selectAllBySearch(List<String> tags){
         List<FeedResponse> feedResponses = new ArrayList<>();
-        List<Tag> tags = feedConverter.toTagEntity(tagList);
-        List<FeedTag> feedTags = tagService.selectAllBySearch(tags);
-        for(FeedTag feedTag:feedTags){
-            feedResponses.add(select(feedTag.getFeed().getFeedNo()));
+        try{
+            List<FeedTag> feedTags = tagService.selectAllBySearch(tags);
+            for(FeedTag feedTag:feedTags){
+                feedResponses.add(select(feedTag.getFeed().getFeedNo()));
+            }
+            return feedResponses;
+        }catch (Exception e){
+            log.info(e.toString());
         }
         return feedResponses;
     }
@@ -93,11 +115,11 @@ public class FeedService {
             // 피드 본문 insert
             Feed newFeed = feedRepository.save(feedConverter.toFeedEntity(member.get(),request.getContent()));
 
-            // 피드 이미지들 저장
+            // 피드 이미지들 저장(없으면 null 뜬다)
             List<FeedImage> feedImageList =  feedConverter.toFeedImageEntity(newFeed,request.getImages());
             feedImageService.insert(feedImageList);
 
-            //피드 태그 insert
+            //피드 태그 insert(없으면 null뜬다)
             List<Tag> tags = feedConverter.toTagEntity(request.getTags());
             tagService.insert(tags,newFeed);
 
@@ -131,14 +153,11 @@ public class FeedService {
             }
 
             // 태그 수정
+            List<Tag> tags = feedConverter.toTagEntity(request.getTags());
+            tagService.deleteAll(feed.get());
             if(request.getTags()!= null){
-//                System.out.println("update tags : "+request.getTags().size());
-                // number 없는 태그들일수있따
-                List<Tag> tags = feedConverter.toTagEntity(request.getTags());
-                tagService.deleteAll(feed.get());
                 tagService.insert(tags,feed.get());
             }
-
         }catch (Exception e){
             log.info(e.toString());
         }

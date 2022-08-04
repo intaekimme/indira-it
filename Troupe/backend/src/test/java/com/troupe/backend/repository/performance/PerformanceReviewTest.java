@@ -40,18 +40,21 @@ public class PerformanceReviewTest {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
-        PerformanceReview performanceReview = PerformanceReview.builder()
-                .memberNo(member)
-                .pfNo(performance)
-                .createdTime(dateFormat.parse("20220802"))
-                .isModified(false)
-                .isRemoved(false)
-                .content("댓글 1")
-                .build();
+        for(int i=2; i<100; i++){
+            PerformanceReview performanceReview = PerformanceReview.builder()
+                    .memberNo(member)
+                    .pfNo(performance)
+                    .createdTime(dateFormat.parse("20220804"))
+                    .isModified(false)
+                    .isRemoved(false)
+                    .content("댓글 "+i)
+                    .build();
 
-        PerformanceReview savePerformanceReview = performanceReviewRepository.save(performanceReview);
+            PerformanceReview savePerformanceReview = performanceReviewRepository.save(performanceReview);
+        }
 
-        Assertions.assertEquals("댓글 1", savePerformanceReview.getContent());
+
+//        Assertions.assertEquals("댓글 1", savePerformanceReview.getContent());
 
     }
 
@@ -66,10 +69,17 @@ public class PerformanceReviewTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("후기 번호로 댓글 찾기")
     public void findById(){
         PerformanceReview performanceReview = performanceReviewRepository.findById(1).get();
 
+        int cnt = 0;
+        for(PerformanceReview p : performanceReview.getChildrenPerformanceReview()){
+            System.out.println(p.getId()+ ", "+p.getContent());
+            cnt++;
+        }
+        System.out.println(cnt);
         Assertions.assertEquals(1, performanceReview.getId());
     }
 

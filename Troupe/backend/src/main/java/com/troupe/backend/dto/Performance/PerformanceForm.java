@@ -27,6 +27,10 @@ public class PerformanceForm {
     private int codeNo;
     private String detailTime;
     private List<Seat> price;
+    private Date startDate;
+    private Date endDate;
+    private List<MultipartFile> images;
+
 
 
 }

@@ -12,6 +12,9 @@
 - [가로배치 float](#float)
   * [object-fit](#object-fit)
 - [Image](#image)
+- [<svg>](#svg)
+  *[<path>](#path)
+  *[회전](#회전)
 
 ## 기본속성
 ### inline
@@ -72,3 +75,46 @@ object-fit: contain;	비율유지한채로 가로 세로중 한쪽이 다 채워
 object-fit: cover;	비율유지한채로 가로 세로 모두 다 채워질때까지
 object-fit: none;	조절X
 object-fit: scale-down;	contain, none 중 작아지는 쪽
+
+## svg
+Vector기반 그림
+	<svg
+		version="1.1"
+		className="highcharts-root"
+		style={{ fontSize: "12px", border: "1px solid black" }}
+		xmlns="http://www.w3.org/2000/svg"
+		width={width}
+		height={height}
+		viewBox={`0 0 ${width} ${height}`}
+		aria-hidden="false"
+		aria-label="Interactive chart"
+	>
+
+### path
+<svg> 태그내에서 사용가능
+시작위치와 다음위치를 연속으로 설정하여 해당위치에 선을 그림
+d="M [x시작] [y시작] L [다음x] [다음y] L [다음x] [다음y] ..."
+
+	<path
+		key={`poly${i}${j}`}
+		fill="none"
+		stroke="#000"
+		strokeWidth={1}
+		strokeDasharray="none"
+		data-z-index={1}
+		className={`highcharts-grid-line ${styledPoly.guideline}`}
+		transform={`rotate(${startDeg + deg * i})`}
+		transform-origin={`${width / 2} ${height / 2}`}
+		d={`M ${width / 2 - (unitLength / 2) * j} ${
+			height / 2 - ((unitLength * 6) / 5) * j
+			}
+			L ${width / 2 + (unitLength / 2) * j} ${
+			height / 2 - ((unitLength * 6) / 5) * j
+			}`}
+	></path>
+
+### 회전
+[x기준점] [y기준점] 을 기준으로 각도만큼 회전
+
+	transform="rotate([각도(0~360)])"
+	transform-origin="[x기준점] [y기준점]"

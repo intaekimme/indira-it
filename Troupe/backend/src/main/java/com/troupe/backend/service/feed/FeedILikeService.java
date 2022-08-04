@@ -54,7 +54,8 @@ public class FeedILikeService {
          }
      }
 
-//     public List<FeedLike> totalLikeCount(int feedNo){
-//         return feedLikeRepository.FeedLikeCount(feedNo);
-//     }
+     public int countTotalLike (int feedNo){
+         Feed feed = feedRepository.findById(feedNo).get();
+         return feedLikeRepository.findByFeedAndIsDeletedFalse(feed);
+     }
 }

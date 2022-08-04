@@ -1,5 +1,6 @@
 package com.troupe.backend.repository.feed;
 
+import com.troupe.backend.domain.feed.Feed;
 import com.troupe.backend.domain.feed.FeedLike;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -44,6 +45,13 @@ class FeedLikeTest {
         Assertions.assertThat(feedLike1.isDeleted()).isEqualTo(false);
         // 이미 좋아요 했을 시 취소
 //        Assertions.assertThat(feedLike1.isDeleted()).isEqualTo(true);
+    }
+
+    @Test
+    public void test(){
+        Feed feed = feedRepository.findById(26).get();
+        int total= feedLikeRepository.findByFeedAndIsDeletedFalse(feed);
+        Assertions.assertThat(total).isEqualTo(1);
     }
 
 }

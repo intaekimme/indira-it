@@ -15,6 +15,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import Favorite from '@mui/icons-material/Favorite';
 import PerfFeedToggle from './MainButton';
+import apiClient from '../apiClient';
 
 
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
@@ -22,7 +23,7 @@ import PerfFeedToggle from './MainButton';
 
 function Copyright() {
   return (
-    <Typography color="text.secondary" align="center">
+    <Typography color="text.secondary" align="center" component="span">
       {'Copyright © '}
       <Link color="inherit" href="/">
         Troupe
@@ -74,6 +75,9 @@ export default function Album() {
     setCard(range(0, pages))
   }
 
+  const feedList = apiClient.getFeedList()
+  console.log(feedList)
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -90,7 +94,7 @@ export default function Album() {
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                   elevation={0}
                 >
-                  <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}}>
+                  <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
                     <img src='https://source.unsplash.com/random' alt='random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                     SmartToy
                   </Typography>
@@ -142,7 +146,7 @@ export default function Album() {
           variant="subtitle1"
           align="center"
           color="text.secondary"
-          component="p"
+          component="span"
         >
           Troupe
         </Typography>

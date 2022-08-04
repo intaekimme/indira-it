@@ -2,9 +2,7 @@ package com.troupe.backend.service.Performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
-import com.troupe.backend.dto.Performance.PerformanceDetailResponse;
-import com.troupe.backend.dto.Performance.PerformanceForm;
-import com.troupe.backend.dto.Performance.PerformanceResponse;
+import com.troupe.backend.dto.Performance.*;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.exception.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
@@ -12,14 +10,14 @@ import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,9 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static com.troupe.backend.util.MyUtil.getMemberNoFromRequestHeader;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PerformanceService {
@@ -44,33 +41,33 @@ public class PerformanceService {
 
 
     @Transactional
-    public void register(Map<String, Object> requestHeader,
-                         PerformanceForm performanceform,
-                         List<MultipartFile> multipartFileList) throws IOException{
-
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+    public void register(int member,
+                         PerformanceForm performanceform) throws IOException{
         //  공연 기본 정보 등록 서비스 호출
-        Performance performance = addPerformance(memberNo, performanceform);
+        Performance performance = addPerformance(member, performanceform);
         //  S3 공연 이미지 업로드 서비스 호출
-        List<String> urlList = s3FileUploadService.upload(multipartFileList, "performance");
-        //  공연 이미지 정보 등록 서비스 호출
-        performanceImageService.addPerformanceImage(urlList, performance);
+        if(!performanceform.getImages().isEmpty()){
+            List<String> urlList = s3FileUploadService.upload(performanceform.getImages(), "performance");
+            //  공연 이미지 정보 등록 서비스 호출
+            performanceImageService.addPerformanceImage(urlList, performance);
+        }
         //  공연 좌석 정보 등록 서비스 호출
-        performancePriceService.addPerformancePrice(performanceform, performance);
+        if(!performanceform.getPrice().isEmpty())
+            performancePriceService.addPerformancePrice(performanceform, performance);
     }
 
     @Transactional
-    public void modify(int pfNo, Map<String, Object> requestHeader, PerformanceForm performanceform){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+    public void modify(int memberNo, int pfNo, PerformanceModifyForm performanceModifyForm) throws Exception{
         //  공연 기본 정보 수정 서비스 호출
-        Performance performance = updatePerformance(memberNo, pfNo, performanceform);
+        Performance performance = updatePerformance(memberNo, pfNo, performanceModifyForm);
+        //  공연 이미지 정보 수정 서비스 호출
+        performanceImageService.updatePerformanceImage(performanceModifyForm, performance);
         //  공연 좌석 정보 수정 서비스 호출
-        performancePriceService.updatePerformancePrice(performanceform, performance);
+        performancePriceService.updatePerformancePrice(performanceModifyForm, performance);
     }
 
     @Transactional
-    public void delete(int pfNo, Map<String, Object> requestHeader){
-        int memberNo = getMemberNoFromRequestHeader(requestHeader);
+    public void delete(int memberNo, int pfNo){
         //  공연 기본 정보 삭제 서비스 호출
         Performance deletedPerformance = deletePerformance(memberNo, pfNo);
         //  기본적인 예외처리 통과함, 공연 번호로 바로
@@ -102,17 +99,19 @@ public class PerformanceService {
      * 공연 기본 정보 수정 서비스
      * @param memberNo
      * @param performanceNo
-     * @param performanceform
+     * @param performanceModifyForm
      * @return
      */
     @Transactional
-    public Performance updatePerformance(int memberNo, int performanceNo, PerformanceForm performanceform){
+    public Performance updatePerformance(int memberNo, int performanceNo, PerformanceModifyForm performanceModifyForm){
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
         Performance performance = performanceRepository.findById(performanceNo)
                 .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
+        if(!member.equals(performance.getMemberNo()))
+            throw new NoSuchElementException("수정 권한이 없는 공연입니다.");
         //  기존 정보 수정
-        Performance updatePerformance = performanceConverter.toPerformanceEntityWhenUpdate(performanceform, member, performance);
+        Performance updatePerformance = performanceConverter.toPerformanceEntityWhenUpdate(performanceModifyForm, member, performance);
         return performanceRepository.save(updatePerformance);
     }
 
@@ -160,21 +159,68 @@ public class PerformanceService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PerformanceResponse> findAll(){
-        List<Performance> performanceList = performanceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdTime"));
+    public List<PerformanceResponse> findAll(int startNo){
+        Pageable sortedByCreatedTime = PageRequest.of(startNo/6,6, Sort.by("createdTime").descending());
+        Page<Performance> performanceList = performanceRepository.findAll(sortedByCreatedTime);
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
         for(Performance p : performanceList){
-            List<String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
+            log.info(p.toString());
+            Map<Integer, String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
             performanceResponseList.add(
-                PerformanceResponse.PerformanceToResponse(p, imgUrlList)
+                    PerformanceResponse.builder()
+                            .pfNo(p.getId())
+                            .description(p.getDescription())
+                            .image(imgUrlList)
+                            .location(p.getLocation())
+                            .detailTime(p.getDetailTime())
+                            .build()
             );
         }
 
         return performanceResponseList;
     }
 
+    /**
+     * 검색 키워드로 검색
+     * @param condition
+     * @param keyword
+     * @return
+     */
+    public List<PerformanceResponse> findQueryAll(String condition, String keyword) {
+        condition.trim(); keyword.trim();
+        if(keyword.isBlank())
+            throw new NoSuchElementException("검색어가 없습니다.");
+
+        List<Performance> performanceList = null;
+        // 검색 조건과 질의어로 질의
+        if(condition.equals("nickname")){       //  작성자
+            performanceList = performanceRepository.findByNickName(keyword);
+        }else if(condition.equals("title")){    //  제목 + 내용
+            performanceList = performanceRepository.findByTitleAndDescription(keyword);
+        }
+
+//        System.out.println(performanceList.size());
+        List<PerformanceResponse> performanceResponseList = new ArrayList<>();
+        for(Performance p : performanceList){
+//            System.out.println("========== "+ p.getCreatedTime() +" ============");
+//            System.out.println(p.toString());
+            Map<Integer, String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
+            performanceResponseList.add(
+                    PerformanceResponse.builder()
+                            .pfNo(p.getId())
+                            .description(p.getDescription())
+                            .image(imgUrlList)
+                            .location(p.getLocation())
+                            .detailTime(p.getDetailTime())
+                            .build()
+            );
+        }
+
+        return performanceResponseList;
+
+    }
     /**
      * 공연 상세 정보
      * 공연 번호로 요청이 들어오면
@@ -193,7 +239,7 @@ public class PerformanceService {
             throw new NoSuchElementException("삭제된 공연 입니다");
 
         //  공연을 찾으면, url을 찾고
-        List<String> urlList = performanceImageService.findPerformanceImagesByPerformance(performance);
+        Map<Integer, String> urlList = performanceImageService.findPerformanceImagesByPerformance(performance);
 
         //  응답 폼으로 만들어 반환
         return PerformanceDetailResponse.builder()
@@ -211,4 +257,28 @@ public class PerformanceService {
                 .isRemoved(performance.getRemoved())
                 .build();
     }
+
+//  =================================================================================
+//  profile service
+//  =================================================================================
+
+    @Transactional(readOnly = true)
+    public List<ProfilePfResponse> findRegisteredList(int memberNo) {
+        Member member = memberRepository.findById(memberNo).get();
+        List<Performance> performanceList = performanceRepository.findByMemberNo(member);
+
+        List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
+        for(Performance p : performanceList){
+            profilePfResponseList.add(ProfilePfResponse.builder()
+                    .perfPoster(p.getPosterUrl())
+                    .perfName(p.getTitle())
+                    .perfStartDate(p.getStartDate())
+                    .perfEndDate(p.getEndDate())
+                    .build()
+            );
+        }
+        return profilePfResponseList;
+    }
+
+
 }

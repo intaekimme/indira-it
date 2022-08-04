@@ -2,7 +2,7 @@ package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.Avatar;
-import com.troupe.backend.dto.avatar.AvatarForm;
+import com.troupe.backend.dto.avatar.form.AvatarForm;
 import com.troupe.backend.dto.member.LoginForm;
 import com.troupe.backend.dto.member.MemberForm;
 import com.troupe.backend.exception.member.DuplicatedMemberException;
@@ -77,6 +77,14 @@ public class MemberService implements UserDetailsService {
      */
     public Member deleteMember(int memberNo) {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
+
+
+        // TODO: 프로필 이미지 서버에서 삭제
+        String oldImageUrl = foundMember.getProfileImageUrl();
+        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            s3FileUploadService.deleteFile(oldImageUrl);
+        }
+
         foundMember.setRemoved(true);
         return foundMember;
     }
@@ -91,6 +99,13 @@ public class MemberService implements UserDetailsService {
             throw new DuplicatedMemberException();
         }
 
+        // TODO: 기존 프로필 이미지를 서버에서 삭제
+        String oldImageUrl = foundMember.getProfileImageUrl();
+        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            s3FileUploadService.deleteFile(oldImageUrl);
+        }
+
+        // 새로운 프로필 이미지를 서버에 저장
         String imageUrl = "";
         if (memberForm.getProfileImage() != null && !memberForm.getProfileImage().isEmpty()) {
             imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");

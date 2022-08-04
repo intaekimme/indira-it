@@ -6,11 +6,9 @@ import { Button } from '@mui/material'
 import MUICarousel from 'react-material-ui-carousel';
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box';
-import axios from 'axios';
-// import Chip from '@mui/material/Chip'
+import apiClient from "../apiClient";
 
 // 제목, 기간, 시간, 장소, 티켓가격
-// MUI칩이 갑자기 오류가 났다,,,,
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
@@ -22,9 +20,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 //포스터 슬라이드
-function Carousel(props)
+function Carousel()
 {
-  function CarouselItem(props)
+  function CarouselItem()
   {
     const [open, setOpen] = React.useState(false)
     function handleOpen() {
@@ -74,7 +72,7 @@ function Carousel(props)
 }
 
 // 목록 수정 삭제 버튼
-function ModifyDeleteButton() {
+function ModifyDeleteButton(props) {
   const [user, setUser] = React.useState(true)
 
   function handleUser() {
@@ -82,12 +80,10 @@ function ModifyDeleteButton() {
   }
 
   function onRemove() {
-    if(window.confirm('삭제하시겠습니까?')){
-
-      alert('삭제되었습니다.');
-    }else{
-      alert('취소하였습니다.')
-    }
+    const data ={
+      pfNo: props
+    };
+    apiClient.perfRemove(data);
   }
 
   return (
@@ -95,7 +91,7 @@ function ModifyDeleteButton() {
             <Button variant='outlined' href='/perf/list' style={{margin: '8px', backgroundColor:'beige', fontFamily: 'IBM Plex Sans KR'}}>목록</Button>
         { user? (
         <Fragment>
-            <Button variant='outlined' href='/feed/list' style={{margin: '8px', backgroundColor:'skyblue', fontFamily: 'IBM Plex Sans KR'}}>수정</Button>
+            <Button variant='outlined' href='/perf/new' style={{margin: '8px', backgroundColor:'skyblue', fontFamily: 'IBM Plex Sans KR'}}>수정</Button>
             <Button 
             variant='outlined' 
             style={{margin: '8px', backgroundColor:'pink', fontFamily: 'IBM Plex Sans KR'}}
@@ -136,7 +132,7 @@ function PerfDetail() {
                   짱아
                   </a>
                 </li>
-                <li>제목: 짱아</li>
+                <li>제목: {title}</li>
                 <br></br>
                 <li>가격: 전석 33,000원</li>
                 <br></br>
