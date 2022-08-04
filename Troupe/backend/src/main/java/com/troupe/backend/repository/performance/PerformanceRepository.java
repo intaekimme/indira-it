@@ -2,6 +2,9 @@ package com.troupe.backend.repository.performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -27,7 +30,7 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
      * @param member
      * @return
      */
-    List<Performance> findByMemberNo(Member member);
+    Slice<Performance> findByMemberNoOrderByCreatedTimeDesc(Member member, Pageable pageable);
 
 
     Performance findByMemberNoAndId(Member member, int pfNo);

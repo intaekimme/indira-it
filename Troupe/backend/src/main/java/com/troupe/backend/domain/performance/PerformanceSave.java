@@ -47,4 +47,14 @@ public class PerformanceSave implements Serializable {
 
     public void setCreatedTime(Date createdTime) { this.createdTime = createdTime; }
 
+    @Override
+    public String toString() {
+        return "PerformanceSave{" +
+                "id=" + id +
+                ", memberNo=" + memberNo +
+                ", pfNo=" + pfNo +
+                ", createdTime=" + createdTime +
+                ", isRemoved=" + isRemoved +
+                '}';
+    }
 }
