@@ -3,10 +3,12 @@ package com.troupe.backend.repository.performance;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceSave;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+
 import java.util.Optional;
 
 public interface PerformanceSaveRepository extends JpaRepository<PerformanceSave, Integer> {
@@ -50,9 +52,10 @@ public interface PerformanceSaveRepository extends JpaRepository<PerformanceSave
      */
     @Query("select pfs from PerformanceSave pfs " +
             "where pfs.memberNo = :member " +
-            "and pfs.isRemoved = false ")
-    List<PerformanceSave> findByMemberNoAndRemovedFalse(Member member);
-
+            "and pfs.isRemoved = false " +
+            "order by pfs.createdTime desc ")
+    Slice<PerformanceSave> findByMemberNoAndRemovedFalse(Member member, Pageable pageable);
+    Slice<PerformanceSave> findAllByMemberNoAndIsRemovedOrderByCreatedTimeDesc(Member member, boolean isRemoved, Pageable pageable);
     /**
      * 유저 번호와 공연 번호로 찾은 공연 삭제
      * @param member

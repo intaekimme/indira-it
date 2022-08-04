@@ -11,10 +11,7 @@ import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -159,9 +156,8 @@ public class PerformanceService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PerformanceResponse> findAll(int startNo){
-        Pageable sortedByCreatedTime = PageRequest.of(startNo/6,6, Sort.by("createdTime").descending());
-        Page<Performance> performanceList = performanceRepository.findAll(sortedByCreatedTime);
+    public List<PerformanceResponse> findAll(Pageable sortedByCreatedTime){
+        Slice<Performance> performanceList = performanceRepository.findAll(sortedByCreatedTime);
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
@@ -263,9 +259,9 @@ public class PerformanceService {
 //  =================================================================================
 
     @Transactional(readOnly = true)
-    public List<ProfilePfResponse> findRegisteredList(int memberNo) {
+    public List<ProfilePfResponse> findRegisteredList(int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
-        List<Performance> performanceList = performanceRepository.findByMemberNo(member);
+        Slice<Performance> performanceList = performanceRepository.findByMemberNoOrderByCreatedTimeDesc(member, pageable);
 
         List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
         for(Performance p : performanceList){
