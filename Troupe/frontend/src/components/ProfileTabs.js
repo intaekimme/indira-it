@@ -60,13 +60,13 @@ export default function CenterTab(props) {
           ))}
         </Tabs>
       </Box>
-      {tabContent.map((content, index) => (
+      {/* {tabContent.map((content, index) => (
         <div key={`content${index}`}>
           <TabPanel value={value} index={index}>
             {content}
           </TabPanel>
         </div>
-      ))}
+      ))} */}
     </Box>
   );
 }

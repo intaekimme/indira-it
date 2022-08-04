@@ -20,7 +20,7 @@ function Profile(props) {
   const { memberNo } = useParams();
 
   //화면 width에 따른 화면분할여부
-  const [gridItemxs, setGridItemxs] = React.useState(6);
+  const [gridItemxs, setGridItemxs] = React.useState(window.innerWidth<1000 ? 12 : 6);
 
   //memberInfo 초기화
   const [memberInfo, setMemberInfo] = React.useState("");
