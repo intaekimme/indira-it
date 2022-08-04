@@ -29,5 +29,5 @@ public class InterestCategory implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "category_no")
-    private Category categoryNo;
+    private Category category;
 }
