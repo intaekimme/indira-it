@@ -248,7 +248,7 @@ public class PerformanceService {
                 .description(performance.getDescription())
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(performance.getUpdatedTime())
-                .codeNo(performance.getCodeNo())
+                .categoryNo(performance.getCategoryNo())
                 .detailTime(performance.getDetailTime())
                 .isRemoved(performance.getRemoved())
                 .build();

@@ -20,7 +20,7 @@ public class PerformanceModifyForm {
     private String location;
     private int runtime;
     private String description;
-    private int codeNo;
+    private int categoryNo;
     private String detailTime;
     private List<Seat> price;
     private Date startDate;

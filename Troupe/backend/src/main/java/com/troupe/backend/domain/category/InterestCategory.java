@@ -28,6 +28,6 @@ public class InterestCategory implements Serializable {
     private Member memberNo;
 
     @ManyToOne
-    @JoinColumn(name = "code_no")
-    private Category codeNo;
+    @JoinColumn(name = "category_no")
+    private Category categoryNo;
 }

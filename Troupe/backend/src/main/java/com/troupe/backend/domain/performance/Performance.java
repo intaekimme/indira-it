@@ -47,7 +47,7 @@ public class Performance implements Serializable{
     @Size(max = 1000)
     private String posterUrl;
 
-    private Integer codeNo;
+    private Integer categoryNo;
 
     private String detailTime;
     private Date startDate;
@@ -94,8 +94,8 @@ public class Performance implements Serializable{
         this.posterUrl = posterUrl;
     }
 
-    public void setCodeNo(Integer codeNo) {
-        this.codeNo = codeNo;
+    public void setCategoryNo(Integer categoryNo) {
+        this.categoryNo = categoryNo;
     }
 
     public void setDetailTime(String detailTime) {
@@ -124,7 +124,7 @@ public class Performance implements Serializable{
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
                 ", posterUrl='" + posterUrl + '\'' +
-                ", codeNo=" + codeNo +
+                ", categoryNo=" + categoryNo +
                 ", detailTime='" + detailTime + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +

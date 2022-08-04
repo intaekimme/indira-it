@@ -11,7 +11,6 @@ import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class PerformanceConverter {
                 .location(performanceForm.getLocation())
                 .runtime(performanceForm.getRuntime())
                 .createdTime(now)
-                .codeNo(performanceForm.getCodeNo())
+                .categoryNo(performanceForm.getCategoryNo())
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
 //                .startDate(performanceForm.getStartDate())
@@ -75,7 +74,7 @@ public class PerformanceConverter {
                 .runtime(performanceModifyForm.getRuntime())
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(now)
-                .codeNo(performanceModifyForm.getCodeNo())
+                .categoryNo(performanceModifyForm.getCategoryNo())
                 .detailTime(performanceModifyForm.getDetailTime())
                 .description(performanceModifyForm.getDescription())
                 .build();
