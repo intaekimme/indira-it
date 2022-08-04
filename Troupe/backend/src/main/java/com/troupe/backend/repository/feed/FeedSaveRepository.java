@@ -15,4 +15,6 @@ public interface FeedSaveRepository extends JpaRepository<FeedSave, Integer> {
     Optional<FeedSave> findByMemberAndFeed(Member member, Feed feed);
 
     Optional<Slice<FeedSave>> findAllByMemberAndIsDeletedOrderByCreatedTimeDesc(Member member, boolean check, Pageable pageable);
+
+    List<FeedSave> findAllByMemberAndIsDeleted(Member member, boolean isDeleted);
 }
