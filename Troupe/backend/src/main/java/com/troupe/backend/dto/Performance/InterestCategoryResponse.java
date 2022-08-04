@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class InterestCategoryResponse {
-    int category_no;
-    String category_name;
+    int categoryNo;
+    String categoryName;
 
     public InterestCategoryResponse(Category category) {
-        this.category_no = category.getId();
-        this.category_name = category.getSmallCategory();
+        this.categoryNo = category.getId();
+        this.categoryName = category.getSmallCategory();
     }
 }
