@@ -234,6 +234,21 @@ const apiClient = {
         return null;
       });
   },
+  //피드 등록
+  feedNew: (data) => {
+    instance
+      .post("/feed",{  headers: {
+        accessToken: sessionStorage.getItem("accessToken"),
+      },}, data)
+      .then((response) => {
+        alert("피드 등록 성공");
+        return response;
+      })
+      .catch((error) => {
+        alert("피드 등록 실패" + error);
+        return null;
+      });
+  },
 };
 
 export default apiClient;
