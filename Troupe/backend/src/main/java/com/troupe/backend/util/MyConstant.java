@@ -27,7 +27,7 @@ public final class MyConstant {
     public static final String IS_FOLLOWING = "isFollowing";
 
     // 관심 관련
-    public static final String INTEREST_TAG_LIST = "interestTagList";
+    public static final String TOP_4_INTEREST_TAGS = "top4InterestTags";
     public static final String INTEREST_CATEGORY_LIST = "interestCategoryList";
 
     // 호감도 관련

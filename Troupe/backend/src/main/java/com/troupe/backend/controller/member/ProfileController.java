@@ -1,12 +1,15 @@
 package com.troupe.backend.controller.member;
 
+import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.likability.Likability;
 import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.MemberConverter;
+import com.troupe.backend.dto.feed.TagResponse;
 import com.troupe.backend.dto.member.AvatarResponse;
 import com.troupe.backend.dto.member.MemberInfoResponse;
 import com.troupe.backend.dto.member.MemberResponse;
+import com.troupe.backend.service.feed.FeedService;
 import com.troupe.backend.service.member.FollowService;
 import com.troupe.backend.service.member.LikabilityService;
 import com.troupe.backend.service.member.MemberService;
@@ -31,6 +34,8 @@ public class ProfileController {
     private final FollowService followService;
 
     private final LikabilityService likabilityService;
+
+    private final FeedService feedService;
 
     @PostMapping("/{profileMemberNo}/follow")
     public ResponseEntity follow(Principal principal, @PathVariable int profileMemberNo) {
@@ -188,21 +193,27 @@ public class ProfileController {
     }
 
 
-    // TODO : 이 아래로는 미구현. 쿼리 필요
     @GetMapping("/{profileMemberNo}/interest/tag")
-    public ResponseEntity getInterestTagList(@PathVariable int profileMemberNo) {
+    public ResponseEntity getTop4InterestTagList(@PathVariable int profileMemberNo) {
+        List<Tag> top4InterestTags = feedService.getTop4InterestTagList(profileMemberNo);
+
+        List<TagResponse> response = new ArrayList<>();
+        for (Tag t : top4InterestTags) {
+            response.add(TagResponse.builder().tagNo(t.getTagNo()).tagName(t.getName()).build());
+        }
+
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(MyConstant.INTEREST_TAG_LIST, resultMap);
+        resultMap.put(MyConstant.TOP_4_INTEREST_TAGS, response);
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 
-        @GetMapping("/{profileMemberNo}/interest/category")
-    public ResponseEntity getInterestCategoryList(@PathVariable int profileMemberNo) {
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, resultMap);
-        return new ResponseEntity(resultMap, HttpStatus.OK);
-    }
-
+//    // TODO : 이 아래로는 미구현. 쿼리 필요
+//    @GetMapping("/{profileMemberNo}/interest/category")
+//    public ResponseEntity getInterestCategoryList(@PathVariable int profileMemberNo) {
+//        Map<String, Object> resultMap = new HashMap<>();
+//        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, resultMap);
+//        return new ResponseEntity(resultMap, HttpStatus.OK);
+//    }
 
 }
 

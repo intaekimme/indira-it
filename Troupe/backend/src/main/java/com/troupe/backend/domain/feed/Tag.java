@@ -1,9 +1,6 @@
 package com.troupe.backend.domain.feed;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class Tag implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
