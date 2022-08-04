@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class Category implements Serializable {
 
     @Id
-    @Column(name = "code_no")
+    @Column(name = "category_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 

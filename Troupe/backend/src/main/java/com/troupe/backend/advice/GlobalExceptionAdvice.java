@@ -1,6 +1,7 @@
 package com.troupe.backend.advice;
 
 import com.troupe.backend.exception.DuplicatedException;
+import com.troupe.backend.exception.UnauthorizedException;
 import com.troupe.backend.util.MyConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,14 @@ public class GlobalExceptionAdvice {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.MESSAGE, e.getMessage());
         return new ResponseEntity(resultMap, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity handleUnauthorizedException(UnauthorizedException e) {
+        e.printStackTrace();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)

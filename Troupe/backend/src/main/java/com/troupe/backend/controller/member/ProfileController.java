@@ -9,6 +9,7 @@ import com.troupe.backend.dto.feed.TagResponse;
 import com.troupe.backend.dto.member.AvatarResponse;
 import com.troupe.backend.dto.member.MemberInfoResponse;
 import com.troupe.backend.dto.member.MemberResponse;
+import com.troupe.backend.service.Performance.PerformanceService;
 import com.troupe.backend.service.feed.FeedService;
 import com.troupe.backend.service.member.FollowService;
 import com.troupe.backend.service.member.LikabilityService;
@@ -36,6 +37,8 @@ public class ProfileController {
     private final LikabilityService likabilityService;
 
     private final FeedService feedService;
+
+    private final PerformanceService performanceService;
 
     @PostMapping("/{profileMemberNo}/follow")
     public ResponseEntity follow(Principal principal, @PathVariable int profileMemberNo) {
@@ -207,14 +210,13 @@ public class ProfileController {
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 
-//    // TODO : 이 아래로는 미구현. 쿼리 필요
-//    @GetMapping("/{profileMemberNo}/interest/category")
-//    public ResponseEntity getInterestCategoryList(@PathVariable int profileMemberNo) {
-//        Map<String, Object> resultMap = new HashMap<>();
-//        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, resultMap);
-//        return new ResponseEntity(resultMap, HttpStatus.OK);
-//    }
-
+    // TODO : 구현해야 함
+    @GetMapping("/{profileMemberNo}/interest/category")
+    public ResponseEntity getInterestCategoryList(@PathVariable int profileMemberNo) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, "TODO");
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
 }
 
 
