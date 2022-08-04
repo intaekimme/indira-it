@@ -44,30 +44,30 @@ export default function ProfileAnalyze(props) {
   ]);
 
   //이 member의 호감도 data
-  // const [performerLikeabilityData, setPerformerLikeabilityData] = React.useState("");
-  // React.useEffect(() => {
-  //   apiClient.getPerformerLikeabilityData(memberNo).then((data) => {
-  //     setPerformerLikeabilityData(data);
-  //   });
-  // });
-  const [performerLikeabilityData, setPerformerLikeabilityData] =
-    React.useState([
-      {
-        memberNo: 1,
-        nickname: "첫번째",
-        exp: 1520,
-      },
-      {
-        memberNo: 2,
-        nickname: "두번째",
-        exp: 1250,
-      },
-      {
-        memberNo: 3,
-        nickname: "세번째",
-        exp: 970,
-      },
-    ]);
+  const [performerTop3, setPerformerTop3] = React.useState("");
+  React.useEffect(() => {
+    apiClient.getPerformerTop3({profileMemberNo: memberNo}).then((data) => {
+      setPerformerTop3(data.top3Stars);
+    });
+  }, []);
+  // const [performerTop3, setPerformerTop3] =
+  //   React.useState([
+  //     {
+  //       memberNo: 1,
+  //       nickname: "첫번째",
+  //       exp: 1520,
+  //     },
+  //     {
+  //       memberNo: 2,
+  //       nickname: "두번째",
+  //       exp: 1250,
+  //     },
+  //     {
+  //       memberNo: 3,
+  //       nickname: "세번째",
+  //       exp: 970,
+  //     },
+  //   ]);
   // 이 member에 대한 나의 호감도 data
   // const [myLikeabilityData, setMyLikeabilityData] = React.useState("");
   // React.useEffect(() => {
@@ -183,7 +183,7 @@ export default function ProfileAnalyze(props) {
               <LikeabilityRank
                 nickname={props.nickname}
                 likeabilityWithMember={likeabilityWithMember}
-                likeabilityData={performerLikeabilityData}
+                likeabilityData={performerTop3}
                 width={props.width}
               ></LikeabilityRank>
             </Grid>
