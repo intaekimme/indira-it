@@ -2,9 +2,15 @@ package com.troupe.backend.dto.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.member.MemberType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MemberInfoResponse {
     int memberNo;
     String email;

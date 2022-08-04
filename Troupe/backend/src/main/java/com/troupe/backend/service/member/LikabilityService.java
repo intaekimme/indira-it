@@ -105,4 +105,21 @@ public class LikabilityService {
         return likabilityLevelRepository.findById(level);
     }
 
+    /**
+     * fanMemberNo를 받아서, 이 팬이 가장 호감도가 높은 3개를 리턴
+     */
+    public List<Likability> getTop3StarList(int fanMemberNo) {
+        Member fanMember = memberRepository.findById(fanMemberNo).get();
+        List<Likability> ret = likabilityRepository.findTop3ByFanMemberOrderByExpDesc(fanMember);
+        return ret;
+    }
+
+    /**
+     * starMemberNo를 받아서, 이 스타에게 가장 호감도가 높은 100개를 리턴
+     */
+    public List<Likability> getTop100FanList(int starMemberNo) {
+        Member starMember = memberRepository.findById(starMemberNo).get();
+        List<Likability> ret = likabilityRepository.findTop100ByStarMemberOrderByExpDesc(starMember);
+        return ret;
+    }
 }

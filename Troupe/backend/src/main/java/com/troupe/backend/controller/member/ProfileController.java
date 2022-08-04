@@ -4,7 +4,9 @@ import com.troupe.backend.domain.likability.Likability;
 import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.MemberConverter;
+import com.troupe.backend.dto.member.AvatarResponse;
 import com.troupe.backend.dto.member.MemberInfoResponse;
+import com.troupe.backend.dto.member.MemberResponse;
 import com.troupe.backend.service.member.FollowService;
 import com.troupe.backend.service.member.LikabilityService;
 import com.troupe.backend.service.member.MemberService;
@@ -16,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @Api("회원 프로필 REST API")
@@ -150,14 +149,59 @@ public class ProfileController {
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 
+    @GetMapping("/{profileMemberNo}/likability/topstars")
+    public ResponseEntity getTop3StarList(@PathVariable int profileMemberNo) {
+        int fanMemberNo = profileMemberNo;
+        List<Likability> likabilities = likabilityService.getTop3StarList(fanMemberNo);
+
+        List<MemberResponse> top3Stars = new ArrayList<>();
+        for (Likability likability : likabilities) {
+            Member starMember = likability.getStarMember();
+
+            MemberResponse memberResponse = new MemberResponse(new MemberInfoResponse(starMember), new AvatarResponse(starMember));
+            top3Stars.add(memberResponse);
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.TOP_3_STARS, top3Stars);
+
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/{profileMemberNo}/likability/topfans")
+    public ResponseEntity getTop100FanList(@PathVariable int profileMemberNo) {
+        int starMemberNo = profileMemberNo;
+
+        List<Likability> likabilities = likabilityService.getTop100FanList(starMemberNo);
+
+        List<MemberResponse> top100Fans = new ArrayList<>();
+        for (Likability likability : likabilities) {
+            Member fanMember = likability.getFanMember();
+
+            MemberResponse memberResponse = new MemberResponse(new MemberInfoResponse(fanMember), new AvatarResponse(fanMember));
+            top100Fans.add(memberResponse);
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.TOP_100_FANS, top100Fans);
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+
     // TODO : 이 아래로는 미구현. 쿼리 필요
-//    @GetMapping("/{profileMemberNo}/interest/tag")
-//    public ResponseEntity getInterestTagList(@PathVariable int profileMemberNo) {
-//        Map<String, Object> resultMap = new HashMap<>();
-//        resultMap.put(MyConstant.TAG_LIST, resultMap);
-//        return new ResponseEntity(resultMap, HttpStatus.OK);
-//    }
-//
+    @GetMapping("/{profileMemberNo}/interest/tag")
+    public ResponseEntity getInterestTagList(@PathVariable int profileMemberNo) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.INTEREST_TAG_LIST, resultMap);
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+        @GetMapping("/{profileMemberNo}/interest/category")
+    public ResponseEntity getInterestCategoryList(@PathVariable int profileMemberNo) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, resultMap);
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
 
 
 }
