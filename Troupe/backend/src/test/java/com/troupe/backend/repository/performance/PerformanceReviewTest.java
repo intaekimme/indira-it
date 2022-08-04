@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Optional;
 
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -42,8 +41,8 @@ public class PerformanceReviewTest {
 
         for(int i=2; i<100; i++){
             PerformanceReview performanceReview = PerformanceReview.builder()
-                    .memberNo(member)
-                    .pfNo(performance)
+                    .member(member)
+                    .pf(performance)
                     .createdTime(dateFormat.parse("20220804"))
                     .isModified(false)
                     .isRemoved(false)
@@ -63,7 +62,7 @@ public class PerformanceReviewTest {
     public void findByPfNo(){
         Performance performance = performanceRepository.findById(1).get();
 
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
 
         Assertions.assertEquals(6, performanceReviewList.size());
     }
@@ -100,7 +99,7 @@ public class PerformanceReviewTest {
     @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
     void findByParentPerformanceReviewTest1(){
         Performance performance = performanceRepository.findById(1).get();
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
         for(PerformanceReview performanceReview : performanceReviewList){
             List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
             System.out.println(childrenPerformanceReview.size());
@@ -112,7 +111,7 @@ public class PerformanceReviewTest {
     @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
     void findByParentPerformanceReviewTest2(){
         Performance performance = performanceRepository.findById(1).get();
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
         for(PerformanceReview performanceReview : performanceReviewList){
             List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
             System.out.println(childrenPerformanceReview.size());

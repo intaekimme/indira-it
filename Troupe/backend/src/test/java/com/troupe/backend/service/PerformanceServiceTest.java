@@ -27,6 +27,6 @@ public class PerformanceServiceTest {
         performanceService.deletePerformance(3, 20);
 
         Performance performance = performanceRepository.findById(20).get();
-        Assertions.assertTrue(performance.getRemoved());
+        Assertions.assertTrue(performance.isRemoved());
     }
 }

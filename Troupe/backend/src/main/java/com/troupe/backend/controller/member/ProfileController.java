@@ -1,15 +1,17 @@
 package com.troupe.backend.controller.member;
 
+import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.likability.Likability;
 import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.dto.InterestCategoryResponse;
 import com.troupe.backend.dto.converter.MemberConverter;
 import com.troupe.backend.dto.feed.TagResponse;
 import com.troupe.backend.dto.member.AvatarResponse;
 import com.troupe.backend.dto.member.MemberInfoResponse;
 import com.troupe.backend.dto.member.MemberResponse;
-import com.troupe.backend.service.Performance.PerformanceService;
+import com.troupe.backend.service.Performance.PerformanceSaveService;
 import com.troupe.backend.service.feed.FeedService;
 import com.troupe.backend.service.member.FollowService;
 import com.troupe.backend.service.member.LikabilityService;
@@ -38,7 +40,7 @@ public class ProfileController {
 
     private final FeedService feedService;
 
-    private final PerformanceService performanceService;
+    private final PerformanceSaveService performanceSaveService;
 
     @PostMapping("/{profileMemberNo}/follow")
     public ResponseEntity follow(Principal principal, @PathVariable int profileMemberNo) {
@@ -200,21 +202,47 @@ public class ProfileController {
     public ResponseEntity getTop4InterestTagList(@PathVariable int profileMemberNo) {
         List<Tag> top4InterestTags = feedService.getTop4InterestTagList(profileMemberNo);
 
-        List<TagResponse> response = new ArrayList<>();
+        List<TagResponse> tagResponseList = new ArrayList<>();
         for (Tag t : top4InterestTags) {
-            response.add(TagResponse.builder().tagNo(t.getTagNo()).tagName(t.getName()).build());
+            tagResponseList.add(TagResponse.builder().tagNo(t.getTagNo()).tagName(t.getName()).build());
         }
 
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(MyConstant.TOP_4_INTEREST_TAGS, response);
+        resultMap.put(MyConstant.TOP_4_INTEREST_TAG_LIST, tagResponseList);
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 
     // TODO : 구현해야 함
     @GetMapping("/{profileMemberNo}/interest/category")
     public ResponseEntity getInterestCategoryList(@PathVariable int profileMemberNo) {
+        // 카운트한 결과를 맵으로 받아옴
+        Map<Category, Integer> categoryCount = performanceSaveService.countInterestTags(profileMemberNo);
+
+        // 리스폰스용 DTO 객체 생성
+        List<InterestCategoryResponse> interestCategoryResponseList = new ArrayList<>();
+        for (Category category : categoryCount.keySet()) {
+            InterestCategoryResponse interestCategoryResponse = InterestCategoryResponse.builder()
+                    .categoryNo(category.getId())
+                    .bigCategory(category.getBigCategory())
+                    .smallCategory(category.getSmallCategory())
+                    .codeName(category.getCodeName())
+                    .count(categoryCount.get(category))
+                    .build();
+
+            interestCategoryResponseList.add(interestCategoryResponse);
+        }
+
+        // 카테고리 번호순 정렬
+        Collections.sort(interestCategoryResponseList, new Comparator<InterestCategoryResponse>() {
+            @Override
+            public int compare(InterestCategoryResponse icr1, InterestCategoryResponse icr2) {
+                return icr1.getCategoryNo() - icr2.getCategoryNo();
+            }
+        });
+
+        // 리스폰스 엔티티 반환
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, "TODO");
+        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, interestCategoryResponseList);
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 }

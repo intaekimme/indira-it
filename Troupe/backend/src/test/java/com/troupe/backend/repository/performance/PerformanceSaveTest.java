@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -39,8 +38,8 @@ public class PerformanceSaveTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
         PerformanceSave performanceSave = PerformanceSave.builder()
-                .memberNo(member)
-                .pfNo(performance)
+                .member(member)
+                .pf(performance)
                 .createdTime(dateFormat.parse("20220802"))
                 .build();
 
@@ -55,12 +54,12 @@ public class PerformanceSaveTest {
         Performance performance = performanceRepository.findById(2).get();
 
         //  삭제할 공연
-        PerformanceSave targetPerformanceSave = performanceSaveRepository.findByMemberNoAndPfNo(member, performance).get();
+        PerformanceSave targetPerformanceSave = performanceSaveRepository.findByMemberAndPf(member, performance).get();
         targetPerformanceSave.setRemoved(true);
 
         performanceSaveRepository.save(targetPerformanceSave);
 
-        Assertions.assertTrue(targetPerformanceSave.getRemoved());
+        Assertions.assertTrue(targetPerformanceSave.isRemoved());
 
     }
 

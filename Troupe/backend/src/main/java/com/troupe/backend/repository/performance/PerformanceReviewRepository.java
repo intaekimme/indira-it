@@ -15,12 +15,12 @@ public interface PerformanceReviewRepository extends JpaRepository <PerformanceR
      * @param reviewNo
      * @return
      */
-    Optional<PerformanceReview> findBypfNoAndId(Performance performance, int reviewNo);
+    Optional<PerformanceReview> findByPfAndId(Performance performance, int reviewNo);
     /**
      * 공연 번호에 해당하는 리뷰 모두 찾기
      * @param performance
      * @return
      */
-    List<PerformanceReview> findByPfNo(Performance performance);
-    List<PerformanceReview> findByPfNoAndParentPerformanceReviewNo(Performance ParentPerformance, PerformanceReview performanceReview);
+    List<PerformanceReview> findByPf(Performance performance);
+    List<PerformanceReview> findByPfAndParentPerformanceReview(Performance ParentPerformance, PerformanceReview performanceReview);
 }
