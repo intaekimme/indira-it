@@ -1,5 +1,6 @@
 package com.troupe.backend.service.Performance;
 
+import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceSave;
@@ -9,6 +10,8 @@ import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceSaveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +61,7 @@ public class PerformanceSaveService {
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
 
         //  공연은 존재하는데 삭제된 경우
-        if (performance.getRemoved())
+        if (performance.isRemoved())
             throw new NoSuchElementException("삭제된 공연 입니다.");
 
         //  -----------------------------------------------------------------------------------
@@ -70,7 +73,7 @@ public class PerformanceSaveService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        performanceSaveRepository.findByMemberNoAndPfNo(member, performance)
+        performanceSaveRepository.findByMemberAndPf(member, performance)
                 .ifPresentOrElse(
                         //  검색 결과가 있으면 한 번 삭제하고 다시 저장하는 경우
                         (found) -> {
@@ -84,8 +87,8 @@ public class PerformanceSaveService {
                         ,
                         //  검색 결과가 없으면, 최초 저장 실행
                         () -> performanceSaveRepository.save(PerformanceSave.builder()
-                                .memberNo(member)
-                                .pfNo(performance)
+                                .member(member)
+                                .pf(performance)
                                 .createdTime(now)
                                 .isRemoved(false)
                                 .build()
@@ -110,7 +113,7 @@ public class PerformanceSaveService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        PerformanceSave found = performanceSaveRepository.findByMemberNoAndPfNo(member, performance).get();
+        PerformanceSave found = performanceSaveRepository.findByMemberAndPf(member, performance).get();
         found.setRemoved(true);
         found.setCreatedTime(now);
         performanceSaveRepository.save(found);
@@ -123,13 +126,17 @@ public class PerformanceSaveService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ProfilePfSaveResponse> findSavedList(int memberNo) {
+    public List<ProfilePfSaveResponse> findSavedList(int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
-        List<PerformanceSave> performanceSaveList = performanceSaveRepository.findByMemberNoAndRemovedFalse(member);
+        Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findByMemberAndRemovedFalse(member, pageable);
+//        Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findAllByMemberNoAndIsRemovedOrderByCreatedTimeDesc(member, false,pageable);
+        for(PerformanceSave p: performanceSaveList){
+            log.info(p.toString());
+        }
 
         List<ProfilePfSaveResponse> profileSaveResponseList = new ArrayList<>();
         for (PerformanceSave performanceSave : performanceSaveList) {
-            Performance performance = performanceSave.getPfNo();
+            Performance performance = performanceSave.getPf();
             profileSaveResponseList.add(ProfilePfSaveResponse.builder()
                     .memberNo(memberNo)
                     .nickname(member.getNickname())
@@ -142,4 +149,28 @@ public class PerformanceSaveService {
         }
         return profileSaveResponseList;
     }
+
+    @Transactional(readOnly = true)
+    public List<PerformanceSave> getPerformanceSaveList(int memberNo) {
+        Member member = memberRepository.findById(memberNo).get();
+
+        return performanceSaveRepository.findAllByMemberAndIsRemoved(member, false);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Category, Integer> countInterestTags(int memberNo) {
+        List<PerformanceSave> performanceSaveList = getPerformanceSaveList(memberNo);
+
+        HashMap<Category, Integer> categoryCount = new HashMap<>();
+
+        for (PerformanceSave performanceSave : performanceSaveList) {
+            Category category = performanceSave.getPf().getCategory();
+            categoryCount.put(category, 1 + categoryCount.getOrDefault(category, 0));
+        }
+
+        System.out.println(categoryCount.toString());
+
+        return categoryCount;
+    }
+
 }

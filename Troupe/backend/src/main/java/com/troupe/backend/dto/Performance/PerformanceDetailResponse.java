@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -23,7 +22,7 @@ public class PerformanceDetailResponse {
     String description;
     Date createdTime;
     Date updatedTime;
-    int codeNo;
+    int categoryNo;
     String detailTime;
     boolean isRemoved;
 

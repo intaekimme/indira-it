@@ -17,4 +17,11 @@ public interface LikabilityRepository extends JpaRepository<Likability, Integer>
     /** fanMember와 호감도가 존재하는 모든 사람과의 호감도를 조회 */
     List<Likability> findAllByFanMember(Member fanMember);
 
+    /** starMember에 대해서 특정 경험치보다 높은 유저 수를 조회 */
+    Long countByStarMemberAndExpGreaterThan(Member starMember, Integer exp);
+
+    List<Likability> findTop3ByFanMemberOrderByExpDesc(Member fanMember);
+
+    List<Likability> findTop100ByStarMemberOrderByExpDesc(Member starMember);
+
 }

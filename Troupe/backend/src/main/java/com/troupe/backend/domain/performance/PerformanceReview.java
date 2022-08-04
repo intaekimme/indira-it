@@ -1,6 +1,5 @@
 package com.troupe.backend.domain.performance;
 
-import com.troupe.backend.domain.comment.Comment;
 import com.troupe.backend.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,11 +27,11 @@ public class PerformanceReview implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "pf_no")
-    private Performance pfNo;
+    private Performance pf;
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-    private Member memberNo;
+    private Member member;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
@@ -47,10 +46,10 @@ public class PerformanceReview implements Serializable {
     // 자기참조 부모 하나
     @ManyToOne(targetEntity = PerformanceReview.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_review_no")
-    private PerformanceReview parentPerformanceReviewNo;
+    private PerformanceReview parentPerformanceReview;
 
     // 자기참조 자식 여러개
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPerformanceReviewNo")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPerformanceReview")
     private List<PerformanceReview> childrenPerformanceReview;
 
     public boolean getRemoved(){
@@ -61,12 +60,12 @@ public class PerformanceReview implements Serializable {
         this.id = id;
     }
 
-    public void setPfNo(Performance pfNo) {
-        this.pfNo = pfNo;
+    public void setPfNo(Performance pf) {
+        this.pf = pf;
     }
 
-    public void setMemberNo(Member memberNo) {
-        this.memberNo = memberNo;
+    public void setMemberNo(Member member) {
+        this.member = member;
     }
 
     public void setCreatedTime(Date createdTime) {

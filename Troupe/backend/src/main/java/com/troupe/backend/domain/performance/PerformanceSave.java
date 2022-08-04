@@ -2,10 +2,7 @@ package com.troupe.backend.domain.performance;
 
 
 import com.troupe.backend.domain.member.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +10,7 @@ import java.util.Date;
 
 @Builder
 @Getter
+@Setter
 @Table(name = "tb_pf_save")
 @Entity
 @NoArgsConstructor
@@ -26,25 +24,25 @@ public class PerformanceSave implements Serializable {
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-    private Member memberNo;
+    private Member member;
 
     @ManyToOne(targetEntity = Performance.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "pf_no")
-    private Performance pfNo;
+    private Performance pf;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
 
     private boolean isRemoved;
 
-    public boolean getRemoved(){
-        return this.isRemoved;
+    @Override
+    public String toString() {
+        return "PerformanceSave{" +
+                "id=" + id +
+                ", memberNo=" + member.getMemberNo() +
+                ", pfNo=" + pf.getId() +
+                ", createdTime=" + createdTime +
+                ", isRemoved=" + isRemoved +
+                '}';
     }
-
-    public void setRemoved(boolean isRemoved){
-        this.isRemoved = isRemoved;
-    }
-
-    public void setCreatedTime(Date createdTime) { this.createdTime = createdTime; }
-
 }

@@ -1,8 +1,18 @@
 package com.troupe.backend.controller.member;
 
+import com.troupe.backend.domain.category.Category;
+import com.troupe.backend.domain.feed.Tag;
+import com.troupe.backend.domain.likability.Likability;
+import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.dto.InterestCategoryResponse;
 import com.troupe.backend.dto.converter.MemberConverter;
+import com.troupe.backend.dto.feed.TagResponse;
+import com.troupe.backend.dto.member.AvatarResponse;
 import com.troupe.backend.dto.member.MemberInfoResponse;
+import com.troupe.backend.dto.member.MemberResponse;
+import com.troupe.backend.service.Performance.PerformanceSaveService;
+import com.troupe.backend.service.feed.FeedService;
 import com.troupe.backend.service.member.FollowService;
 import com.troupe.backend.service.member.LikabilityService;
 import com.troupe.backend.service.member.MemberService;
@@ -14,9 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @Api("회원 프로필 REST API")
@@ -29,6 +37,10 @@ public class ProfileController {
     private final FollowService followService;
 
     private final LikabilityService likabilityService;
+
+    private final FeedService feedService;
+
+    private final PerformanceSaveService performanceSaveService;
 
     @PostMapping("/{profileMemberNo}/follow")
     public ResponseEntity follow(Principal principal, @PathVariable int profileMemberNo) {
@@ -88,38 +100,151 @@ public class ProfileController {
     }
 
 
-    // TODO : 이 아래로는 미구현. 쿼리 필요
-//    @GetMapping("/{profileMemberNo}/tag")
-//    public ResponseEntity getInterestTagList(@PathVariable int profileMemberNo) {
-//        Map<String, Object> resultMap = new HashMap<>();
-//        resultMap.put(MyConstant.TAG_LIST, resultMap);
-//        return new ResponseEntity(resultMap, HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/{profileMemberNo}/likability")
-//    public ResponseEntity getLikability(@RequestHeader Map<String, Object> requestHeader, @PathVariable int profileMemberNo) {
-//        int starMemberNo = profileMemberNo;
-//        int fanMemberNo = MyUtil.getMemberNoFromRequestHeader(requestHeader);
-//
-//        Optional<Likability> found = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
-//
-//        int exp = 0;
-//        int level = 0;
-//
-//        // TODO : 경험치로 현재 레벨, 다음 레벨, 다음 레벨까지 남은 경험치 쿼리로 가져와야 함
-//        if (found.isPresent()) {
-//            exp = found.get().getExp();
-//        }
-//        else {
-//
-//        }
-//
-//        Map<String, Object> resultMap = new HashMap<>();
-//        resultMap.put(MyConstant.EXP, exp);
-//        return new ResponseEntity(resultMap, HttpStatus.OK);
-//    }
+    @GetMapping("/{profileMemberNo}/likability")
+    public ResponseEntity getLikability(Principal principal, @PathVariable int profileMemberNo) {
+        int starMemberNo = profileMemberNo;
+        int fanMemberNo = Integer.parseInt(principal.getName());
+
+        // 현재 호감도 조회
+        Optional<Likability> foundLikability = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
+
+        int level = 0;
+        int exp = 0;
+        int requiredExpNow = 0;
+        int requiredExpNext = 0;
+
+        // 현재 호감도의 레벨 조회
+        if (foundLikability.isPresent()) {
+            exp = foundLikability.get().getExp();
+            level = likabilityService.getLikabilityLevel(exp);
+
+            Optional<LikabilityLevel> foundNowLevel = likabilityService.findById(level);
+
+            if (foundNowLevel.isPresent()) {
+                requiredExpNow = foundNowLevel.get().getRequiredExp();
+            }
+        }
+
+        // 다음 레벨까지 필요 경험치 조회
+        int nextLevel = level + 1;
+        Optional<LikabilityLevel> foundNextLikabilityLevel = likabilityService.findById(nextLevel);
+        if (foundNextLikabilityLevel.isPresent()) {
+            requiredExpNext = foundNextLikabilityLevel.get().getRequiredExp();
+        }
+
+        // 반환값 리턴
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.EXP, exp);
+        resultMap.put(MyConstant.LEVEL, level);
+        resultMap.put(MyConstant.REQUIRED_EXP_NOW, requiredExpNow);
+        resultMap.put(MyConstant.REQUIRED_EXP_NEXT, requiredExpNext);
+
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/{profileMemberNo}/likability/rank")
+    public ResponseEntity getLikabilityRank(Principal principal, @PathVariable int profileMemberNo) {
+        int starMemberNo = profileMemberNo;
+        int fanMemberNo = Integer.parseInt(principal.getName());
+
+        // 현재 호감도 조회
+        Optional<Likability> foundLikability = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
+        int exp = (foundLikability.isPresent()) ? foundLikability.get().getExp() : 0;
+
+        int rank = likabilityService.getRank(starMemberNo, exp) + 1;
+        // 반환값 리턴
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.RANK, rank);
+
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/{profileMemberNo}/likability/topstars")
+    public ResponseEntity getTop3StarList(@PathVariable int profileMemberNo) {
+        int fanMemberNo = profileMemberNo;
+        List<Likability> likabilities = likabilityService.getTop3StarList(fanMemberNo);
+
+        List<MemberResponse> top3Stars = new ArrayList<>();
+        for (Likability likability : likabilities) {
+            Member starMember = likability.getStarMember();
+
+            MemberResponse memberResponse = new MemberResponse(new MemberInfoResponse(starMember), new AvatarResponse(starMember));
+            top3Stars.add(memberResponse);
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.TOP_3_STARS, top3Stars);
+
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/{profileMemberNo}/likability/topfans")
+    public ResponseEntity getTop100FanList(@PathVariable int profileMemberNo) {
+        int starMemberNo = profileMemberNo;
+
+        List<Likability> likabilities = likabilityService.getTop100FanList(starMemberNo);
+
+        List<MemberResponse> top100Fans = new ArrayList<>();
+        for (Likability likability : likabilities) {
+            Member fanMember = likability.getFanMember();
+
+            MemberResponse memberResponse = new MemberResponse(new MemberInfoResponse(fanMember), new AvatarResponse(fanMember));
+            top100Fans.add(memberResponse);
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.TOP_100_FANS, top100Fans);
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
 
 
+    @GetMapping("/{profileMemberNo}/interest/tag")
+    public ResponseEntity getTop4InterestTagList(@PathVariable int profileMemberNo) {
+        List<Tag> top4InterestTags = feedService.getTop4InterestTagList(profileMemberNo);
+
+        List<TagResponse> tagResponseList = new ArrayList<>();
+        for (Tag t : top4InterestTags) {
+            tagResponseList.add(TagResponse.builder().tagNo(t.getTagNo()).tagName(t.getName()).build());
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.TOP_4_INTEREST_TAG_LIST, tagResponseList);
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+    // TODO : 구현해야 함
+    @GetMapping("/{profileMemberNo}/interest/category")
+    public ResponseEntity getInterestCategoryList(@PathVariable int profileMemberNo) {
+        // 카운트한 결과를 맵으로 받아옴
+        Map<Category, Integer> categoryCount = performanceSaveService.countInterestTags(profileMemberNo);
+
+        // 리스폰스용 DTO 객체 생성
+        List<InterestCategoryResponse> interestCategoryResponseList = new ArrayList<>();
+        for (Category category : categoryCount.keySet()) {
+            InterestCategoryResponse interestCategoryResponse = InterestCategoryResponse.builder()
+                    .categoryNo(category.getId())
+                    .bigCategory(category.getBigCategory())
+                    .smallCategory(category.getSmallCategory())
+                    .codeName(category.getCodeName())
+                    .count(categoryCount.get(category))
+                    .build();
+
+            interestCategoryResponseList.add(interestCategoryResponse);
+        }
+
+        // 카테고리 번호순 정렬
+        Collections.sort(interestCategoryResponseList, new Comparator<InterestCategoryResponse>() {
+            @Override
+            public int compare(InterestCategoryResponse icr1, InterestCategoryResponse icr2) {
+                return icr1.getCategoryNo() - icr2.getCategoryNo();
+            }
+        });
+
+        // 리스폰스 엔티티 반환
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.INTEREST_CATEGORY_LIST, interestCategoryResponseList);
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
 }
 
 

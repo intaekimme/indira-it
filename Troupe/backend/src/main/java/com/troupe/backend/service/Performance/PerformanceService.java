@@ -11,10 +11,7 @@ import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,7 +105,7 @@ public class PerformanceService {
                 .orElseThrow(() -> new MemberNotFoundException("존재 하지 않는 유저입니다."));
         Performance performance = performanceRepository.findById(performanceNo)
                 .orElseThrow(() -> new PerformanceNotFoundException("존재 하지 않는 공연입니다."));
-        if(!member.equals(performance.getMemberNo()))
+        if(!member.equals(performance.getMember()))
             throw new NoSuchElementException("수정 권한이 없는 공연입니다.");
         //  기존 정보 수정
         Performance updatePerformance = performanceConverter.toPerformanceEntityWhenUpdate(performanceModifyForm, member, performance);
@@ -129,11 +126,11 @@ public class PerformanceService {
 
         //  요청으로 보낸 공연번호로 찾은 공연의 유저 정보와 헤더로 넘어온 로그인 유저 정보가 다르면 삭제하면 안됨.
         Performance found = performanceRepository.findById(performanceNo).get();
-        if(!found.getMemberNo().equals(member))
+        if(!found.getMember().equals(member))
             throw new NoSuchElementException("존재 하지 않는 공연입니다.");
 
         //  공연이 이미 삭제되면 예외 처리
-        if (found.getRemoved())
+        if (found.isRemoved())
             throw new PerformanceNotFoundException("존재 하지 않는 공연입니다.");
 
         //  아니라면 삭제 처리
@@ -159,9 +156,8 @@ public class PerformanceService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PerformanceResponse> findAll(int startNo){
-        Pageable sortedByCreatedTime = PageRequest.of(startNo/6,6, Sort.by("createdTime").descending());
-        Page<Performance> performanceList = performanceRepository.findAll(sortedByCreatedTime);
+    public List<PerformanceResponse> findAll(Pageable sortedByCreatedTime){
+        Slice<Performance> performanceList = performanceRepository.findAll(sortedByCreatedTime);
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
@@ -196,9 +192,9 @@ public class PerformanceService {
         List<Performance> performanceList = null;
         // 검색 조건과 질의어로 질의
         if(condition.equals("nickname")){       //  작성자
-            performanceList = performanceRepository.findByNickName(keyword);
+            performanceList = performanceRepository.findAllByNickName(keyword);
         }else if(condition.equals("title")){    //  제목 + 내용
-            performanceList = performanceRepository.findByTitleAndDescription(keyword);
+            performanceList = performanceRepository.findAllByTitleAndDescription(keyword);
         }
 
 //        System.out.println(performanceList.size());
@@ -235,7 +231,7 @@ public class PerformanceService {
                 .orElseThrow(() -> new NoSuchElementException("존재 하지 않는 공연입니다."));
 
         //  삭제된 공연 조회
-        if(performance.getRemoved())
+        if(performance.isRemoved())
             throw new NoSuchElementException("삭제된 공연 입니다");
 
         //  공연을 찾으면, url을 찾고
@@ -245,16 +241,16 @@ public class PerformanceService {
         return PerformanceDetailResponse.builder()
                 .pfNo(pfNo)
                 .imageUrl(urlList)
-                .memberNo(performance.getMemberNo().getMemberNo())
+                .memberNo(performance.getMember().getMemberNo())
                 .title(performance.getTitle())
                 .location(performance.getLocation())
                 .runtime(performance.getRuntime())
                 .description(performance.getDescription())
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(performance.getUpdatedTime())
-                .codeNo(performance.getCodeNo())
+                .categoryNo(performance.getCategory().getId())
                 .detailTime(performance.getDetailTime())
-                .isRemoved(performance.getRemoved())
+                .isRemoved(performance.isRemoved())
                 .build();
     }
 
@@ -263,9 +259,9 @@ public class PerformanceService {
 //  =================================================================================
 
     @Transactional(readOnly = true)
-    public List<ProfilePfResponse> findRegisteredList(int memberNo) {
+    public List<ProfilePfResponse> findRegisteredList(int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
-        List<Performance> performanceList = performanceRepository.findByMemberNo(member);
+        Slice<Performance> performanceList = performanceRepository.findByMemberOrderByCreatedTimeDesc(member, pageable);
 
         List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
         for(Performance p : performanceList){

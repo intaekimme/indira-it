@@ -34,6 +34,12 @@ class FeedTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    FollowService followService;
+
+    @Autowired
+    JPAQueryFactory queryFactory;
+
     @Test
     public void insert() throws ParseException {
         Feed feedSave =  feedRepository.save(Feed.builder().member(memberRepository.getById(3)).content("content").isRemoved(false).build());
@@ -88,11 +94,6 @@ class FeedTest {
         Assertions.assertThat(feed1).isNull();
     }
 
-    @Autowired
-    FollowService followService;
-
-    @Autowired
-    JPAQueryFactory queryFactory;
     @Test
     public void selectAllByFollwing(){
         Member member = memberRepository.findById(377).get();

@@ -74,11 +74,12 @@ const apiClient = {
 
   //팔로우 여부 확인
   isFollowing: (data) => {
-    const fanMemberNo = data.fanMemberNo ? data.fanMemberNo : -1;
-    console.log(fanMemberNo);
+    const profileMemberNo = data.profileMemberNo;
     return instance
-      .get(`profile/${data.profileMemberNo}/follow`, {
-        headers: { accessToken: sessionStorage.getItem("accessToken") },
+      .get(`/profile/${profileMemberNo}/follow`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
       })
       .then((response) => {
         console.log("isFollowing : " + response.data.isFollowing);
@@ -93,20 +94,13 @@ const apiClient = {
 
   //팔로우 언팔로우 클릭
   follow: (data) => {
-    return data.isFollowing
+    return data.currentFollow
       ? instance
-          .post(`/profile/${data.profileMemberNo}/follow`, data.fanMemberNo)
-          .then((response) => {
-            alert("팔로우 하였습니다." + response.data);
-            return true;
+          .delete(`/profile/${data.profileMemberNo}/follow`, {}, {
+            headers: {
+              accessToken: sessionStorage.getItem("accessToken"),
+            },
           })
-          .catch((error) => {
-            console.log(error);
-            alert(" 팔로우실패 : " + error);
-            return false;
-          })
-      : instance
-          .delete(`/profile/${data.profileMemberNo}/follow`, data.fanMemberNo)
           .then((response) => {
             alert("팔로우 취소하였습니다" + response.data);
             return true;
@@ -114,6 +108,21 @@ const apiClient = {
           .catch((error) => {
             console.log(error);
             alert(" 팔로우 취소실패 : " + error);
+            return false;
+          })
+      : instance
+          .post(`/profile/${data.profileMemberNo}/follow`, {}, {
+            headers: {
+              accessToken: sessionStorage.getItem("accessToken"),
+            },
+          })
+          .then((response) => {
+            alert("팔로우 하였습니다." + response.data);
+            return true;
+          })
+          .catch((error) => {
+            console.log(error);
+            alert(" 팔로우실패 : " + error);
             return false;
           });
   },
