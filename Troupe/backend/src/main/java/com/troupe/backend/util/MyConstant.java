@@ -32,7 +32,9 @@ public final class MyConstant {
     // 호감도 관련
     public static final String EXP = "exp";
     public static final String LEVEL = "level";
-    public static final String EXP_TO_NEXT_LEVEL = "expToNextLevel";
+    public static final String REQUIRED_EXP_NOW = "requiredExpNow";
+    public static final String REQUIRED_EXP_NEXT = "requiredExpNext";
+    public static final String RANK = "rank";
 
     // 파일 서버 주소
     public static final String FILE_SERVER_URL = "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/";

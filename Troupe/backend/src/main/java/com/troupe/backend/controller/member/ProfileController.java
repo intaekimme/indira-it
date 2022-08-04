@@ -1,5 +1,7 @@
 package com.troupe.backend.controller.member;
 
+import com.troupe.backend.domain.likability.Likability;
+import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.converter.MemberConverter;
 import com.troupe.backend.dto.member.MemberInfoResponse;
@@ -17,6 +19,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @Api("회원 프로필 REST API")
@@ -88,36 +91,73 @@ public class ProfileController {
     }
 
 
+    @GetMapping("/{profileMemberNo}/likability")
+    public ResponseEntity getLikability(Principal principal, @PathVariable int profileMemberNo) {
+        int starMemberNo = profileMemberNo;
+        int fanMemberNo = Integer.parseInt(principal.getName());
+
+        // 현재 호감도 조회
+        Optional<Likability> foundLikability = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
+
+        int level = 0;
+        int exp = 0;
+        int requiredExpNow = 0;
+        int requiredExpNext = 0;
+
+        // 현재 호감도의 레벨 조회
+        if (foundLikability.isPresent()) {
+            exp = foundLikability.get().getExp();
+            level = likabilityService.getLikabilityLevel(exp);
+
+            Optional<LikabilityLevel> foundNowLevel = likabilityService.findById(level);
+
+            if (foundNowLevel.isPresent()) {
+                requiredExpNow = foundNowLevel.get().getRequiredExp();
+            }
+        }
+
+        // 다음 레벨까지 필요 경험치 조회
+        int nextLevel = level + 1;
+        Optional<LikabilityLevel> foundNextLikabilityLevel = likabilityService.findById(nextLevel);
+        if (foundNextLikabilityLevel.isPresent()) {
+            requiredExpNext = foundNextLikabilityLevel.get().getRequiredExp();
+        }
+
+        // 반환값 리턴
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.EXP, exp);
+        resultMap.put(MyConstant.LEVEL, level);
+        resultMap.put(MyConstant.REQUIRED_EXP_NOW, requiredExpNow);
+        resultMap.put(MyConstant.REQUIRED_EXP_NEXT, requiredExpNext);
+
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/{profileMemberNo}/likability/rank")
+    public ResponseEntity getLikabilityRank(Principal principal, @PathVariable int profileMemberNo) {
+        int starMemberNo = profileMemberNo;
+        int fanMemberNo = Integer.parseInt(principal.getName());
+
+        // 현재 호감도 조회
+        Optional<Likability> foundLikability = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
+        int exp = (foundLikability.isPresent()) ? foundLikability.get().getExp() : 0;
+
+        int rank = likabilityService.getRank(starMemberNo, exp) + 1;
+        // 반환값 리턴
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.RANK, rank);
+
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
     // TODO : 이 아래로는 미구현. 쿼리 필요
-//    @GetMapping("/{profileMemberNo}/tag")
+//    @GetMapping("/{profileMemberNo}/interest/tag")
 //    public ResponseEntity getInterestTagList(@PathVariable int profileMemberNo) {
 //        Map<String, Object> resultMap = new HashMap<>();
 //        resultMap.put(MyConstant.TAG_LIST, resultMap);
 //        return new ResponseEntity(resultMap, HttpStatus.OK);
 //    }
 //
-//    @GetMapping("/{profileMemberNo}/likability")
-//    public ResponseEntity getLikability(@RequestHeader Map<String, Object> requestHeader, @PathVariable int profileMemberNo) {
-//        int starMemberNo = profileMemberNo;
-//        int fanMemberNo = MyUtil.getMemberNoFromRequestHeader(requestHeader);
-//
-//        Optional<Likability> found = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
-//
-//        int exp = 0;
-//        int level = 0;
-//
-//        // TODO : 경험치로 현재 레벨, 다음 레벨, 다음 레벨까지 남은 경험치 쿼리로 가져와야 함
-//        if (found.isPresent()) {
-//            exp = found.get().getExp();
-//        }
-//        else {
-//
-//        }
-//
-//        Map<String, Object> resultMap = new HashMap<>();
-//        resultMap.put(MyConstant.EXP, exp);
-//        return new ResponseEntity(resultMap, HttpStatus.OK);
-//    }
 
 
 }

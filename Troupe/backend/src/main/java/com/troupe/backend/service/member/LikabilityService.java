@@ -1,7 +1,9 @@
 package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.likability.Likability;
+import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.repository.likability.LikabilityLevelRepository;
 import com.troupe.backend.repository.likability.LikabilityRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LikabilityService {
     private final LikabilityRepository likabilityRepository;
+    private final LikabilityLevelRepository likabilityLevelRepository;
 
     private final MemberRepository memberRepository;
 
@@ -72,8 +75,34 @@ public class LikabilityService {
 
             return likability;
         }
+    }
 
+    /**
+     * 경험치에 해당하는 호감도 레벨을 리턴
+     */
+    public int getLikabilityLevel(int exp) {
+        Optional<LikabilityLevel> found = likabilityLevelRepository.findTopByRequiredExpLessThanEqualOrderByLevelDesc(exp);
 
+        if (found.isPresent()) {
+            return found.get().getLevel();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * starMember에 대한 내 호감도 경험치가 exp일 때, 나의 순위를 리턴
+     */
+    public int getRank(int starMemberNo, int exp) {
+        Member starMember = memberRepository.findById(starMemberNo).get();
+        return likabilityRepository.countByStarMemberAndExpGreaterThan(starMember, exp).intValue();
+    }
+
+    /**
+     * 호감도 레벨로 조회
+     */
+    public Optional<LikabilityLevel> findById(int level) {
+        return likabilityLevelRepository.findById(level);
     }
 
 }
