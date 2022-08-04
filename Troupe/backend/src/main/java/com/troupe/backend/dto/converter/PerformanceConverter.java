@@ -1,5 +1,6 @@
 package com.troupe.backend.dto.converter;
 
+import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceImage;
@@ -7,6 +8,7 @@ import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.Performance.PerformanceForm;
 import com.troupe.backend.dto.Performance.PerformanceModifyForm;
 import com.troupe.backend.dto.Performance.Seat;
+import com.troupe.backend.repository.category.CategoryRepository;
 import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class PerformanceConverter {
     @Autowired
     S3FileUploadService s3FileUploadService;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
     /**
      * Create
      * PerformanceForm -> PerformancEntity
@@ -38,13 +43,15 @@ public class PerformanceConverter {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
+        Category category = categoryRepository.findById(performanceForm.getCategoryNo()).get();
+
         return Performance.builder()
-                .memberNo(member)
+                .member(member)
                 .title(performanceForm.getTitle())
                 .location(performanceForm.getLocation())
                 .runtime(performanceForm.getRuntime())
                 .createdTime(now)
-                .categoryNo(performanceForm.getCategoryNo())
+                .category(category)
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
 //                .startDate(performanceForm.getStartDate())
@@ -67,14 +74,16 @@ public class PerformanceConverter {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
+        Category category = categoryRepository.findById(performanceModifyForm.getCategoryNo()).get();
+
         return Performance.builder()
-                .memberNo(member)
+                .member(member)
                 .title(performanceModifyForm.getTitle())
                 .location(performanceModifyForm.getLocation())
                 .runtime(performanceModifyForm.getRuntime())
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(now)
-                .categoryNo(performanceModifyForm.getCategoryNo())
+                .category(category)
                 .detailTime(performanceModifyForm.getDetailTime())
                 .description(performanceModifyForm.getDescription())
                 .build();

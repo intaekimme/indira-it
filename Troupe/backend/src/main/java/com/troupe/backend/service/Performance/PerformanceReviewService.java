@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,8 +50,8 @@ public class PerformanceReviewService {
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
         PerformanceReview performanceReview = PerformanceReview.builder()
-                .memberNo(member)
-                .pfNo(performance)
+                .member(member)
+                .pf(performance)
                 .createdTime(now)
                 .isModified(false)
                 .isRemoved(false)
@@ -71,7 +71,7 @@ public class PerformanceReviewService {
         Performance performance = performanceRepository.findById(pfNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
         //  refactoring : 리뷰 번호로만 삭제해도 되지않을까?
-        PerformanceReview performanceReview = performanceReviewRepository.findBypfNoAndId(performance, reviewNo)
+        PerformanceReview performanceReview = performanceReviewRepository.findByPfAndId(performance, reviewNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다."));
         performanceReview.setRemoved(true);
         performanceReviewRepository.save(performanceReview);
@@ -86,10 +86,10 @@ public class PerformanceReviewService {
     public List<PfReviewResponse> findPfReviewList(int pfNo){
         Performance performance = performanceRepository.findById(pfNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfNo(performance);
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
         List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
         for (PerformanceReview review : performanceReviewList){
-            Member member = review.getMemberNo();
+            Member member = review.getMember();
             pfReviewResponseList.add( PfReviewResponse.builder()
                     .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())
@@ -113,7 +113,7 @@ public class PerformanceReviewService {
         //  공연 엔티티를 하나 불러오고
         Performance performance = performanceRepository.findById(pfNo).get();
         //  리뷰테이블에서 공연 엔티티와 id: reviewNo로 리뷰 엔티티를 찾고
-        PerformanceReview performanceReview = performanceReviewRepository.findBypfNoAndId(performance, reviewNo).get();
+        PerformanceReview performanceReview = performanceReviewRepository.findByPfAndId(performance, reviewNo).get();
         //  is_modified 값과, content 값만 변경해서 set 해주고, 나머지는 그대로
         performanceReview.setModified(true);
         performanceReview.setContent(content);
@@ -133,14 +133,14 @@ public class PerformanceReviewService {
         //  공연 엔티티를 하나 불러오고
         Performance performance = performanceRepository.findById(pfNo).get();
         //  리뷰테이블에서 공연 엔티티와 id: reviewNo로 리뷰 엔티티를 찾고
-        PerformanceReview performanceReview = performanceReviewRepository.findBypfNoAndId(performance, reviewNo).get();
+        PerformanceReview performanceReview = performanceReviewRepository.findByPfAndId(performance, reviewNo).get();
         //  리뷰 엔티티에서 대댓글 리스트를 불러오고
         List<PerformanceReview> childReviewList = performanceReview.getChildrenPerformanceReview();
 
         //  리뷰 하나를 반환 폼으로 만듦
         List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
         for (PerformanceReview review : childReviewList){
-            Member member = review.getMemberNo();
+            Member member = review.getMember();
             pfReviewResponseList.add(PfReviewResponse.builder()
                     .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())

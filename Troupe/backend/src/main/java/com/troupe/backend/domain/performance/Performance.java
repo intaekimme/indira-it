@@ -1,10 +1,8 @@
 package com.troupe.backend.domain.performance;
 
+import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.member.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -15,6 +13,7 @@ import java.util.Date;
 @Getter
 @Builder
 @Entity
+@Setter
 @Table(name = "tb_performance")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +26,7 @@ public class Performance implements Serializable{
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-    private Member memberNo;
+    private Member member;
 
     private String title;
 
@@ -47,7 +46,9 @@ public class Performance implements Serializable{
     @Size(max = 1000)
     private String posterUrl;
 
-    private Integer categoryNo;
+    @ManyToOne(targetEntity = Category.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_no")
+    private Category category;
 
     private String detailTime;
     private Date startDate;
@@ -55,68 +56,11 @@ public class Performance implements Serializable{
 
     private boolean isRemoved;
 
-    public boolean getRemoved(){
-        return this.isRemoved;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setMemberNo(Member memberNo) {
-        this.memberNo = memberNo;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setRuntime(Integer runtime) {
-        this.runtime = runtime;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public void setUpdatedTime(Date updatedTime) {
-        this.updatedTime = updatedTime;
-    }
-
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl = posterUrl;
-    }
-
-    public void setCategoryNo(Integer categoryNo) {
-        this.categoryNo = categoryNo;
-    }
-
-    public void setDetailTime(String detailTime) {
-        this.detailTime = detailTime;
-    }
-
-    public void setRemoved(boolean removed) {
-        isRemoved = removed;
-    }
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     @Override
     public String toString() {
         return "Performance{" +
                 "id=" + id +
-                ", memberNo=" + memberNo +
+                ", memberNo=" + member +
                 ", title='" + title + '\'' +
                 ", location='" + location + '\'' +
                 ", runtime=" + runtime +
@@ -124,7 +68,7 @@ public class Performance implements Serializable{
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
                 ", posterUrl='" + posterUrl + '\'' +
-                ", categoryNo=" + categoryNo +
+                ", category=" + category +
                 ", detailTime='" + detailTime + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +

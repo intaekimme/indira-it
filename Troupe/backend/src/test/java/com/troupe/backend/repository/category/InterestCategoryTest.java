@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.ManyToOne;
 import java.util.List;
 
 @DataJpaTest
@@ -38,7 +37,7 @@ public class InterestCategoryTest {
         for(Category category : categoryList) {
             InterestCategory interestCategory = InterestCategory.builder()
                     .memberNo(member)
-                    .codeNo(category)
+                    .category(category)
                     .build();
 
             InterestCategory saveInterestCategory = interestCategoryRepository.save(interestCategory);

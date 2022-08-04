@@ -1,8 +1,10 @@
 package com.troupe.backend.repository.performance;
 
 
+import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
+import com.troupe.backend.repository.category.CategoryRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -28,22 +30,27 @@ public class PerformanceTest {
     @Autowired
     PerformanceRepository performanceRepository;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
     @Test
     @DisplayName("공연 엔티티 및 save 메소드 테스트")
     public void saveTest() throws ParseException {
 
         Member member = memberRepository.getById(3);
 
+        Category category = categoryRepository.findById(1).get();
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Performance performance = Performance.builder()
-                .memberNo(member)
+                .member(member)
                 .title("새로운 연극")
                 .location("새로운 극장")
                 .runtime(120)
                 .createdTime(dateFormat.parse("20220709"))
                 .updatedTime(dateFormat.parse("20220925"))
                 .posterUrl("http://www.def.ghi")
-                .codeNo(1)
+                .category(category)
                 .detailTime("15:30")
                 .description("test test test test test test test test test test test test test test")
                 .isRemoved(false)
@@ -88,7 +95,7 @@ public class PerformanceTest {
         performance.setRemoved(true);
         performanceRepository.save(performance);
 
-        Assertions.assertTrue(performance.getRemoved());
+        Assertions.assertTrue(performance.isRemoved());
     }
 
     @Test
@@ -113,7 +120,7 @@ public class PerformanceTest {
     public void findByMemberNo(){
         Member member = memberRepository.getById(3);
 
-        List<Performance> performanceList = performanceRepository.findByMemberNo(member);
+        List<Performance> performanceList = performanceRepository.findAllByMember(member);
 
         for (Performance pf : performanceList){
             System.out.println(pf.getTitle());

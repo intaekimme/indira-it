@@ -1,21 +1,18 @@
 package com.troupe.backend.domain.category;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-@Builder
-@Getter
-@Table(name = "tb_category")
 @Entity
+@Table(name = "tb_category")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category implements Serializable {
 
     @Id
