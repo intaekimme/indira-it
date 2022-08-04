@@ -26,13 +26,19 @@ public final class MyConstant {
     public static final String STAR_LIST = "starList";
     public static final String IS_FOLLOWING = "isFollowing";
 
-    // 태그 관련
-    public static final String TAG_LIST = "tagList";
+    // 관심 관련
+    public static final String INTEREST_TAG_LIST = "interestTagList";
+    public static final String INTEREST_CATEGORY_LIST = "interestCategoryList";
 
     // 호감도 관련
     public static final String EXP = "exp";
     public static final String LEVEL = "level";
-    public static final String EXP_TO_NEXT_LEVEL = "expToNextLevel";
+    public static final String REQUIRED_EXP_NOW = "requiredExpNow";
+    public static final String REQUIRED_EXP_NEXT = "requiredExpNext";
+    public static final String RANK = "rank";
+
+    public static final String TOP_3_STARS = "top3Stars";
+    public static final String TOP_100_FANS = "top100Fans";
 
     // 파일 서버 주소
     public static final String FILE_SERVER_URL = "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/";
