@@ -245,7 +245,6 @@ const apiClient = {
         return null;
       });
   },
-
   //호감도 공연자 Top3
   getPerformerTop3: (data) => {
     return instance
@@ -278,6 +277,21 @@ const apiClient = {
         return null;
       });
   },
+  //피드 등록
+  feedNew: (data) => {
+    instance
+      .post("/feed", data,{  headers: {
+        accessToken: sessionStorage.getItem("accessToken"),
+        'Content-Type': 'multipart/form-data'
+      }})
+      .then((response) => {
+        alert("피드 등록 성공");
+        return response;
+      })
+      .catch((error) => {
+        alert("피드 등록 실패" + error);
+      });
+    },
 };
 
 export default apiClient;

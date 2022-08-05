@@ -13,18 +13,21 @@ import Profile from "./components/Profile";
 import Test from "./components/Test";
 import PerfDetail from "./components/PerfDetail";
 import PerfNew from "./components/PerfNew";
+import FeedRegister from "./components/FeedRegister";
 
 function App() {
   const loginCheck = () => {
     return window.sessionStorage.getItem("loginCheck") === "true";
   };
-  const [memberData, setMemberData] = React.useState(window.sessionStorage.getItem("memberData"));
+  const [memberData, setMemberData] = React.useState(
+    window.sessionStorage.getItem("memberData")
+  );
   React.useEffect(() => {
     setMemberData(window.sessionStorage.getItem("memberData"));
   }, [window.sessionStorage.getItem("memberData")]);
   const myPageCheck = () => {
     return true;
-  }
+  };
   return (
     <div>
       <div>
@@ -45,6 +48,7 @@ function App() {
           <Route path="/test" element={<Test />}></Route>
           <Route path="/perf/detail" element={<PerfDetail />}></Route>
           <Route path="/perf/new" element={<PerfNew />}></Route>
+          <Route path="/feed/register" element={<FeedRegister />}></Route>
         </Routes>
       </Router>
     </div>
