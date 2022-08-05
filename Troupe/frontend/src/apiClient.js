@@ -220,11 +220,12 @@ const apiClient = {
   },
 
   //공연 목록 불러오기
-  getPerfList: () => {
-    return instance
-      .get("/perf/list")
+  getPerfList: async (startNo) => {
+    await instance
+      .get(`/perf/list/${startNo}`)
       .then((response) => {
         alert("공연 불러오기 성공");
+        console.log(response.data)
         return response.data;
       })
       .catch((error) => {

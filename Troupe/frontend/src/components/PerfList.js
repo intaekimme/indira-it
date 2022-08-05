@@ -17,6 +17,7 @@ import Favorite from '@mui/icons-material/Favorite';
 import SearchBar from './SearchBar'
 import PerfFeedToggle from './MainButton';
 import apiClient from '../apiClient';
+import { useParams } from 'react-router-dom';
 
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
 // 유저 분간을 어떻게 하지
@@ -43,11 +44,13 @@ function range(start, end) {
 
 const theme = createTheme();
 
-export default function Album() {
+export default function PerfList() {
 
-  let [perfList, setPerfList] = React.useState("");
-  React.useEffect(() => {
-    apiClient.getPerfList().then((data)=>{setPerfList(data)});
+  const {startNo} = useParams();
+
+  let [perfList, setPerfList] = React.useState([]);
+  React.useEffect((startNo) => {
+    apiClient.getPerfList(startNo).then((data)=>{setPerfList(data)});
   }, []);
   const [like, setLike] = React.useState(false)
   const [save, setSave] = React.useState(false)
@@ -62,7 +65,7 @@ export default function Album() {
   }
 
   function handleCard() {
-    setCard(range(0, perfList.length))
+    setCard(range(0, 6))
   }
 
   async function handlePerfList() {

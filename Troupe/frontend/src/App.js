@@ -33,7 +33,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<PerfList />}></Route>
-          <Route path="/perf/list" element={<PerfList />}></Route>
+          <Route path="/perf/list/:startNo" element={<PerfList />}></Route>
           <Route path="/feed/list" element={<FeedList />}></Route>
           <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
           <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
