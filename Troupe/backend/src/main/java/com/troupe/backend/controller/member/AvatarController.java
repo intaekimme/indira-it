@@ -5,6 +5,7 @@ import com.troupe.backend.dto.avatar.response.*;
 import com.troupe.backend.dto.converter.AvatarConverter;
 import com.troupe.backend.service.member.AvatarService;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.List;
 public class AvatarController {
     private final AvatarService avatarService;
 
+    @Operation(summary = "모든 아바타 의상 목록 조회", description = "파라미터 없음")
     @GetMapping("/clothes")
     private ResponseEntity getClothesList() {
         List<AvatarClothes> clothesList =  avatarService.findAllClothes();
@@ -31,6 +33,7 @@ public class AvatarController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "모든 아바타 눈 목록 조회", description = "파라미터 없음")
     @GetMapping("/eye")
     private ResponseEntity getEyeList() {
         List<AvatarEye> eyeList =  avatarService.findAllEye();
@@ -39,6 +42,7 @@ public class AvatarController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "모든 아바타 머리카락 목록 조회", description = "파라미터 없음")
     @GetMapping("/hair")
     private ResponseEntity getHairList() {
         List<AvatarHair> hairList =  avatarService.findAllHair();
@@ -47,6 +51,7 @@ public class AvatarController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "모든 아바타 입 목록 조회", description = "파라미터 없음")
     @GetMapping("/mouth")
     private ResponseEntity getMouthList() {
         List<AvatarMouth> mouthList =  avatarService.findAllMouth();
@@ -55,6 +60,7 @@ public class AvatarController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "모든 아바타 코 목록 조회", description = "파라미터 없음")
     @GetMapping("/nose")
     private ResponseEntity getNoseList() {
         List<AvatarNose> noseList =  avatarService.findAllNose();
@@ -63,6 +69,7 @@ public class AvatarController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "모든 아바타 얼굴형 목록 조회", description = "파라미터 없음")
     @GetMapping("/shape")
     private ResponseEntity getShapeList() {
         List<AvatarShape> shapeList =  avatarService.findAllShape();

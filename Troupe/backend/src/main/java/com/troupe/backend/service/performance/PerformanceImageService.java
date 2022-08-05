@@ -1,9 +1,8 @@
-package com.troupe.backend.service.Performance;
+package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceImage;
-import com.troupe.backend.domain.performance.PerformancePrice;
-import com.troupe.backend.dto.Performance.PerformanceModifyForm;
+import com.troupe.backend.dto.performance.PerformanceModifyForm;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.repository.performance.PerformanceImageRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
@@ -18,8 +17,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service

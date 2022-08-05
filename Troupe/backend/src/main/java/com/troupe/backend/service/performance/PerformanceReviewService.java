@@ -1,9 +1,9 @@
-package com.troupe.backend.service.Performance;
+package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceReview;
-import com.troupe.backend.dto.Performance.PfReviewResponse;
+import com.troupe.backend.dto.performance.PfReviewResponse;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceReviewRepository;

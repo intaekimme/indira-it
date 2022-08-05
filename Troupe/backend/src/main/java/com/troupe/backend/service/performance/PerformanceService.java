@@ -1,8 +1,8 @@
-package com.troupe.backend.service.Performance;
+package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
-import com.troupe.backend.dto.Performance.*;
+import com.troupe.backend.dto.performance.*;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.exception.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;

@@ -2,7 +2,7 @@ package com.troupe.backend.service;
 
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.repository.performance.PerformanceRepository;
-import com.troupe.backend.service.Performance.PerformanceService;
+import com.troupe.backend.service.performance.PerformanceService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
