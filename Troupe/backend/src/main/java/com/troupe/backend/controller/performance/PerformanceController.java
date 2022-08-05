@@ -2,6 +2,8 @@ package com.troupe.backend.controller.performance;
 
 
 import com.troupe.backend.dto.performance.*;
+import com.troupe.backend.dto.performance.ProfilePfResponse;
+import com.troupe.backend.dto.performance.ProfilePfSaveResponse;
 import com.troupe.backend.service.performance.*;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +19,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 
 @CrossOrigin
@@ -60,7 +64,7 @@ public class PerformanceController {
     public ResponseEntity modify(Principal principal,
                                  @PathVariable int pfNo,
                                  @ModelAttribute @Valid PerformanceModifyForm performanceModifyForm)
-    throws Exception {
+            throws Exception {
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.modify(memberNo, pfNo, performanceModifyForm);
         return ResponseEntity.ok().build();
@@ -103,7 +107,7 @@ public class PerformanceController {
     @Operation(summary = "공연 목록 조회(검색 및 필터 기능 포함)", description = "파라미터: 필터 (이름으로 검색 {condition : nickname}, 제목+내용으로 검색 {condition : title}), 질의어")
     @GetMapping("/list/search")
     public ResponseEntity<List<PerformanceResponse>> performanceQueryList(@RequestParam String condition,
-                                           @RequestParam String keyword){
+                                                                          @RequestParam String keyword){
         List<PerformanceResponse> performanceResponseList =  performanceService.findQueryAll(condition, keyword);
         return ResponseEntity.ok()
                 .body(performanceResponseList);
@@ -159,13 +163,22 @@ public class PerformanceController {
      * @param content
      * @return
      */
-    @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용")
+    @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용, 부모댓글번호-선택")
     @PostMapping("/{pfNo}/review")
     public ResponseEntity registerReview(Principal principal,
                                          @PathVariable int pfNo,
+                                         @RequestParam(required = false) Integer parentCommentNo,
                                          @RequestParam String content){
         int memberNo = Integer.parseInt(principal.getName());
-        performanceReviewService.add(pfNo, memberNo, content);
+        PfReviewForm request = PfReviewForm.builder()
+                .pfNo(pfNo)
+                .memberNo(memberNo)
+                .content(content)
+                .build();
+
+        request.setParentReviewNo(Objects.requireNonNullElse(parentCommentNo, 0));
+
+        performanceReviewService.add(request);
         return ResponseEntity.ok().build();
     }
 
@@ -230,6 +243,43 @@ public class PerformanceController {
         int memberNo = Integer.parseInt(principal.getName());
         List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfChildReviewList(pfNo, reviewNo, memberNo);
         return ResponseEntity.ok().body(pfReviewResponseList);
+    }
+
+    //  =================================================================================
+    //  profile controller
+    //  =================================================================================
+
+    /**
+     * 프로필, 유저의 공연 북마크 목록
+     * @param principal
+     * @param profileMemberNo
+     * @return
+     */
+    @Operation(summary = "프로필, 유저의 공연 북마크 목록", description = "파라미터: 유저 프로필 번호")
+    @GetMapping("/{profileMemberNo}/saveperf/list")
+    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(Principal principal,
+                                                                         @PathVariable int profileMemberNo,
+                                                                         int pageNumber){
+        //  profile service
+        PageRequest pageRequest = PageRequest.of(pageNumber,6);
+        List<ProfilePfSaveResponse> profileSaveResponseList = performanceSaveService.findSavedList(profileMemberNo, pageRequest);
+        return ResponseEntity.ok().body(profileSaveResponseList);
+    }
+
+    /**
+     * 프로필, 유저가 등록한 공연 목록 불러오기
+     * @param principal
+     * @param profileMemberNo
+     * @return
+     */
+    @Operation(summary = "프로필, 유저가 등록한 공연 목록 불러오기", description = "파라미터: 유저 프로필 번호")
+    @GetMapping("/{profileMemberNo}/myperf/list")
+    public ResponseEntity<List<ProfilePfResponse>> profilePfList(Principal principal,
+                                                                 @PathVariable int profileMemberNo,
+                                                                 int pageNumber){
+        PageRequest pageRequest = PageRequest.of(pageNumber,6);
+        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageRequest);
+        return ResponseEntity.ok().body(profilePfResponseList);
     }
 
 }
