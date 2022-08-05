@@ -94,9 +94,11 @@ const apiClient = {
 
   //팔로우 언팔로우 클릭
   follow: (data) => {
+    console.log(data);
+    console.log(sessionStorage.getItem("accessToken"));
     return data.currentFollow
       ? instance
-          .delete(`/profile/${data.profileMemberNo}/follow`, {}, {
+          .delete(`/profile/${parseInt(data.profileMemberNo)}/follow`, {
             headers: {
               accessToken: sessionStorage.getItem("accessToken"),
             },
@@ -111,7 +113,7 @@ const apiClient = {
             return false;
           })
       : instance
-          .post(`/profile/${data.profileMemberNo}/follow`, {}, {
+          .post(`/profile/${parseInt(data.profileMemberNo)}/follow`, {}, {
             headers: {
               accessToken: sessionStorage.getItem("accessToken"),
             },
@@ -243,6 +245,38 @@ const apiClient = {
         return null;
       });
   },
+  //호감도 공연자 Top3
+  getPerformerTop3: (data) => {
+    return instance
+      .get(`/profile/${parseInt(data.profileMemberNo)}/likability/topstars`)
+      .then((response) => {
+        alert("호감도 공연자 Top3 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("호감도 공연자 Top3 불러오기 실패" + error);
+        return null;
+      });
+  },
+  
+  //호감도 공연자 Top3
+  getMyLikeabilityData: (data) => {
+    return instance
+      .get(`/profile/${parseInt(data.profileMemberNo)}/likability`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        alert("공연자에 대한 나의 호감도data 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("공연자에 대한 나의 호감도data 불러오기 실패" + error);
+        return null;
+      });
+  },
   //피드 등록
   feedNew: (data) => {
     instance
@@ -256,9 +290,8 @@ const apiClient = {
       })
       .catch((error) => {
         alert("피드 등록 실패" + error);
-        return null;
       });
-  },
+    },
 };
 
 export default apiClient;

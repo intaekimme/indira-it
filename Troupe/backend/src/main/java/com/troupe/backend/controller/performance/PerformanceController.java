@@ -1,8 +1,10 @@
-package com.troupe.backend.controller.Performance;
+package com.troupe.backend.controller.performance;
 
 
-import com.troupe.backend.dto.Performance.*;
-import com.troupe.backend.service.Performance.*;
+import com.troupe.backend.dto.performance.*;
+import com.troupe.backend.dto.performance.ProfilePfResponse;
+import com.troupe.backend.dto.performance.ProfilePfSaveResponse;
+import com.troupe.backend.service.performance.*;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 
 @CrossOrigin
@@ -61,7 +64,7 @@ public class PerformanceController {
     public ResponseEntity modify(Principal principal,
                                  @PathVariable int pfNo,
                                  @ModelAttribute @Valid PerformanceModifyForm performanceModifyForm)
-    throws Exception {
+            throws Exception {
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.modify(memberNo, pfNo, performanceModifyForm);
         return ResponseEntity.ok().build();
@@ -104,7 +107,7 @@ public class PerformanceController {
     @Operation(summary = "공연 목록 조회(검색 및 필터 기능 포함)", description = "파라미터: 필터 (이름으로 검색 {condition : nickname}, 제목+내용으로 검색 {condition : title}), 질의어")
     @GetMapping("/list/search")
     public ResponseEntity<List<PerformanceResponse>> performanceQueryList(@RequestParam String condition,
-                                           @RequestParam String keyword){
+                                                                          @RequestParam String keyword){
         List<PerformanceResponse> performanceResponseList =  performanceService.findQueryAll(condition, keyword);
         return ResponseEntity.ok()
                 .body(performanceResponseList);
@@ -160,13 +163,22 @@ public class PerformanceController {
      * @param content
      * @return
      */
-    @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용")
+    @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용, 부모댓글번호-선택")
     @PostMapping("/{pfNo}/review")
     public ResponseEntity registerReview(Principal principal,
                                          @PathVariable int pfNo,
+                                         @RequestParam(required = false) Integer parentCommentNo,
                                          @RequestParam String content){
         int memberNo = Integer.parseInt(principal.getName());
-        performanceReviewService.add(pfNo, memberNo, content);
+        PfReviewForm request = PfReviewForm.builder()
+                .pfNo(pfNo)
+                .memberNo(memberNo)
+                .content(content)
+                .build();
+
+        request.setParentReviewNo(Objects.requireNonNullElse(parentCommentNo, 0));
+
+        performanceReviewService.add(request);
         return ResponseEntity.ok().build();
     }
 

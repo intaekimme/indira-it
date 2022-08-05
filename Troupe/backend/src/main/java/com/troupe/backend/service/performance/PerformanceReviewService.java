@@ -1,9 +1,11 @@
-package com.troupe.backend.service.Performance;
+package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceReview;
-import com.troupe.backend.dto.Performance.PfReviewResponse;
+import com.troupe.backend.dto.performance.PfReviewForm;
+import com.troupe.backend.dto.performance.PfReviewResponse;
+import com.troupe.backend.dto.performance.PfReviewResponse;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceReviewRepository;
@@ -29,34 +31,45 @@ public class PerformanceReviewService {
 
     /**
      * 공연후기 작성
-     * @param pfNo
-     * @param memberNo
-     * @param content
+     * @param request
      */
     @Transactional
-    public void add(int pfNo, int memberNo, String content){
+    public void add(PfReviewForm request){
 
         //  비로그인 유저만의 값 이용
-        if(memberNo == 0){
+        if(request.getMemberNo() == 0){
             log.info("유효 하지 않은 값");
             throw new NoSuchElementException("로그인이 필요합니다.");
         }
-        Member member = memberRepository.getById(memberNo);
-        Performance performance = performanceRepository.getById(pfNo);
+        Member member = memberRepository.findById(request.getMemberNo()).get();
+        Performance performance = performanceRepository.findById(request.getPfNo()).get();
 
         // 1. LocalDateTime 객체 생성(현재 시간)
         LocalDateTime localDateTime = LocalDateTime.now();
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
-
-        PerformanceReview performanceReview = PerformanceReview.builder()
-                .member(member)
-                .pf(performance)
-                .createdTime(now)
-                .isModified(false)
-                .isRemoved(false)
-                .content(content)
-                .build();
+        PerformanceReview performanceReview = null;
+        if(request.getParentReviewNo() != 0){
+            PerformanceReview parentReview = performanceReviewRepository.findById(request.getParentReviewNo()).get();
+            performanceReview = PerformanceReview.builder()
+                    .member(member)
+                    .pf(performance)
+                    .createdTime(now)
+                    .isModified(false)
+                    .isRemoved(false)
+                    .content(request.getContent())
+                    .parentPerformanceReview(parentReview)
+                    .build();
+        }else{
+            performanceReview = PerformanceReview.builder()
+                    .member(member)
+                    .pf(performance)
+                    .createdTime(now)
+                    .isModified(false)
+                    .isRemoved(false)
+                    .content(request.getContent())
+                    .build();
+        }
 
         performanceReviewRepository.save(performanceReview);
     }
@@ -92,6 +105,7 @@ public class PerformanceReviewService {
             Member member = review.getMember();
             pfReviewResponseList.add( PfReviewResponse.builder()
                     .memberNo(member.getMemberNo())
+                    .reviewNo(review.getId())
                     .nickname(member.getNickname())
                     .profileImageUrl(member.getProfileImageUrl())
                     .comment(review.getContent())

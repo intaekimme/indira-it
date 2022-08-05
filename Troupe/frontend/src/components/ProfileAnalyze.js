@@ -42,47 +42,19 @@ export default function ProfileAnalyze(props) {
   const [interestCategory, setInterestCategory] = React.useState([
     10, 20, 30, 40, 50, 60, 70, 80,
   ]);
-
+// 이 member에 대한 나의 호감도 data
+  const [myLikeabilityData, setMyLikeabilityData] = React.useState([]);
   //이 member의 호감도 data
-  // const [performerLikeabilityData, setPerformerLikeabilityData] = React.useState("");
-  // React.useEffect(() => {
-  //   apiClient.getPerformerLikeabilityData(memberNo).then((data) => {
-  //     setPerformerLikeabilityData(data);
-  //   });
-  // });
-  const [performerLikeabilityData, setPerformerLikeabilityData] =
-    React.useState([
-      {
-        memberNo: 1,
-        nickname: "첫번째",
-        exp: 1520,
-      },
-      {
-        memberNo: 2,
-        nickname: "두번째",
-        exp: 1250,
-      },
-      {
-        memberNo: 3,
-        nickname: "세번째",
-        exp: 970,
-      },
-    ]);
-  // 이 member에 대한 나의 호감도 data
-  // const [myLikeabilityData, setMyLikeabilityData] = React.useState("");
-  // React.useEffect(() => {
-  //   apiClient.getMyLikeabilityData(memberNo).then((data) => {
-  //     setMyLikeabilityData(data);
-  //   });
-  // });
-  const [myLikeabilityData, setMyLikeabilityData] = React.useState([
-    {
-      memberNo: sessionStorage.getItem("loginMember"),
-      nickname: props.nickname,
-      exp: 1222,
-      rank: 78,
-    },
-  ]);
+  const [performerTop3, setPerformerTop3] = React.useState([]);
+  React.useEffect(() => {
+    apiClient.getPerformerTop3({profileMemberNo: memberNo}).then((data) => {
+      setPerformerTop3(data.top3Stars);
+    });
+    apiClient.getMyLikeabilityData({profileMemberNo: memberNo}).then((data) => {
+      setMyLikeabilityData([data]);
+    });
+  }, [memberNo]);
+  
   //이 member에 대한 나의 호감도 exp
   const [myLikeabilityExp, setMyLikeabilityExp] = React.useState(1222);
   //이 member에 대한 나의 호감도 순위
@@ -183,7 +155,7 @@ export default function ProfileAnalyze(props) {
               <LikeabilityRank
                 nickname={props.nickname}
                 likeabilityWithMember={likeabilityWithMember}
-                likeabilityData={performerLikeabilityData}
+                likeabilityData={performerTop3}
                 width={props.width}
               ></LikeabilityRank>
             </Grid>

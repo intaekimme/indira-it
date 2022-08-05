@@ -2,7 +2,7 @@ import React from "react";
 
 import LikeabilityBar from "./LikeabilityBar";
 export default function LikeabilityRank(props) {
-  const [rank, setRank] = React.useState(props.likeabilityData[0].rank);
+  const [rank, setRank] = React.useState(props.likeabilityData[0] ? props.likeabilityData[0].rank : -1);
   return (
     <div>
       {props.likeabilityWithMember ? (
@@ -10,7 +10,8 @@ export default function LikeabilityRank(props) {
       ) : (
         <div></div>
       )}
-      {props.likeabilityData.map((data) => (
+      {props.likeabilityData.length == 0 ? <div></div>
+      : props.likeabilityData.map((data) => (
         <LikeabilityBar
           likeabilityData={data}
           key={`LikeabilityBar${data.memberNo}`}

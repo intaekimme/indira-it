@@ -95,7 +95,11 @@ export default function ProfileMemberInfo(props) {
     } else {
       const currnetFollow = isFollowing;
       setIsFollowing(!isFollowing);
-      apiClient.follow({currentFollow: currnetFollow}).then((data) => {
+      const followData = {
+        currentFollow: currnetFollow,
+        profileMemberNo: memberInfo.memberNo,
+      };
+      apiClient.follow(followData).then((data) => {
         if (!data) {
           setIsFollowing(currnetFollow);
         }

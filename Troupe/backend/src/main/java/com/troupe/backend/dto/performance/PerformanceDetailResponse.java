@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.Performance;
+package com.troupe.backend.dto.performance;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
