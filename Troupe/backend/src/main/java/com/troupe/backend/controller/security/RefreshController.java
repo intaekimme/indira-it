@@ -7,6 +7,7 @@ import com.troupe.backend.dto.security.TokenResponse;
 import com.troupe.backend.service.member.MemberService;
 import com.troupe.backend.util.MyConstant;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,7 @@ public class RefreshController {
 
     private final MemberService memberService;
 
-    /**
-     * 액세스 토큰이 만료되었을 때 리프레시 토큰을 받아서 액세스 토큰을 재발급한다
-     */
+    @Operation(summary = "액세스 토큰 재발급 요청", description = "파라미터 : memberNo(리퀘스트바디), refreshToken(리퀘스트바디)")
     @PostMapping()
     public ResponseEntity refresh(@RequestBody RefreshForm refreshForm) {
         int memberNo = refreshForm.getMemberNo();

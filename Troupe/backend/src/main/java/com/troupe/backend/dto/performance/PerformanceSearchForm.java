@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.Performance;
+package com.troupe.backend.dto.performance;
 
 public class PerformanceSearchForm {
     String key;                 //  검색 필터

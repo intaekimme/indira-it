@@ -1,11 +1,10 @@
-package com.troupe.backend.service.Performance;
+package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformancePrice;
-import com.troupe.backend.dto.Performance.PerformanceForm;
-import com.troupe.backend.dto.Performance.PerformanceModifyForm;
+import com.troupe.backend.dto.performance.PerformanceForm;
+import com.troupe.backend.dto.performance.PerformanceModifyForm;
 import com.troupe.backend.dto.converter.PerformanceConverter;
-import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.performance.PerformancePriceRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import lombok.RequiredArgsConstructor;

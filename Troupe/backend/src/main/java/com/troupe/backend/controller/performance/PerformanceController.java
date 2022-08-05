@@ -1,8 +1,8 @@
-package com.troupe.backend.controller.Performance;
+package com.troupe.backend.controller.performance;
 
 
-import com.troupe.backend.dto.Performance.*;
-import com.troupe.backend.service.Performance.*;
+import com.troupe.backend.dto.performance.*;
+import com.troupe.backend.service.performance.*;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 @CrossOrigin
@@ -231,43 +230,6 @@ public class PerformanceController {
         int memberNo = Integer.parseInt(principal.getName());
         List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfChildReviewList(pfNo, reviewNo, memberNo);
         return ResponseEntity.ok().body(pfReviewResponseList);
-    }
-
-    //  =================================================================================
-    //  profile controller
-    //  =================================================================================
-
-    /**
-     * 프로필, 유저의 공연 북마크 목록
-     * @param principal
-     * @param profileMemberNo
-     * @return
-     */
-    @Operation(summary = "프로필, 유저의 공연 북마크 목록", description = "파라미터: 유저 프로필 번호")
-    @GetMapping("/{profileMemberNo}/saveperf/list")
-    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(Principal principal,
-                                                                         @PathVariable int profileMemberNo,
-                                                                         int pageNumber){
-        //  profile service
-        PageRequest pageRequest = PageRequest.of(pageNumber,6);
-        List<ProfilePfSaveResponse> profileSaveResponseList = performanceSaveService.findSavedList(profileMemberNo, pageRequest);
-        return ResponseEntity.ok().body(profileSaveResponseList);
-    }
-
-    /**
-     * 프로필, 유저가 등록한 공연 목록 불러오기
-     * @param principal
-     * @param profileMemberNo
-     * @return
-     */
-    @Operation(summary = "프로필, 유저가 등록한 공연 목록 불러오기", description = "파라미터: 유저 프로필 번호")
-    @GetMapping("/{profileMemberNo}/myperf/list")
-    public ResponseEntity<List<ProfilePfResponse>> profilePfList(Principal principal,
-                                                                 @PathVariable int profileMemberNo,
-                                                                 int pageNumber){
-        PageRequest pageRequest = PageRequest.of(pageNumber,6);
-        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageRequest);
-        return ResponseEntity.ok().body(profilePfResponseList);
     }
 
 }
