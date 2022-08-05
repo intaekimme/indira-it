@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PfReviewResponse {
     int memberNo;
+    int reviewNo;
     String nickname;
     String profileImageUrl;
     String comment;
