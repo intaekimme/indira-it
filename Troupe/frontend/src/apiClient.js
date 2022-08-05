@@ -246,9 +246,10 @@ const apiClient = {
   //피드 등록
   feedNew: (data) => {
     instance
-      .post("/feed",{  headers: {
+      .post("/feed", data,{  headers: {
         accessToken: sessionStorage.getItem("accessToken"),
-      },}, data)
+        'Content-Type': 'multipart/form-data'
+      }})
       .then((response) => {
         alert("피드 등록 성공");
         return response;

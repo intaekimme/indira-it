@@ -10,36 +10,45 @@ import stylesTag from "../css/tag.module.css"
 const theme = createTheme();
 
 export default function FeedRegister() {
-  const [images, setImgUrl] = React.useState([]);
-  const [tagList, setTagList] = React.useState([]);
+  const [imgUrl, setImgUrl] = React.useState([]);
+  const [images, setImages] = React.useState([]);
+  const [tags, setTagList] = React.useState([]);
   const [tag, setTag] = React.useState("");
   const [content, setContent] = React.useState("");
 
   const handleSubmit = (event) => {
-      event.preventDefault();
-    console.log(event.currentTarget);
+    event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log(event.currentTarget);
-    // console.log(data);
-
+    let imageList = [...images];
+   //file형태로 리스트 뽑기 위해..
+    imageList.forEach(item=>{
+        data.append("images",item);
+    })
+      console.log(data.get("content"));
+      console.log(data.get("tags"));
+      
     apiClient.feedNew(data);
-  };
 
-  //   const data = { images: null };
+  };
+ 
+
   const changeImage = (event) => {
     const imageLists = event.target.files;
-    let imageUrlLists = [...images];
-
+    let imageUrlLists = [...imgUrl];
+    let imageList = [...images];
     for (let i = 0; i < imageLists.length; i++) {
       const currentImageUrl = URL.createObjectURL(imageLists[i]);
       imageUrlLists.push(currentImageUrl);
+      imageList.push(imageLists[i]);
     }
 
-    if (imageUrlLists.length > 10) {
+    if (imageUrlLists.length > 10 ) {
       imageUrlLists = imageUrlLists.slice(0, 10);
+      imageList = imageList.slice(0, 10);
     }
     setImgUrl(imageUrlLists);
-    // console.log(Object.keys);
+    setImages(imageList);
+    // console.log(imageList);
   };
   const changeTag = (event) => {
     setTag(event.target.value);
@@ -60,21 +69,25 @@ export default function FeedRegister() {
         HashWrapInner.addEventListener("click", () => {
           HashWrapOuter.removeChild(HashWrapInner);
           console.log(HashWrapInner.innerHTML);
-          setTagList(tagList.filter((tag) => tag));
+          setTagList(tags.filter((tag) => tag));
         });
         if (event.key === "Enter" && event.target.value.trim() !== "") {
-            //   event.preventDefault();
+              event.preventDefault();
             HashWrapInner.innerHTML = "#" + event.target.value;
             HashWrapOuter.appendChild(HashWrapInner);
-            setTagList((tagList) => [...tagList, tag]);
+            setTagList((tags) => [...tags, tag]);
             setTag('');
-            console.log(tagList);
+            console.log(tags);
         }
       }
     },
-    [tag, tagList]
+    [tag, tags]
   );
 
+  function deleteImage(imgNo){
+    setImgUrl(imgUrl.filter((imgNo)=>imgNo));
+    console.log([...imgUrl]);
+  }
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -93,15 +106,17 @@ export default function FeedRegister() {
         >
           <Grid container spacing={4}>
             <Grid item xs={9}>
-              {images ? (
+              {imgUrl ? (
                 <div>
-                  {images.map((item, id) => (
+                  {imgUrl.map((item, id) => (
+                    <span key={id}>
                     <img
                       key={id}
                       src={item}
                       alt=""
                       style={{ height: "70px", width: "70px" }}
                     ></img>
+                    <button type="button" onClick={()=>deleteImage(item)}>-</button></span>
                   ))}
                 </div>
               ) : (
@@ -115,20 +130,9 @@ export default function FeedRegister() {
           </Grid>
           <Grid container spacing={4}>
             <Grid item xs={9}>
-              <div className={stylesTag.HashWrap}>
-                <div className={stylesTag.HashWrapOuter}></div>
-                <TextField
-                  className={stylesTag.HashInput}
-                  autoComplete="given-name"
-                  name="tag"
-                  fullWidth
-                  id="tag"
-                  label="태그"
-                  value={tag}
-                  onChange={changeTag}
-                  onKeyUp={addTagFunc}
-                  placeholder="태그입력 후 엔터를 치세요"
-                />
+              <div  className={stylesTag.HashWrap}>
+                <div  className={stylesTag.HashWrapOuter}></div>               
+                <input type="hidden" value={tags} multiple name="tags"></input>
               </div>
             </Grid>
           </Grid>
@@ -151,21 +155,24 @@ export default function FeedRegister() {
             <Grid>
               <Button
                 type="submit"
-                style={{
-                  position: "absolute",
-                  width: "80px",
-                  height: "30px",
-                  bottom: "0px",
-                  right: "0px",
-                  backgroundColor: "#CCCCCC",
-                  color: "black",
-                }}
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
               >
-                등록
+                피드 등록
               </Button>
             </Grid>
           </Grid>
         </form>
+        <input
+            className={stylesTag.HashInput}
+            label="태그"
+            value={tag}
+            multiple
+            onChange={changeTag}
+            onKeyUp={addTagFunc}
+            placeholder="태그입력 후 엔터를 치세요"
+        />
       </Box>
     </ThemeProvider>
   );
