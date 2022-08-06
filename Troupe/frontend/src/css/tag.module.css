@@ -6,7 +6,7 @@
     display: flex;
     flex-wrap: wrap;
     letter-spacing: -0.6px;
-    color: #444241;
+    color: #b9b9b9;
     border-bottom: 1.6px solid;
     padding: 2px 2px 8px 2px;
 }
@@ -24,11 +24,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        font-weight: bold;
-        font-size: 1.4rem;
+        font-size: 1.0rem;
         line-height: 20px;
         margin-right: 5px;
         cursor: pointer;
+        font-style: italic;
       }
 .HashInput {
         width: auto;
@@ -41,3 +41,19 @@
         min-width: 8rem;
         border: none;
       }
+
+.img {
+  position: relative;
+  margin: 3px;
+}
+
+.btn1 {
+  position: absolute;
+  top : -130px;
+  right: 3px;
+  color: white;
+  background-color: red;
+  border-radius: 50%;
+  border: none;
+  font-weight: bold;
+}
