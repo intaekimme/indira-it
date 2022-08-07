@@ -120,7 +120,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            },
+            }
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -362,6 +362,24 @@ const apiClient = {
     } else {
       alert("취소합니다.");
     }
+  },
+  //  공연 후기 등록
+  perfReviewNew: (data) => {
+    instance.post(`/perf/${performanceNo}/review`);
+  },
+
+  //  공연 후기 목록 불러오기(완성)
+  perfReviewList: () => {
+    instance
+      .get(`/perf/${performanceNo}/review/list`)
+      .then((response) => {
+        alert("불러오기 성공");
+        return response;
+      })
+      .catch((error) => {
+        alert("공연 후기 불러오기 실패" + error);
+        return null;
+      });
   },
 };
 
