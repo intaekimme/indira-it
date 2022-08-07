@@ -331,7 +331,7 @@ const apiClient = {
       });
   },
 
-  //호감도 공연자 Top3
+  //공연자에 대한 나의 호감도 data
   getMyLikeabilityData: (data) => {
     return instance
       .get(`/profile/${parseInt(data.profileMemberNo)}/likability`, {
@@ -341,11 +341,11 @@ const apiClient = {
       })
       .then((response) => {
         console.log(response.data);
-        alert("공연자에 대한 나의 호감도data 불러오기 성공");
+        alert("공연자에 대한 나의 호감도 data 불러오기 성공");
         return response.data;
       })
       .catch((error) => {
-        alert("공연자에 대한 나의 호감도data 불러오기 실패" + error);
+        alert("공연자에 대한 나의 호감도 data 불러오기 실패" + error);
         return null;
       });
   },
