@@ -56,6 +56,10 @@ public class FeedILikeService {
 
      public int countTotalLike (int feedNo){
          Feed feed = feedRepository.findById(feedNo).get();
-         return feedLikeRepository.findByFeedAndIsDeletedFalse(feed);
+         int total = 0;
+         if(feedLikeRepository.findByFeedAndIsDeletedFalse(feed) != null){
+             total=feedLikeRepository.findByFeedAndIsDeletedFalse(feed);
+         }
+         return total;
      }
 }

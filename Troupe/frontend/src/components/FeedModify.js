@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { useParams } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
@@ -6,7 +7,6 @@ import Box from "@mui/material/Box";
 import { Button, Grid, Container } from "@mui/material";
 import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
-import { textAlign } from "@mui/system";
 
 const theme = createTheme({
   palette: {
@@ -17,25 +17,41 @@ const theme = createTheme({
   },
 });
 
-export default function FeedRegister() {
+export default function FeedModify() {
+  const { feedNo } = useParams();
+  // 추가된 이미지 url
   const [imgUrl, setImgUrl] = React.useState([
     {
       url: "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/feed/defalut.jpg",
       file: null,
     },
   ]);
+  // 추가된 이미지파일
   const [images, setImages] = React.useState([]);
+  // 기존 이미지 번호+url
+  const [oldImage, setOldImage] = React.useState(new Map());
+  // 삭제된 이미지 번호
+  const [imageNo, setImageNo] = React.useState([]);
+  // 삭제된 이미지 번호들의 키(filter거르면 key값 변경되기 때문에 원본 서치용)
+  const [imgKeys, setImgKeys] = React.useState(new Map());
   const [tags, setTagList] = React.useState([]);
   const [tag, setTag] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [maxSize, setMaxSize] = React.useState(10);
+
+  React.useEffect(() => {
+    apiClient.getFeedDetail(feedNo).then((data) => {
+      setImgKeys(data.images);
+      setOldImage(data.images);
+      setContent(data.content);
+      setTagList(data.tags);
+    });
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (images.length === 0) {
+    if (images === []) {
       alert("사진을 업로드하세요");
-      return;
-    } else if (content.length === 0) {
-      alert("내용을 작성하세요");
       return;
     }
     const data = new FormData(event.currentTarget);
@@ -47,23 +63,26 @@ export default function FeedRegister() {
     console.log(data.get("content"));
     console.log("제출할 태그들 " + data.get("tags"));
     console.log(data.get("images"));
+    console.log("삭제된 이미지 번호들 " + data.get("imageNo"));
+    console.log("기존 이미지 사이즈: " + Object.values(oldImage).length);
 
-    // apiClient.feedNew(data);
+    // apiClient.feedModify(data, feedNo);
   };
 
   const changeImage = (event) => {
     const imageLists = event.target.files;
     let imageUrlLists = [...imgUrl];
     let imageList = [...images];
+    let size = Object.values(oldImage).length;
     for (let i = 0; i < imageLists.length; i++) {
       const currentImageUrl = URL.createObjectURL(imageLists[i]);
       imageUrlLists.push({ url: currentImageUrl, file: imageLists[i] });
       imageList.push(imageLists[i]);
     }
 
-    if (imageUrlLists.length > 10) {
-      imageUrlLists = imageUrlLists.slice(0, 10);
-      imageList = imageList.slice(0, 10);
+    if (imageUrlLists.length > 10 - size) {
+      imageUrlLists = imageUrlLists.slice(0, 10 - size);
+      imageList = imageList.slice(0, 10 - size);
       alert("최대 10개 까지 업로드 할 수 있습니다");
     }
     setImgUrl(imageUrlLists);
@@ -89,8 +108,6 @@ export default function FeedRegister() {
 
         if (event.key === "Enter" && event.target.value.trim() !== "") {
           event.preventDefault();
-          // HashWrapInner.innerHTML = "# " + event.target.value;
-          // HashWrapOuter.appendChild(HashWrapInner);
           if (tags.length >= 5) {
             // alert("최대 5개까지 등록할 수 있습니다");
             const notice = document.querySelector("#notice");
@@ -116,10 +133,26 @@ export default function FeedRegister() {
     [tag, tags],
   );
 
+  function deleteOldImage(imgUrl) {
+    console.log(Object.values(oldImage).length);
+    // 보이는거 지우고
+    let imgNo = getKeyByValue(imgKeys, imgUrl);
+    // 새로 정렬 돼서 문제..
+    setOldImage(Object.values(oldImage).filter((url) => url !== imgUrl));
+
+    // 삭제된 번호 넣기
+    let list = [...imageNo];
+    list.push(imgNo);
+    // console.log(imgNo);
+    setImageNo(list);
+  }
+  function getKeyByValue(object, value) {
+    // console.log(value);
+    return Object.keys(object).find((key) => object[key] === value);
+  }
   function deleteImage(imgFile) {
     setImgUrl(imgUrl.filter((imgUrl) => imgUrl.file !== imgFile));
     setImages(images.filter((images) => images !== imgFile));
-    // console.log(images);
   }
   function deleteTag(tagName) {
     setTagList(tags.filter((tag) => tag !== tagName));
@@ -133,6 +166,27 @@ export default function FeedRegister() {
         <div style={{ textAlign: "center", marginTop: "3%" }}>
           <Grid container spacing={12}>
             <Grid item xs={12}>
+              {Object.values(oldImage) ? (
+                Object.values(oldImage).map((item, id) => (
+                  <span key={id} className={stylesTag.img}>
+                    <img
+                      key={id}
+                      src={item}
+                      alt=""
+                      style={{ height: "150px", width: "150px" }}
+                    ></img>
+                    <button
+                      type="button"
+                      onClick={() => deleteOldImage(item)}
+                      className={stylesTag.btn1}
+                    >
+                      -
+                    </button>
+                  </span>
+                ))
+              ) : (
+                <div></div>
+              )}
               {imgUrl ? (
                 <div>
                   {imgUrl.map((item, id) => (
@@ -193,6 +247,7 @@ export default function FeedRegister() {
               />
             </Grid>
           </Grid>
+
           <Grid container>
             <Grid item xs={12}>
               <TextField
@@ -205,6 +260,7 @@ export default function FeedRegister() {
                 onChange={changeContent}
                 placeholder="내용 입력"
                 size="medium"
+                value={content}
                 inputProps={{
                   maxLength: 2000,
                 }}
@@ -225,6 +281,7 @@ export default function FeedRegister() {
             >
               <input type="hidden" value={tags} multiple name="tags"></input>
               <input type="hidden" value={content} name="content"></input>
+              <input type="hidden" value={imageNo} name="imageNo"></input>
               <Button
                 type="submit"
                 fullWidth
@@ -232,7 +289,7 @@ export default function FeedRegister() {
                 sx={{ mt: 3, mb: 2 }}
                 color="neutral"
               >
-                피드 등록
+                피드 수정
               </Button>
             </form>
           </Grid>

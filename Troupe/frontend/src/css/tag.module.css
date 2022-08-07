@@ -57,3 +57,9 @@
   border: none;
   font-weight: bold;
 }
+
+.alert {
+  color: #ff6e35;
+  font-size: 0.9rem;
+  animation-name: vibration;
+}
