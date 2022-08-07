@@ -33,28 +33,77 @@ const apiClient = {
         alert("회원가입 실패 : " + error);
       });
   },
+  //프로필수정
+  modifyProfile: (data) => {
+    instance
+      .patch("/member/myinfo", data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("프로필수정 되었습니다." + response.data);
+      })
+      .catch((error) => {
+        alert("프로필수정 실패 : " + error);
+      });
+  },
 
   //이메일 중복체크
   existEmail: (data) => {
-    instance
+    return instance
       .post("/member/signup/email", data)
       .then((response) => {
         alert("사용 가능합니다." + response.data);
+        return false;
       })
       .catch((error) => {
-        alert("중복된 email입니다. : " + error);
+        const status = error.response.status;
+        if (status === 500) {
+          alert("server Error : " + error);
+          return error;
+        } else if (status === 409) {
+          alert("중복된 e-mail 입니다 : " + error);
+          return true;
+        }
       });
   },
 
   //닉네임 중복체크
   existNickname: (data) => {
-    instance
+    return instance
       .post("/member/signup/nickname", data)
       .then((response) => {
         alert("사용 가능합니다." + response.data);
+        return false;
       })
       .catch((error) => {
-        alert("중복된 nickname입니다. : " + error);
+        const status = error.response.status;
+        if (status === 500) {
+          alert("server Error : " + error);
+          return error;
+        } else if (status === 409) {
+          alert("중복된 nickname 입니다 : " + error);
+          return true;
+        }
+      });
+  },
+
+  //현재 비밀번호 일치 확인
+  pwCurrentCheck: (data) => {
+    return instance
+      .post(`/member/pw`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log("pwCurrentCheck : " + response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("pwCurrentCheck 정보를 불러오는데 실패하였습니다 : " + error);
+        return null;
       });
   },
 
@@ -113,11 +162,15 @@ const apiClient = {
             return false;
           })
       : instance
-          .post(`/profile/${parseInt(data.profileMemberNo)}/follow`, {}, {
-            headers: {
-              accessToken: sessionStorage.getItem("accessToken"),
-            },
-          })
+          .post(
+            `/profile/${parseInt(data.profileMemberNo)}/follow`,
+            {},
+            {
+              headers: {
+                accessToken: sessionStorage.getItem("accessToken"),
+              },
+            }
+          )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
             return true;
@@ -129,10 +182,29 @@ const apiClient = {
           });
   },
 
+  //내정보 불러오기
+  getMyinfo: () => {
+    return instance
+      .get(`/member/myinfo`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Member 정보를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
+
   //회원정보 불러오기
   getMemberInfo: (memberNo) => {
     return instance
-      .get(`/member/${memberNo}`)
+      .get(`/member/${parseInt(memberNo)}`)
       .then((response) => {
         console.log(response.data);
         return response.data;
@@ -259,7 +331,7 @@ const apiClient = {
         return null;
       });
   },
-  
+
   //호감도 공연자 Top3
   getMyLikeabilityData: (data) => {
     return instance

@@ -22,39 +22,60 @@ const theme = createTheme();
 export default function ProfileForm() {
   //memberNo
   const { memberNo } = useParams();
-  //memberInfo 초기화
-  const [memberInfo, setMemberInfo] = React.useState({
-    memberNo: -1,
-    email: "123",
-    nickname: "123123",
-    description: "123123123",
-    memberType: "PERFORMER",
-    profileImageUrl: "Stage",
-    removed: false,
-  });
-  //frontend image update
+
+  // //memberInfo 초기화
+  // const [memberInfo, setMemberInfo] = React.useState(""
+  //   // {
+  //   // profileImageUrl: "Stage",
+  //   // memberType: "PERFORMER",
+  //   // email: "123",
+  //   // nickname: "123123",
+  //   // description: "123123123",
+  //   // memberNo: -1,
+  //   // removed: false,
+  //   // }
+  // );
+  
+  //default nickname
+  const [defaultNickname, setDefaultNickname] = React.useState("");
+
+  //초기 data 불러오기 판단
+  const [defaultValue, setDefaultValue] = React.useState(false);
+  //frontend image 초기화
   const [imgUrl, setImgUrl] = React.useState("");
-  //nickname update
-  const [nickname, setNickname] = React.useState("");
-  //email update
+  //email 초기화
   const [email, setEmail] = React.useState("");
+  //nickname 초기화
+  const [nickname, setNickname] = React.useState("");
+  // description 초기화
+  const [description, setDescription] = React.useState("");
+  //memberType 초기화
+  const [memberType, setMemberType] = React.useState("AUDIENCE");
+  
+  //nickname 중복확인
+  const [nicknameCheck, setNicknameCheck] = React.useState(true);
   //nickname 길이확인
   const [nicknameLength, setNicknameLength] = React.useState(true);
+  //currentPassword 일치 확인
+  const [pwCurrent, setPwCurrent] = React.useState(true);
   //password 길이확인
   const [pwLength, setPwLength] = React.useState(true);
   //password 일치확인
   const [pwSame, setPwSame] = React.useState(true);
-  //memberInfo 화면분할 update 시 불러오기
+  //memberNo update 시 값 update
   React.useEffect(() => {
-    // apiClient.getMemberInfo(memberNo).then((data) => {
-    //   setMemberInfo(data);
-      // setNickname(data.nickname);
-      // setEmail(data.email);
-      // setImgUrl(data.profileImageUrl);
-    // });
-    setNickname(memberInfo.nickname);
-    setEmail(memberInfo.email);
-    setImgUrl(memberInfo.profileImageUrl);
+    apiClient.getMyinfo().then((data) => {
+      // setMemberInfo(data);
+      setDefaultNickname(data.nickname);
+
+      setNickname(data.nickname);
+      setEmail(data.email);
+      setImgUrl(data.profileImageUrl);
+      setDescription(data.description);
+      setMemberType(data.memberType);
+
+      setDefaultValue(true);
+    });
   }, [memberNo]);
 
   //image 업로드
@@ -65,6 +86,12 @@ export default function ProfileForm() {
   //nickname Change
   const changeNickname = (e) => {
     setNickname(e.target.value);
+    if (defaultNickname===e.target.value) {
+      setNicknameCheck(true);
+    }
+    else {
+      setNicknameCheck(false);
+    }
   };
 
   //email Change
@@ -74,28 +101,51 @@ export default function ProfileForm() {
 
   //중복체크
   const sameCheck = (string) => {
-    // if (string === "email") {
-    //   apiClient.existEmail({ email: email });
-    // } else if (string === "nickname") {
-    //   apiClient.existNickname({ nickname: nickname });
-    // }
+    if (string === "nickname") {
+      if (nicknameCheck) {
+        alert("nickname 중복확인이 이미 완료되었습니다.");
+        return;
+      }
+      apiClient.existNickname({ nickname: nickname }).then((data) => {
+        if (data === false) {
+          setNicknameCheck(true);
+        } else {
+          console.log("nicknameCheck : " + data);
+        }
+      });
+      //닉네임 2~20자
+      const nicknameLength = nickname.length;
+      const nicknameLengthCheck = nicknameLength >= 2 && nicknameLength <= 20;
+      setNicknameLength(nicknameLengthCheck);
+    }
   };
 
   //입력된 값이 올바른지 확인
   const checkValue = (data) => {
-    //닉네임 2~20자
-    const nicknameLength = data.nickname.length;
-    const nicknameCheck = nicknameLength >= 2 && nicknameLength <= 20;
-    setNicknameLength(nicknameCheck);
-    //password 8~20자
-    const pwLength = data.password.length;
-    const pwCheck = pwLength >= 8 && pwLength <= 20;
-    setPwLength(pwCheck);
-    //paswword 일치확인
-    const pwSame = data.password === data.passwordCheck;
-    setPwSame(pwSame);
+    //현재 비밀번호 일치 확인
+    return apiClient.pwCurrentCheck(data.currentPassword).then((data) => {
+      setPwCurrent(data);
+      if (!pwCurrent) {
+        return false;
+      } else {
+        //닉네임 2~20자
+        const nicknameLength = data.nickname.length;
+        const nicknameCheck = nicknameLength >= 2 && nicknameLength <= 20;
+        setNicknameLength(nicknameCheck);
+        //password 8~20자
+        const pwLength = data.password.length;
+        const pwCheck = pwLength >= 8 && pwLength <= 20;
+        setPwLength(pwCheck);
+        //paswword 일치확인
+        const pwSame = data.password === data.passwordCheck;
+        setPwSame(pwSame);
 
-    return nicknameCheck && pwCheck && pwSame;
+        return nicknameCheck && pwCheck && pwSame;
+      }
+    }).catch((error) => {
+      console.log(error);
+      return false;
+    });
   };
 
   //회원가입버튼 클릭
@@ -105,21 +155,24 @@ export default function ProfileForm() {
     console.log(event.currentTarget);
     console.log(formData);
 
-    const data = {
+    const modifyData = {
       profileImage: formData.get("imgUpload"),
       nickname: formData.get("nickname"),
       email: formData.get("email"),
+      currentPassword: formData.get('currentpassword'),
       password: formData.get("password"),
       passwordCheck: formData.get("passwordCheck"),
       profileMessage: formData.get("profileMessage"),
     };
-    console.log(data);
+    console.log(modifyData);
 
     //입력된 값이 올바른지 확인
-    if (!checkValue(data)) {
-      return;
-    }
-    // apiClient.modifyProfile(data);
+    checkValue(modifyData).then((data) => {
+      console.log(data);
+      if (true) {
+        apiClient.modifyProfile(formData);
+      }
+    });
   };
 
   //취소버튼
@@ -186,17 +239,33 @@ export default function ProfileForm() {
                     right: "0px",
                     opacity: "0%",
                   }}
-                  id="imgUpload"
-                  className="imgUpload"
-                  name="imgUpload"
+                  id="profileImage"
+                  className="profileImage"
+                  name="profileImage"
                   type="file"
                   accept="image/*"
                   onChange={changeImage}
                 />
               </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  required
+                  fullWidth
+                  name="memberType"
+                  label="memberType"
+                  id="memberType"
+                  value={memberType}
+                />
+              </Grid>
 
-              {false ? (
-                <Grid item xs={12} style={{ textAlign: "right" }}>
+              {memberType === "PERFORMER" ? (
+                <Grid item xs={6} style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: "12px" }}>
+                    본인인증이 완료되었습니다.
+                  </div>
+                </Grid>
+              ) : (
+                <Grid item xs={6} style={{ textAlign: "right" }}>
                   <Button
                     style={{
                       width: "80px",
@@ -206,43 +275,41 @@ export default function ProfileForm() {
                       backgroundColor: "#CCCCCC",
                       color: "black",
                     }}
-                    // onClick={() => sameCheck("nickname")}
+                    // onClick={() => 본인인증()}
                   >
                     본인인증
                   </Button>
                 </Grid>
-              ) : (
-                <Grid item xs={12} style={{ textAlign: "left" }}>
-                  본인인증이 완료되었습니다.
-                </Grid>
               )}
-              <Grid item xs={12} style={{margin: "10px", textAlign: "left", fontSize:"20px"}}>
-                {/* <TextField
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  style={{ backgroundColor: "#777777" }}
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  value={memberInfo.email}
-                  name="email"
-                  autoComplete="email"
-                  onChange={changeEmail}
-                /> */}
-                {`email : ${memberInfo.email}`}
-              </Grid>
-              <Grid item xs={9}>
+              <Grid
+                item
+                xs={12}
+                style={{ margin: "10px", textAlign: "left", fontSize: "20px" }}
+              >
                 <TextField
-                  autoComplete="given-name"
-                  name="nickname"
                   required
                   fullWidth
-                  id="nickname"
-                  label="닉네임"
-                  defaultValue={memberInfo.nickname}
-                  onChange={changeNickname}
+                  name="email"
+                  label="email"
+                  id="email"
+                  value={email}
                 />
+              </Grid>
+              <Grid item xs={9}>
+                {defaultValue ? (
+                  <TextField
+                    autoComplete="given-name"
+                    name="nickname"
+                    required
+                    fullWidth
+                    id="nickname"
+                    label="닉네임"
+                    defaultValue={defaultNickname}
+                    onChange={changeNickname}
+                  />
+                ) : (
+                  <div></div>
+                )}
               </Grid>
               <Grid item xs={3} style={{ position: "relative" }}>
                 <Button
@@ -260,6 +327,17 @@ export default function ProfileForm() {
                   중복확인
                 </Button>
               </Grid>
+              {nicknameCheck ? (
+                <Grid item xs={12}>
+                  <div style={{ color: "green" }}>nickname 중복확인 완료</div>
+                </Grid>
+              ) : (
+                <Grid item xs={12}>
+                  <div style={{ color: "red" }}>
+                    nickname 중복확인이 필요합니다.
+                  </div>
+                </Grid>
+              )}
               {nicknameLength ? (
                 <div></div>
               ) : (
@@ -280,6 +358,15 @@ export default function ProfileForm() {
                   autoFocus
                 />
               </Grid>
+              {pwCurrent ? (
+                <div></div>
+              ) : (
+                <Grid item xs={12}>
+                  <div style={{ color: "red" }}>
+                    비밀번호가 일치하지 않습니다.
+                  </div>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -319,14 +406,18 @@ export default function ProfileForm() {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  multiline
-                  id="profileMessage"
-                  label="소개글 입력"
-                  defaultValue={memberInfo.description}
-                  name="profileMessage"
-                />
+                {defaultValue ? (
+                  <TextField
+                    fullWidth
+                    multiline
+                    id="description"
+                    label="소개글 입력"
+                    defaultValue={description}
+                    name="description"
+                  />
+                ) : (
+                  <div></div>
+                )}
               </Grid>
             </Grid>
             <Grid container spacing={2}>
