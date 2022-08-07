@@ -113,11 +113,15 @@ const apiClient = {
             return false;
           })
       : instance
-          .post(`/profile/${parseInt(data.profileMemberNo)}/follow`, {}, {
-            headers: {
-              accessToken: sessionStorage.getItem("accessToken"),
+          .post(
+            `/profile/${parseInt(data.profileMemberNo)}/follow`,
+            {},
+            {
+              headers: {
+                accessToken: sessionStorage.getItem("accessToken"),
+              },
             },
-          })
+          )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
             return true;
@@ -258,7 +262,7 @@ const apiClient = {
         return null;
       });
   },
-  
+
   //호감도 공연자 Top3
   getMyLikeabilityData: (data) => {
     return instance
@@ -280,18 +284,85 @@ const apiClient = {
   //피드 등록
   feedNew: (data) => {
     instance
-      .post("/feed", data,{  headers: {
-        accessToken: sessionStorage.getItem("accessToken"),
-        'Content-Type': 'multipart/form-data'
-      }})
+      .post("/feed", data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
         alert("피드 등록 성공");
         return response;
       })
       .catch((error) => {
         alert("피드 등록 실패" + error);
+        return error;
       });
-    },
+  },
+
+  feedModify: (data, feedNo) => {
+    instance
+      .post(`/feed/${feedNo}/modify`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        alert("피드 수정 성공");
+        return response;
+      })
+      .catch((error) => {
+        alert("피드 수정 실패" + error);
+        return error;
+      });
+  },
+  getFeedDetail: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        // alert("피드 상세 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 상세 불러오기 실패" + error);
+        return error;
+      });
+  },
+
+  getFeedTotalLike: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}/like`)
+      .then((response) => {
+        // console.log(response.data);
+        // alert("피드 좋아요 수 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 좋아요 수 불러오기 실패" + error);
+        return error;
+      });
+  },
+  feedRemove: (feedNo) => {
+    if (window.confirm("삭제하시겠습니까?")) {
+      instance
+        .patch(`/feed/${feedNo}/del`)
+        .then((response) => {
+          alert("피드가 삭제되었습니다" + response);
+        })
+        .catch((error) => {
+          alert("피드 삭제 실패 :" + error + feedNo);
+          return error;
+        });
+    } else {
+      alert("취소합니다.");
+    }
+  },
 };
 
 export default apiClient;

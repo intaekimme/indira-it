@@ -13,5 +13,5 @@ public interface FeedLikeRepository extends JpaRepository<FeedLike, Integer> {
         @Query(value = "select count(*) from tb_feed_like fl "
                 +" where fl.feed_no = :feed and fl.is_deleted = false "
                 + "group by fl.feed_no = :feed ", nativeQuery = true)
-        int findByFeedAndIsDeletedFalse (Feed feed);
+        Integer findByFeedAndIsDeletedFalse (Feed feed);
 }
