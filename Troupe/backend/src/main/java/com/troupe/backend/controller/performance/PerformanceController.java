@@ -1,4 +1,4 @@
-package com.troupe.backend.controller.performance;
+package com.troupe.backend.controller.Performance;
 
 
 import com.troupe.backend.dto.performance.*;
@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -168,12 +169,13 @@ public class PerformanceController {
     public ResponseEntity registerReview(Principal principal,
                                          @PathVariable int pfNo,
                                          @RequestParam(required = false) Integer parentCommentNo,
-                                         @RequestParam String content){
+                                         @RequestBody Map<String, String> body){
+        System.out.println(body.get("content"));
         int memberNo = Integer.parseInt(principal.getName());
         PfReviewForm request = PfReviewForm.builder()
                 .pfNo(pfNo)
                 .memberNo(memberNo)
-                .content(content)
+                .content(body.get("content"))
                 .build();
 
         request.setParentReviewNo(Objects.requireNonNullElse(parentCommentNo, 0));

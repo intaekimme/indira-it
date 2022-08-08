@@ -1,3 +1,4 @@
+import { type } from "@testing-library/user-event/dist/type";
 import instance from "axios";
 
 // const instance = axios.create({
@@ -364,22 +365,34 @@ const apiClient = {
     }
   },
   //  공연 후기 등록
-  perfReviewNew: (data) => {
-    // instance.post(`/perf/${performanceNo}/review`);
+  perfReviewNew: (performanceNo, data) => {
+    console.log(data);
+    instance
+      .post(`/perf/${performanceNo}/review`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("댓글 등록 성공" + response);
+      })
+      .catch((error) => {
+        alert("댓글 등록 실패 : " + error);
+      });
   },
 
   //  공연 후기 목록 불러오기(완성)
-  getPerfReviewList: () => {
-    // instance
-    //   .get(`/perf/${performanceNo}/review/list`)
-    //   .then((response) => {
-    //     alert("불러오기 성공");
-    //     return response;
-    //   })
-    //   .catch((error) => {
-    //     alert("공연 후기 불러오기 실패" + error);
-    //     return null;
-    //   });
+  getPerfReviewList: (performanceNo) => {
+    instance
+      .get(`/perf/${performanceNo}/review/list`)
+      .then((response) => {
+        alert("불러오기 성공");
+        return response;
+      })
+      .catch((error) => {
+        alert("공연 후기 불러오기 실패" + error);
+        return null;
+      });
   },
 };
 

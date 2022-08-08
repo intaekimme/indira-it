@@ -7,9 +7,19 @@ export default function CommentForm() {
   const [review, setReview] = React.useState();
 
   const reset = () => setReview();
+  const onChange = (event) => {
+    setReview(event.target.value);
+  };
 
-  const reviewRegister = (event) => {
-    apiClient.perfReviewNew();
+  const reviewRegister = () => {
+    // let bodyFormData = new FormData();
+    // bodyFormData.append("content", review);
+    // apiClient.perfReviewNew(2, bodyFormData);
+    const data = {
+      content: review,
+    };
+    apiClient.perfReviewNew(2, data);
+    reset();
   };
 
   const WriteButton = () => (
@@ -19,14 +29,17 @@ export default function CommentForm() {
   );
 
   return (
-    <TextField
-      fullWidth
-      id="write-review-form"
-      placeholder="댓글을 입력하세요."
-      value={review}
-      type="text"
-      maxlength="500"
-      InputProps={{ endAdornment: <WriteButton /> }}
-    />
+    <form>
+      <TextField
+        fullWidth
+        id="write-review-form"
+        placeholder="댓글을 입력하세요."
+        value={review}
+        type="text"
+        maxlength="500"
+        onChange={onChange}
+        InputProps={{ endAdornment: <WriteButton /> }}
+      />
+    </form>
   );
 }
