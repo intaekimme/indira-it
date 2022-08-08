@@ -156,8 +156,12 @@ export default function FeedDetail() {
   });
   const [like, setLike] = React.useState(0);
   const [img, setImg] = React.useState(new Map());
+  const [user, setUser] = React.useState(0);
 
   React.useEffect(() => {
+    if (sessionStorage.getItem("loginCheck"))
+      setUser(parseInt(sessionStorage.getItem("loginMember")));
+
     apiClient.getFeedDetail(feedNo).then((data) => {
       setFeedInfo(data);
       setImg(data.images);
@@ -172,7 +176,11 @@ export default function FeedDetail() {
     <ThemeProvider theme={theme}>
       <Container maxWidth="md">
         <CssBaseline />
-        <FollowButton memberNo={feedInfo.memberNo}></FollowButton>
+        {user !== feedInfo.memberNo ? (
+          <FollowButton memberNo={feedInfo.memberNo}></FollowButton>
+        ) : (
+          <div></div>
+        )}
         <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
         <Grid container spacing={4}>
           <Grid item xs={5}>
