@@ -72,6 +72,14 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "비밀번호 재설정", description = "파라미터 : accessToken (리퀘스트헤더) ")
+    @PatchMapping("/reset-password")
+    private ResponseEntity resetPassword(Principal principal) {
+        int memberNo = Integer.parseInt(principal.getName());
+        memberService.resetPassword(memberNo);
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(summary = "멤버의 정보 조회", description = "파라미터 : memberNo (패스배리어블) ")
     @GetMapping("/{memberNo}")
     private ResponseEntity getMemberInfo(@PathVariable int memberNo) {
