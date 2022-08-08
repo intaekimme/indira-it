@@ -3,14 +3,14 @@ package com.troupe.backend.controller.member;
 import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.feed.Tag;
 import com.troupe.backend.domain.likability.Likability;
-import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.dto.avatar.response.AvatarResponse;
 import com.troupe.backend.dto.converter.MemberConverter;
 import com.troupe.backend.dto.feed.FeedResponse;
 import com.troupe.backend.dto.feed.TagResponse;
-import com.troupe.backend.dto.member.AvatarResponse;
-import com.troupe.backend.dto.member.MemberInfoResponse;
-import com.troupe.backend.dto.member.MemberResponse;
+import com.troupe.backend.dto.likability.LikabilityResponse;
+import com.troupe.backend.dto.member.response.MemberInfoResponse;
+import com.troupe.backend.dto.member.response.MemberWithLikabilityResponse;
 import com.troupe.backend.dto.performance.InterestCategoryResponse;
 import com.troupe.backend.dto.performance.ProfilePfResponse;
 import com.troupe.backend.dto.performance.ProfilePfSaveResponse;
@@ -85,7 +85,7 @@ public class ProfileController {
     @GetMapping("/{profileMemberNo}/follow/fans/list")
     public ResponseEntity getFanList(@PathVariable int profileMemberNo) {
         List<Member> fans = followService.findAllFans(profileMemberNo);
-        List<MemberInfoResponse> response = MemberConverter.getMemberInfoResponseList(fans);
+        List<MemberInfoResponse> response = MemberConverter.convertMemberListToMemberInfoResponseList(fans);
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.FAN_LIST, response);
@@ -96,7 +96,7 @@ public class ProfileController {
     @GetMapping("/{profileMemberNo}/follow/stars/list")
     public ResponseEntity getStarList(@PathVariable int profileMemberNo) {
         List<Member> stars = followService.findAllStars(profileMemberNo);
-        List<MemberInfoResponse> response = MemberConverter.getMemberInfoResponseList(stars);
+        List<MemberInfoResponse> response = MemberConverter.convertMemberListToMemberInfoResponseList(stars);
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.STAR_LIST, response);
@@ -120,64 +120,11 @@ public class ProfileController {
         int starMemberNo = profileMemberNo;
         int fanMemberNo = Integer.parseInt(principal.getName());
 
-        // 현재 호감도 조회
-        Optional<Likability> foundLikability = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
+        // 호감도 조회
+        LikabilityResponse likabilityResponse = likabilityService.getLikabilityResponse(starMemberNo, fanMemberNo);
 
-        int level = 0;
-        int exp = 0;
-        int requiredExpNow = 0;
-        int requiredExpNext = 0;
-
-        // 현재 호감도의 레벨 조회
-        if (foundLikability.isPresent()) {
-            exp = foundLikability.get().getExp();
-            level = likabilityService.getLikabilityLevel(exp);
-
-            Optional<LikabilityLevel> foundNowLevel = likabilityService.findById(level);
-
-            if (foundNowLevel.isPresent()) {
-                requiredExpNow = foundNowLevel.get().getRequiredExp();
-            }
-        }
-
-        // 다음 레벨까지 필요 경험치 조회
-        int nextLevel = level + 1;
-        Optional<LikabilityLevel> foundNextLikabilityLevel = likabilityService.findById(nextLevel);
-        if (foundNextLikabilityLevel.isPresent()) {
-            requiredExpNext = foundNextLikabilityLevel.get().getRequiredExp();
-        }
-
-        // 순위 조회
-        int rank = likabilityService.getRank(starMemberNo, exp) + 1;
-
-        // 반환값 리턴
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(MyConstant.EXP, exp);
-        resultMap.put(MyConstant.LEVEL, level);
-        resultMap.put(MyConstant.REQUIRED_EXP_NOW, requiredExpNow);
-        resultMap.put(MyConstant.REQUIRED_EXP_NEXT, requiredExpNext);
-        resultMap.put(MyConstant.RANK, rank);
-
-        return new ResponseEntity(resultMap, HttpStatus.OK);
+        return new ResponseEntity(likabilityResponse, HttpStatus.OK);
     }
-
-// // getLikability 쪽으로 합쳐짐
-//    @GetMapping("/{profileMemberNo}/likability/rank")
-//    public ResponseEntity getLikabilityRank(Principal principal, @PathVariable int profileMemberNo) {
-//        int starMemberNo = profileMemberNo;
-//        int fanMemberNo = Integer.parseInt(principal.getName());
-//
-//        // 현재 호감도 조회
-//        Optional<Likability> foundLikability = likabilityService.findByStarMemberNoAndFanMemberNo(profileMemberNo, fanMemberNo);
-//        int exp = (foundLikability.isPresent()) ? foundLikability.get().getExp() : 0;
-//
-//        int rank = likabilityService.getRank(starMemberNo, exp) + 1;
-//        // 반환값 리턴
-//        Map<String, Object> resultMap = new HashMap<>();
-//        resultMap.put(MyConstant.RANK, rank);
-//
-//        return new ResponseEntity(resultMap, HttpStatus.OK);
-//    }
 
     @Operation(summary = "프로필 주인이 가장 호감도가 높은 3명의 스타를 조회", description = "파라미터 : profileMemberNo(패스배리어블)")
     @GetMapping("/{profileMemberNo}/likability/topstars")
@@ -185,12 +132,14 @@ public class ProfileController {
         int fanMemberNo = profileMemberNo;
         List<Likability> likabilities = likabilityService.getTop3StarList(fanMemberNo);
 
-        List<MemberResponse> top3Stars = new ArrayList<>();
+        List<MemberWithLikabilityResponse> top3Stars = new ArrayList<>();
         for (Likability likability : likabilities) {
             Member starMember = likability.getStarMember();
 
-            MemberResponse memberResponse = new MemberResponse(new MemberInfoResponse(starMember), new AvatarResponse(starMember));
-            top3Stars.add(memberResponse);
+            LikabilityResponse likabilityResponse = likabilityService.getLikabilityResponse(starMember.getMemberNo(), fanMemberNo);
+
+            MemberWithLikabilityResponse memberWithLikabilityResponse = new MemberWithLikabilityResponse(new MemberInfoResponse(starMember), new AvatarResponse(starMember), likabilityResponse);
+            top3Stars.add(memberWithLikabilityResponse);
         }
 
         Map<String, Object> resultMap = new HashMap<>();
@@ -206,12 +155,14 @@ public class ProfileController {
 
         List<Likability> likabilities = likabilityService.getTop100FanList(starMemberNo);
 
-        List<MemberResponse> top100Fans = new ArrayList<>();
+        List<MemberWithLikabilityResponse> top100Fans = new ArrayList<>();
         for (Likability likability : likabilities) {
             Member fanMember = likability.getFanMember();
 
-            MemberResponse memberResponse = new MemberResponse(new MemberInfoResponse(fanMember), new AvatarResponse(fanMember));
-            top100Fans.add(memberResponse);
+            LikabilityResponse likabilityResponse = likabilityService.getLikabilityResponse(starMemberNo, fanMember.getMemberNo());
+
+            MemberWithLikabilityResponse memberWithLikabilityResponse = new MemberWithLikabilityResponse(new MemberInfoResponse(fanMember), new AvatarResponse(fanMember), likabilityResponse);
+            top100Fans.add(memberWithLikabilityResponse);
         }
 
         Map<String, Object> resultMap = new HashMap<>();

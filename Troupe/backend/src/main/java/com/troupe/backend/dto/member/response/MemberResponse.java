@@ -1,0 +1,16 @@
+package com.troupe.backend.dto.member.response;
+
+import com.troupe.backend.dto.avatar.response.AvatarResponse;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class MemberResponse {
+    MemberInfoResponse memberInfoResponse;
+    AvatarResponse avatarResponse;
+}
