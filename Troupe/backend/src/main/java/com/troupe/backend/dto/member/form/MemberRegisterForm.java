@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.member;
+package com.troupe.backend.dto.member.form;
 
 import com.troupe.backend.domain.member.MemberType;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MemberForm {
+public class MemberRegisterForm {
     private String email;
     private String password;
     private String nickname;

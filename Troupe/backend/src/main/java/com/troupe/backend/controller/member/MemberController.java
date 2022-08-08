@@ -2,10 +2,11 @@ package com.troupe.backend.controller.member;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.form.AvatarForm;
-import com.troupe.backend.dto.member.AvatarResponse;
-import com.troupe.backend.dto.member.LoginForm;
-import com.troupe.backend.dto.member.MemberForm;
-import com.troupe.backend.dto.member.MemberInfoResponse;
+import com.troupe.backend.dto.avatar.response.AvatarResponse;
+import com.troupe.backend.dto.member.form.LoginForm;
+import com.troupe.backend.dto.member.form.MemberModifyForm;
+import com.troupe.backend.dto.member.form.MemberRegisterForm;
+import com.troupe.backend.dto.member.response.MemberInfoResponse;
 import com.troupe.backend.dto.security.TokenResponse;
 import com.troupe.backend.service.member.MemberService;
 import com.troupe.backend.service.security.JwtTokenProvider;
@@ -35,10 +36,10 @@ public class MemberController {
 
     @Operation(summary = "회원가입", description = "파라미터 : 회원가입 폼")
     @PostMapping("/signup")
-    private ResponseEntity register(@ModelAttribute @Valid MemberForm memberForm) throws IOException {
-        System.out.println(memberForm.toString());
+    private ResponseEntity register(@ModelAttribute @Valid MemberRegisterForm memberRegisterForm) throws IOException {
+        System.out.println(memberRegisterForm.toString());
 
-        memberService.saveMember(memberForm);
+        memberService.saveMember(memberRegisterForm);
         return ResponseEntity.ok().build();
     }
 
@@ -54,12 +55,12 @@ public class MemberController {
 
     @Operation(summary = "회원 기본정보 수정", description = "파라미터 : accessToken (리퀘스트헤더), 멤버수정폼 (모델어트리뷰트) ")
     @PatchMapping("/myinfo")
-    private ResponseEntity updateMember(Principal principal, @ModelAttribute @Valid MemberForm memberForm) throws IOException {
+    private ResponseEntity updateMember(Principal principal, @ModelAttribute @Valid MemberModifyForm memberModifyForm) throws IOException {
         int memberNo = Integer.parseInt(principal.getName());
         System.out.println("memberNo = " + memberNo);
-        System.out.println("memberForm = " + memberForm.toString());
+        System.out.println("memberForm = " + memberModifyForm.toString());
 
-        memberService.updateMember(memberNo, memberForm);
+        memberService.updateMember(memberNo, memberModifyForm);
         return ResponseEntity.ok().build();
     }
 
@@ -71,7 +72,15 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "이메일 중복 체크", description = "파라미터 : accessToken (리퀘스트헤더) ")
+    @Operation(summary = "멤버의 정보 조회", description = "파라미터 : memberNo (패스배리어블) ")
+    @GetMapping("/{memberNo}")
+    private ResponseEntity getMemberInfo(@PathVariable int memberNo) {
+        Member foundMember = memberService.findById(memberNo).get();
+        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(foundMember);
+        return new ResponseEntity(memberInfoResponse, HttpStatus.OK);
+    }
+
+    @Operation(summary = "로그인중인 회원이 자신의 정보 조회", description = "파라미터 : accessToken (리퀘스트헤더) ")
     @GetMapping("/myinfo")
     private ResponseEntity getMemberInfo(Principal principal) {
         int memberNo = Integer.parseInt(principal.getName());

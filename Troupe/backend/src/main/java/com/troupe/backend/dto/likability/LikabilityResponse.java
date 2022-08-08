@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.member;
+package com.troupe.backend.dto.likability;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MemberResponse {
-    MemberInfoResponse memberInfoResponse;
-    AvatarResponse avatarResponse;
+public class LikabilityResponse {
+    int exp;
+    int level;
+    int requiredExpNow;
+    int requiredExpNext;
+    int rank;
 }
