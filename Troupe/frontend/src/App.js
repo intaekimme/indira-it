@@ -7,6 +7,7 @@ import PerfList from "./components/PerfList";
 import FeedList from "./components/FeedList";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import EmailSend from "./components/EmailSend";
 import ProfileForm from "./components/ProfileForm";
 import ResetPw from "./components/ResetPw";
 import Profile from "./components/Profile";
@@ -43,6 +44,7 @@ function App() {
           <Route path="/feed/list" element={<FeedList />}></Route>
           <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />} ></Route>
           <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />} ></Route>
+          <Route path="/email" element={<EmailSend />}></Route>
           <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />} ></Route>
           <Route path="/profile/:memberNo" element={<Profile />}></Route>
           <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />} ></Route>

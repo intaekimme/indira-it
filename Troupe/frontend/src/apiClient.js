@@ -7,7 +7,7 @@ import instance from "axios";
 const apiClient = {
   //로그인
   login: (loginInfo) => {
-    instance
+    return instance
       .post("/member/login", loginInfo)
       .then((response) => {
         window.sessionStorage.setItem("loginCheck", true);
@@ -17,20 +17,29 @@ const apiClient = {
         const href = sessionStorage.getItem("currentHref");
         sessionStorage.removeItem("currentHref");
         window.location.href = href;
+        return true;
       })
       .catch((error) => {
         alert("로그인 실패 : " + error);
+        alert(error.response.status)
+        if(error.response.status===401){
+          window.location.href = "/email";
+        }
+        return false;
       });
   },
   //회원가입
   signup: (data) => {
-    instance
+    return instance
       .post("/member/signup", data)
       .then((response) => {
         alert("회원가입 되었습니다." + response.data);
+        window.location.href="/email";
+        return true;
       })
       .catch((error) => {
         alert("회원가입 실패 : " + error);
+        return false;
       });
   },
   //프로필수정

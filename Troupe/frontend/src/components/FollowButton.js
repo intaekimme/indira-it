@@ -10,17 +10,18 @@ export default function FollowButton(props){
   const [isFollowing, setIsFollowing] = React.useState(false);
   //memberNo update 시
   React.useEffect(() => {
+    setMemberNo(props.memberNo);
     // 이 유저를 팔로우 했는지 판단 update
     if(sessionStorage.getItem("loginCheck")){
       apiClient.isFollowing({
-        profileMemberNo: memberNo,
+        profileMemberNo: props.memberNo,
         fanMamberNo: sessionStorage.getItem("loginMember"),
       })
       .then((data) => {
         setIsFollowing(data.isFollowing);
       });
     }
-  }, [memberNo]);
+  }, [props.memberNo]);
   // follow/unfollow 버튼클릭
   const followClick = () => {
     if (!sessionStorage.getItem("loginCheck")) {
