@@ -5,19 +5,20 @@ import styledButton from "../css/button.module.css";
 
 export default function FollowButton(props){
   //memberNo
-  const [memberNo, setMemberNo] = React.useState(props.memberNo);
+  const [memberNo, setMemberNo] = React.useState("");
   // 이 유저를 팔로우 했는지 판단초기화
   const [isFollowing, setIsFollowing] = React.useState(false);
   //memberNo update 시
   React.useEffect(() => {
     setMemberNo(props.memberNo);
     // 이 유저를 팔로우 했는지 판단 update
-    if(sessionStorage.getItem("loginCheck")){
+    if(sessionStorage.getItem("loginCheck") && props.memberNo){
       apiClient.isFollowing({
         profileMemberNo: props.memberNo,
         fanMamberNo: sessionStorage.getItem("loginMember"),
       })
       .then((data) => {
+        console.log(data);
         setIsFollowing(data.isFollowing);
       });
     }

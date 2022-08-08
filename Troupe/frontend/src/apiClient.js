@@ -133,6 +133,8 @@ const apiClient = {
   //팔로우 여부 확인
   isFollowing: (data) => {
     const profileMemberNo = data.profileMemberNo;
+    console.log(data);
+    console.log(profileMemberNo);
     return instance
       .get(`/profile/${profileMemberNo}/follow`, {
         headers: {
@@ -146,7 +148,7 @@ const apiClient = {
       .catch((error) => {
         console.log(error);
         alert("isFollowing 정보를 불러오는데 실패하였습니다 : " + error);
-        return null;
+        return {isFollowing: false};
       });
   },
 
