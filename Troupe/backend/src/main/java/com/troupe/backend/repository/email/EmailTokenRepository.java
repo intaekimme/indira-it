@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface EmailTokenRepository extends JpaRepository<EmailToken, String> {
     Optional<EmailToken> findByTokenAndExpirationDateAfterAndIsExpiredFalse(String token, LocalDateTime now);
+
+    void deleteAllByEmail(String email);
 }
