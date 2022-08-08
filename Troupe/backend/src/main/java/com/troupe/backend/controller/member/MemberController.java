@@ -1,8 +1,8 @@
 package com.troupe.backend.controller.member;
 
 import com.troupe.backend.domain.member.Member;
-import com.troupe.backend.dto.avatar.response.AvatarResponse;
 import com.troupe.backend.dto.avatar.form.AvatarForm;
+import com.troupe.backend.dto.avatar.response.AvatarResponse;
 import com.troupe.backend.dto.member.form.LoginForm;
 import com.troupe.backend.dto.member.form.MemberModifyForm;
 import com.troupe.backend.dto.member.form.MemberRegisterForm;
