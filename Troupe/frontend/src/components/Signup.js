@@ -17,13 +17,17 @@ import styledButton from "../css/button.module.css";
 
 const theme = createTheme();
 
-export default function ProfileForm() {
+export default function Signup() {
   //frontend image update
   const [imgUrl, setImgUrl] = React.useState("");
   //nickname update
   const [nickname, setNickname] = React.useState("");
+  //nickname 중복확인
+  const [nicknameCheck, setNicknameCheck] = React.useState(false);
   //email update
   const [email, setEmail] = React.useState("");
+  //email 중복확인
+  const [emailCheck, setEmailCheck] = React.useState(false);
   //nickname 길이확인
   const [nicknameLength, setNicknameLength] = React.useState(true);
   //password 길이확인
@@ -39,19 +43,45 @@ export default function ProfileForm() {
   //nickname Change
   const changeNickname = (e) => {
     setNickname(e.target.value);
+    setNicknameCheck(false);
   };
 
   //email Change
   const changeEmail = (e) => {
     setEmail(e.target.value);
+    setEmailCheck(false);
   };
 
   //중복체크
   const sameCheck = (string) => {
     if (string === "email") {
-      apiClient.existEmail({ email: email });
+      if (emailCheck) {
+        alert("email 중복확인이 이미 완료되었습니다.");
+        return;
+      }
+      apiClient.existEmail({ email: email }).then((data) => {
+        if (data === false) {
+          setEmailCheck(true);
+        } else {
+          console.log("emailCheck : " + data);
+        }
+      });
     } else if (string === "nickname") {
-      apiClient.existNickname({ nickname: nickname });
+      if (nicknameCheck) {
+        alert("nickname 중복확인이 이미 완료되었습니다.");
+        return;
+      }
+      apiClient.existNickname({ nickname: nickname }).then((data) => {
+        if (data === false) {
+          setNicknameCheck(true);
+        } else {
+          console.log("nicknameCheck : " + data);
+        }
+      });
+      //닉네임 2~20자
+      const nicknameLength = nickname.length;
+      const nicknameLengthCheck = nicknameLength >= 2 && nicknameLength <= 20;
+      setNicknameLength(nicknameLengthCheck);
     }
   };
 
@@ -74,26 +104,30 @@ export default function ProfileForm() {
 
   //회원가입버튼 클릭
   const handleSubmit = (event) => {
+    if (!emailCheck || !nicknameCheck) {
+      return;
+    }
+
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     console.log(event.currentTarget);
-    console.log(formData);
+    console.log(formData.values);
 
     const data = {
-      profileImage: formData.get("imgUpload"),
-      nickname: formData.get("nickname"),
       email: formData.get("email"),
       password: formData.get("password"),
+      nickname: formData.get("nickname"),
+      profileImage: formData.get("profileImage"),
       passwordCheck: formData.get("passwordCheck"),
       profileMessage: formData.get("profileMessage"),
     };
-    console.log(data);
+    console.log(formData);
 
     //입력된 값이 올바른지 확인
     if (!checkValue(data)) {
       return;
     }
-    apiClient.signup(data);
+    apiClient.signup(formData);
   };
 
   return (
@@ -156,9 +190,9 @@ export default function ProfileForm() {
                     right: "0px",
                     opacity: "0%",
                   }}
-                  id="imgUpload"
-                  className="imgUpload"
-                  name="imgUpload"
+                  id="profileImage"
+                  className="profileImage"
+                  name="profileImage"
                   type="file"
                   accept="image/*"
                   onChange={changeImage}
@@ -191,6 +225,15 @@ export default function ProfileForm() {
                   중복확인
                 </Button>
               </Grid>
+              {nicknameCheck ? (
+                <Grid item xs={12}>
+                  <div style={{ color: "green" }}>nickname 중복확인 완료</div>
+                </Grid>
+              ) : (
+                <Grid item xs={12}>
+                  <div style={{ color: "red" }}>nickname 중복확인이 필요합니다.</div>
+                </Grid>
+              )}
               {nicknameLength ? (
                 <div></div>
               ) : (
@@ -227,6 +270,15 @@ export default function ProfileForm() {
                   중복확인
                 </Button>
               </Grid>
+              {emailCheck ? (
+                <Grid item xs={12}>
+                  <div style={{ color: "green" }}>email 중복확인 완료</div>
+                </Grid>
+              ) : (
+                <Grid item xs={12}>
+                  <div style={{ color: "red" }}>email 중복확인이 필요합니다.</div>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -272,9 +324,9 @@ export default function ProfileForm() {
                 <TextField
                   fullWidth
                   multiline
-                  id="profileMessage"
+                  id="description"
                   label="소개글 입력"
-                  name="profileMessage"
+                  name="description"
                 />
               </Grid>
               <Grid item xs={12}>

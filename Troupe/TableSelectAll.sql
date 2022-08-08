@@ -1,4 +1,11 @@
-use troupe;
+use testdb;
+select * from tb_avatar_clothes;
+select * from tb_avatar_eye;
+select * from tb_avatar_hair;
+select * from tb_avatar_mouth;
+select * from tb_avatar_nose;
+select * from tb_avatar_shape;
+
 select * from tb_category;
 select * from tb_character_eye;
 select * from tb_character_clothes;
@@ -25,6 +32,8 @@ select * from tb_pf_review;
 select * from tb_pf_save;
 select * from tb_report;
 select * from tb_tag;
-select * from tb_user;
+select * from tb_member;
 select * from tb_user_character;
 select * from tb_user_guestbook;
+
+desc tb_user;

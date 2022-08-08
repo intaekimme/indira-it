@@ -1,7 +1,9 @@
 package com.troupe.backend.advice;
 
 import com.troupe.backend.exception.DuplicatedException;
+import com.troupe.backend.exception.EmailUnauthenticatedException;
 import com.troupe.backend.exception.UnauthorizedException;
+import com.troupe.backend.exception.member.WrongPasswordException;
 import com.troupe.backend.util.MyConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,24 @@ public class GlobalExceptionAdvice {
         resultMap.put(MyConstant.MESSAGE, e.getMessage());
         return new ResponseEntity(resultMap, HttpStatus.UNAUTHORIZED);
     }
+
+    // EmailUnauthenticatedException
+    @ExceptionHandler(EmailUnauthenticatedException.class)
+    public ResponseEntity handleEmailUnauthenticatedException(EmailUnauthenticatedException e) {
+        e.printStackTrace();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(WrongPasswordException.class)
+    public ResponseEntity handleWrongPasswordException(WrongPasswordException e) {
+        e.printStackTrace();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.UNAUTHORIZED);
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Exception e) {
