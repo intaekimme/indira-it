@@ -1,6 +1,7 @@
 package com.troupe.backend.advice;
 
 import com.troupe.backend.exception.DuplicatedException;
+import com.troupe.backend.exception.EmailUnauthenticatedException;
 import com.troupe.backend.exception.UnauthorizedException;
 import com.troupe.backend.exception.member.WrongPasswordException;
 import com.troupe.backend.util.MyConstant;
@@ -33,6 +34,15 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity handleUnauthorizedException(UnauthorizedException e) {
+        e.printStackTrace();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.UNAUTHORIZED);
+    }
+
+    // EmailUnauthenticatedException
+    @ExceptionHandler(EmailUnauthenticatedException.class)
+    public ResponseEntity handleEmailUnauthenticatedException(EmailUnauthenticatedException e) {
         e.printStackTrace();
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(MyConstant.MESSAGE, e.getMessage());

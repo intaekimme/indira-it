@@ -6,9 +6,11 @@ import com.troupe.backend.dto.avatar.form.AvatarForm;
 import com.troupe.backend.dto.member.form.LoginForm;
 import com.troupe.backend.dto.member.form.MemberModifyForm;
 import com.troupe.backend.dto.member.form.MemberRegisterForm;
-import com.troupe.backend.exception.member.WrongPasswordException;
+import com.troupe.backend.exception.EmailUnauthenticatedException;
 import com.troupe.backend.exception.member.DuplicatedMemberException;
+import com.troupe.backend.exception.member.WrongPasswordException;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.service.email.EmailTokenService;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +29,8 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final AvatarService avatarService;
     private final S3FileUploadService s3FileUploadService;
+
+    private final EmailTokenService emailTokenService;
 
     /**
      * 회원 등록
@@ -63,15 +67,28 @@ public class MemberService implements UserDetailsService {
                 .mouth(defaultAvatar.getAvatarMouth())
                 .nose(defaultAvatar.getAvatarNose())
                 .shape(defaultAvatar.getAvatarShape())
+                .isAuthenticatedEmail(false) // 회원가입하고 DB에 저장하는 시점에는 이메일 인증이 되지 않은 상태
                 .build();
 
-        // 저장
-        return memberRepository.save(member);
+        // DB 저장
+        Member savedMember = memberRepository.save(member);
+
+        // 인증 메일 전송
+        emailTokenService.createEmailTokenAndSendEmail(member.getEmail());
+
+        // 리턴
+        return savedMember;
     }
 
     public Member login(LoginForm loginForm) {
         Member foundMember = memberRepository.findByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword()).get();
-        return foundMember;
+
+        // 이메일 인증 여부 확인
+        if (foundMember.isAuthenticatedEmail()) {
+            return foundMember;
+        } else {
+            throw new EmailUnauthenticatedException();
+        }
     }
 
     /**
@@ -105,7 +122,7 @@ public class MemberService implements UserDetailsService {
 
         // 기존 비밀번호 일치 여부 확인
         if (!(foundMember.getPassword().equals(memberModifyForm.getCurrentPassword()))) {
-                throw new WrongPasswordException();
+            throw new WrongPasswordException();
         }
 
         // 기존 프로필 이미지를 서버에서 삭제

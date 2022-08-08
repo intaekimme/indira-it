@@ -70,6 +70,9 @@ dependencies {
     //querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    // email 전송 dependency
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 test {
