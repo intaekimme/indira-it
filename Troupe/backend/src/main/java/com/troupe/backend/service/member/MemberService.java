@@ -1,6 +1,7 @@
 package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.domain.member.MemberType;
 import com.troupe.backend.dto.avatar.Avatar;
 import com.troupe.backend.dto.avatar.form.AvatarForm;
 import com.troupe.backend.dto.member.form.LoginForm;
@@ -58,7 +59,7 @@ public class MemberService implements UserDetailsService {
                 .password(memberRegisterForm.getPassword())
                 .nickname(memberRegisterForm.getNickname())
                 .description(memberRegisterForm.getDescription())
-                .memberType(memberRegisterForm.getMemberType())
+                .memberType(MemberType.AUDIENCE)
                 .profileImageUrl(imageUrl)
                 .isRemoved(false)
                 .clothes(defaultAvatar.getAvatarClothes())
@@ -74,7 +75,7 @@ public class MemberService implements UserDetailsService {
         Member savedMember = memberRepository.save(member);
 
         // 인증 메일 전송
-        emailTokenService.createEmailTokenAndSendEmail(member.getEmail());
+        emailTokenService.sendRegisterEmail(member.getEmail());
 
         // 리턴
         return savedMember;
@@ -247,5 +248,21 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return memberRepository.findById(Integer.parseInt(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    /**
+     * 비밀번호 재설정 이메일 전송
+     */
+    public void sendResetPasswordEmail (String email) {
+        emailTokenService.sendResetPasswordEmail(email);
+    }
+
+    /**
+     * 비밀번호 재설정
+     */
+    public void resetPassword(String email, String password) {
+        Member member = memberRepository.findByEmail(email).get(); // 실패 시 NoSuchElementException
+
+        member.setPassword(password);
     }
 }

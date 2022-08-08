@@ -1,13 +1,13 @@
 package com.troupe.backend.controller.member;
 
+import com.troupe.backend.domain.email.EmailToken;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.avatar.form.AvatarForm;
 import com.troupe.backend.dto.avatar.response.AvatarResponse;
-import com.troupe.backend.dto.member.form.LoginForm;
-import com.troupe.backend.dto.member.form.MemberModifyForm;
-import com.troupe.backend.dto.member.form.MemberRegisterForm;
+import com.troupe.backend.dto.member.form.*;
 import com.troupe.backend.dto.member.response.MemberInfoResponse;
 import com.troupe.backend.dto.security.TokenResponse;
+import com.troupe.backend.service.email.EmailTokenService;
 import com.troupe.backend.service.member.MemberService;
 import com.troupe.backend.service.security.JwtTokenProvider;
 import com.troupe.backend.util.MyConstant;
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @Api("회원정보 REST API")
@@ -33,6 +34,8 @@ public class MemberController {
     private final MemberService memberService;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final EmailTokenService emailTokenService;
 
     @Operation(summary = "회원가입", description = "파라미터 : 회원가입 폼")
     @PostMapping("/signup")
@@ -70,6 +73,37 @@ public class MemberController {
         int memberNo = Integer.parseInt(principal.getName());
         memberService.deleteMember(memberNo);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "비밀번호 재설정을 위한 이메일 전송", description = "파라미터 : email (리퀘스트바디)")
+    @PostMapping("request-password")
+    private ResponseEntity sendPasswordResetEmail(@RequestBody EmailForm emailForm) {
+        emailTokenService.sendResetPasswordEmail(emailForm.getEmail());
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.MESSAGE, emailForm.getEmail() + " 주소로 비밀번호 재설정 이메일이 전송되었습니다.\n");
+        return new ResponseEntity(resultMap, HttpStatus.OK);
+    }
+
+    @Operation(summary = "비밀번호 재설정", description = "파라미터 : token (리퀘스트파람), password (리퀘스트바디)")
+    @PostMapping("/reset-password")
+    private ResponseEntity resetPassword(@RequestParam String token, @RequestBody PasswordForm passwordForm) {
+        String password = passwordForm.getPassword();
+
+        Optional<EmailToken> found = emailTokenService.findValidEmailToken(token);
+        if (found.isPresent()) {
+            EmailToken emailToken = found.get();
+            emailToken.setTokenToUsed();
+            memberService.resetPassword(emailToken.getEmail(), password);
+
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put(MyConstant.MESSAGE, "비밀번호 재설정 성공\n");
+            return new ResponseEntity(resultMap, HttpStatus.OK);
+        } else {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put(MyConstant.MESSAGE, "비밀번호 재설정 실패 : 유효하지 않은 토큰\n");
+            return new ResponseEntity(resultMap, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(summary = "멤버의 정보 조회", description = "파라미터 : memberNo (패스배리어블) ")

@@ -16,8 +16,8 @@ export default function LikeabilityBar(props) {
   // 	})
   // }, [likeabilityData.memberNo]);
   const avatarUrl = [Stage];
-  const imgWidth = 30;
-  const imgHeight = 50;
+  const imgWidth = 75;
+  const imgHeight = 100;
   const barHeight = 30;
 
   return (
@@ -72,6 +72,8 @@ export default function LikeabilityBar(props) {
         <Grid item xs={2}>
           <div>Lv.{parseInt(exp / 100)}</div>
         </Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
       </Grid>
     </div>
   );
