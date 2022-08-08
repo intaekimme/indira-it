@@ -11,6 +11,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { useParams } from "react-router-dom";
 import stylesTag from "../css/tag.module.css";
 import { func } from "prop-types";
+import FollowButton from "./FollowButton";
 
 const theme = createTheme({
   palette: {
@@ -171,9 +172,9 @@ export default function FeedDetail() {
     <ThemeProvider theme={theme}>
       <Container maxWidth="md">
         <CssBaseline />
+        <FollowButton memberNo={feedInfo.memberNo}></FollowButton>
         <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
         <Grid container spacing={4}>
-          {/* <FollowButton memberNo={feedInfo.memberNo}></FollowButton> */}
           <Grid item xs={5}>
             <Item
               elevation={0}
