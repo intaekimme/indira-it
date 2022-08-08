@@ -1,6 +1,7 @@
 package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.domain.member.MemberType;
 import com.troupe.backend.dto.avatar.Avatar;
 import com.troupe.backend.dto.avatar.form.AvatarForm;
 import com.troupe.backend.dto.member.form.LoginForm;
@@ -10,9 +11,13 @@ import com.troupe.backend.exception.EmailUnauthenticatedException;
 import com.troupe.backend.exception.member.DuplicatedMemberException;
 import com.troupe.backend.exception.member.WrongPasswordException;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.service.email.EmailSenderService;
 import com.troupe.backend.service.email.EmailTokenService;
+import com.troupe.backend.util.MyConstant;
+import com.troupe.backend.util.MyUtil;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +36,8 @@ public class MemberService implements UserDetailsService {
     private final S3FileUploadService s3FileUploadService;
 
     private final EmailTokenService emailTokenService;
+
+    private final EmailSenderService emailSenderService;
 
     /**
      * 회원 등록
@@ -58,7 +65,7 @@ public class MemberService implements UserDetailsService {
                 .password(memberRegisterForm.getPassword())
                 .nickname(memberRegisterForm.getNickname())
                 .description(memberRegisterForm.getDescription())
-                .memberType(memberRegisterForm.getMemberType())
+                .memberType(MemberType.AUDIENCE)
                 .profileImageUrl(imageUrl)
                 .isRemoved(false)
                 .clothes(defaultAvatar.getAvatarClothes())
@@ -247,5 +254,28 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return memberRepository.findById(Integer.parseInt(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    /**
+     * 비밀번호 재설정
+     */
+    public void resetPassword(int memberNo) {
+        Member member = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
+
+        // 비밀번호 변경
+        String randomPassword = MyUtil.makeRandomString(16);
+        System.out.println("new random password = " + randomPassword);
+        member.setPassword(randomPassword);
+
+        // 이메일 작성
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(MyConstant.EMAIL_SENDER_ADDRESS);
+        mailMessage.setTo(member.getEmail());
+        mailMessage.setSubject("Troupe 사이트 비밀번호 재설정");
+        mailMessage.setText("새로운 비밀번호 : \n" + randomPassword);
+
+        // 이메일 전송
+        emailSenderService.sendEmail(mailMessage);
+
     }
 }

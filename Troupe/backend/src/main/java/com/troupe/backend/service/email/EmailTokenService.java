@@ -2,6 +2,7 @@ package com.troupe.backend.service.email;
 
 import com.troupe.backend.domain.email.EmailToken;
 import com.troupe.backend.repository.email.EmailTokenRepository;
+import com.troupe.backend.util.MyConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class EmailTokenService {
 
         // 이메일 작성
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom("troupetest0001@gmail.com");
+        mailMessage.setFrom(MyConstant.EMAIL_SENDER_ADDRESS);
         mailMessage.setTo(receiverEmail);
         mailMessage.setSubject("회원가입 이메일 인증");
         mailMessage.setText("http://localhost:8080/confirm-email?token=" + emailToken.getToken());
