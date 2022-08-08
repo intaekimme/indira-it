@@ -8,6 +8,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import apiClient from "../apiClient";
 import LoginPopup from "./LoginPopup";
+import FollowButton from "./FollowButton"
+
 import NumberFilter from "../function/NumberFilter.js";
 import styledButton from "../css/button.module.css";
 
@@ -58,8 +60,6 @@ export default function ProfileMemberInfo(props) {
   const [followerCount, setFollowerCount] = React.useState("");
   //이 member의 관심태그 초기화
   const [interestTag, setInterestTag] = React.useState("");
-  // 이 유저를 팔로우 했는지 판단초기화
-  const [isFollowing, setIsFollowing] = React.useState(false);
   //memberNo update 시
   React.useEffect(() => {
     //이 member의 팔로워 수 update
@@ -70,42 +70,11 @@ export default function ProfileMemberInfo(props) {
     // apiClient.getInterestTag(memberNo).then((data) => {
     //   setInterestTag(data);
     // });
-
-    // 이 유저를 팔로우 했는지 판단 update
-    if(sessionStorage.getItem("loginCheck")){
-      apiClient.isFollowing({
-        profileMemberNo: memberNo,
-        fanMamberNo: sessionStorage.getItem("loginMember"),
-      })
-      .then((data) => {
-        setIsFollowing(data.isFollowing);
-      });
-    }
   }, [memberNo]);
   // const followerCount = 123123123;
 
   // 자신의 유저페이지인지 판단
   const myPage = props.myPage;
-  // const [isFollowing, setIsFollowing] = React.useState(false);
-
-  // follow/unfollow 버튼클릭
-  const followClick = () => {
-    if (!sessionStorage.getItem("loginCheck")) {
-      window.location.href = "/login";
-    } else {
-      const currnetFollow = isFollowing;
-      setIsFollowing(!isFollowing);
-      const followData = {
-        currentFollow: currnetFollow,
-        profileMemberNo: memberInfo.memberNo,
-      };
-      apiClient.follow(followData).then((data) => {
-        if (!data) {
-          setIsFollowing(currnetFollow);
-        }
-      });
-    }
-  };
 
   //프로필 수정 버튼 클릭
   const modifyProfile = () => {
@@ -162,22 +131,8 @@ export default function ProfileMemberInfo(props) {
               >
                 프로필수정
               </Button>
-            ) : isFollowing ? (
-              <Button className={styledButton.btn} onClick={followClick}>
-                -UnFollow
-              </Button>
-            ) : (
-              <Button
-                className={styledButton.btn}
-                style={{
-                  backgroundColor: "#45E3C6",
-                  color: "black",
-                }}
-                onClick={followClick}
-              >
-                +Follow
-              </Button>
-            )}
+            ) : (<FollowButton memberNo={memberNo}/>)
+            }
           </div>
         </div>
         <Typography variant="body2" color="text.secondary">

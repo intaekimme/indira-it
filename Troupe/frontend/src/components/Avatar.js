@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Avatar(props) {
 	const avatarResponse = props.avatarResponse;
-	const imgWidth = 30;
-  const imgHeight = 50;
+	const imgWidth = 75;
+  const imgHeight = 100;
 	return (
 		<div>
       <img
@@ -11,7 +11,8 @@ export default function Avatar(props) {
         alt={avatarResponse.shapeUrl}
         style={{
 					position: "absolute",
-					top: "0%",
+					top: "-100%",
+          left: "0%",
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
@@ -21,7 +22,8 @@ export default function Avatar(props) {
         alt={avatarResponse.clothesUrl}
 				style={{
 					position: "absolute",
-					top: "0%",
+					top: "-100%",
+          left: "0%",
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
@@ -31,7 +33,8 @@ export default function Avatar(props) {
         alt={avatarResponse.eyeUrl}
         style={{
 					position: "absolute",
-					top: "0%",
+					top: "-100%",
+          left: "0%",
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
@@ -41,7 +44,8 @@ export default function Avatar(props) {
         alt={avatarResponse.mouthUrl}
         style={{
 					position: "absolute",
-					top: "0%",
+					top: "-100%",
+          left: "0%",
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
@@ -51,7 +55,8 @@ export default function Avatar(props) {
         alt={avatarResponse.noseUrl}
         style={{
 					position: "absolute",
-					top: "0%",
+					top: "-100%",
+          left: "0%",
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
@@ -61,7 +66,8 @@ export default function Avatar(props) {
         alt={avatarResponse.hairUrl}
         style={{
 					position: "absolute",
-					top: "0%",
+					top: "-100%",
+          left: "0%",
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
