@@ -3,6 +3,7 @@ package com.troupe.backend.service.member;
 import com.troupe.backend.domain.likability.Likability;
 import com.troupe.backend.domain.likability.LikabilityLevel;
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.dto.likability.LikabilityResponse;
 import com.troupe.backend.repository.likability.LikabilityLevelRepository;
 import com.troupe.backend.repository.likability.LikabilityRepository;
 import com.troupe.backend.repository.member.MemberRepository;
@@ -101,7 +102,7 @@ public class LikabilityService {
     /**
      * 호감도 레벨로 조회
      */
-    public Optional<LikabilityLevel> findById(int level) {
+    public Optional<LikabilityLevel> findLikabilityLevelById(int level) {
         return likabilityLevelRepository.findById(level);
     }
 
@@ -121,5 +122,47 @@ public class LikabilityService {
         Member starMember = memberRepository.findById(starMemberNo).get();
         List<Likability> ret = likabilityRepository.findTop100ByStarMemberOrderByExpDesc(starMember);
         return ret;
+    }
+
+    public LikabilityResponse getLikabilityResponse (int starMemberNo, int fanMemberNo) {
+        // 현재 호감도 조회
+        Optional<Likability> foundLikability = findByStarMemberNoAndFanMemberNo(starMemberNo, fanMemberNo);
+
+        int level = 0;
+        int exp = 0;
+        int requiredExpNow = 0;
+        int requiredExpNext = 0;
+
+        // 현재 호감도의 레벨 조회
+        if (foundLikability.isPresent()) {
+            exp = foundLikability.get().getExp();
+            level = getLikabilityLevel(exp);
+
+            Optional<LikabilityLevel> foundNowLevel = likabilityLevelRepository.findById(level);
+
+            if (foundNowLevel.isPresent()) {
+                requiredExpNow = foundNowLevel.get().getRequiredExp();
+            }
+        }
+
+        // 다음 레벨까지 필요 경험치 조회
+        int nextLevel = level + 1;
+        Optional<LikabilityLevel> foundNextLikabilityLevel = likabilityLevelRepository.findById(nextLevel);
+        if (foundNextLikabilityLevel.isPresent()) {
+            requiredExpNext = foundNextLikabilityLevel.get().getRequiredExp();
+        }
+
+        // 순위 조회
+        int rank = getRank(starMemberNo, exp) + 1;
+
+        LikabilityResponse likabilityResponse = LikabilityResponse.builder()
+                .exp(exp)
+                .level(level)
+                .requiredExpNow(requiredExpNow)
+                .requiredExpNext(requiredExpNext)
+                .rank(rank)
+                .build();
+
+        return likabilityResponse;
     }
 }

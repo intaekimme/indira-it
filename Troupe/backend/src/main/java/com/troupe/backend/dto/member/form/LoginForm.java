@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.member;
+package com.troupe.backend.dto.member.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

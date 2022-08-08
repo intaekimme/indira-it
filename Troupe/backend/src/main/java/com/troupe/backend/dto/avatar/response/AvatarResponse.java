@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.member;
+package com.troupe.backend.dto.avatar.response;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.util.MyConstant;
