@@ -11,13 +11,9 @@ import com.troupe.backend.exception.EmailUnauthenticatedException;
 import com.troupe.backend.exception.member.DuplicatedMemberException;
 import com.troupe.backend.exception.member.WrongPasswordException;
 import com.troupe.backend.repository.member.MemberRepository;
-import com.troupe.backend.service.email.EmailSenderService;
 import com.troupe.backend.service.email.EmailTokenService;
-import com.troupe.backend.util.MyConstant;
-import com.troupe.backend.util.MyUtil;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,8 +32,6 @@ public class MemberService implements UserDetailsService {
     private final S3FileUploadService s3FileUploadService;
 
     private final EmailTokenService emailTokenService;
-
-    private final EmailSenderService emailSenderService;
 
     /**
      * 회원 등록
@@ -81,7 +75,7 @@ public class MemberService implements UserDetailsService {
         Member savedMember = memberRepository.save(member);
 
         // 인증 메일 전송
-        emailTokenService.createEmailTokenAndSendEmail(member.getEmail());
+        emailTokenService.sendRegisterEmail(member.getEmail());
 
         // 리턴
         return savedMember;
@@ -257,25 +251,18 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
+     * 비밀번호 재설정 이메일 전송
+     */
+    public void sendResetPasswordEmail (String email) {
+        emailTokenService.sendResetPasswordEmail(email);
+    }
+
+    /**
      * 비밀번호 재설정
      */
-    public void resetPassword(int memberNo) {
-        Member member = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
+    public void resetPassword(String email, String password) {
+        Member member = memberRepository.findByEmail(email).get(); // 실패 시 NoSuchElementException
 
-        // 비밀번호 변경
-        String randomPassword = MyUtil.makeRandomString(16);
-        System.out.println("new random password = " + randomPassword);
-        member.setPassword(randomPassword);
-
-        // 이메일 작성
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(MyConstant.EMAIL_SENDER_ADDRESS);
-        mailMessage.setTo(member.getEmail());
-        mailMessage.setSubject("Troupe 사이트 비밀번호 재설정");
-        mailMessage.setText("새로운 비밀번호 : \n" + randomPassword);
-
-        // 이메일 전송
-        emailSenderService.sendEmail(mailMessage);
-
+        member.setPassword(password);
     }
 }
