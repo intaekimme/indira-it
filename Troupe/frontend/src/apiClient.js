@@ -42,6 +42,17 @@ const apiClient = {
         return false;
       });
   },
+  //reset pw
+  requestPassword:(data) =>{
+    instance.post("/member/request-password", data)
+    .then((response) => {
+      console.log(response);
+      alert("비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data);
+    })
+    .catch((error) => {
+      alert("비밀번호 초기화 실패 : " + error);
+    });
+  },
   //프로필수정
   modifyProfile: (data) => {
     instance

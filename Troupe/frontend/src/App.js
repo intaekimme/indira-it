@@ -45,7 +45,8 @@ function App() {
           <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />} ></Route>
           <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />} ></Route>
           <Route path="/email" element={<EmailSend />}></Route>
-          <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />} ></Route>
+          <Route path="/resetpw" element={loginCheck() ? <ResetPw /> : <Navigate to="/" />} ></Route>
+          <Route path="/member/reset-password/:token" element={loginCheck() ? <ResetPw /> : <Navigate to="/" />} ></Route>
           <Route path="/profile/:memberNo" element={<Profile />}></Route>
           <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />} ></Route>
           <Route path="/test" element={<Test />}></Route>
