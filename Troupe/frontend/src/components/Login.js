@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import SNSLoginFacebook from './SNSLoginFacebook';
+
 const theme = createTheme();
 
 export default function Login() {
@@ -56,7 +58,8 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}
+          style={{textAlign:"center"}}>
             <TextField
               margin="normal"
               required
@@ -90,7 +93,8 @@ export default function Login() {
             >
               로그인
             </Button>
-            <Button
+            <SNSLoginFacebook />
+            {/* <Button
               fullWidth
               variant="contained"
               sx={{ mt: 0, mb: 1 }}
@@ -98,7 +102,7 @@ export default function Login() {
               onClick = {facebookLogin}
             >
               FaceBook 로그인
-            </Button>
+            </Button> */}
             <Button
               fullWidth
               variant="contained"

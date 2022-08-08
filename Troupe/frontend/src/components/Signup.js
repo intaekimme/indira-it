@@ -127,7 +127,7 @@ export default function Signup() {
     if (!checkValue(data)) {
       return;
     }
-    apiClient.signup(data);
+    apiClient.signup(formData);
   };
 
   return (
