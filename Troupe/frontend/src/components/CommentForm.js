@@ -4,14 +4,13 @@ import { IconButton, TextField } from "@mui/material";
 import apiClient from "../apiClient";
 
 export default function CommentForm() {
-    const [review, setReview] = React.useState();
-    
-    const reset = () => setReview();
-    
-    const reviewRegister = (event) => (
-        
-        apiClient.perfReviewNew();
-    );
+  const [review, setReview] = React.useState();
+
+  const reset = () => setReview();
+
+  const reviewRegister = (event) => {
+    apiClient.perfReviewNew();
+  };
 
   const WriteButton = () => (
     <IconButton onClick={reviewRegister}>

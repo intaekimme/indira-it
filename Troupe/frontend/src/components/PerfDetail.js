@@ -7,7 +7,7 @@ import MUICarousel from "react-material-ui-carousel";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
-import CommentForm from "./CommentForm";
+import CommentList from "./CommentList";
 
 // 제목, 기간, 시간, 장소, 티켓가격
 
@@ -234,7 +234,7 @@ function PerfDetail() {
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Item>
-                <CommentForm />
+                <CommentList />
               </Item>
             </Grid>
           </Grid>
