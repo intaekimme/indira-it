@@ -40,6 +40,8 @@ public class Member implements UserDetails, Serializable {
 
     private boolean isRemoved;
 
+    private boolean isAuthenticatedEmail;
+
     @ManyToOne(targetEntity = AvatarClothes.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "clothes_no")
     private AvatarClothes clothes;
