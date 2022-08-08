@@ -7,6 +7,16 @@ export default function Avatar(props) {
 	return (
 		<div>
       <img
+        src={avatarResponse.shapeUrl}
+        alt={avatarResponse.shapeUrl}
+        style={{
+					position: "absolute",
+					top: "0%",
+          width: `${imgWidth}px`,
+          height: `${imgHeight}px`,
+        }}
+			></img>
+      <img
         src={avatarResponse.clothesUrl}
         alt={avatarResponse.clothesUrl}
 				style={{
@@ -27,16 +37,6 @@ export default function Avatar(props) {
         }}
 			></img>
 			<img
-        src={avatarResponse.hairUrl}
-        alt={avatarResponse.hairUrl}
-        style={{
-					position: "absolute",
-					top: "0%",
-          width: `${imgWidth}px`,
-          height: `${imgHeight}px`,
-        }}
-      ></img>
-			<img
         src={avatarResponse.mouthUrl}
         alt={avatarResponse.mouthUrl}
         style={{
@@ -46,7 +46,7 @@ export default function Avatar(props) {
           height: `${imgHeight}px`,
         }}
 			></img>
-			{/* <img
+			<img
         src={avatarResponse.noseUrl}
         alt={avatarResponse.noseUrl}
         style={{
@@ -55,17 +55,17 @@ export default function Avatar(props) {
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
-			></img> */}
-			{/* <img
-        src={avatarResponse.shapeUrl}
-        alt={avatarResponse.shapeUrl}
+			></img>
+      <img
+        src={avatarResponse.hairUrl}
+        alt={avatarResponse.hairUrl}
         style={{
 					position: "absolute",
 					top: "0%",
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
-			></img> */}
+      ></img>
     </div>
   );
 }
