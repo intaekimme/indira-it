@@ -48,7 +48,7 @@ export default function FeedRegister() {
     console.log("제출할 태그들 " + data.get("tags"));
     console.log(data.get("images"));
 
-    // apiClient.feedNew(data);
+    apiClient.feedNew(data);
   };
 
   const changeImage = (event) => {

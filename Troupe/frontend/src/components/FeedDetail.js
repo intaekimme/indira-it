@@ -10,6 +10,8 @@ import apiClient from "../apiClient";
 import CardMedia from "@mui/material/CardMedia";
 import { useParams } from "react-router-dom";
 import stylesTag from "../css/tag.module.css";
+import { func } from "prop-types";
+import FollowButton from "./FollowButton";
 
 const theme = createTheme({
   palette: {
@@ -83,15 +85,18 @@ function Carousel(props) {
 }
 
 function ModifyDeleteButton(props) {
-  const [user, setUser] = React.useState(true);
+  const [user, setUser] = React.useState(false);
 
+  React.useEffect(() => {
+    setUser(parseInt(sessionStorage.getItem("loginMember")) === props.memberNo);
+    // console.log(sessionStorage.getItem("loginMember") == props.memberNo);
+    // console.log(props.memberNo);
+  }, [sessionStorage.getItem("loginMember"), props.memberNo]);
   function handleUser() {
     setUser(!user);
   }
-
   function onRemove() {
-    console.log(props.item);
-    apiClient.feedRemove(props.item);
+    apiClient.feedRemove(props.feedNo);
   }
 
   return (
@@ -160,14 +165,15 @@ export default function FeedDetail() {
     apiClient.getFeedTotalLike(feedNo).then((data) => {
       setLike(data);
     });
-  }, []);
+  }, [feedNo]);
   // console.log(Object.keys(img));
   // console.log(Object.values(img));
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="md">
         <CssBaseline />
-        <ModifyDeleteButton item={feedNo} />
+        <FollowButton memberNo={feedInfo.memberNo}></FollowButton>
+        <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
         <Grid container spacing={4}>
           <Grid item xs={5}>
             <Item
