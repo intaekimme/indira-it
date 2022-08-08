@@ -12,9 +12,6 @@ export default function CommentForm() {
   };
 
   const reviewRegister = () => {
-    // let bodyFormData = new FormData();
-    // bodyFormData.append("content", review);
-    // apiClient.perfReviewNew(2, bodyFormData);
     const data = {
       content: review,
     };

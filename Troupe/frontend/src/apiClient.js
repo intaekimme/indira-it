@@ -442,7 +442,7 @@ const apiClient = {
         },
       })
       .then((response) => {
-        alert("댓글 등록 성공" + response);
+        alert("댓글 등록 성공");
       })
       .catch((error) => {
         alert("댓글 등록 실패 : " + error);
@@ -455,6 +455,7 @@ const apiClient = {
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
         alert("불러오기 성공");
+        // console.log(response.data);
         return response;
       })
       .catch((error) => {

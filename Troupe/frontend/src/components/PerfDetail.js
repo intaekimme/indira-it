@@ -234,7 +234,7 @@ function PerfDetail() {
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Item>
-                <CommentList />
+                <CommentList performance={2} />
               </Item>
             </Grid>
           </Grid>
