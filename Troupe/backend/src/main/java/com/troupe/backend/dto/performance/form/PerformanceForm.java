@@ -1,5 +1,6 @@
-package com.troupe.backend.dto.performance;
+package com.troupe.backend.dto.performance.form;
 
+import com.troupe.backend.dto.performance.Seat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class PerformanceForm {
     private List<Seat> price;
     private Date startDate;
     private Date endDate;
+    private String category;
     private List<MultipartFile> images;
 
 

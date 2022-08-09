@@ -10,19 +10,16 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 
-export default function Comment() {
+export default function Comment(props) {
+  console.log(props);
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
-        }
+        avatar={<Avatar alt={props.nickname} src={props.profileImageUrl} />}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {}
+          {props.comment}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

@@ -4,7 +4,7 @@ import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceSave;
-import com.troupe.backend.dto.performance.ProfilePfSaveResponse;
+import com.troupe.backend.dto.performance.response.ProfilePfSaveResponse;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceSaveRepository;

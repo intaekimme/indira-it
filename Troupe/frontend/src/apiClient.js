@@ -463,7 +463,7 @@ const apiClient = {
   },
 
   //피드 검색 테스트용(후에 삭제)
- getFeedSearchTest: (data) => {
+  getFeedSearchTest: (data) => {
     return instance
       .get(`/feed/search?pageNumber=0`, {
         params: {
@@ -480,7 +480,7 @@ const apiClient = {
         return error;
       });
   },
- 
+
   feedRemove: (feedNo) => {
     if (window.confirm("삭제하시겠습니까?")) {
       instance
