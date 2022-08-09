@@ -220,18 +220,19 @@ const apiClient = {
   },
 
   //공연 목록 불러오기
-  getPerfList: async (startNo) => {
-    await instance
-      .get(`/perf/list/${startNo}`)
+  getPerfList: async (pageNumber) => {
+      return await instance
+      .get(`/perf/list?pageNumber=${pageNumber}`)
       .then((response) => {
-        alert("공연 불러오기 성공");
-        console.log(response.data)
+        // alert("공연 불러오기 성공");
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
         alert("공연 불러오기 실패" + error);
       });
   },
+
 
   //피드 목록 불러오기
   getFeedList: () => {

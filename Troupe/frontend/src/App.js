@@ -13,6 +13,10 @@ import Profile from "./components/Profile";
 import Test from "./components/Test";
 import PerfDetail from "./components/PerfDetail";
 import PerfNew from "./components/PerfNew";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient();
 
 function App() {
   const loginCheck = () => {
@@ -30,23 +34,26 @@ function App() {
       <div>
         <Header />
       </div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<PerfList />}></Route>
-          <Route path="/perf/list/:startNo" element={<PerfList />}></Route>
-          <Route path="/feed/list" element={<FeedList />}></Route>
-          <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
-          <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
-          <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
-          <Route path="/profile/:memberNo" element={<Profile />}></Route>
-          <Route path="/profile/:memberNo/:modify" element={
-            true
-             ? <ProfileForm /> : <Navigate to="/" />}></Route>
-          <Route path="/test" element={<Test />}></Route>
-          <Route path="/perf/detail" element={<PerfDetail />}></Route>
-          <Route path="/perf/new" element={<PerfNew />}></Route>
-        </Routes>
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<PerfList />}></Route>
+            <Route path="/perf/list/:pageNumber" element={<PerfList />}></Route>
+            <Route path="/feed/list" element={<FeedList />}></Route>
+            <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
+            <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
+            <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
+            <Route path="/profile/:memberNo" element={<Profile />}></Route>
+            <Route path="/profile/:memberNo/:modify" element={
+              true
+              ? <ProfileForm /> : <Navigate to="/" />}></Route>
+            <Route path="/test" element={<Test />}></Route>
+            <Route path="/perf/detail" element={<PerfDetail />}></Route>
+            <Route path="/perf/new" element={<PerfNew />}></Route>
+          </Routes>
+        </Router>
+      <ReactQueryDevtools initialIsOpen={true} position="bottom-right" />
+      </QueryClientProvider>
     </div>
   );
 }
