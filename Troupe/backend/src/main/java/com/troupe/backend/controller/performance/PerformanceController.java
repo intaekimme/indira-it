@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -160,7 +161,7 @@ public class PerformanceController {
      * 공연후기작성
      * @param principal
      * @param pfNo
-     * @param content
+     * @param body
      * @return
      */
     @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용, 부모댓글번호-선택")
@@ -168,12 +169,13 @@ public class PerformanceController {
     public ResponseEntity registerReview(Principal principal,
                                          @PathVariable int pfNo,
                                          @RequestParam(required = false) Integer parentCommentNo,
-                                         @RequestParam String content){
+                                         @RequestBody Map<String, String> body){
+        System.out.println(body.get("content"));
         int memberNo = Integer.parseInt(principal.getName());
         PfReviewForm request = PfReviewForm.builder()
                 .pfNo(pfNo)
                 .memberNo(memberNo)
-                .content(content)
+                .content(body.get("content"))
                 .build();
 
         request.setParentReviewNo(Objects.requireNonNullElse(parentCommentNo, 0));
