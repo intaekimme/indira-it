@@ -1,3 +1,4 @@
+import { type } from "@testing-library/user-event/dist/type";
 import instance from "axios";
 
 // const instance = axios.create({
@@ -41,6 +42,17 @@ const apiClient = {
         alert("회원가입 실패 : " + error);
         return false;
       });
+  },
+  //reset pw
+  requestPassword:(data) =>{
+    instance.post("/member/request-password", data)
+    .then((response) => {
+      console.log(response);
+      alert("비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data);
+    })
+    .catch((error) => {
+      alert("비밀번호 초기화 실패 : " + error);
+    });
   },
   //프로필수정
   modifyProfile: (data) => {
@@ -180,7 +192,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            },
+            }
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -303,17 +315,19 @@ const apiClient = {
   },
 
   //공연 목록 불러오기
-  getPerfList: () => {
-    return instance
-      .get("/perf/list")
+  getPerfList: async (pageNumber) => {
+      return await instance
+      .get(`/perf/list?pageNumber=${pageNumber}`)
       .then((response) => {
-        alert("공연 불러오기 성공");
+        // alert("공연 불러오기 성공");
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
         alert("공연 불러오기 실패" + error);
       });
   },
+
 
   //피드 목록 불러오기
   getFeedList: () => {
@@ -480,6 +494,37 @@ const apiClient = {
     } else {
       alert("취소합니다.");
     }
+  },
+  //  공연 후기 등록
+  perfCommentNew: (performanceNo, data) => {
+    console.log(data);
+    instance
+      .post(`/perf/${performanceNo}/review`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("댓글 등록 성공");
+      })
+      .catch((error) => {
+        alert("댓글 등록 실패 : " + error);
+      });
+  },
+
+  //  공연 후기 목록 불러오기(완성)
+  getPerfCommentList: (performanceNo) => {
+    return instance
+      .get(`/perf/${performanceNo}/review/list`)
+      .then((response) => {
+        alert("불러오기 성공");
+        // console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("공연 후기 불러오기 실패" + error);
+        return null;
+      });
   },
 };
 

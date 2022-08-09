@@ -17,7 +17,9 @@ import Favorite from '@mui/icons-material/Favorite';
 import SearchBar from './SearchBar'
 import PerfFeedToggle from './MainButton';
 import apiClient from '../apiClient';
-
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import axios from 'axios';
 // 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
 // 유저 분간을 어떻게 하지
 
@@ -43,16 +45,17 @@ function range(start, end) {
 
 const theme = createTheme();
 
-export default function Album() {
+export default function PerfList() {
+  
+  let pageNumber = useParams().pageNumber;  
+  
+  let {isLoading, data} = useQuery('performanceList', async () => await apiClient.getPerfList(pageNumber));
+  console.log(data)
 
-  let [perfList, setPerfList] = React.useState("");
-  React.useEffect(() => {
-    apiClient.getPerfList().then((data)=>{setPerfList(data)});
-  }, []);
   const [like, setLike] = React.useState(false)
   const [save, setSave] = React.useState(false)
   let [cards, setCard] = React.useState([])
-
+  
   function handleLike() {
     setLike(!like)
   }
@@ -62,14 +65,10 @@ export default function Album() {
   }
 
   function handleCard() {
-    setCard(range(0, perfList.length))
+    setCard(range(0, 6))
   }
 
-  async function handlePerfList() {
-    const MyData = await apiClient.getPerfList()
-    setPerfList(MyData)
-  }
-  
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -89,12 +88,12 @@ export default function Album() {
                   elevation={0}
                 >
                   <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
-                    <img src='https://source.unsplash.com/random' alt='random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
+                    <img src={data.image} alt='random' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                     Author
                   </Typography>
                   <Box style={{ fontFamily:'IBM Plex Sans KR', background:'pink', borderRadius:'10%', position:'absolute', top:'45px', right:'5px', zIndex:'3'}}>상영 중</Box>
                   <Box style={{ fontFamily:'IBM Plex Sans KR', background:'skyblue', borderRadius:'10%', position:'absolute', top:'45px', right:'60px', zIndex:'3'}}>뮤지컬</Box>
-                  <Link href='/perf/detail'>
+                  <Link href={'perf/detail/' + data.pfNo}>
                     <CardMedia 
                       component="img"
                       sx={{
@@ -103,7 +102,7 @@ export default function Album() {
                         width:'300px',
                         height:'300px'
                       }}
-                      image="https://source.unsplash.com/random"
+                      image = {data.image}
                       alt="random"
                     >
                     </CardMedia>
@@ -154,4 +153,3 @@ export default function Album() {
     </ThemeProvider>
   );
 }
-
