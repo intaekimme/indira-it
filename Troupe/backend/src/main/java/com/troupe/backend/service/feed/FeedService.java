@@ -12,6 +12,7 @@ import com.troupe.backend.service.member.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -94,10 +95,10 @@ public class FeedService {
         return feedResponses;
     }
 
-    public List<FeedResponse> selectAllBySearch(List<String> tags) {
+    public List<FeedResponse> selectAllBySearch(List<String> tags, Pageable pageable) {
         List<FeedResponse> feedResponses = new ArrayList<>();
         try {
-            List<FeedTag> feedTags = tagService.selectAllBySearch(tags);
+            List<FeedTag> feedTags = tagService.selectAllBySearch(tags, pageable);
             for (FeedTag feedTag : feedTags) {
                 feedResponses.add(select(feedTag.getFeed().getFeedNo()));
             }

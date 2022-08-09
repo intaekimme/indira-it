@@ -18,6 +18,7 @@ import FeedRegister from "./components/FeedRegister";
 import FeedDetail from "./components/FeedDetail";
 import FeedModify from "./components/FeedModify";
 import GuestBook from "./components/GuestBook";
+import PopupTest from "./components/Popuptest";
 
 function App() {
   const loginCheck = () => {
@@ -42,21 +43,21 @@ function App() {
           <Route path="/" element={<PerfList />}></Route>
           <Route path="/perf/list" element={<PerfList />}></Route>
           <Route path="/feed/list" element={<FeedList />}></Route>
-          <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />} ></Route>
-          <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />} ></Route>
+          <Route path="/login"element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
+          <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
           <Route path="/email" element={<EmailSend />}></Route>
-          <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />} ></Route>
+          <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
           <Route path="/profile/:memberNo" element={<Profile />}></Route>
-          <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />} ></Route>
+          <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />}></Route>
           <Route path="/test" element={<Test />}></Route>
           <Route path="/perf/detail" element={<PerfDetail />}></Route>
           <Route path="/perf/new" element={<PerfNew />}></Route>
           <Route path="/feed/register" element={<FeedRegister />}></Route>
-          <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route>
           <Route path="/feed/modify/:feedNo" element={<FeedModify />}></Route>
-          
-          
-          <Route path="/guestbook/test" element={<GuestBook/>}></Route>
+
+          <Route path="/guestbook/test" element={<GuestBook />}></Route>
+          <Route path="/feed/test" element={<PopupTest />}></Route>
+          {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}
         </Routes>
       </Router>
     </div>

@@ -8,6 +8,7 @@ import com.troupe.backend.repository.feed.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -67,9 +68,9 @@ public class TagService {
     }
 
     // 중복 수정
-    public List<FeedTag> selectAllBySearch(List<String> tags){
+    public List<FeedTag> selectAllBySearch(List<String> tags, Pageable pageable){
         int size = tags.size();
-        List<FeedTag> feeds =feedTagRepository.findAllByTagsIn(tags,size);
+        List<FeedTag> feeds =feedTagRepository.findAllByTagsIn(tags,size,pageable);
         return feeds;
     }
 

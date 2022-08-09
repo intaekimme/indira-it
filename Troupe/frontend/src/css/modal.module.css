@@ -1,0 +1,34 @@
+.outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%; /*100%*/
+    width: 100%; /*100%*/
+    background-color: rgba(255, 227, 194,40%);
+  }
+  
+  .inner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 80%;  
+    height: 80%;
+    background-color: white;
+    word-break:break-all;
+    overflow: hidden;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .inner::-webkit-scrollbar{
+    display:none;
+  }
+
+
+  .img {
+    background-color: black;
+  }

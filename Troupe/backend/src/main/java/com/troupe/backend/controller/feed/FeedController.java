@@ -104,7 +104,7 @@ public class FeedController {
             request.setFeedNo(feedNo);
             if(feedUpdateVO.getImages()!=null)  request.setImages(feedUpdateVO.getImages());
             if(feedUpdateVO.getImageNo()!=null) request.setImageNo(feedUpdateVO.getImageNo());
-            if(feedUpdateVO.getImageNo()!=null) request.setContent(feedUpdateVO.getContent());
+            if(feedUpdateVO.getContent()!=null) request.setContent(feedUpdateVO.getContent());
             if(feedUpdateVO.getTags()!=null)  request.setTags(feedUpdateVO.getTags());
 //            System.out.println(request.getFeedNo()+" "+request.getImageNo()+" "+request.getContent()+" "+request.getImages()+" "+request.getTags()+" "+request.getTagNo());
             feedService.update(request);
@@ -246,9 +246,10 @@ public class FeedController {
 
     @Operation(summary = "피드 태그 검색 ", description = "파라미터: 태그명들 ")
     @GetMapping("/search")
-    public ResponseEntity tagSearch (@RequestParam List<String> tags) throws IOException {
+    public ResponseEntity tagSearch (@RequestParam List<String> tags, int pageNumber) throws IOException {
         try{
-             List<FeedResponse> list = feedService.selectAllBySearch(tags);
+            PageRequest pageRequest = PageRequest.of(pageNumber,6);
+             List<FeedResponse> list = feedService.selectAllBySearch(tags, pageRequest);
             return new ResponseEntity(list, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
