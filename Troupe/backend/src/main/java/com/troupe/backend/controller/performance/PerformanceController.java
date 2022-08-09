@@ -166,22 +166,22 @@ public class PerformanceController {
      */
     @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용, 부모댓글번호-선택")
     @PostMapping("/{pfNo}/review")
-    public ResponseEntity registerReview(Principal principal,
-                                         @PathVariable int pfNo,
+    public ResponseEntity<PfReviewResponse> registerReview(Principal principal,
+                                         @PathVariable String pfNo,
                                          @RequestParam(required = false) Integer parentCommentNo,
                                          @RequestBody Map<String, String> body){
         System.out.println(body.get("content"));
         int memberNo = Integer.parseInt(principal.getName());
         PfReviewForm request = PfReviewForm.builder()
-                .pfNo(pfNo)
+                .pfNo(Integer.parseInt(pfNo))
                 .memberNo(memberNo)
                 .content(body.get("content"))
                 .build();
 
         request.setParentReviewNo(Objects.requireNonNullElse(parentCommentNo, 0));
 
-        performanceReviewService.add(request);
-        return ResponseEntity.ok().build();
+        PfReviewResponse response = performanceReviewService.add(request);
+        return ResponseEntity.ok().body(response);
     }
 
     /**

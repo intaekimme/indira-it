@@ -178,6 +178,12 @@ function PerfDetail() {
   const [date, setDate] = React.useState("");
   const [location, setLocation] = React.useState("");
 
+  const [commentList, setCommentList] = React.useState([]);
+
+  const refreshFunction = (newComment) => {
+    setCommentList([...commentList, newComment]);
+  };
+
   return (
     <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
       <ModifyDeleteButton />
@@ -234,7 +240,11 @@ function PerfDetail() {
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Item>
-                <CommentList performance={2} />
+                <CommentList
+                  refreshFunction={refreshFunction}
+                  commentList={commentList}
+                  performance={2}
+                />
               </Item>
             </Grid>
           </Grid>
