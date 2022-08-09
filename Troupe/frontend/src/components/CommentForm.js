@@ -3,7 +3,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import { IconButton, TextField } from "@mui/material";
 import apiClient from "../apiClient";
 
-export default function CommentForm() {
+export default function CommentForm({ setIsSubmit }) {
   const [review, setReview] = React.useState();
 
   const reset = () => setReview();
@@ -15,7 +15,8 @@ export default function CommentForm() {
     const data = {
       content: review,
     };
-    apiClient.perfReviewNew(2, data);
+    apiClient.perfCommentNew(2, data);
+    setIsSubmit(true);
     reset();
   };
 

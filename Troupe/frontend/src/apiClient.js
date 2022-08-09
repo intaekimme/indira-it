@@ -433,7 +433,7 @@ const apiClient = {
     }
   },
   //  공연 후기 등록
-  perfReviewNew: (performanceNo, data) => {
+  perfCommentNew: (performanceNo, data) => {
     console.log(data);
     instance
       .post(`/perf/${performanceNo}/review`, data, {
@@ -450,13 +450,13 @@ const apiClient = {
   },
 
   //  공연 후기 목록 불러오기(완성)
-  getPerfReviewList: (performanceNo) => {
-    instance
+  getPerfCommentList: (performanceNo) => {
+    return instance
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
         alert("불러오기 성공");
         // console.log(response.data);
-        return response;
+        return response.data;
       })
       .catch((error) => {
         alert("공연 후기 불러오기 실패" + error);

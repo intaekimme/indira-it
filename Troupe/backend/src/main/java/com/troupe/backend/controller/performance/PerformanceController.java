@@ -1,4 +1,4 @@
-package com.troupe.backend.controller.Performance;
+package com.troupe.backend.controller.performance;
 
 
 import com.troupe.backend.dto.performance.*;
@@ -161,7 +161,7 @@ public class PerformanceController {
      * 공연후기작성
      * @param principal
      * @param pfNo
-     * @param content
+     * @param body
      * @return
      */
     @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용, 부모댓글번호-선택")
