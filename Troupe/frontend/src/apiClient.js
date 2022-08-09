@@ -463,7 +463,7 @@ const apiClient = {
   //피드 검색 테스트용(후에 삭제)
  getFeedSearchTest: (data) => {
     return instance
-      .get(`/feed/search`, {
+      .get(`/feed/search?pageNumber=0`, {
         params: {
           tags: data,
         },
