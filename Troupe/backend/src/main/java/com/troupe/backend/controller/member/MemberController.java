@@ -85,10 +85,12 @@ public class MemberController {
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 
-    @Operation(summary = "비밀번호 재설정", description = "파라미터 : token (리퀘스트파람), password (리퀘스트바디)")
-    @PostMapping("/reset-password")
-    private ResponseEntity resetPassword(@RequestParam String token, @RequestBody PasswordForm passwordForm) {
+    @Operation(summary = "비밀번호 재설정", description = "파라미터 : token (패스배리어블), password (리퀘스트바디)")
+    @PostMapping("/reset-password/{token}")
+    private ResponseEntity resetPassword(@PathVariable String token, @RequestBody PasswordForm passwordForm) {
         String password = passwordForm.getPassword();
+
+        System.out.println(token);
 
         Optional<EmailToken> found = emailTokenService.findValidEmailToken(token);
         if (found.isPresent()) {
