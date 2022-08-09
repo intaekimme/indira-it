@@ -5,7 +5,8 @@ import CommentCount from "./CommentCount";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 
-export default function CommentList({ performance }) {
+export default function CommentList(props) {
+  const performanceNo = props.performance;
   const [comments, setComments] = useState([]);
   const [isSubmit, setIsSubmit] = useState(false);
 
@@ -17,7 +18,7 @@ export default function CommentList({ performance }) {
     let completed = false;
 
     async function fetchData() {
-      const response = await apiClient.getPerfCommentList(performance);
+      const response = await apiClient.getPerfCommentList(performanceNo);
       console.log(response);
       if (!completed) setComments(response);
       console.log(comments);
@@ -31,12 +32,14 @@ export default function CommentList({ performance }) {
 
   return (
     <div>
-      <CommentCount listSize={comments.length} />
-      <Comment setIsSubmit={setIsSubmit} />;
+      {/* <CommentCount listSize={comments.length} /> */}
+      <Comment setIsSubmit={setIsSubmit} />
+      console.log(props.commentList);
+      {/* <Comment setIsSubmit={setIsSubmit} />; */}
       {/* {comments.map((comment) => {
         return <Comment isSubmit={isSubmit} />;
       })} */}
-      <CommentForm />
+      <CommentForm refreshFunction={props.refreshFunction} />
     </div>
   );
 }

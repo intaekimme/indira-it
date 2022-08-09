@@ -22,8 +22,8 @@ const apiClient = {
       })
       .catch((error) => {
         alert("로그인 실패 : " + error);
-        alert(error.response.status)
-        if(error.response.status===401){
+        alert(error.response.status);
+        if (error.response.status === 401) {
           window.location.href = "/email";
         }
         return false;
@@ -35,7 +35,7 @@ const apiClient = {
       .post("/member/signup", data)
       .then((response) => {
         alert("회원가입 되었습니다." + response.data);
-        window.location.href="/email";
+        window.location.href = "/email";
         return true;
       })
       .catch((error) => {
@@ -44,15 +44,18 @@ const apiClient = {
       });
   },
   //reset pw
-  requestPassword:(data) =>{
-    instance.post("/member/request-password", data)
-    .then((response) => {
-      console.log(response);
-      alert("비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data);
-    })
-    .catch((error) => {
-      alert("비밀번호 초기화 실패 : " + error);
-    });
+  requestPassword: (data) => {
+    instance
+      .post("/member/request-password", data)
+      .then((response) => {
+        console.log(response);
+        alert(
+          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
+        );
+      })
+      .catch((error) => {
+        alert("비밀번호 초기화 실패 : " + error);
+      });
   },
   //프로필수정
   modifyProfile: (data) => {
@@ -160,7 +163,7 @@ const apiClient = {
       .catch((error) => {
         console.log(error);
         alert("isFollowing 정보를 불러오는데 실패하였습니다 : " + error);
-        return {isFollowing: false};
+        return { isFollowing: false };
       });
   },
 
@@ -316,7 +319,7 @@ const apiClient = {
 
   //공연 목록 불러오기
   getPerfList: async (pageNumber) => {
-      return await instance
+    return await instance
       .get(`/perf/list?pageNumber=${pageNumber}`)
       .then((response) => {
         // alert("공연 불러오기 성공");
@@ -327,7 +330,6 @@ const apiClient = {
         alert("공연 불러오기 실패" + error);
       });
   },
-
 
   //피드 목록 불러오기
   getFeedList: () => {
@@ -457,8 +459,7 @@ const apiClient = {
     }
   },
   //  공연 후기 등록
-  perfCommentNew: (performanceNo, data) => {
-    console.log(data);
+  perfCommentNew: (performanceNo, data, refreshFunction) => {
     instance
       .post(`/perf/${performanceNo}/review`, data, {
         headers: {
@@ -467,6 +468,8 @@ const apiClient = {
       })
       .then((response) => {
         alert("댓글 등록 성공");
+        console.log(response.data);
+        refreshFunction(response.data);
       })
       .catch((error) => {
         alert("댓글 등록 실패 : " + error);

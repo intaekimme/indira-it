@@ -34,7 +34,7 @@ public class PerformanceReviewService {
      * @param request
      */
     @Transactional
-    public void add(PfReviewForm request){
+    public PfReviewResponse add(PfReviewForm request){
 
         //  비로그인 유저만의 값 이용
         if(request.getMemberNo() == 0){
@@ -70,8 +70,20 @@ public class PerformanceReviewService {
                     .content(request.getContent())
                     .build();
         }
+        PfReviewResponse response = null;
+        try {
+            PerformanceReview savedReview = performanceReviewRepository.save(performanceReview);
+            response = PfReviewResponse.builder()
+                    .memberNo(member.getMemberNo())
+                    .reviewNo(savedReview.getId())
+                    .nickname(member.getNickname())
+                    .profileImageUrl(member.getProfileImageUrl())
+                    .comment(request.getContent())
+                    .build();
+        }catch (Exception e){
 
-        performanceReviewRepository.save(performanceReview);
+        }
+        return response;
     }
 
     /**

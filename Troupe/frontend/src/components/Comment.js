@@ -1,20 +1,38 @@
 import React from "react";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { red } from "@mui/material/colors";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
 
 export default function Comment() {
   return (
-    <div>
-      <div>
-        <image src="" />
-        <p>UserName</p>
-      </div>
-      <div>
-        <p>Comment</p>
-        <div>
-          <button>신고</button>
-          <button>수정</button>
-          <button>삭제</button>
-        </div>
-      </div>
-    </div>
+    <Card sx={{ maxWidth: 345 }}>
+      <CardHeader
+        avatar={
+          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+            R
+          </Avatar>
+        }
+      />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
+        </IconButton>
+      </CardActions>
+    </Card>
   );
 }
