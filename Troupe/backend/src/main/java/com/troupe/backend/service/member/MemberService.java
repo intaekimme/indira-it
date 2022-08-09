@@ -1,12 +1,17 @@
 package com.troupe.backend.service.member;
 
 import com.troupe.backend.domain.member.Member;
+import com.troupe.backend.domain.member.MemberType;
 import com.troupe.backend.dto.avatar.Avatar;
 import com.troupe.backend.dto.avatar.form.AvatarForm;
-import com.troupe.backend.dto.member.LoginForm;
-import com.troupe.backend.dto.member.MemberForm;
+import com.troupe.backend.dto.member.form.LoginForm;
+import com.troupe.backend.dto.member.form.MemberModifyForm;
+import com.troupe.backend.dto.member.form.MemberRegisterForm;
+import com.troupe.backend.exception.EmailUnauthenticatedException;
 import com.troupe.backend.exception.member.DuplicatedMemberException;
+import com.troupe.backend.exception.member.WrongPasswordException;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.service.email.EmailTokenService;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,14 +31,16 @@ public class MemberService implements UserDetailsService {
     private final AvatarService avatarService;
     private final S3FileUploadService s3FileUploadService;
 
+    private final EmailTokenService emailTokenService;
+
     /**
      * 회원 등록
      */
-    public Member saveMember(MemberForm memberForm) throws IOException {
-        System.out.println(memberForm.toString());
+    public Member saveMember(MemberRegisterForm memberRegisterForm) throws IOException {
+        System.out.println(memberRegisterForm.toString());
 
         // 중복 체크
-        if (isDuplicateMember(memberForm)) {
+        if (isDuplicateMember(memberRegisterForm)) {
             throw new DuplicatedMemberException();
         }
 
@@ -42,17 +49,17 @@ public class MemberService implements UserDetailsService {
 
         // 프로필 사진 저장
         String imageUrl = "";
-        if (memberForm.getProfileImage() != null && !memberForm.getProfileImage().isEmpty()) {
-            imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+        if (memberRegisterForm.getProfileImage() != null && !memberRegisterForm.getProfileImage().isEmpty()) {
+            imageUrl = s3FileUploadService.upload(memberRegisterForm.getProfileImage(), "profile");
         }
 
         // 멤버 생성
         Member member = Member.builder()
-                .email(memberForm.getEmail())
-                .password(memberForm.getPassword())
-                .nickname(memberForm.getNickname())
-                .description(memberForm.getDescription())
-                .memberType(memberForm.getMemberType())
+                .email(memberRegisterForm.getEmail())
+                .password(memberRegisterForm.getPassword())
+                .nickname(memberRegisterForm.getNickname())
+                .description(memberRegisterForm.getDescription())
+                .memberType(MemberType.AUDIENCE)
                 .profileImageUrl(imageUrl)
                 .isRemoved(false)
                 .clothes(defaultAvatar.getAvatarClothes())
@@ -61,15 +68,28 @@ public class MemberService implements UserDetailsService {
                 .mouth(defaultAvatar.getAvatarMouth())
                 .nose(defaultAvatar.getAvatarNose())
                 .shape(defaultAvatar.getAvatarShape())
+                .isAuthenticatedEmail(false) // 회원가입하고 DB에 저장하는 시점에는 이메일 인증이 되지 않은 상태
                 .build();
 
-        // 저장
-        return memberRepository.save(member);
+        // DB 저장
+        Member savedMember = memberRepository.save(member);
+
+        // 인증 메일 전송
+        emailTokenService.sendRegisterEmail(member.getEmail());
+
+        // 리턴
+        return savedMember;
     }
 
     public Member login(LoginForm loginForm) {
         Member foundMember = memberRepository.findByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword()).get();
-        return foundMember;
+
+        // 이메일 인증 여부 확인
+        if (foundMember.isAuthenticatedEmail()) {
+            return foundMember;
+        } else {
+            throw new EmailUnauthenticatedException();
+        }
     }
 
     /**
@@ -78,28 +98,35 @@ public class MemberService implements UserDetailsService {
     public Member deleteMember(int memberNo) {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
 
-
-        // TODO: 프로필 이미지 서버에서 삭제
+        // 프로필 이미지 서버에서 삭제
         String oldImageUrl = foundMember.getProfileImageUrl();
         if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
             s3FileUploadService.deleteFile(oldImageUrl);
         }
 
+        // 멤버 삭제
         foundMember.setRemoved(true);
+
         return foundMember;
     }
 
     /**
      * 회원 기본정보 수정
      */
-    public Member updateMember(int memberNo, MemberForm memberForm) throws IOException {
+    public Member updateMember(int memberNo, MemberModifyForm memberModifyForm) throws IOException {
         Member foundMember = memberRepository.findById(memberNo).get(); // 실패 시 NoSuchElementException
 
-        if (isDuplicateMember(foundMember.getMemberNo(), memberForm)) {
+        // 이메일, 닉네임 중복 체크
+        if (isDuplicateMember(foundMember.getMemberNo(), memberModifyForm)) {
             throw new DuplicatedMemberException();
         }
 
-        // TODO: 기존 프로필 이미지를 서버에서 삭제
+        // 기존 비밀번호 일치 여부 확인
+        if (!(foundMember.getPassword().equals(memberModifyForm.getCurrentPassword()))) {
+            throw new WrongPasswordException();
+        }
+
+        // 기존 프로필 이미지를 서버에서 삭제
         String oldImageUrl = foundMember.getProfileImageUrl();
         if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
             s3FileUploadService.deleteFile(oldImageUrl);
@@ -107,15 +134,16 @@ public class MemberService implements UserDetailsService {
 
         // 새로운 프로필 이미지를 서버에 저장
         String imageUrl = "";
-        if (memberForm.getProfileImage() != null && !memberForm.getProfileImage().isEmpty()) {
-            imageUrl = s3FileUploadService.upload(memberForm.getProfileImage(), "profile");
+        if (memberModifyForm.getProfileImage() != null && !memberModifyForm.getProfileImage().isEmpty()) {
+            imageUrl = s3FileUploadService.upload(memberModifyForm.getProfileImage(), "profile");
         }
 
-        foundMember.setEmail(memberForm.getEmail());
-        foundMember.setPassword(memberForm.getPassword());
-        foundMember.setNickname(memberForm.getNickname());
-        foundMember.setDescription(memberForm.getDescription());
-        foundMember.setMemberType(memberForm.getMemberType());
+        // 멤버 객체 수정 및 DB 반영
+        foundMember.setEmail(memberModifyForm.getEmail());
+        foundMember.setPassword(memberModifyForm.getPassword());
+        foundMember.setNickname(memberModifyForm.getNickname());
+        foundMember.setDescription(memberModifyForm.getDescription());
+        foundMember.setMemberType(memberModifyForm.getMemberType());
         foundMember.setProfileImageUrl(imageUrl);
 
         return foundMember;
@@ -124,15 +152,15 @@ public class MemberService implements UserDetailsService {
     /**
      * 등록 시 이메일, 닉네임 중복 여부 리턴
      */
-    public boolean isDuplicateMember(MemberForm memberForm) {
-        return isDuplicateEmail(memberForm.getEmail()) || isDuplicateNickname(memberForm.getNickname());
+    public boolean isDuplicateMember(MemberRegisterForm memberRegisterForm) {
+        return isDuplicateEmail(memberRegisterForm.getEmail()) || isDuplicateNickname(memberRegisterForm.getNickname());
     }
 
     /**
      * 수정 시 이메일, 닉네임 중복 여부 리턴
      */
-    public boolean isDuplicateMember(int memberNo, MemberForm memberForm) {
-        return isDuplicateEmail(memberNo, memberForm.getEmail()) || isDuplicateNickname(memberNo, memberForm.getNickname());
+    public boolean isDuplicateMember(int memberNo, MemberModifyForm memberModifyForm) {
+        return isDuplicateEmail(memberNo, memberModifyForm.getEmail()) || isDuplicateNickname(memberNo, memberModifyForm.getNickname());
     }
 
     /**
@@ -220,5 +248,21 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return memberRepository.findById(Integer.parseInt(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    /**
+     * 비밀번호 재설정 이메일 전송
+     */
+    public void sendResetPasswordEmail (String email) {
+        emailTokenService.sendResetPasswordEmail(email);
+    }
+
+    /**
+     * 비밀번호 재설정
+     */
+    public void resetPassword(String email, String password) {
+        Member member = memberRepository.findByEmail(email).get(); // 실패 시 NoSuchElementException
+
+        member.setPassword(password);
     }
 }

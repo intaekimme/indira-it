@@ -7,7 +7,7 @@ import instance from "axios";
 const apiClient = {
   //로그인
   login: (loginInfo) => {
-    instance
+    return instance
       .post("/member/login", loginInfo)
       .then((response) => {
         window.sessionStorage.setItem("loginCheck", true);
@@ -17,44 +17,113 @@ const apiClient = {
         const href = sessionStorage.getItem("currentHref");
         sessionStorage.removeItem("currentHref");
         window.location.href = href;
+        return true;
       })
       .catch((error) => {
         alert("로그인 실패 : " + error);
+        alert(error.response.status)
+        if(error.response.status===401){
+          window.location.href = "/email";
+        }
+        return false;
       });
   },
   //회원가입
   signup: (data) => {
-    instance
+    return instance
       .post("/member/signup", data)
       .then((response) => {
         alert("회원가입 되었습니다." + response.data);
+        window.location.href="/email";
+        return true;
       })
       .catch((error) => {
         alert("회원가입 실패 : " + error);
+        return false;
+      });
+  },
+  //reset pw
+  requestPassword:(data) =>{
+    instance.post("/member/request-password", data)
+    .then((response) => {
+      console.log(response);
+      alert("비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data);
+    })
+    .catch((error) => {
+      alert("비밀번호 초기화 실패 : " + error);
+    });
+  },
+  //프로필수정
+  modifyProfile: (data) => {
+    instance
+      .patch("/member/myinfo", data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("프로필수정 되었습니다." + response.data);
+      })
+      .catch((error) => {
+        alert("프로필수정 실패 : " + error);
       });
   },
 
   //이메일 중복체크
   existEmail: (data) => {
-    instance
+    return instance
       .post("/member/signup/email", data)
       .then((response) => {
         alert("사용 가능합니다." + response.data);
+        return false;
       })
       .catch((error) => {
-        alert("중복된 email입니다. : " + error);
+        const status = error.response.status;
+        if (status === 500) {
+          alert("server Error : " + error);
+          return error;
+        } else if (status === 409) {
+          alert("중복된 e-mail 입니다 : " + error);
+          return true;
+        }
       });
   },
 
   //닉네임 중복체크
   existNickname: (data) => {
-    instance
+    return instance
       .post("/member/signup/nickname", data)
       .then((response) => {
         alert("사용 가능합니다." + response.data);
+        return false;
       })
       .catch((error) => {
-        alert("중복된 nickname입니다. : " + error);
+        const status = error.response.status;
+        if (status === 500) {
+          alert("server Error : " + error);
+          return error;
+        } else if (status === 409) {
+          alert("중복된 nickname 입니다 : " + error);
+          return true;
+        }
+      });
+  },
+
+  //현재 비밀번호 일치 확인
+  pwCurrentCheck: (data) => {
+    return instance
+      .post(`/member/pw`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log("pwCurrentCheck : " + response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("pwCurrentCheck 정보를 불러오는데 실패하였습니다 : " + error);
+        return null;
       });
   },
 
@@ -75,6 +144,8 @@ const apiClient = {
   //팔로우 여부 확인
   isFollowing: (data) => {
     const profileMemberNo = data.profileMemberNo;
+    console.log(data);
+    console.log(profileMemberNo);
     return instance
       .get(`/profile/${profileMemberNo}/follow`, {
         headers: {
@@ -88,7 +159,7 @@ const apiClient = {
       .catch((error) => {
         console.log(error);
         alert("isFollowing 정보를 불러오는데 실패하였습니다 : " + error);
-        return null;
+        return {isFollowing: false};
       });
   },
 
@@ -113,11 +184,15 @@ const apiClient = {
             return false;
           })
       : instance
-          .post(`/profile/${parseInt(data.profileMemberNo)}/follow`, {}, {
-            headers: {
-              accessToken: sessionStorage.getItem("accessToken"),
+          .post(
+            `/profile/${parseInt(data.profileMemberNo)}/follow`,
+            {},
+            {
+              headers: {
+                accessToken: sessionStorage.getItem("accessToken"),
+              },
             },
-          })
+          )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
             return true;
@@ -129,10 +204,29 @@ const apiClient = {
           });
   },
 
+  //내정보 불러오기
+  getMyinfo: () => {
+    return instance
+      .get(`/member/myinfo`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Member 정보를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
+
   //회원정보 불러오기
   getMemberInfo: (memberNo) => {
     return instance
-      .get(`/member/${memberNo}`)
+      .get(`/member/${parseInt(memberNo)}`)
       .then((response) => {
         console.log(response.data);
         return response.data;
@@ -246,7 +340,6 @@ const apiClient = {
         return null;
       });
   },
-
   //호감도 공연자 Top3
   getPerformerTop3: (data) => {
     return instance
@@ -260,8 +353,8 @@ const apiClient = {
         return null;
       });
   },
-  
-  //호감도 공연자 Top3
+
+  //공연자에 대한 나의 호감도 data
   getMyLikeabilityData: (data) => {
     return instance
       .get(`/profile/${parseInt(data.profileMemberNo)}/likability`, {
@@ -271,13 +364,95 @@ const apiClient = {
       })
       .then((response) => {
         console.log(response.data);
-        alert("공연자에 대한 나의 호감도data 불러오기 성공");
+        alert("공연자에 대한 나의 호감도 data 불러오기 성공");
         return response.data;
       })
       .catch((error) => {
-        alert("공연자에 대한 나의 호감도data 불러오기 실패" + error);
+        alert("공연자에 대한 나의 호감도 data 불러오기 실패" + error);
         return null;
       });
+  },
+  //피드 등록
+  feedNew: (data) => {
+    instance
+      .post("/feed", data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        alert("피드 등록 성공");
+        return response;
+      })
+      .catch((error) => {
+        alert("피드 등록 실패" + error);
+        return error;
+      });
+  },
+
+  feedModify: (data, feedNo) => {
+    instance
+      .post(`/feed/${feedNo}/modify`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        alert("피드 수정 성공");
+        return response;
+      })
+      .catch((error) => {
+        alert("피드 수정 실패" + error);
+        return error;
+      });
+  },
+  getFeedDetail: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        // alert("피드 상세 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 상세 불러오기 실패" + error);
+        return error;
+      });
+  },
+
+  getFeedTotalLike: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}/like`)
+      .then((response) => {
+        // console.log(response.data);
+        // alert("피드 좋아요 수 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 좋아요 수 불러오기 실패" + error);
+        return error;
+      });
+  },
+  feedRemove: (feedNo) => {
+    if (window.confirm("삭제하시겠습니까?")) {
+      instance
+        .patch(`/feed/${feedNo}/del`)
+        .then((response) => {
+          alert("피드가 삭제되었습니다" + response);
+        })
+        .catch((error) => {
+          alert("피드 삭제 실패 :" + error + feedNo);
+          return error;
+        });
+    } else {
+      alert("취소합니다.");
+    }
   },
 };
 

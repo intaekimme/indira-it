@@ -3,6 +3,7 @@ import apiClient from "../apiClient";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Stage from "../img/stage.jpg";
+import Avatar from "./Avatar";
 export default function LikeabilityBar(props) {
   const likeabilityData = props.likeabilityData;
   // 호감도 경험치
@@ -15,8 +16,8 @@ export default function LikeabilityBar(props) {
   // 	})
   // }, [likeabilityData.memberNo]);
   const avatarUrl = [Stage];
-  const imgWidth = 30;
-  const imgHeight = 50;
+  const imgWidth = 75;
+  const imgHeight = 100;
   const barHeight = 30;
 
   return (
@@ -29,8 +30,8 @@ export default function LikeabilityBar(props) {
           padding: "20px",
         }}
       >
-        <Grid item xs={2}>
-          {avatarUrl.map((url, index) => (
+        <Grid item xs={2} style={{position: "relative"}}>
+          {/* {avatarUrl.map((url, index) => (
             <img
               key={`${url}${index}`}
               src={url}
@@ -40,7 +41,11 @@ export default function LikeabilityBar(props) {
                 height: `${imgHeight}px`,
               }}
             ></img>
-          ))}
+          ))} */}
+
+          {
+            <Avatar avatarResponse={likeabilityData.avatarResponse} />
+          }
         </Grid>
         <Grid item xs={8} style={{ position: "relative" }}>
           <Box
@@ -67,6 +72,8 @@ export default function LikeabilityBar(props) {
         <Grid item xs={2}>
           <div>Lv.{parseInt(exp / 100)}</div>
         </Grid>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}></Grid>
       </Grid>
     </div>
   );

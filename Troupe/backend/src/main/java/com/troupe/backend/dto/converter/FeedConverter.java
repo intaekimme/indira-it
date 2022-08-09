@@ -30,7 +30,7 @@ public class FeedConverter {
         response.setFeedNo(feed.getFeedNo());
         response.setMemberNo(feed.getMember().getMemberNo());
         response.setNickname(feed.getMember().getNickname());
-        response.setProfileImageUrl(feed.getMember().getProfileImageUrl());
+        response.setProfileImageUrl(MyConstant.FILE_SERVER_URL+feed.getMember().getProfileImageUrl());
         response.setTags(tagList(taglist));
         response.setContent(feed.getContent());
         response.setImages(imageList(feedImage));

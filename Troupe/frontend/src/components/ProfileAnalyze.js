@@ -47,10 +47,12 @@ export default function ProfileAnalyze(props) {
   //이 member의 호감도 data
   const [performerTop3, setPerformerTop3] = React.useState([]);
   React.useEffect(() => {
-    apiClient.getPerformerTop3({profileMemberNo: memberNo}).then((data) => {
+    apiClient.getPerformerTop3({ profileMemberNo: memberNo }).then((data) => {
+      console.log(data);
       setPerformerTop3(data.top3Stars);
     });
     apiClient.getMyLikeabilityData({profileMemberNo: memberNo}).then((data) => {
+      console.log(data);
       setMyLikeabilityData([data]);
     });
   }, [memberNo]);

@@ -1,7 +1,7 @@
 package com.troupe.backend.dto.guestbook;
 
 import com.troupe.backend.domain.member.Guestbook;
-import com.troupe.backend.dto.member.MemberInfoResponse;
+import com.troupe.backend.dto.member.response.MemberInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
