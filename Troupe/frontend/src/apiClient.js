@@ -374,6 +374,7 @@ const apiClient = {
         return null;
       });
   },
+
   //피드 등록
   feedNew: (data) => {
     instance
@@ -441,12 +442,50 @@ const apiClient = {
         return error;
       });
   },
+
+  //피드 목록 테스트용(후에 삭제)
+  getFeedTest: () => {
+    // const change = data.change;
+    // const pageNumber = data.pageNumber;
+    return instance
+      .get(`/feed/list/all?pageNumber=0`)
+      .then((response) => {
+        console.log(response.data);
+        alert("피드 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 불러오기 실패" + error);
+        return null;
+      });
+  },
+
+  //피드 검색 테스트용(후에 삭제)
+ getFeedSearchTest: (data) => {
+    return instance
+      .get(`/feed/search?pageNumber=0`, {
+        params: {
+          tags: data,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        alert("피드 검색 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 검색 불러오기 실패" + error);
+        return error;
+      });
+  },
+ 
   feedRemove: (feedNo) => {
     if (window.confirm("삭제하시겠습니까?")) {
       instance
         .patch(`/feed/${feedNo}/del`)
         .then((response) => {
           alert("피드가 삭제되었습니다" + response);
+          window.location.href = "/feed/list";
         })
         .catch((error) => {
           alert("피드 삭제 실패 :" + error + feedNo);

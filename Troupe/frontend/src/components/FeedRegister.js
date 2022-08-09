@@ -2,11 +2,9 @@ import React, { useCallback } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import { Button, Grid, Container } from "@mui/material";
 import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
-import { textAlign } from "@mui/system";
 
 const theme = createTheme({
   palette: {
@@ -44,9 +42,9 @@ export default function FeedRegister() {
     imageList.forEach((item) => {
       data.append("images", item);
     });
-    console.log(data.get("content"));
-    console.log("제출할 태그들 " + data.get("tags"));
-    console.log(data.get("images"));
+    // console.log(data.get("content"));
+    // console.log("제출할 태그들 " + data.get("tags"));
+    // console.log(data.get("images"));
 
     apiClient.feedNew(data);
   };

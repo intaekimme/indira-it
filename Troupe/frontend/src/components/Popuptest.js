@@ -16,9 +16,12 @@ import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import Favorite from "@mui/icons-material/Favorite";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
+import FeedDetail from "./FeedDetail";
+import { useNavigate } from "react-router-dom";
+import Modal from "@mui/material/Modal";
+import stylesModal from "../css/modal.module.css";
 
-// 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
-// 유저 분간을 어떻게 하지
+// 피드상세 모달구현을 위한 임시페이지 (후에 삭제 예정)
 
 function Copyright() {
   return (
@@ -51,9 +54,24 @@ const theme = createTheme();
 export default function Album() {
   const [like, setLike] = React.useState(false);
   const [save, setSave] = React.useState(false);
-  let [cards, setCard] = React.useState([1, 2, 3, 4, 5, 6]);
+  const [open, setOpen] = React.useState(false);
+  const [feedNo, setFeedNo] = React.useState(0);
+  let [cards, setCard] = React.useState([
+    {
+      feedNo: 0,
+      nickname: "",
+      profileImageUrl: "",
+    },
+  ]);
 
-const[]
+  function handleOpen(no) {
+    setOpen(true);
+    setFeedNo(no);
+  }
+  function handleClose() {
+    setOpen(false);
+  }
+
   function handleLike() {
     setLike(!like);
   }
@@ -68,11 +86,19 @@ const[]
     setCard(range(0, pages));
   }
 
+  function onClick(feedNo) {
+    // alert(feedNo);
+  }
   React.useEffect(() => {
-      apiClient.getFeedList(0).then((data) => {
-        
-    })
-  }, [feedNo]);
+    // const data = {
+    //   change: "all",
+    //   pageNumber: 0,
+    // };
+    apiClient.getFeedTest().then((data) => {
+      console.log(data);
+      setCard(data);
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -84,8 +110,8 @@ const[]
       <main>
         <Container sx={{ py: 10 }} maxWidth="md">
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {cards.map((card, id) => (
+              <Grid item key={id} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
                     height: "100%",
@@ -93,14 +119,18 @@ const[]
                     flexDirection: "column",
                   }}
                   elevation={0}
+                  onClick={() => handleOpen(card.feedNo)}
                 >
                   <Typography
                     gutterBottom
-                    style={{ fontSize: "20px", fontFamily: "IBM Plex Sans KR" }}
+                    style={{
+                      fontSize: "20px",
+                      fontFamily: "IBM Plex Sans KR",
+                    }}
                     component="span"
                   >
                     <img
-                      src="https://source.unsplash.com/random"
+                      src={card.profileImageUrl}
                       alt="random"
                       style={{
                         borderRadius: "70%",
@@ -109,7 +139,7 @@ const[]
                         width: "20px",
                       }}
                     ></img>
-                    SmartToy
+                    {card.nickname}
                   </Typography>
                   <CardMedia
                     component="img"
@@ -144,7 +174,7 @@ const[]
                       ) : (
                         <FavoriteBorderIcon></FavoriteBorderIcon>
                       )}
-                      30
+                      {card.feedNo}
                     </Button>
                     <Button
                       size="small"
@@ -161,12 +191,21 @@ const[]
                       ) : (
                         <TurnedInNotIcon></TurnedInNotIcon>
                       )}
-                    </Button>
+                    </Button>{" "}
                   </CardActions>
                 </Card>
               </Grid>
             ))}
           </Grid>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            className={stylesModal.outer}
+          >
+            <FeedDetail feedNo={feedNo} open={open}></FeedDetail>
+          </Modal>
         </Container>
       </main>
       {/* Footer */}

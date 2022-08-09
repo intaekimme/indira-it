@@ -17,6 +17,7 @@ import FeedRegister from "./components/FeedRegister";
 import FeedDetail from "./components/FeedDetail";
 import FeedModify from "./components/FeedModify";
 import GuestBook from "./components/GuestBook";
+import PopupTest from "./components/Popuptest";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -57,9 +58,10 @@ function App() {
             <Route path="/perf/detail" element={<PerfDetail />}></Route>
             <Route path="/perf/new" element={<PerfNew />}></Route>
             <Route path="/feed/register" element={<FeedRegister />}></Route>
-            <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route>
             <Route path="/feed/modify/:feedNo" element={<FeedModify />}></Route>
             <Route path="/guestbook/test" element={<GuestBook/>}></Route>
+            <Route path="/feed/test" element={<PopupTest />}></Route>
+            {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}
           </Routes>
         </Router>
         <ReactQueryDevtools initialIsOpen={true} position="bottom-right" />

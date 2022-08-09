@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import { Button, Grid, Container } from "@mui/material";
 import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
@@ -60,13 +59,13 @@ export default function FeedModify() {
     imageList.forEach((item) => {
       data.append("images", item);
     });
-    console.log(data.get("content"));
-    console.log("제출할 태그들 " + data.get("tags"));
-    console.log(data.get("images"));
-    console.log("삭제된 이미지 번호들 " + data.get("imageNo"));
-    console.log("기존 이미지 사이즈: " + Object.values(oldImage).length);
+    // console.log(data.get("content"));
+    // console.log("제출할 태그들 " + data.get("tags"));
+    // console.log(data.get("images"));
+    // console.log("삭제된 이미지 번호들 " + data.get("imageNo"));
+    // console.log("기존 이미지 사이즈: " + Object.values(oldImage).length);
 
-    // apiClient.feedModify(data, feedNo);
+    apiClient.feedModify(data, feedNo);
   };
 
   const changeImage = (event) => {
@@ -95,6 +94,14 @@ export default function FeedModify() {
 
   const changeContent = (event) => {
     setContent(event.target.value);
+  };
+
+  const cancelForm = () => {
+    if (window.confirm("수정을 취소하시겠습니까?")) {
+      window.location.href = "/feed/list";
+    } else {
+      return;
+    }
   };
   const addTagFunc = useCallback(
     (event) => {
@@ -290,6 +297,16 @@ export default function FeedModify() {
                 color="neutral"
               >
                 피드 수정
+              </Button>
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                color="grey"
+                onClick={() => cancelForm()}
+              >
+                취소
               </Button>
             </form>
           </Grid>
