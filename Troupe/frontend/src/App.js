@@ -44,7 +44,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<PerfList />}></Route>
-            <Route path="/perf/list/:startNo" element={<PerfList />}></Route>
+            <Route path="/perf/list/:pageNumber" element={<PerfList />}></Route>
             <Route path="/feed/list" element={<FeedList />}></Route>
             <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />} ></Route>
             <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />} ></Route>
@@ -62,7 +62,7 @@ function App() {
             <Route path="/guestbook/test" element={<GuestBook/>}></Route>
           </Routes>
         </Router>
-        <ReactQueryDevtools initialIsOpen={true} position="bottom-right" />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
     </div>
   );
