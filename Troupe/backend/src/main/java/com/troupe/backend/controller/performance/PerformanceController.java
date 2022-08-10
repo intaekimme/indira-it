@@ -165,10 +165,10 @@ public class PerformanceController {
      * @return
      */
     @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용, 부모댓글번호-선택")
-    @PostMapping("/{pfNo}/review")
+    @PostMapping("/{pfNo}/review/{parentCommentNo}")
     public ResponseEntity<PfReviewResponse> registerReview(Principal principal,
                                                            @PathVariable String pfNo,
-                                                           @RequestParam(required = false) Integer parentCommentNo,
+                                                           @PathVariable(required = false) Integer parentCommentNo,
                                                            @RequestBody Map<String, String> body){
         System.out.println(body.get("content"));
         int memberNo = Integer.parseInt(principal.getName());
@@ -232,18 +232,16 @@ public class PerformanceController {
 
     /**
      * 공연 후기 대댓글 목록
-     * @param principal
      * @param pfNo
      * @param reviewNo
      * @return
      */
     @Operation(summary = "공연 후기 대댓글 목록", description = "파라미터: 공연 번호, 리뷰 번호")
     @GetMapping("/{pfNo}/review/{reviewNo}/list")
-    public ResponseEntity<List<PfReviewResponse>> findPfChildReviewList(Principal principal,
-                                                                        @PathVariable int pfNo,
+    public ResponseEntity<List<PfReviewResponse>> findPfChildReviewList( @PathVariable int pfNo,
                                                                         @PathVariable int reviewNo){
-        int memberNo = Integer.parseInt(principal.getName());
-        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfChildReviewList(pfNo, reviewNo, memberNo);
+
+        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfChildReviewList(pfNo, reviewNo);
         return ResponseEntity.ok().body(pfReviewResponseList);
     }
 
