@@ -13,7 +13,16 @@ export default function CarouselItem(prop) {
     setOpen(false);
   }
   return (
-    <Paper style={{ backgroundColor: "#FFFF" }} elevation={0}>
+    <Paper
+      style={{
+        height: "700px",
+        width: "760px",
+        // height: "100%",
+        // width: "100%",
+        margin: "100px 0px",
+      }}
+      elevation={0}
+    >
       {prop.item.slice(-3) !== "mp4" && prop.item.slice(-3) !== "wav" ? (
         <img
           onClick={handleOpen}

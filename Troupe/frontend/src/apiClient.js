@@ -50,7 +50,7 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert(
-          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
+          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data,
         );
       })
       .catch((error) => {
@@ -195,7 +195,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            }
+            },
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -388,6 +388,7 @@ const apiClient = {
       })
       .then((response) => {
         alert("피드 등록 성공");
+        window.location.href = "/feed/list";
         return response;
       })
       .catch((error) => {
@@ -406,6 +407,7 @@ const apiClient = {
       })
       .then((response) => {
         alert("피드 수정 성공");
+        window.location.href = "/feed/list";
         return response;
       })
       .catch((error) => {
@@ -527,6 +529,74 @@ const apiClient = {
       .catch((error) => {
         alert("공연 후기 불러오기 실패" + error);
         return null;
+      });
+  },
+  feedLikeCheck: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}/like/now`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("피드 좋아요 여부 get 성공");
+        // console.log("isLike? " + response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        // alert("피드 좋아요 여부 get 실패" + error);
+        return error;
+      });
+  },
+  feedLike: (feedNo) => {
+    return instance
+      .patch(`/feed/${feedNo}/like`, feedNo, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("피드 좋아요 성공");
+        // console.log("isLike? " + response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 좋아요 실패" + error);
+        return error;
+      });
+  },
+  feedSaveCheck: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}/save/now`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("피드 저장 여부 get 성공");
+        // console.log("Save? " + response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        // alert("피드 저장 여부 get 실패" + error);
+        return error;
+      });
+  },
+  feedSave: (feedNo) => {
+    return instance
+      .patch(`/feed/${feedNo}/save`, feedNo, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("피드 저장 성공");
+        // console.log("Save? " + response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 저장 실패" + error);
+        return error;
       });
   },
 };

@@ -72,8 +72,8 @@ function App() {
             <Route path="/test" element={<Test />}></Route>
             <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
             <Route path="/perf/new" element={<PerfNew />}></Route>
-            <Route path="/feed/register" element={<FeedRegister />}></Route>
-            <Route path="/feed/modify/:feedNo" element={<FeedModify />}></Route>
+            <Route path="/feed/register" element={loginCheck() ? <FeedRegister /> : <Navigate to="/login" />}></Route>
+            <Route path="/feed/modify/:feedNo" element={loginCheck() ? <FeedModify /> : <Navigate to="/login" />}></Route>
             <Route path="/guestbook/test" element={<GuestBook />}></Route>
             <Route path="/feed/test" element={<PopupTest />}></Route>
             {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}

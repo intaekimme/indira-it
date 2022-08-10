@@ -62,4 +62,12 @@ public class FeedILikeService {
          }
          return total;
      }
+
+     public boolean checkFeedLike(int memberNo,int feedNo){
+         Member member = memberRepository.findById(memberNo).get();
+         Feed feed = feedRepository.findById(feedNo).get();
+         Optional<FeedLike> check = feedLikeRepository.findByMemberAndFeedAndIsDeletedFalse(member,feed);
+         if(check.isPresent()) return true;
+         else return false;
+     }
 }

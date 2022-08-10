@@ -1,6 +1,10 @@
 import React, { Fragment } from "react";
 import { Button } from "@mui/material";
 import apiClient from "../apiClient";
+import { SvgIcon } from "@mui/material";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
 export default function ModifyDeleteButton(props) {
   const [user, setUser] = React.useState(false);
 
@@ -17,39 +21,36 @@ export default function ModifyDeleteButton(props) {
   return (
     <div style={{ float: "right", backgroundColor: "#FFF" }}>
       <Button
-        variant="outlined"
         href="/feed/list"
         style={{
-          margin: "8px",
-          backgroundColor: "beige",
+          margin: "5px",
+          backgroundColor: "transparent",
           fontFamily: "IBM Plex Sans KR",
         }}
       >
-        피드 목록
+        <SvgIcon component={FormatListBulletedIcon} color="action"></SvgIcon>
       </Button>
       {user ? (
         <Fragment>
           <Button
-            variant="outlined"
             href={"/feed/modify/" + props.feedNo}
             style={{
-              margin: "8px",
-              backgroundColor: "skyblue",
+              margin: "5px",
+              backgroundColor: "transparent",
               fontFamily: "IBM Plex Sans KR",
             }}
           >
-            수정
+            <SvgIcon component={ModeEditIcon} color="action"></SvgIcon>
           </Button>
           <Button
-            variant="outlined"
             style={{
-              margin: "8px",
-              backgroundColor: "pink",
+              margin: "5px",
+              backgroundColor: "transparent",
               fontFamily: "IBM Plex Sans KR",
             }}
             onClick={onRemove}
           >
-            삭제
+            <SvgIcon component={DeleteIcon} color="action"></SvgIcon>
           </Button>
         </Fragment>
       ) : (

@@ -51,11 +51,11 @@
   position: absolute;
   top : -130px;
   right: 3px;
-  color: white;
+  /* color: white;
   background-color: red;
   border-radius: 50%;
   border: none;
-  font-weight: bold;
+  font-weight: bold; */
 }
 
 .alert {
