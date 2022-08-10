@@ -500,8 +500,7 @@ const apiClient = {
     }
   },
   //  공연 후기 등록
-  perfCommentNew: (performanceNo, data) => {
-    console.log(data);
+  perfCommentNew: (performanceNo, data, refreshFunction) => {
     instance
       .post(`/perf/${performanceNo}/review`, data, {
         headers: {
@@ -510,6 +509,8 @@ const apiClient = {
       })
       .then((response) => {
         alert("댓글 등록 성공");
+        console.log(response.data);
+        refreshFunction(response.data);
       })
       .catch((error) => {
         alert("댓글 등록 실패 : " + error);

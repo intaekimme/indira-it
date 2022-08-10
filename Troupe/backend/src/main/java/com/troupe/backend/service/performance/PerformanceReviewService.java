@@ -3,12 +3,12 @@ package com.troupe.backend.service.performance;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceReview;
-import com.troupe.backend.dto.performance.PfReviewForm;
-import com.troupe.backend.dto.performance.PfReviewResponse;
-import com.troupe.backend.dto.performance.PfReviewResponse;
+import com.troupe.backend.dto.performance.form.PfReviewForm;
+import com.troupe.backend.dto.performance.response.PfReviewResponse;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceReviewRepository;
+import com.troupe.backend.util.MyConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class PerformanceReviewService {
      * @param request
      */
     @Transactional
-    public void add(PfReviewForm request){
+    public PfReviewResponse add(PfReviewForm request){
 
         //  비로그인 유저만의 값 이용
         if(request.getMemberNo() == 0){
@@ -70,8 +70,20 @@ public class PerformanceReviewService {
                     .content(request.getContent())
                     .build();
         }
+        PfReviewResponse response = null;
+        try {
+            PerformanceReview savedReview = performanceReviewRepository.save(performanceReview);
+            response = PfReviewResponse.builder()
+                    .memberNo(member.getMemberNo())
+                    .reviewNo(savedReview.getId())
+                    .nickname(member.getNickname())
+                    .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
+                    .comment(request.getContent())
+                    .build();
+        }catch (Exception e){
 
-        performanceReviewRepository.save(performanceReview);
+        }
+        return response;
     }
 
     /**
@@ -107,7 +119,7 @@ public class PerformanceReviewService {
                     .memberNo(member.getMemberNo())
                     .reviewNo(review.getId())
                     .nickname(member.getNickname())
-                    .profileImageUrl(member.getProfileImageUrl())
+                    .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(review.getContent())
                     .build()
             );
@@ -158,7 +170,7 @@ public class PerformanceReviewService {
             pfReviewResponseList.add(PfReviewResponse.builder()
                     .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())
-                    .profileImageUrl(member.getProfileImageUrl())
+                    .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(review.getContent())
                     .build()
             );

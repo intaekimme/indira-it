@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -8,6 +8,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
 import CommentList from "./CommentList";
+import { useParams } from "react-router-dom";
 
 // 제목, 기간, 시간, 장소, 티켓가격
 
@@ -178,6 +179,23 @@ function PerfDetail() {
   const [date, setDate] = React.useState("");
   const [location, setLocation] = React.useState("");
 
+  const [performanceNo, setPerformanceNo] = useState(0);
+  const [commentList, setCommentList] = React.useState([]);
+
+  const refreshFunction = (newComment) => {
+    setCommentList([...commentList, newComment]);
+  };
+
+  const { pfNo } = useParams();
+
+  useEffect(() => {
+    setPerformanceNo(pfNo);
+
+    apiClient.getPerfCommentList(pfNo).then((data) => {
+      setCommentList(data);
+    });
+  }, []);
+
   return (
     <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
       <ModifyDeleteButton />
@@ -234,7 +252,10 @@ function PerfDetail() {
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Item>
-                <CommentList performance={2} />
+                <CommentList
+                  refreshFunction={refreshFunction}
+                  commentList={commentList}
+                />
               </Item>
             </Grid>
           </Grid>

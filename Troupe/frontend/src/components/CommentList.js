@@ -1,42 +1,30 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import apiClient from "../apiClient";
 import CommentCount from "./CommentCount";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 
-export default function CommentList({ performance }) {
-  const [comments, setComments] = useState([]);
-  const [isSubmit, setIsSubmit] = useState(false);
+export default function CommentList(props) {
+  console.log(props);
 
-  // const isSubmit = (val) => {
-  //   console.log(val);
-  // };
-
-  useEffect(() => {
-    let completed = false;
-
-    async function fetchData() {
-      const response = await apiClient.getPerfCommentList(performance);
-      console.log(response);
-      if (!completed) setComments(response);
-      console.log(comments);
-    }
-    fetchData();
-
-    return () => {
-      completed = true;
-    };
-  }, []);
-
+  const comments = props.commentList;
+  console.log(comments);
   return (
     <div>
-      <CommentCount listSize={comments.length} />
-      <Comment setIsSubmit={setIsSubmit} />;
-      {/* {comments.map((comment) => {
-        return <Comment isSubmit={isSubmit} />;
-      })} */}
-      <CommentForm />
+      <CommentCount listSize={props.commentList.length} />
+      {comments.map((comment, index) => {
+        return (
+          <Comment
+            key={index}
+            memberNo={comment.memberNo}
+            reviewNo={comment.reviewNo}
+            nickname={comment.nickname}
+            profileImageUrl={comment.profileImageUrl}
+            comment={comment.comment}
+          />
+        );
+      })}
+      <CommentForm refreshFunction={props.refreshFunction} />
     </div>
   );
 }

@@ -28,7 +28,7 @@ function App() {
     return window.sessionStorage.getItem("loginCheck") === "true";
   };
   const [memberData, setMemberData] = React.useState(
-    window.sessionStorage.getItem("memberData"),
+    window.sessionStorage.getItem("memberData")
   );
   React.useEffect(() => {
     setMemberData(window.sessionStorage.getItem("memberData"));
@@ -70,18 +70,10 @@ function App() {
               element={true ? <ProfileForm /> : <Navigate to="/" />}
             ></Route>
             <Route path="/test" element={<Test />}></Route>
-            <Route path="/perf/detail" element={<PerfDetail />}></Route>
+            <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
             <Route path="/perf/new" element={<PerfNew />}></Route>
-            <Route
-              path="/feed/register"
-              element={
-                loginCheck() ? <FeedRegister /> : <Navigate to="/login" />
-              }
-            ></Route>
-            <Route
-              path="/feed/modify/:feedNo"
-              element={loginCheck() ? <FeedModify /> : <Navigate to="/login" />}
-            ></Route>
+            <Route path="/feed/register" element={loginCheck() ? <FeedRegister /> : <Navigate to="/login" />}></Route>
+            <Route path="/feed/modify/:feedNo" element={loginCheck() ? <FeedModify /> : <Navigate to="/login" />}></Route>
             <Route path="/guestbook/test" element={<GuestBook />}></Route>
             <Route path="/feed/test" element={<PopupTest />}></Route>
             {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}

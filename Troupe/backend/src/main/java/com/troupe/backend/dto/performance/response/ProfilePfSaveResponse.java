@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.performance;
+package com.troupe.backend.dto.performance.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProfilePfResponse {
+public class ProfilePfSaveResponse {
+    int memberNo;
+    String nickname;
     String perfPoster;
     String perfName;
     Date perfStartDate;

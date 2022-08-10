@@ -2,12 +2,17 @@ package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
-import com.troupe.backend.dto.performance.*;
 import com.troupe.backend.dto.converter.PerformanceConverter;
+import com.troupe.backend.dto.performance.form.PerformanceForm;
+import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
+import com.troupe.backend.dto.performance.response.PerformanceDetailResponse;
+import com.troupe.backend.dto.performance.response.PerformanceResponse;
+import com.troupe.backend.dto.performance.response.ProfilePfResponse;
 import com.troupe.backend.exception.member.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
+import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 @Slf4j
@@ -161,7 +164,18 @@ public class PerformanceService {
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
+        // 1. LocalDateTime 객체 생성(현재 시간)
+        LocalDateTime localDateTime = LocalDateTime.now();
+        // 2. LocalDateTime -> Date 변환
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
+
         for(Performance p : performanceList){
+            //  공연 상태 계산
+            StringBuilder sb = new StringBuilder();
+            if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
+            else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
+            else if(now.after(p.getEndDate())) sb.append(MyConstant.END);
+
             log.info(p.toString());
             Map<Integer, String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
             performanceResponseList.add(
@@ -171,6 +185,8 @@ public class PerformanceService {
                             .image(imgUrlList)
                             .location(p.getLocation())
                             .detailTime(p.getDetailTime())
+                            .category(p.getCategory().getSmallCategory())
+                            .status(sb.toString())
                             .build()
             );
         }
@@ -197,11 +213,19 @@ public class PerformanceService {
             performanceList = performanceRepository.findAllByTitleAndDescription(keyword);
         }
 
-//        System.out.println(performanceList.size());
+        // 1. LocalDateTime 객체 생성(현재 시간)
+        LocalDateTime localDateTime = LocalDateTime.now();
+        // 2. LocalDateTime -> Date 변환
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
+
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
         for(Performance p : performanceList){
-//            System.out.println("========== "+ p.getCreatedTime() +" ============");
-//            System.out.println(p.toString());
+            //  공연 상태 계산
+            StringBuilder sb = new StringBuilder();
+            if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
+            else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
+            else if(now.after(p.getEndDate())) sb.append(MyConstant.END);
+
             Map<Integer, String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
             performanceResponseList.add(
                     PerformanceResponse.builder()
@@ -210,6 +234,8 @@ public class PerformanceService {
                             .image(imgUrlList)
                             .location(p.getLocation())
                             .detailTime(p.getDetailTime())
+                            .category(p.getCategory().getSmallCategory())
+                            .status(sb.toString())
                             .build()
             );
         }
@@ -237,6 +263,18 @@ public class PerformanceService {
         //  공연을 찾으면, url을 찾고
         Map<Integer, String> urlList = performanceImageService.findPerformanceImagesByPerformance(performance);
 
+        // 공연 상태 계산
+        // 1. LocalDateTime 객체 생성(현재 시간)
+        LocalDateTime localDateTime = LocalDateTime.now();
+        // 2. LocalDateTime -> Date 변환
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
+
+        //  공연 상태 계산
+        StringBuilder sb = new StringBuilder();
+        if(now.before(performance.getStartDate())) sb.append(MyConstant.PREV);
+        else if(now.after(performance.getStartDate()) && now.before(performance.getEndDate())) sb.append(MyConstant.ING);
+        else if(now.after(performance.getEndDate())) sb.append(MyConstant.END);
+
         //  응답 폼으로 만들어 반환
         return PerformanceDetailResponse.builder()
                 .pfNo(pfNo)
@@ -248,7 +286,8 @@ public class PerformanceService {
                 .description(performance.getDescription())
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(performance.getUpdatedTime())
-                .categoryNo(performance.getCategory().getId())
+                .category(performance.getCategory().getSmallCategory())
+                .status(sb.toString())
                 .detailTime(performance.getDetailTime())
                 .isRemoved(performance.isRemoved())
                 .build();
@@ -264,10 +303,25 @@ public class PerformanceService {
         Slice<Performance> performanceList = performanceRepository.findByMemberOrderByCreatedTimeDesc(member, pageable);
 
         List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
+
+        // 공연 상태 계산
+        // 1. LocalDateTime 객체 생성(현재 시간)
+        LocalDateTime localDateTime = LocalDateTime.now();
+        // 2. LocalDateTime -> Date 변환
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
+
         for(Performance p : performanceList){
+            //  공연 상태 계산
+            StringBuilder sb = new StringBuilder();
+            if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
+            else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
+            else if(now.after(p.getEndDate())) sb.append(MyConstant.END);
+
             profilePfResponseList.add(ProfilePfResponse.builder()
                     .perfPoster(p.getPosterUrl())
                     .perfName(p.getTitle())
+                    .perfCategory(p.getCategory().getSmallCategory())
+                    .perfStatus(sb.toString())
                     .perfStartDate(p.getStartDate())
                     .perfEndDate(p.getEndDate())
                     .build()
