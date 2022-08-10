@@ -38,7 +38,7 @@ public class CommentService {
     CommentConverter commentConverter;
 
 
-    public  void insert(CommentForm request){
+    public  CommentResponse insert(CommentForm request){
         try{
             Member member = memberRepository.findById(request.getMemberNo()).get();
             Feed feed = feedRepository.findById(request.getFeedNo()).get();
@@ -52,19 +52,22 @@ public class CommentService {
             else{
                 comment = Comment.builder().feed(feed).createdTime(now).member(member).content(request.getContent()).build();
             }
-            commentRepository.save(comment);
+            Comment cmt = commentRepository.save(comment);
+            return commentConverter.commentResponse(cmt);
         }catch (Exception e){
             log.info(e.toString());
         }
+        return null;
     }
 
-    public void update(CommentForm request){
+    public CommentResponse update(CommentForm request){
         Optional<Comment> comment = commentRepository.findById(request.getCommentNo());
 
         if(comment.isPresent()){
             Comment updateComment = commentConverter.toEntity(request);
-            commentRepository.save(updateComment);
-        }else return;
+            Comment cmt = commentRepository.save(updateComment);
+            return  commentConverter.commentResponse(cmt);
+        }else return null;
 
     }
 

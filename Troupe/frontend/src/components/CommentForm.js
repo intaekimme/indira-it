@@ -4,18 +4,25 @@ import { IconButton, TextField } from "@mui/material";
 import apiClient from "../apiClient";
 
 export default function CommentForm(props) {
-  const [review, setReview] = React.useState();
+  const [review, setReview] = React.useState("");
 
-  const reset = () => setReview();
+  const reset = () => setReview("");
   const onChange = (event) => {
     setReview(event.target.value);
   };
 
   const reviewRegister = () => {
+    
     const data = {
       content: review,
     };
-    apiClient.perfCommentNew(2, data, props.refreshFunction);
+    if (!props.feedNo) {
+      apiClient.perfCommentNew(2, data, props.refreshFunction);
+    } else {     
+      // console.log(data);
+      // console.log(props.feedNo);
+      apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
+    }
     reset();
   };
 

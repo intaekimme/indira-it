@@ -24,7 +24,7 @@ export default function CommentList(props) {
           />
         );
       })}
-      <CommentForm refreshFunction={props.refreshFunction} />
+      <CommentForm refreshFunction={props.refreshFunction} feedNo={props.feedNo} />
     </div>
   );
 }

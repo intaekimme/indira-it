@@ -599,6 +599,45 @@ const apiClient = {
         return error;
       });
   },
+  // 피드 댓글 목록 불러오기(완성)
+  getPerfCommentList: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}/comment/list`)
+      .then((response) => {
+        // alert("피드 댓글 불러오기 성공");
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 댓글 불러오기 실패" + error);
+        return null;
+      });
+  },
+  // 피드댓글 등록
+  feedCommentNew: (feedNo, data, refreshFunction) => {
+    instance
+      .post(`/feed/${feedNo}/comment`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("댓글 등록 성공");
+        console.log(response.data);
+        const json = {
+          memberNo: response.data.memberNo,
+          reviewNo: response.data.commentNo,
+          profileImageUrl: response.data.profileImageUrl,
+          comment: response.data.content,
+          nickname: response.data.nickname
+        }
+        refreshFunction(json);
+      })
+      .catch((error) => {
+        alert("댓글 등록 실패 : " + error);
+        return error;
+      });
+  },
 };
 
 export default apiClient;
