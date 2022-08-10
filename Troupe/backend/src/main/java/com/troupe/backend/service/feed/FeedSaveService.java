@@ -1,6 +1,7 @@
 package com.troupe.backend.service.feed;
 
 import com.troupe.backend.domain.feed.Feed;
+import com.troupe.backend.domain.feed.FeedLike;
 import com.troupe.backend.domain.feed.FeedSave;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.repository.feed.FeedRepository;
@@ -65,5 +66,12 @@ public class FeedSaveService {
      */
     public List<FeedSave> findAllByMember(Member member) {
         return feedSaveRepository.findAllByMemberAndIsDeleted(member, false);
+    }
+    public boolean checkFeedSave(int memberNo,int feedNo){
+        Member member = memberRepository.findById(memberNo).get();
+        Feed feed = feedRepository.findById(feedNo).get();
+        Optional<FeedSave> check = feedSaveRepository.findByMemberAndFeedAndIsDeletedFalse(member,feed);
+        if(check.isPresent()) return true;
+        else return false;
     }
 }

@@ -117,13 +117,17 @@ public class FeedService {
             // 피드 본문 insert
             Feed newFeed = feedRepository.save(feedConverter.toFeedEntity(member.get(), request.getContent()));
 
-            // 피드 이미지들 저장(없으면 null 뜬다)
-            List<FeedImage> feedImageList = feedConverter.toFeedImageEntity(newFeed, request.getImages());
-            feedImageService.insert(feedImageList);
+            // 피드 이미지들 저장
+            if(request.getImages()!=null){
+                List<FeedImage> feedImageList = feedConverter.toFeedImageEntity(newFeed, request.getImages());
+                feedImageService.insert(feedImageList);
+            }
 
-            //피드 태그 insert(없으면 null뜬다)
-            List<Tag> tags = feedConverter.toTagEntity(request.getTags());
-            tagService.insert(tags, newFeed);
+            //피드 태그 insert
+            if(request.getTags()!=null){
+                List<Tag> tags = feedConverter.toTagEntity(request.getTags());
+                tagService.insert(tags, newFeed);
+            }
 
         } catch (Exception e) {
             log.info(e.toString());
@@ -155,9 +159,9 @@ public class FeedService {
             }
 
             // 태그 수정
-            List<Tag> tags = feedConverter.toTagEntity(request.getTags());
             tagService.deleteAll(feed.get());
             if (request.getTags() != null) {
+                List<Tag> tags = feedConverter.toTagEntity(request.getTags());
                 tagService.insert(tags, feed.get());
             }
         } catch (Exception e) {

@@ -10,6 +10,10 @@ import ModifyDeleteButton from "./ModifyDeleteButton";
 import Carousel from "./Carousel";
 import Box from "@mui/material/Box";
 import stylesModal from "../css/modal.module.css";
+import MUICarousel from "react-material-ui-carousel";
+import CarouselItem from "./CarouselItem";
+import FeedLikeButton from "./FeedLikeButton";
+import FeedSaveButton from "./FeedSaveButton";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#FFF",
@@ -36,7 +40,6 @@ export default function FeedDetail(props) {
   const [like, setLike] = React.useState(0);
   const [img, setImg] = React.useState(new Map());
   const [user, setUser] = React.useState(0);
-
   function searchTag(tagName) {
     if (tagName !== "") {
       apiClient.getFeedSearchTest(tagName).then((data) => {});
@@ -66,12 +69,8 @@ export default function FeedDetail(props) {
   return open ? (
     <Box className={stylesModal.inner}>
       <Grid container spacing={4}>
-        <Grid item xs={5} className={stylesModal.img}>
-          <Item
-            elevation={0}
-            style={{ position: "relative", direction: "row" }}
-          >
-            <Carousel>
+        <Grid item xs={6} className={stylesModal.img}>
+          {/* <Carousel>
               {Object.values(img) ? (
                 Object.values(img).map((item, id) => (
                   <Item key={id} item={item} />
@@ -79,10 +78,22 @@ export default function FeedDetail(props) {
               ) : (
                 <div></div>
               )}
-            </Carousel>
-          </Item>
+            </Carousel> */}
+          <MUICarousel
+            autoPlay={false}
+            animation="slide"
+            style={{
+              backgroudColor: "black",
+            }}
+          >
+            {Object.values(img)
+              ? Object.values(img).map((item, id) => (
+                  <CarouselItem key={id} item={item} />
+                ))
+              : null}
+          </MUICarousel>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={6}>
           <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
           <Item elevation={0}>
             <div
@@ -113,7 +124,10 @@ export default function FeedDetail(props) {
                 </a>
                 {user !== feedInfo.memberNo ? (
                   <div>
-                    <FollowButton memberNo={feedInfo.memberNo}></FollowButton>
+                    <FollowButton
+                      memberNo={feedInfo.memberNo}
+                      style={{ textAlign: "top" }}
+                    ></FollowButton>
                   </div>
                 ) : (
                   <div></div>
@@ -139,14 +153,13 @@ export default function FeedDetail(props) {
               </div>
             </div>
           </Item>
-          총 좋아요 수 {like}
-          <div style={{ margin: "12px" }}>
-            <Grid container spacing={1}>
-              <Grid item xs={12}>
-                <Item>댓글란</Item>
-              </Grid>
+          <FeedLikeButton feedNo={feedNo}></FeedLikeButton>
+          <FeedSaveButton feedNo={feedNo}></FeedSaveButton>
+          <Grid container margin="10% 10% 10% 10%">
+            <Grid item xs={7}>
+              <Item>댓글란</Item>
             </Grid>
-          </div>
+          </Grid>
         </Grid>
       </Grid>
     </Box>

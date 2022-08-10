@@ -9,9 +9,11 @@ export default function Carousel(props) {
       animation="slide"
       style={{ backgroudColor: "black" }}
     >
-      {props.children.map((item, id) => (
-        <CarouselItem key={id} item={item.props.item} />
-      ))}
+      {props.children
+        ? props.children.map((item, id) => (
+            <CarouselItem key={id} item={item.props.item} />
+          ))
+        : null}
     </MUICarousel>
   );
 }

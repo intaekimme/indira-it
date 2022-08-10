@@ -22,12 +22,13 @@
     overflow-y: auto;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
+    box-shadow: 20px 20px 10px rgba(0,0,0,0.3);
+    border-radius: 7px;
   }
   
   .inner::-webkit-scrollbar{
     display:none;
   }
-
 
   .img {
     background-color: black;
