@@ -377,6 +377,21 @@ const apiClient = {
       });
   },
 
+  //호감도 공연자 Top100
+  getPerformerTop100: (data) => {
+    return instance
+      .get(`/profile/${parseInt(data.profileMemberNo)}/likability/topfans`)
+      .then((response) => {
+        console.log(response.data);
+        alert("호감도 공연자 Top100 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("호감도 공연자 Top100 불러오기 실패" + error);
+        return null;
+      });
+  },
+
   //공연자에 대한 나의 호감도 data
   getMyLikeabilityData: (data) => {
     return instance
