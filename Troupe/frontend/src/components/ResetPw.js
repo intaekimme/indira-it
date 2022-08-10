@@ -5,6 +5,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import apiClient from "../apiClient";
 
@@ -12,18 +14,46 @@ const theme = createTheme();
 
 export default function ResetPw() {
   const {token} = useParams();
-  const [resetPossible, setResetPossible] = React.useState(true);
+  const [resetPossible, setResetPossible] = React.useState(false);
+  //password 길이확인
+  const [pwLength, setPwLength] = React.useState(true);
+  //password 일치확인
+  const [pwSame, setPwSame] = React.useState(true);
 
   React.useEffect(()=>{
     if(token){
       setResetPossible(true);
     }
+    else {
+      setResetPossible(true);
+    }
   }, [token]);
 
   const handleSubmit = (event) => {
+    event.preventDefault();
+    
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email");
-    apiClient.requestPassword(email);
+    console.log(email);
+    if (email) {
+      // apiClient.requestPassword(formData);
+    }
+    else {
+      const password = formData.get("password");
+      const passwordCheck = formData.get("passwordCheck");
+      //password 8~20자
+      const pwLength = password.length;
+      const pwCheck = pwLength >= 8 && pwLength <= 20;
+      setPwLength(pwCheck);
+      //paswword 일치확인
+      const pwSame = password === passwordCheck;
+      setPwSame(pwSame);
+      console.log(pwCheck && pwSame);
+      if (pwCheck && pwSame) {
+        // apiClient.resetPassword(token, formData);
+      }
+    }
+    alert("abc");
   };
   return (
     <ThemeProvider theme={theme}>
@@ -56,6 +86,15 @@ export default function ResetPw() {
                   autoComplete="new-password"
                   autoFocus
                 />
+                {pwLength ? (
+                  <div></div>
+                ) : (
+                  <Grid>
+                    <div style={{ color: "red" }}>
+                      비밀번호는 8~20자의 길이로 설정해주세요.
+                    </div>
+                  </Grid>
+                )}
                 <TextField
                   margin="normal"
                   required
@@ -66,6 +105,15 @@ export default function ResetPw() {
                   id="passwordCheck"
                   autoComplete="new-password"
                 />
+                {pwSame ? (
+                  <div></div>
+                ) : (
+                  <Grid>
+                    <div style={{ color: "red" }}>
+                      비밀번호가 일치하지 않습니다.
+                    </div>
+                  </Grid>
+                )}
               </div>
             ) : (
               <TextField

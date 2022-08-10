@@ -43,18 +43,36 @@ const apiClient = {
         return false;
       });
   },
-  //reset pw
-  requestPassword: (data) => {
-    instance
-      .post("/member/request-password", data)
+  //request pw
+  requestPassword: (formData) => {
+    return instance
+      .post("/member/request-password", formData)
       .then((response) => {
         console.log(response);
         alert(
           "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
         );
+        return true;
+      })
+      .catch((error) => {
+        alert("이메일 전송 실패 : " + error);
+        return false;
+      });
+  },
+  //reset pw
+  resetPassword: (token, formData) => {
+    return instance
+      .post(`/member/request-password/${token}`, formData)
+      .then((response) => {
+        console.log(response);
+        alert(
+          "비밀번호가 초기화되었습니다." + response.data
+        );
+        return true;
       })
       .catch((error) => {
         alert("비밀번호 초기화 실패 : " + error);
+        return false;
       });
   },
   //프로필수정

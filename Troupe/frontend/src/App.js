@@ -47,28 +47,13 @@ function App() {
             <Route path="/" element={<PerfList />}></Route>
             <Route path="/perf/list/:startNo" element={<PerfList />}></Route>
             <Route path="/feed/list" element={<FeedList />}></Route>
-            <Route
-              path="/login"
-              element={loginCheck() ? <Navigate to="/" /> : <Login />}
-            ></Route>
-            <Route
-              path="/signup"
-              element={loginCheck() ? <Navigate to="/" /> : <Signup />}
-            ></Route>
+            <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
+            <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
             <Route path="/email" element={<EmailSend />}></Route>
-            <Route
-              path="/resetpw"
-              element={loginCheck() ? <ResetPw /> : <Navigate to="/" />}
-            ></Route>
-            <Route
-              path="/member/reset-password/:token"
-              element={loginCheck() ? <ResetPw /> : <Navigate to="/" />}
-            ></Route>
+            <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
+            <Route path="/member/reset-password/:token" element={loginCheck() ? <Navigate to="/" />: <ResetPw />}></Route>
             <Route path="/profile/:memberNo" element={<Profile />}></Route>
-            <Route
-              path="/profile/:memberNo/:modify"
-              element={true ? <ProfileForm /> : <Navigate to="/" />}
-            ></Route>
+            <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />}></Route>
             <Route path="/test" element={<Test />}></Route>
             <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
             <Route path="/perf/new" element={<PerfNew />}></Route>
