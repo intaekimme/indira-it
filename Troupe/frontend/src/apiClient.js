@@ -44,9 +44,10 @@ const apiClient = {
       });
   },
   //request pw
-  requestPassword: (formData) => {
+  requestPassword: (email) => {
+    console.log(email)
     return instance
-      .post("/member/request-password", formData)
+      .post("/member/request-password", { email: email })
       .then((response) => {
         console.log(response);
         alert(
@@ -60,9 +61,9 @@ const apiClient = {
       });
   },
   //reset pw
-  resetPassword: (token, formData) => {
+  resetPassword: (token, password) => {
     return instance
-      .post(`/member/request-password/${token}`, formData)
+      .post(`/member/reset-password/${token}`, { password: password })
       .then((response) => {
         console.log(response);
         alert(

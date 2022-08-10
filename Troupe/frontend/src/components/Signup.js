@@ -104,11 +104,11 @@ export default function Signup() {
 
   //회원가입버튼 클릭
   const handleSubmit = (event) => {
+    event.preventDefault();
+
     if (!emailCheck || !nicknameCheck) {
       return;
     }
-
-    event.preventDefault();
     const formData = new FormData(event.currentTarget);
     console.log(event.currentTarget);
     console.log(formData.values);

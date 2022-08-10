@@ -20,12 +20,13 @@ export default function ResetPw() {
   //password 일치확인
   const [pwSame, setPwSame] = React.useState(true);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
+    console.log(token);
     if(token){
       setResetPossible(true);
     }
     else {
-      setResetPossible(true);
+      setResetPossible(false);
     }
   }, [token]);
 
@@ -36,7 +37,7 @@ export default function ResetPw() {
     const email = formData.get("email");
     console.log(email);
     if (email) {
-      // apiClient.requestPassword(formData);
+      apiClient.requestPassword(email);
     }
     else {
       const password = formData.get("password");
@@ -50,7 +51,7 @@ export default function ResetPw() {
       setPwSame(pwSame);
       console.log(pwCheck && pwSame);
       if (pwCheck && pwSame) {
-        // apiClient.resetPassword(token, formData);
+        apiClient.resetPassword(token, password);
       }
     }
     alert("abc");
