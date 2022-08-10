@@ -5,8 +5,8 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceImage;
 import com.troupe.backend.domain.performance.PerformancePrice;
-import com.troupe.backend.dto.performance.PerformanceForm;
-import com.troupe.backend.dto.performance.PerformanceModifyForm;
+import com.troupe.backend.dto.performance.form.PerformanceForm;
+import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
 import com.troupe.backend.dto.performance.Seat;
 import com.troupe.backend.repository.category.CategoryRepository;
 import com.troupe.backend.util.MyConstant;
@@ -43,7 +43,7 @@ public class PerformanceConverter {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        Category category = categoryRepository.findById(performanceForm.getCategoryNo()).get();
+        Category category = categoryRepository.findBySmallCategory(performanceForm.getCategory()).get();
 
         return Performance.builder()
                 .member(member)
@@ -54,8 +54,8 @@ public class PerformanceConverter {
                 .category(category)
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
-//                .startDate(performanceForm.getStartDate())
-//                .updatedTime(performanceForm.getEndDate())
+                .startDate(performanceForm.getStartDate())
+                .updatedTime(performanceForm.getEndDate())
                 .build();
     }
 
@@ -137,7 +137,7 @@ public class PerformanceConverter {
         List<PerformanceImage> performanceImageList = new ArrayList<>();
         for (String url : urlList){
             PerformanceImage p = PerformanceImage.builder()
-                    .imageUrl(MyConstant.FILE_SERVER_URL + url)
+                    .imageUrl(url)
                     .pf(performance)
                     .build();
 

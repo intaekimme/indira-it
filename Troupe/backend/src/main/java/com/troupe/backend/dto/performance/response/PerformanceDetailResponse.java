@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.performance;
+package com.troupe.backend.dto.performance.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +22,8 @@ public class PerformanceDetailResponse {
     String description;
     Date createdTime;
     Date updatedTime;
-    int categoryNo;
+    String category;
+    String status;
     String detailTime;
     boolean isRemoved;
 

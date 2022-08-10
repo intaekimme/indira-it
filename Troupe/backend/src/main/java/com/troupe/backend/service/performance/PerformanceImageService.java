@@ -2,10 +2,11 @@ package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceImage;
-import com.troupe.backend.dto.performance.PerformanceModifyForm;
+import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.repository.performance.PerformanceImageRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
+import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class PerformanceImageService {
         List<PerformanceImage> performanceImageList = performanceImageRepository.findByPf(performance);
         Map<Integer, String> imageUrlMap = new HashMap<>();
         for(PerformanceImage p : performanceImageList){
-            imageUrlMap.put(p.getId(), p.getImageUrl());
+            imageUrlMap.put(p.getId(), MyConstant.FILE_SERVER_URL + p.getImageUrl());
         }
         return imageUrlMap;
     }
