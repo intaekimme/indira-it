@@ -318,12 +318,17 @@ const apiClient = {
   },
 
   //공연 목록 불러오기
+<<<<<<< HEAD
   getPerfList: async (pageNumber) => {
     return await instance
       .get(`/perf/list?pageNumber=${pageNumber}`)
+=======
+  getPerfList: async ({pageParam = 0}) => {
+      return await instance
+      .get(`/perf/list?pageNumber=${pageParam}`)
+>>>>>>> jaehyun
       .then((response) => {
-        // alert("공연 불러오기 성공");
-        console.log(response.data);
+        console.log(response.data)
         return response.data;
       })
       .catch((error) => {
