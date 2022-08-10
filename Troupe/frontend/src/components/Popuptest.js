@@ -10,17 +10,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import FeedDetail from "./FeedDetail";
-import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import stylesModal from "../css/modal.module.css";
-
+import FeedLikeButton from "./FeedLikeButton";
+import FeedSaveButton from "./FeedSaveButton";
 // 피드상세 모달구현을 위한 임시페이지 (후에 삭제 예정)
 
 function Copyright() {
@@ -52,8 +48,6 @@ function range(start, end) {
 const theme = createTheme();
 
 export default function Album() {
-  const [like, setLike] = React.useState(false);
-  const [save, setSave] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   let [cards, setCard] = React.useState([
@@ -63,21 +57,15 @@ export default function Album() {
       profileImageUrl: "",
     },
   ]);
-
+  const [change, setChange] = React.useState(false);
   function handleOpen(no) {
     setOpen(true);
     setFeedNo(no);
+    setChange(false);
   }
   function handleClose() {
     setOpen(false);
-  }
-
-  function handleLike() {
-    setLike(!like);
-  }
-
-  function handleSave() {
-    setSave(!save);
+    setChange(true);
   }
 
   function handleCard() {
@@ -86,9 +74,9 @@ export default function Album() {
     setCard(range(0, pages));
   }
 
-  function onClick(feedNo) {
-    // alert(feedNo);
-  }
+  const changeFunction = (check) => {
+    setChange(check);
+  };
   React.useEffect(() => {
     // const data = {
     //   change: "all",
@@ -119,7 +107,6 @@ export default function Album() {
                     flexDirection: "column",
                   }}
                   elevation={0}
-                  onClick={() => handleOpen(card.feedNo)}
                 >
                   <Typography
                     gutterBottom
@@ -151,6 +138,7 @@ export default function Album() {
                     }}
                     image="https://source.unsplash.com/random"
                     alt="random"
+                    onClick={() => handleOpen(card.feedNo)}
                   />
                   <CardActions
                     sx={{
@@ -159,39 +147,14 @@ export default function Album() {
                       padding: "0px",
                     }}
                   >
-                    <Button
-                      size="small"
-                      onClick={handleLike}
-                      style={{
-                        color: "black",
-                        justifyContent: "flex-start",
-                        margin: "0px",
-                        padding: "0px",
-                      }}
-                    >
-                      {like ? (
-                        <Favorite></Favorite>
-                      ) : (
-                        <FavoriteBorderIcon></FavoriteBorderIcon>
-                      )}
-                      {card.feedNo}
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={handleSave}
-                      style={{
-                        color: "black",
-                        justifyContent: "flex-end",
-                        margin: "0px",
-                        padding: "0px",
-                      }}
-                    >
-                      {save ? (
-                        <TurnedInIcon></TurnedInIcon>
-                      ) : (
-                        <TurnedInNotIcon></TurnedInNotIcon>
-                      )}
-                    </Button>{" "}
+                    <FeedLikeButton
+                      change={change}
+                      feedNo={card.feedNo}
+                    ></FeedLikeButton>
+                    <FeedSaveButton
+                      change={change}
+                      feedNo={card.feedNo}
+                    ></FeedSaveButton>
                   </CardActions>
                 </Card>
               </Grid>
@@ -203,8 +166,13 @@ export default function Album() {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             className={stylesModal.outer}
+            animationType={"fade"}
           >
-            <FeedDetail feedNo={feedNo} open={open}></FeedDetail>
+            <FeedDetail
+              setChange={setChange}
+              feedNo={feedNo}
+              open={open}
+            ></FeedDetail>
           </Modal>
         </Container>
       </main>

@@ -45,7 +45,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<PerfList />}></Route>
-            <Route path="/perf/list/:startNo" element={<PerfList />}></Route>
+            <Route path="/perf/list/:pageNumber" element={<PerfList />}></Route>
             <Route path="/feed/list" element={<FeedList />}></Route>
             <Route
               path="/login"
@@ -72,14 +72,14 @@ function App() {
             <Route path="/test" element={<Test />}></Route>
             <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
             <Route path="/perf/new" element={<PerfNew />}></Route>
-            <Route path="/feed/register" element={<FeedRegister />}></Route>
-            <Route path="/feed/modify/:feedNo" element={<FeedModify />}></Route>
+            <Route path="/feed/register" element={loginCheck() ? <FeedRegister /> : <Navigate to="/login" />}></Route>
+            <Route path="/feed/modify/:feedNo" element={loginCheck() ? <FeedModify /> : <Navigate to="/login" />}></Route>
             <Route path="/guestbook/test" element={<GuestBook />}></Route>
             <Route path="/feed/test" element={<PopupTest />}></Route>
             {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}
           </Routes>
         </Router>
-        <ReactQueryDevtools initialIsOpen={true} position="bottom-right" />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
     </div>
   );

@@ -104,7 +104,7 @@ function Carousel() {
   ];
 
   return (
-    <MUICarousel animation="slide" indicators="">
+    <MUICarousel animation="slide" indicators="" autoPlay={false}>
       {items.map((item, i) => (
         <CarouselItem key={i} item={item} />
       ))}

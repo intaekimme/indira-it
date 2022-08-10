@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import { Button, Grid, Container } from "@mui/material";
 import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 const theme = createTheme({
   palette: {
@@ -26,6 +27,11 @@ export default function FeedRegister() {
   const [tags, setTagList] = React.useState([]);
   const [tag, setTag] = React.useState("");
   const [content, setContent] = React.useState("");
+  // const [isReady, setIsReady] = React.useState(false);
+
+  // React.useState(() => {
+  //   if (images.length !== 0 && content.length !== 0) setIsReady(true);
+  // }, [isReady]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -67,6 +73,7 @@ export default function FeedRegister() {
     setImgUrl(imageUrlLists);
     setImages(imageList);
     // console.log(imageUrlLists);
+    // setIsReady(false);
   };
   const changeTag = (event) => {
     setTag(event.target.value);
@@ -74,6 +81,7 @@ export default function FeedRegister() {
 
   const changeContent = (event) => {
     setContent(event.target.value);
+    // setIsReady(false);
   };
   const addTagFunc = useCallback(
     (event) => {
@@ -123,6 +131,14 @@ export default function FeedRegister() {
     setTagList(tags.filter((tag) => tag !== tagName));
   }
 
+  const cancelForm = () => {
+    if (window.confirm("등록을 취소하시겠습니까?")) {
+      window.location.href = "/feed/list";
+    } else {
+      return;
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="md">
@@ -141,13 +157,11 @@ export default function FeedRegister() {
                         alt=""
                         style={{ height: "150px", width: "150px" }}
                       ></img>
-                      <button
-                        type="button"
+                      <RemoveCircleOutlineIcon
+                        color="error"
                         onClick={() => deleteImage(item.file)}
                         className={stylesTag.btn1}
-                      >
-                        -
-                      </button>
+                      ></RemoveCircleOutlineIcon>
                     </span>
                   ))}
                 </div>
@@ -214,7 +228,19 @@ export default function FeedRegister() {
           </div>
         </div>
         <Grid container spacing={2}>
-          <Grid item xs={10}></Grid>
+          <Grid item xs={8}></Grid>
+          <Grid item xs={2}>
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              color="inherit"
+              onClick={() => cancelForm()}
+            >
+              취소
+            </Button>
+          </Grid>
           <Grid item xs={2}>
             <form
               onSubmit={handleSubmit}
@@ -232,6 +258,20 @@ export default function FeedRegister() {
               >
                 피드 등록
               </Button>
+              {/* {isReady ? (
+                
+              ) : (
+                <Button
+                  type="button"
+                  disabled
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  color="grey"
+                >
+                  피드 등록
+                </Button>
+              )} */}
             </form>
           </Grid>
         </Grid>
