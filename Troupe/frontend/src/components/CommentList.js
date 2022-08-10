@@ -8,7 +8,6 @@ export default function CommentList(props) {
   console.log(props);
 
   const comments = props.commentList;
-  console.log(comments);
   return (
     <div>
       <CommentCount listSize={props.commentList.length} />
@@ -16,11 +15,13 @@ export default function CommentList(props) {
         return (
           <Comment
             key={index}
+            performanceNo={comment.pfNo}
             memberNo={comment.memberNo}
             reviewNo={comment.reviewNo}
             nickname={comment.nickname}
             profileImageUrl={comment.profileImageUrl}
             comment={comment.comment}
+            refreshFunction={props.refreshFunction}
           />
         );
       })}

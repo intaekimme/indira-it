@@ -116,8 +116,9 @@ public class PerformanceReviewService {
         for (PerformanceReview review : performanceReviewList){
             Member member = review.getMember();
             pfReviewResponseList.add( PfReviewResponse.builder()
-                    .memberNo(member.getMemberNo())
                     .reviewNo(review.getId())
+                    .pfNo(performance.getId())
+                    .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())
                     .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(review.getContent())
@@ -151,11 +152,10 @@ public class PerformanceReviewService {
      * 공연후기대댓글
      * @param pfNo
      * @param reviewNo
-     * @param memberNo
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PfReviewResponse> findPfChildReviewList(int pfNo, int reviewNo, int memberNo) {
+    public List<PfReviewResponse> findPfChildReviewList(int pfNo, int reviewNo) {
         //  공연 엔티티를 하나 불러오고
         Performance performance = performanceRepository.findById(pfNo).get();
         //  리뷰테이블에서 공연 엔티티와 id: reviewNo로 리뷰 엔티티를 찾고

@@ -45,7 +45,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<PerfList />}></Route>
-            <Route path="/perf/list/:startNo" element={<PerfList />}></Route>
+            <Route path="/perf/list/:pageNumber" element={<PerfList />}></Route>
             <Route path="/feed/list" element={<FeedList />}></Route>
             <Route
               path="/login"
@@ -79,7 +79,7 @@ function App() {
             {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}
           </Routes>
         </Router>
-        <ReactQueryDevtools initialIsOpen={true} position="bottom-right" />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
     </div>
   );

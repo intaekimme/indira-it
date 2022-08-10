@@ -104,7 +104,7 @@ function Carousel() {
   ];
 
   return (
-    <MUICarousel animation="slide" indicators="">
+    <MUICarousel animation="slide" indicators="" autoPlay={false}>
       {items.map((item, i) => (
         <CarouselItem key={i} item={item} />
       ))}
@@ -173,29 +173,31 @@ function ModifyDeleteButton(props) {
 }
 
 function PerfDetail() {
+  const { pfNo } = useParams();
+
   const [title, setTitle] = React.useState("");
   const [price, setPrice] = React.useState([]);
   const [time, setTime] = React.useState("");
   const [date, setDate] = React.useState("");
   const [location, setLocation] = React.useState("");
 
-  const [performanceNo, setPerformanceNo] = useState(0);
+  const [performanceNo, setPerformanceNo] = useState(pfNo);
   const [commentList, setCommentList] = React.useState([]);
 
   const refreshFunction = (newComment) => {
     setCommentList([...commentList, newComment]);
   };
 
-  const { pfNo } = useParams();
-
   useEffect(() => {
     setPerformanceNo(pfNo);
 
-    apiClient.getPerfCommentList(pfNo).then((data) => {
+    apiClient.getPerfReviewList(pfNo).then((data) => {
       setCommentList(data);
     });
   }, []);
 
+  // console.log(`pfNo: ${pfNo}`);
+  // console.log(`performanceNo: ${performanceNo}`);
   return (
     <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
       <ModifyDeleteButton />
@@ -255,6 +257,7 @@ function PerfDetail() {
                 <CommentList
                   refreshFunction={refreshFunction}
                   commentList={commentList}
+                  performanceNo={performanceNo}
                 />
               </Item>
             </Grid>

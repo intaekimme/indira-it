@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PfReviewResponse {
-    int memberNo;
     int reviewNo;
+    int pfNo;
+    int memberNo;
     String nickname;
     String profileImageUrl;
     String comment;
