@@ -497,8 +497,8 @@ const apiClient = {
       alert("취소합니다.");
     }
   },
-  //  공연 후기 등록
-  perfCommentNew: (performanceNo, data, refreshFunction) => {
+  //  공연 후기 등록(완성)
+  perfReviewNew: (performanceNo, data, refreshFunction) => {
     instance
       .post(`/perf/${performanceNo}/review`, data, {
         headers: {
@@ -516,17 +516,49 @@ const apiClient = {
   },
 
   //  공연 후기 목록 불러오기(완성)
-  getPerfCommentList: (performanceNo) => {
+  getPerfReviewList: (performanceNo) => {
     return instance
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
-        alert("불러오기 성공");
+        // alert("불러오기 성공");
         // console.log(response.data);
         return response.data;
       })
       .catch((error) => {
         alert("공연 후기 불러오기 실패" + error);
         return null;
+      });
+  },
+
+  // 공연 후기 대댓글 목록 불러오기
+  getPerfChildReviewList: (performanceNo, reviewNo) => {
+    return instance
+      .get(`/perf/${performanceNo}/review/${reviewNo}/list`)
+      .then((response) => {
+        console.log(response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("대댓글 불러오기 실패" + error);
+        return null;
+      });
+  },
+
+  //  공연 후기 대댓글 작성
+  perfChildReviewNew: (performanceNo, reviewNo, data, refreshFunction) => {
+    instance
+      .post(`/perf/${performanceNo}/review/${reviewNo}`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("댓글 등록 성공");
+        console.log(response.data);
+        refreshFunction(response.data);
+      })
+      .catch((error) => {
+        alert("댓글 등록 실패 : " + error);
       });
   },
 };

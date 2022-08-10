@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import { IconButton, TextField } from "@mui/material";
 import apiClient from "../apiClient";
 
 export default function CommentForm(props) {
-  const [review, setReview] = React.useState();
+  const [review, setReview] = useState("");
+  const [isChild, setIsChild] = useState(props.isChild);
 
-  const reset = () => setReview();
+  useEffect(() => {
+    console.log(props.isChild);
+  }, []);
+
+  const reset = () => setReview("");
+
+  //  답글 폼 변화 인식
   const onChange = (event) => {
     setReview(event.target.value);
   };
@@ -15,12 +22,26 @@ export default function CommentForm(props) {
     const data = {
       content: review,
     };
-    apiClient.perfCommentNew(2, data, props.refreshFunction);
+    apiClient.perfReviewNew(props.performanceNo, data, props.refreshFunction);
     reset();
   };
 
+  const childReviewRegister = () => {
+    const data = {
+      content: review,
+    };
+    apiClient.perfChildReviewNew(
+      props.performanceNo,
+      props.reviewNo,
+      data,
+      props.refreshFunction
+    );
+    reset();
+    setIsChild(false);
+  };
+
   const WriteButton = () => (
-    <IconButton onClick={reviewRegister}>
+    <IconButton onClick={isChild ? childReviewRegister : reviewRegister}>
       <CreateIcon color="gray" />
     </IconButton>
   );
