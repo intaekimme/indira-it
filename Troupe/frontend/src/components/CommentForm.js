@@ -21,18 +21,20 @@ export default function CommentForm(props) {
   const reviewRegister = () => {
     const data = {
       content: review,
+      parentCommentNo: 0,
     };
     apiClient.perfReviewNew(props.performanceNo, data, props.refreshFunction);
     reset();
   };
 
   const childReviewRegister = () => {
+    console.log(props.performanceNo);
     const data = {
       content: review,
+      parentCommentNo: props.reviewNo,
     };
     apiClient.perfChildReviewNew(
       props.performanceNo,
-      props.reviewNo,
       data,
       props.refreshFunction
     );

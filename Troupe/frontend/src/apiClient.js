@@ -546,9 +546,9 @@ const apiClient = {
   },
 
   //  공연 후기 대댓글 작성
-  perfChildReviewNew: (performanceNo, reviewNo, data, refreshFunction) => {
+  perfChildReviewNew: (performanceNo, data, refreshFunction) => {
     instance
-      .post(`/perf/${performanceNo}/review/${reviewNo}`, data, {
+      .post(`/perf/${performanceNo}/review`, data, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
