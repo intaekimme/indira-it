@@ -79,17 +79,22 @@ function Profile(props) {
         <Grid container spacing={2} style={{ textAlign: "center" }}>
           <Grid
             item
+            container
+            alignItems="flex-end"
             xs={gridItemxs}
-            style={{ backgroundColor: "gray", padding: 0, position:"relative" }}
+            style={{
+              backgroundColor: "gray",
+              paddingRight: 20,
+              paddingBottom: 50,
+              position: "relative",
+            }}
           >
             {/* Stage start */}
-            <ProfileStage/>
+            <ProfileStage />
             {/* Stage finish */}
           </Grid>
-          <Grid
-            item
-            xs={gridItemxs}
-            style={{ backgroundColor: "blue", padding: 0 }}
+          <Grid item xs={gridItemxs}
+            style={{ padding: 0 }}
           >
             <Grid container spacing={3}>
               {
@@ -112,13 +117,15 @@ function Profile(props) {
                   myPage={myPage}
                 />
               </Grid>
-              {
-                //공연/전시, 피드 목록
-              }
-              <Grid item xs={12}>
-                <ProfileTabs tabContent={tabContent} tabText={tabText} />
-              </Grid>
             </Grid>
+          </Grid>
+          {
+            //공연/전시, 피드 목록
+          }
+          <Grid item xs={12}
+            style={{ padding: 0 }}
+          >
+            <ProfileTabs tabContent={tabContent} tabText={tabText} />
           </Grid>
         </Grid>
       </Container>

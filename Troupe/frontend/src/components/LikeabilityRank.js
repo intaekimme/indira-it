@@ -11,10 +11,10 @@ export default function LikeabilityRank(props) {
         <div></div>
       )}
       {props.likeabilityData.length == 0 ? <div></div>
-      : props.likeabilityData.map((data) => (
+      : props.likeabilityData.map((data, index) => (
         <LikeabilityBar
           likeabilityData={data}
-          key={`LikeabilityBar${data.memberNo}`}
+          key={`LikeabilityBar_${data.memberNo}_${index}`}
         />
       ))}
       <div
