@@ -16,22 +16,26 @@ export default function CommentList(props) {
           <Comment
             key={index}
             performanceNo={comment.pfNo}
+            feedNo={props.feedNo}
             memberNo={comment.memberNo}
             reviewNo={comment.reviewNo}
             nickname={comment.nickname}
             profileImageUrl={comment.profileImageUrl}
             comment={comment.comment}
             isRemoved={comment.isRemoved}
+            parentCommentNo={props.parentCommentNo}
             refreshFunction={props.refreshFunction}
-            feedNo={props.feedNo}
+            refreshChildFunction={props.refreshChildFunction}
           />
         );
       })}
-      <CommentForm
-        refreshFunction={props.refreshFunction}
-        feedNo={props.feedNo}
-        performanceNo={props.performanceNo}
-      />
+      {!props.parentCommentNo && (
+        <CommentForm
+          refreshFunction={props.refreshFunction}
+          feedNo={props.feedNo}
+          performanceNo={props.performanceNo}
+        />
+      )}
     </div>
   );
 }

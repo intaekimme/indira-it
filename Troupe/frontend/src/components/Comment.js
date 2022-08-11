@@ -2,24 +2,28 @@ import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import apiClient from "../apiClient";
 import CommentForm from "./CommentForm";
 import { Grid } from "@mui/material";
 import TextField from "@mui/material/TextField";
+import CommentList from "./CommentList";
 export default function Comment(props) {
   const [user, setUser] = useState(0);
+  // 대댓글 목록
   const [childComments, setchildComments] = useState([]);
+  // 대댓글 목록 가시 여부
   const [isChild, setIsChild] = useState(false);
+  // 대댓글 등록 여부
   const [isChildReviewRegister, setIsChildReviewRegister] = useState(false);
 
   const [content, setContent] = useState("");
   const [modify, setModify] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  // 대댓글 등록 취소 여부
+  const [cancel, setCancel] = useState(false);
 
   useEffect(() => {
     setContent(props.comment);
@@ -32,6 +36,24 @@ export default function Comment(props) {
           console.log(data);
           // setchildComment(data);
         });
+    } else {
+      apiClient
+        .getFeedChildReviewList(props.feedNo, props.reviewNo)
+        .then((data) => {
+          const json = [];
+
+          data.forEach((item) => {
+            json.push({
+              memberNo: item.memberNo,
+              reviewNo: item.commentNo,
+              profileImageUrl: item.profileImageUrl,
+              comment: item.content,
+              nickname: item.nickname,
+              isRemoved: item.removed,
+            });
+          });
+          setchildComments(json);
+        });
     }
   }, []);
 
@@ -40,6 +62,8 @@ export default function Comment(props) {
   }
   //  답글 작성 클릭
   const childCommentRegister = (event) => {
+    setCancel(!cancel);
+    setIsChild(true);
     if (!sessionStorage.getItem("loginCheck")) {
       if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
         window.location.href = `/login`;
@@ -47,24 +71,29 @@ export default function Comment(props) {
       setIsChildReviewRegister(true);
     }
   };
-
+  // 대댓글 refresh
+  const refreshChildFunction = (newComment) => {
+    setchildComments([...childComments, newComment]);
+  };
+  // 대댓글 리스트 가시 여부
+  const childCommentList = () => {
+    setIsChild(!isChild);
+  };
   const modifyComment = () => {
     setModify(!modify);
     if (modify) {
-      // axios
       const data = {
         content: content,
       };
-      apiClient.feedCommentModify(
-        props.feedNo,
-        props.reviewNo,
-        data,
-        props.refreshFunction,
-      );
-      // .then(() => {})
-      // .catch(() => {
-      // });
-      setModify(!modify);
+      if (!props.feedNo) {
+        //perf
+      } else {
+        apiClient
+          .feedCommentModify(props.feedNo, props.reviewNo, data)
+          .then(() => {
+            setModify(!modify);
+          });
+      }
     }
   };
   const modifyCancel = () => {
@@ -73,18 +102,23 @@ export default function Comment(props) {
   };
   const deleteComment = () => {
     if (window.confirm("삭제하시겠습니까?")) {
-      apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
-        setContent("삭제된 댓글입니다.");
-        setDeleted(true);
-      });
+      if (!props.feedNo) {
+        //perf
+      } else {
+        apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
+          setContent("삭제된 댓글입니다.");
+          setDeleted(true);
+        });
+      }
     }
   };
-  // console.log(props);
-  // console.log(user);
-  // console.log(childComments);
+  const cancelRegister = () => {
+    setCancel(!cancel);
+    setIsChildReviewRegister(!isChildReviewRegister);
+  };
 
   return (
-    <Card sx={{ maxWidth: "100%" }}>
+    <Card sx={{ maxWidth: "100%", m: 2 }}>
       <CardHeader
         avatar={<Avatar alt={props.nickname} src={props.profileImageUrl} />}
         subheader={props.nickname}
@@ -111,10 +145,11 @@ export default function Comment(props) {
           )}
         </Typography>
       </CardContent>
-      {props.memberNo === user ? (
+
+      <Grid>
         <Grid container justifyContent="flex-end">
           <Grid item>
-            {!props.isRemoved && !deleted ? (
+            {props.memberNo === user && !props.isRemoved && !deleted ? (
               modify ? (
                 <div>
                   <Button
@@ -144,7 +179,7 @@ export default function Comment(props) {
             ) : (
               <div></div>
             )}
-            {!props.isRemoved && !deleted ? (
+            {props.memberNo === user && !props.isRemoved && !deleted ? (
               <Button
                 size="small"
                 aria-label="delete"
@@ -155,10 +190,20 @@ export default function Comment(props) {
             ) : (
               <div></div>
             )}
-            <Button size="small" aria-label="child-comment">
-              답글({childComments.length})
-            </Button>
-            {!props.isRemoved && !deleted ? (
+            {!props.parentCommentNo && (
+              <Button
+                size="small"
+                aria-label="child-comment"
+                onClick={childCommentList}
+              >
+                답글({childComments.length})
+              </Button>
+            )}
+
+            {!props.isRemoved &&
+            !deleted &&
+            !props.parentCommentNo &&
+            !cancel ? (
               <Button
                 size="small"
                 arial-lebel="child-comment-register"
@@ -167,46 +212,41 @@ export default function Comment(props) {
                 답글작성
               </Button>
             ) : (
-              <div></div>
+              <span></span>
+            )}
+            {cancel ? (
+              <Button
+                size="small"
+                arial-lebel="child-comment-register"
+                onClick={cancelRegister}
+              >
+                답글취소
+              </Button>
+            ) : (
+              <span></span>
             )}
           </Grid>
-          {isChildReviewRegister && (
-            <Grid item>
-              <CommentForm
-                refreshFunction={props.refreshFunction}
-                isChild={isChildReviewRegister}
-                performanceNo={props.performanceNo}
-                reviewNo={props.reviewNo}
-              />
-            </Grid>
-          )}
         </Grid>
-      ) : (
-        <Grid container justifyContent="flex-end">
+        {isChildReviewRegister && (
           <Grid item>
-            <Button size="small" aria-label="child-comment">
-              답글({childComments.length})
-            </Button>
-            <Button
-              size="small"
-              arial-lebel="child-comment-register"
-              onClick={childCommentRegister}
-            >
-              답글작성
-            </Button>
+            <CommentForm
+              refreshChildFunction={refreshChildFunction}
+              isChild={isChildReviewRegister}
+              performanceNo={props.performanceNo}
+              feedNo={props.feedNo}
+              parentCommentNo={props.reviewNo}
+            />
           </Grid>
-          {isChildReviewRegister && (
-            <Grid item>
-              <CommentForm
-                refreshFunction={props.refreshFunction}
-                isChild={isChildReviewRegister}
-                performanceNo={props.performanceNo}
-                reviewNo={props.reviewNo}
-              />
-            </Grid>
-          )}
-        </Grid>
-      )}
+        )}
+        {isChild && (
+          <CommentList
+            refreshChildFunction={refreshChildFunction}
+            commentList={childComments}
+            feedNo={props.feedNo}
+            parentCommentNo={props.reviewNo}
+          />
+        )}
+      </Grid>
     </Card>
   );
 }
