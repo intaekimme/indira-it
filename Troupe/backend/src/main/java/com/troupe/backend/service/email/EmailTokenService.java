@@ -35,7 +35,7 @@ public class EmailTokenService {
         mailMessage.setFrom(MyConstant.EMAIL_SENDER_ADDRESS);
         mailMessage.setTo(receiverEmail);
         mailMessage.setSubject("회원가입 이메일 인증");
-        mailMessage.setText("http://localhost:8080/confirm-email/" + emailToken.getToken());
+        mailMessage.setText("http://localhost:3000/confirm-email/" + emailToken.getToken());
 
         // 이메일 전송
         emailSenderService.sendEmail(mailMessage);
