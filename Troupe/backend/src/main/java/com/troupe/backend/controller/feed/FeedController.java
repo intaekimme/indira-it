@@ -104,7 +104,8 @@ public class FeedController {
             request.setFeedNo(feedNo);
             if(feedUpdateVO.getImages()!=null)  request.setImages(feedUpdateVO.getImages());
             if(feedUpdateVO.getImageNo()!=null) request.setImageNo(feedUpdateVO.getImageNo());
-            if(feedUpdateVO.getImageNo()!=null) request.setContent(feedUpdateVO.getContent());
+            if(feedUpdateVO.getContent()!=null) request.setContent(feedUpdateVO.getContent());
+            else request.setContent("");
             if(feedUpdateVO.getTags()!=null)  request.setTags(feedUpdateVO.getTags());
 //            System.out.println(request.getFeedNo()+" "+request.getImageNo()+" "+request.getContent()+" "+request.getImages()+" "+request.getTags()+" "+request.getTagNo());
             feedService.update(request);
@@ -132,7 +133,7 @@ public class FeedController {
     public ResponseEntity likeFeed(@PathVariable int feedNo, Principal principal) throws IOException {
         try {
             boolean check = feedILikeService.insert(Integer.parseInt(principal.getName()),feedNo);
-            return new ResponseEntity(check, HttpStatus.CREATED);
+            return new ResponseEntity(!check, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed Like FAIL", HttpStatus.BAD_REQUEST);
@@ -144,7 +145,7 @@ public class FeedController {
     public ResponseEntity saveFeed(@PathVariable int feedNo, Principal principal) throws IOException {
         try {
             boolean check = feedSaveService.insert(Integer.parseInt(principal.getName()),feedNo);
-            return new ResponseEntity(check, HttpStatus.CREATED);
+            return new ResponseEntity(!check, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Feed Save FAIL", HttpStatus.BAD_REQUEST);
@@ -246,14 +247,35 @@ public class FeedController {
 
     @Operation(summary = "피드 태그 검색 ", description = "파라미터: 태그명들 ")
     @GetMapping("/search")
-    public ResponseEntity tagSearch (@RequestParam List<String> tags) throws IOException {
+    public ResponseEntity tagSearch (@RequestParam List<String> tags, int pageNumber) throws IOException {
         try{
-             List<FeedResponse> list = feedService.selectAllBySearch(tags);
+            PageRequest pageRequest = PageRequest.of(pageNumber,6);
+             List<FeedResponse> list = feedService.selectAllBySearch(tags, pageRequest);
             return new ResponseEntity(list, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("search FAIL", HttpStatus.BAD_REQUEST);
         }
     }
+    @Operation(summary = "피드 좋아요 여부 ", description = "파라미터: 피드 번호 ")
+    @GetMapping("/{feedNo}/like/now")
+    public ResponseEntity feedLikeCheck (Principal principal, @PathVariable int feedNo) throws IOException {
+        try{
+            return new ResponseEntity(feedILikeService.checkFeedLike(Integer.parseInt(principal.getName()),feedNo), HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("feedLike check FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    @Operation(summary = "피드 북마크 여부 ", description = "파라미터: 피드 번호 ")
+    @GetMapping("/{feedNo}/save/now")
+    public ResponseEntity feedSaveCheck (Principal principal, @PathVariable int feedNo) throws IOException {
+        try{
+            return new ResponseEntity(feedSaveService.checkFeedSave(Integer.parseInt(principal.getName()),feedNo), HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("feedSave check FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

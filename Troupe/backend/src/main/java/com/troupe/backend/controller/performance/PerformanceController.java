@@ -1,9 +1,10 @@
 package com.troupe.backend.controller.performance;
 
 
-import com.troupe.backend.dto.performance.*;
-import com.troupe.backend.dto.performance.ProfilePfResponse;
-import com.troupe.backend.dto.performance.ProfilePfSaveResponse;
+import com.troupe.backend.dto.performance.response.*;
+import com.troupe.backend.dto.performance.form.PerformanceForm;
+import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
+import com.troupe.backend.dto.performance.form.PfReviewForm;
 import com.troupe.backend.service.performance.*;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -160,26 +161,27 @@ public class PerformanceController {
      * 공연후기작성
      * @param principal
      * @param pfNo
-     * @param content
+     * @param body
      * @return
      */
     @Operation(summary = "공연 후기 작성", description = "파라미터: 공연 번호, 내용, 부모댓글번호-선택")
-    @PostMapping("/{pfNo}/review")
-    public ResponseEntity registerReview(Principal principal,
-                                         @PathVariable int pfNo,
-                                         @RequestParam(required = false) Integer parentCommentNo,
-                                         @RequestParam String content){
+    @PostMapping("/{pfNo}/review/{parentCommentNo}")
+    public ResponseEntity<PfReviewResponse> registerReview(Principal principal,
+                                                           @PathVariable String pfNo,
+                                                           @PathVariable(required = false) Integer parentCommentNo,
+                                                           @RequestBody Map<String, String> body){
+        System.out.println(body.get("content"));
         int memberNo = Integer.parseInt(principal.getName());
         PfReviewForm request = PfReviewForm.builder()
-                .pfNo(pfNo)
+                .pfNo(Integer.parseInt(pfNo))
                 .memberNo(memberNo)
-                .content(content)
+                .content(body.get("content"))
                 .build();
 
         request.setParentReviewNo(Objects.requireNonNullElse(parentCommentNo, 0));
 
-        performanceReviewService.add(request);
-        return ResponseEntity.ok().build();
+        PfReviewResponse response = performanceReviewService.add(request);
+        return ResponseEntity.ok().body(response);
     }
 
     /**
@@ -230,18 +232,16 @@ public class PerformanceController {
 
     /**
      * 공연 후기 대댓글 목록
-     * @param principal
      * @param pfNo
      * @param reviewNo
      * @return
      */
     @Operation(summary = "공연 후기 대댓글 목록", description = "파라미터: 공연 번호, 리뷰 번호")
     @GetMapping("/{pfNo}/review/{reviewNo}/list")
-    public ResponseEntity<List<PfReviewResponse>> findPfChildReviewList(Principal principal,
-                                                                        @PathVariable int pfNo,
+    public ResponseEntity<List<PfReviewResponse>> findPfChildReviewList( @PathVariable int pfNo,
                                                                         @PathVariable int reviewNo){
-        int memberNo = Integer.parseInt(principal.getName());
-        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfChildReviewList(pfNo, reviewNo, memberNo);
+
+        List<PfReviewResponse> pfReviewResponseList = performanceReviewService.findPfChildReviewList(pfNo, reviewNo);
         return ResponseEntity.ok().body(pfReviewResponseList);
     }
 

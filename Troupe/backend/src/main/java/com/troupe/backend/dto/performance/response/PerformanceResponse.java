@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.performance;
+package com.troupe.backend.dto.performance.response;
 
 
 import lombok.AllArgsConstructor;
@@ -18,4 +18,6 @@ public class PerformanceResponse {
     Map<Integer, String> image;
     String location;
     String detailTime;
+    String category;
+    String status;
 }

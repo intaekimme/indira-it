@@ -3,11 +3,10 @@ import { useParams } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import { Button, Grid, Container } from "@mui/material";
 import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
-
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 const theme = createTheme({
   palette: {
     neutral: {
@@ -41,6 +40,10 @@ export default function FeedModify() {
 
   React.useEffect(() => {
     apiClient.getFeedDetail(feedNo).then((data) => {
+      if (parseInt(sessionStorage.getItem("loginMember")) !== data.memberNo) {
+        alert("권한이 없습니다");
+        window.location.href = "/feed/list";
+      }
       setImgKeys(data.images);
       setOldImage(data.images);
       setContent(data.content);
@@ -60,13 +63,13 @@ export default function FeedModify() {
     imageList.forEach((item) => {
       data.append("images", item);
     });
-    console.log(data.get("content"));
-    console.log("제출할 태그들 " + data.get("tags"));
-    console.log(data.get("images"));
-    console.log("삭제된 이미지 번호들 " + data.get("imageNo"));
-    console.log("기존 이미지 사이즈: " + Object.values(oldImage).length);
+    // console.log(data.get("content"));
+    // console.log("제출할 태그들 " + data.get("tags"));
+    // console.log(data.get("images"));
+    // console.log("삭제된 이미지 번호들 " + data.get("imageNo"));
+    // console.log("기존 이미지 사이즈: " + Object.values(oldImage).length);
 
-    // apiClient.feedModify(data, feedNo);
+    apiClient.feedModify(data, feedNo);
   };
 
   const changeImage = (event) => {
@@ -95,6 +98,14 @@ export default function FeedModify() {
 
   const changeContent = (event) => {
     setContent(event.target.value);
+  };
+
+  const cancelForm = () => {
+    if (window.confirm("수정을 취소하시겠습니까?")) {
+      window.location.href = "/feed/list";
+    } else {
+      return;
+    }
   };
   const addTagFunc = useCallback(
     (event) => {
@@ -175,20 +186,18 @@ export default function FeedModify() {
                       alt=""
                       style={{ height: "150px", width: "150px" }}
                     ></img>
-                    <button
-                      type="button"
+                    <RemoveCircleOutlineIcon
+                      color="error"
                       onClick={() => deleteOldImage(item)}
                       className={stylesTag.btn1}
-                    >
-                      -
-                    </button>
+                    ></RemoveCircleOutlineIcon>
                   </span>
                 ))
               ) : (
                 <div></div>
               )}
               {imgUrl ? (
-                <div>
+                <span>
                   {imgUrl.map((item, id) => (
                     <span key={id} className={stylesTag.img}>
                       <img
@@ -197,23 +206,23 @@ export default function FeedModify() {
                         alt=""
                         style={{ height: "150px", width: "150px" }}
                       ></img>
-                      <button
-                        type="button"
+                      <RemoveCircleOutlineIcon
+                        color="error"
                         onClick={() => deleteImage(item.file)}
                         className={stylesTag.btn1}
-                      >
-                        -
-                      </button>
+                      ></RemoveCircleOutlineIcon>
                     </span>
                   ))}
-                </div>
+                </span>
               ) : (
                 <div></div>
               )}
-              <Button variant="contained" component="label" color="neutral">
-                + 사진/동영상 추가
-                <input type="file" multiple hidden onChange={changeImage} />
-              </Button>
+              <div>
+                <Button variant="contained" component="label" color="neutral">
+                  + 사진/동영상 추가
+                  <input type="file" multiple hidden onChange={changeImage} />
+                </Button>
+              </div>
             </Grid>
           </Grid>
           <Grid container>
@@ -272,7 +281,19 @@ export default function FeedModify() {
           </div>
         </div>
         <Grid container spacing={2}>
-          <Grid item xs={10}></Grid>
+          <Grid item xs={8}></Grid>
+          <Grid item xs={2}>
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              color="inherit"
+              onClick={() => cancelForm()}
+            >
+              취소
+            </Button>
+          </Grid>
           <Grid item xs={2}>
             <form
               onSubmit={handleSubmit}
@@ -289,7 +310,7 @@ export default function FeedModify() {
                 sx={{ mt: 3, mb: 2 }}
                 color="neutral"
               >
-                피드 수정
+                수정 완료
               </Button>
             </form>
           </Grid>

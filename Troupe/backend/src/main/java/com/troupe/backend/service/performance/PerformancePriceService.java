@@ -2,8 +2,8 @@ package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformancePrice;
-import com.troupe.backend.dto.performance.PerformanceForm;
-import com.troupe.backend.dto.performance.PerformanceModifyForm;
+import com.troupe.backend.dto.performance.form.PerformanceForm;
+import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.repository.performance.PerformancePriceRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;

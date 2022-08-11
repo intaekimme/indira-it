@@ -10,15 +10,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
-
-// 무한 스크롤 구현 필요(더보기 버튼을 활용한, axios)
-// 유저 분간을 어떻게 하지
+import FeedDetail from "./FeedDetail";
+import Modal from "@mui/material/Modal";
+import stylesModal from "../css/modal.module.css";
+import FeedLikeButton from "./FeedLikeButton";
+import FeedSaveButton from "./FeedSaveButton";
+// 피드상세 모달구현을 위한 임시페이지 (후에 삭제 예정)
 
 function Copyright() {
   return (
@@ -49,17 +48,24 @@ function range(start, end) {
 const theme = createTheme();
 
 export default function Album() {
-  const [like, setLike] = React.useState(false);
-  const [save, setSave] = React.useState(false);
-  let [cards, setCard] = React.useState([1, 2, 3, 4, 5, 6]);
-
-const[]
-  function handleLike() {
-    setLike(!like);
+  const [open, setOpen] = React.useState(false);
+  const [feedNo, setFeedNo] = React.useState(0);
+  let [cards, setCard] = React.useState([
+    {
+      feedNo: 0,
+      nickname: "",
+      profileImageUrl: "",
+    },
+  ]);
+  const [change, setChange] = React.useState(false);
+  function handleOpen(no) {
+    setOpen(true);
+    setFeedNo(no);
+    setChange(false);
   }
-
-  function handleSave() {
-    setSave(!save);
+  function handleClose() {
+    setOpen(false);
+    setChange(true);
   }
 
   function handleCard() {
@@ -68,11 +74,19 @@ const[]
     setCard(range(0, pages));
   }
 
+  const changeFunction = (check) => {
+    setChange(check);
+  };
   React.useEffect(() => {
-      apiClient.getFeedList(0).then((data) => {
-        
-    })
-  }, [feedNo]);
+    // const data = {
+    //   change: "all",
+    //   pageNumber: 0,
+    // };
+    apiClient.getFeedTest().then((data) => {
+      console.log(data);
+      setCard(data);
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -84,8 +98,8 @@ const[]
       <main>
         <Container sx={{ py: 10 }} maxWidth="md">
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {cards.map((card, id) => (
+              <Grid item key={id} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
                     height: "100%",
@@ -96,11 +110,14 @@ const[]
                 >
                   <Typography
                     gutterBottom
-                    style={{ fontSize: "20px", fontFamily: "IBM Plex Sans KR" }}
+                    style={{
+                      fontSize: "20px",
+                      fontFamily: "IBM Plex Sans KR",
+                    }}
                     component="span"
                   >
                     <img
-                      src="https://source.unsplash.com/random"
+                      src={card.profileImageUrl}
                       alt="random"
                       style={{
                         borderRadius: "70%",
@@ -109,7 +126,7 @@ const[]
                         width: "20px",
                       }}
                     ></img>
-                    SmartToy
+                    {card.nickname}
                   </Typography>
                   <CardMedia
                     component="img"
@@ -121,6 +138,7 @@ const[]
                     }}
                     image="https://source.unsplash.com/random"
                     alt="random"
+                    onClick={() => handleOpen(card.feedNo)}
                   />
                   <CardActions
                     sx={{
@@ -129,44 +147,33 @@ const[]
                       padding: "0px",
                     }}
                   >
-                    <Button
-                      size="small"
-                      onClick={handleLike}
-                      style={{
-                        color: "black",
-                        justifyContent: "flex-start",
-                        margin: "0px",
-                        padding: "0px",
-                      }}
-                    >
-                      {like ? (
-                        <Favorite></Favorite>
-                      ) : (
-                        <FavoriteBorderIcon></FavoriteBorderIcon>
-                      )}
-                      30
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={handleSave}
-                      style={{
-                        color: "black",
-                        justifyContent: "flex-end",
-                        margin: "0px",
-                        padding: "0px",
-                      }}
-                    >
-                      {save ? (
-                        <TurnedInIcon></TurnedInIcon>
-                      ) : (
-                        <TurnedInNotIcon></TurnedInNotIcon>
-                      )}
-                    </Button>
+                    <FeedLikeButton
+                      change={change}
+                      feedNo={card.feedNo}
+                    ></FeedLikeButton>
+                    <FeedSaveButton
+                      change={change}
+                      feedNo={card.feedNo}
+                    ></FeedSaveButton>
                   </CardActions>
                 </Card>
               </Grid>
             ))}
           </Grid>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            className={stylesModal.outer}
+            animationType={"fade"}
+          >
+            <FeedDetail
+              setChange={setChange}
+              feedNo={feedNo}
+              open={open}
+            ></FeedDetail>
+          </Modal>
         </Container>
       </main>
       {/* Footer */}

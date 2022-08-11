@@ -1,5 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Header from "./Header";
@@ -18,13 +17,18 @@ import FeedRegister from "./components/FeedRegister";
 import FeedDetail from "./components/FeedDetail";
 import FeedModify from "./components/FeedModify";
 import GuestBook from "./components/GuestBook";
+import PopupTest from "./components/Popuptest";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
+const queryClient = new QueryClient();
 
 function App() {
   const loginCheck = () => {
     return window.sessionStorage.getItem("loginCheck") === "true";
   };
   const [memberData, setMemberData] = React.useState(
-    window.sessionStorage.getItem("memberData"),
+    window.sessionStorage.getItem("memberData")
   );
   React.useEffect(() => {
     setMemberData(window.sessionStorage.getItem("memberData"));
@@ -37,29 +41,31 @@ function App() {
       <div>
         <Header />
       </div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<PerfList />}></Route>
-          <Route path="/perf/list" element={<PerfList />}></Route>
-          <Route path="/feed/list" element={<FeedList />}></Route>
-          <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />} ></Route>
-          <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />} ></Route>
-          <Route path="/email" element={<EmailSend />}></Route>
-          <Route path="/resetpw" element={loginCheck() ? <ResetPw /> : <Navigate to="/" />} ></Route>
-          <Route path="/member/reset-password/:token" element={loginCheck() ? <ResetPw /> : <Navigate to="/" />} ></Route>
-          <Route path="/profile/:memberNo" element={<Profile />}></Route>
-          <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />} ></Route>
-          <Route path="/test" element={<Test />}></Route>
-          <Route path="/perf/detail" element={<PerfDetail />}></Route>
-          <Route path="/perf/new" element={<PerfNew />}></Route>
-          <Route path="/feed/register" element={<FeedRegister />}></Route>
-          <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route>
-          <Route path="/feed/modify/:feedNo" element={<FeedModify />}></Route>
-          
-          
-          <Route path="/guestbook/test" element={<GuestBook/>}></Route>
-        </Routes>
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<PerfList />}></Route>
+            <Route path="/perf/list/:pageNumber" element={<PerfList />}></Route>
+            <Route path="/feed/list" element={<FeedList />}></Route>
+            <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
+            <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
+            <Route path="/email" element={<EmailSend />}></Route>
+            <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
+            <Route path="/member/reset-password/:token" element={loginCheck() ? <Navigate to="/" />: <ResetPw />}></Route>
+            <Route path="/profile/:memberNo" element={<Profile />}></Route>
+            <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />}></Route>
+            <Route path="/test" element={<Test />}></Route>
+            <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
+            <Route path="/perf/new" element={<PerfNew />}></Route>
+            <Route path="/feed/register" element={loginCheck() ? <FeedRegister /> : <Navigate to="/login" />}></Route>
+            <Route path="/feed/modify/:feedNo" element={loginCheck() ? <FeedModify /> : <Navigate to="/login" />}></Route>
+            <Route path="/guestbook/test" element={<GuestBook />}></Route>
+            <Route path="/feed/test" element={<PopupTest />}></Route>
+            {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}
+          </Routes>
+        </Router>
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      </QueryClientProvider>
     </div>
   );
 }

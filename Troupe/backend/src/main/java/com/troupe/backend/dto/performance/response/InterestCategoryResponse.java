@@ -1,4 +1,4 @@
-package com.troupe.backend.dto.performance;
+package com.troupe.backend.dto.performance.response;
 
 import lombok.*;
 
