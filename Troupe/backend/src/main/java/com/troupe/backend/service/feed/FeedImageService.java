@@ -6,21 +6,19 @@ import com.troupe.backend.repository.feed.FeedImageRepository;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FeedImageService {
-    @Autowired
-    FeedImageRepository feedImageRepository;
+    private final FeedImageRepository feedImageRepository;
 
-    @Autowired
-    S3FileUploadService s3FileUploadService;
+    private final S3FileUploadService s3FileUploadService;
 
     public void insert(List<FeedImage> feedImageList){
 //        System.out.println("feedImageListsize:  "+ feedImageList.size());

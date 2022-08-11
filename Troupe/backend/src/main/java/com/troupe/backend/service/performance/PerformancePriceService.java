@@ -8,11 +8,13 @@ import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.repository.performance.PerformancePriceRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PerformancePriceService {
