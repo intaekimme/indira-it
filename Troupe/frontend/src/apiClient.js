@@ -631,6 +631,19 @@ const apiClient = {
         return error;
       });
   },
+
+  // 공연 상세 정보 불러오기
+  getPerfDetail: (performanceNo) => {
+    return instance
+      .get(`/perf/${performanceNo}`)
+      .then((response) => {
+        // console.log(response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("공연상세 불러 오기 실패 " + error);
+      });
+  },
 };
 
 export default apiClient;
