@@ -34,11 +34,9 @@ export default function CommentForm(props) {
         apiClient.perfReviewNew(
           props.performanceNo,
           data,
-          props.refreshFunction
+          props.refreshFunction,
         );
       } else {
-        // console.log(data);
-        // console.log(props.feedNo);
         apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
       }
       reset();
@@ -56,15 +54,17 @@ export default function CommentForm(props) {
         props.performanceNo,
         props.reviewNo,
         data,
-        props.refreshFunction
+        props.refreshFunction,
       );
     } else {
-      // console.log(data);
-      // console.log(props.feedNo);
-      apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
+      apiClient.feedChildCommentNew(
+        props.feedNo,
+        props.parentCommentNo,
+        data,
+        props.refreshChildFunction,
+      );
     }
     reset();
-    setIsChild(false);
   };
 
   const WriteButton = () => (
@@ -74,7 +74,7 @@ export default function CommentForm(props) {
   );
 
   return (
-    <form>
+    <div>
       <TextField
         fullWidth
         id="write-review-form"
@@ -85,6 +85,9 @@ export default function CommentForm(props) {
         onChange={onChange}
         InputProps={{ endAdornment: <WriteButton /> }}
       />
-    </form>
+      <form>
+        <input type="hidden" value={review}></input>
+      </form>
+    </div>
   );
 }
