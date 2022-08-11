@@ -61,7 +61,7 @@ public class EmailTokenService {
         mailMessage.setFrom(MyConstant.EMAIL_SENDER_ADDRESS);
         mailMessage.setTo(receiverEmail);
         mailMessage.setSubject("비밀번호 재설정");
-        mailMessage.setText("http://localhost:8080/member/reset-password/" + emailToken.getToken());
+        mailMessage.setText("http://localhost:3000/member/reset-password/" + emailToken.getToken());
 
         // 이메일 전송
         System.out.println("비밀번호 재설정 이메일 전송");
