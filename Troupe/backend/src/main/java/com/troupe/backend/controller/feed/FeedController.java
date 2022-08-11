@@ -27,6 +27,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @Api("피드 REST API")
@@ -156,18 +157,18 @@ public class FeedController {
     @Operation(summary = "피드 댓글 등록", description = "파라미터: 피드번호, 멤버번호, 내용, 부모댓글번호-선택")
     @PostMapping("/{feedNo}/comment")
     public ResponseEntity insertComment(Principal principal,
-                                     @RequestParam String content,
+                                     @RequestBody Map<String, String> body,
                                      @RequestParam(required = false) Integer parentCommentNo,
                                         @PathVariable int feedNo) throws IOException {
         try{
             CommentForm request = new CommentForm();
             request.setMemberNo(Integer.parseInt(principal.getName()));
-            request.setContent(content);
+            request.setContent(body.get("content"));
             if(parentCommentNo!=null)  request.setParentCommentNo(parentCommentNo);
             else request.setParentCommentNo(0);
             request.setFeedNo(feedNo);
-            commentService.insert(request);
-            return new ResponseEntity("Comment Insert SUCCESS", HttpStatus.CREATED);
+            CommentResponse response =  commentService.insert(request);
+            return new ResponseEntity(response, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Comment Insert FAIL", HttpStatus.BAD_REQUEST);
@@ -178,14 +179,14 @@ public class FeedController {
     @PatchMapping("/{feedNo}/comment/{commentNo}")
     public ResponseEntity updateComment(@PathVariable int feedNo,
                                         @PathVariable int commentNo,
-                                        @RequestParam String content) throws IOException {
+                                        @RequestBody Map<String, String> body) throws IOException {
         try{
             CommentForm request = new CommentForm();
             request.setCommentNo(commentNo);
-            request.setContent(content);
+            request.setContent(body.get("content"));
             request.setFeedNo(feedNo);
-            commentService.update(request);
-            return new ResponseEntity("Comment update SUCCESS", HttpStatus.CREATED);
+            CommentResponse response = commentService.update(request);
+            return new ResponseEntity(response, HttpStatus.CREATED);
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Comment update FAIL", HttpStatus.BAD_REQUEST);
