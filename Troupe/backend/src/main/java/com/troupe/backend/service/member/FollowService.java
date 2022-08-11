@@ -5,6 +5,7 @@ import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.exception.member.DuplicatedFollowException;
 import com.troupe.backend.repository.member.FollowRepository;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.util.MyConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,8 @@ public class FollowService {
 
     private final MemberRepository memberRepository;
 
+    private final LikabilityService likabilityService;
+
     /**
      * 팔로우 관계 등록
      */
@@ -28,20 +31,29 @@ public class FollowService {
             throw new DuplicatedFollowException();
         }
 
+        // 팔로우 DB에 저장
         Member starMember = memberRepository.findById(starMemberNo).get();
         Member fanMember = memberRepository.findById(fanMemberNo).get();
-        return followRepository.save(Follow.builder().starMember(starMember).fanMember(fanMember).build());
+        Follow savedFollow = followRepository.save(Follow.builder().starMember(starMember).fanMember(fanMember).build());
+
+        // 호감도 갱신
+        likabilityService.updateExp(starMemberNo, fanMemberNo, MyConstant.EXP_FOLLOW);
+
+        return savedFollow;
     }
 
     /**
      * 팔로우 관계 삭제
      */
     public void unfollow(int starMemberNo, int fanMemberNo) {
-        // 여기도 짜야 함
-
         Member starMember = memberRepository.findById(starMemberNo).get();
         Member fanMember = memberRepository.findById(fanMemberNo).get();
+
+        // 팔로우 DB에서 삭제
         followRepository.delete(followRepository.findByStarMemberAndFanMember(starMember, fanMember).get());
+
+        // 호감도 갱신
+        likabilityService.updateExp(starMemberNo, fanMemberNo, -MyConstant.EXP_FOLLOW);
     }
 
     /**

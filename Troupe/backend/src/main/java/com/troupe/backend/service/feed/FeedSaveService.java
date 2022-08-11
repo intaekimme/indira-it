@@ -1,7 +1,6 @@
 package com.troupe.backend.service.feed;
 
 import com.troupe.backend.domain.feed.Feed;
-import com.troupe.backend.domain.feed.FeedLike;
 import com.troupe.backend.domain.feed.FeedSave;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.repository.feed.FeedRepository;
@@ -9,7 +8,6 @@ import com.troupe.backend.repository.feed.FeedSaveRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -25,14 +23,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FeedSaveService {
 
-    @Autowired
     FeedSaveRepository feedSaveRepository;
 
-    @Autowired
     MemberRepository memberRepository;
 
-    @Autowired
     FeedRepository feedRepository;
+
+
 
     public boolean insert(int memberNo, int feedNo) {
         Member member = memberRepository.findById(memberNo).get();

@@ -40,6 +40,14 @@ public final class MyConstant {
     public static final String TOP_3_STARS = "top3Stars";
     public static final String TOP_100_FANS = "top100Fans";
 
+    // 호감도 경험치 상승량
+    public static final int EXP_FOLLOW = 10;
+    public static final int EXP_PERFORMANCE_SAVE = 5;
+    public static final int EXP_FEED_SAVE = 3;
+    public static final int EXP_FEED_LIKE = 1;
+    public static final int EXP_FEED_COMMENT = 1;
+
+
     // 파일 서버 주소
     public static final String FILE_SERVER_URL = "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/";
     public static final String EMAIL_SENDER_ADDRESS = "troupetest0001@gmail.com";
