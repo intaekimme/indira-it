@@ -19,13 +19,12 @@ export default function CommentForm(props) {
   };
 
   const reviewRegister = () => {
-    
     const data = {
       content: review,
     };
     if (!props.feedNo) {
       apiClient.perfReviewNew(props.performanceNo, data, props.refreshFunction);
-    } else {     
+    } else {
       // console.log(data);
       // console.log(props.feedNo);
       apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
@@ -37,19 +36,25 @@ export default function CommentForm(props) {
     const data = {
       content: review,
     };
-    apiClient.perfChildReviewNew(
-      props.performanceNo,
-      props.reviewNo,
-      data,
-      props.refreshFunction
-    );
+    if (!props.feedNo) {
+      apiClient.perfChildReviewNew(
+        props.performanceNo,
+        props.reviewNo,
+        data,
+        props.refreshFunction,
+      );
+    } else {
+      // console.log(data);
+      // console.log(props.feedNo);
+      apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
+    }
     reset();
     setIsChild(false);
   };
 
   const WriteButton = () => (
     <IconButton onClick={isChild ? childReviewRegister : reviewRegister}>
-      <CreateIcon color="gray" />
+      <CreateIcon color="grey" />
     </IconButton>
   );
 
@@ -61,7 +66,7 @@ export default function CommentForm(props) {
         placeholder="댓글을 입력하세요."
         value={review}
         type="text"
-        maxlength="500"
+        maxLength="500"
         onChange={onChange}
         InputProps={{ endAdornment: <WriteButton /> }}
       />

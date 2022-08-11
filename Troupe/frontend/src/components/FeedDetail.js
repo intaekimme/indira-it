@@ -65,19 +65,20 @@ export default function FeedDetail(props) {
       apiClient.getFeedTotalLike(props.feedNo).then((data) => {
         setLike(data);
       });
-      apiClient.getPerfCommentList(props.feedNo).then((data) => {
+      apiClient.getFeedCommentList(props.feedNo).then((data) => {
         const json = [];
-       
+
         data.forEach((item) => {
           json.push({
             memberNo: item.memberNo,
             reviewNo: item.commentNo,
             profileImageUrl: item.profileImageUrl,
             comment: item.content,
-            nickname: item.nickname
-          })
-        })
-        
+            nickname: item.nickname,
+            isRemoved: item.removed,
+          });
+        });
+
         setCommentList(json);
       });
     }
@@ -177,7 +178,7 @@ export default function FeedDetail(props) {
           <Grid container margin="10% 10% 10% 10%">
             <Grid item xs={10}>
               <Item>
-               <CommentList
+                <CommentList
                   refreshFunction={refreshFunction}
                   commentList={commentList}
                   feedNo={feedNo}
