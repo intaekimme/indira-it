@@ -9,10 +9,12 @@ import com.troupe.backend.dto.converter.CommentConverter;
 import com.troupe.backend.repository.comment.CommentRepository;
 import com.troupe.backend.repository.feed.FeedRepository;
 import com.troupe.backend.repository.member.MemberRepository;
+import com.troupe.backend.service.member.LikabilityService;
+import com.troupe.backend.util.MyConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,22 +25,21 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CommentService {
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
-    @Autowired
-    FeedRepository feedRepository;
+    private final FeedRepository feedRepository;
 
-    @Autowired
-    CommentConverter commentConverter;
+    private final CommentConverter commentConverter;
+
+    private final LikabilityService likabilityService;
 
 
-    public  void insert(CommentForm request){
+    public  CommentResponse insert(CommentForm request){
         try{
             Member member = memberRepository.findById(request.getMemberNo()).get();
             Feed feed = feedRepository.findById(request.getFeedNo()).get();
@@ -52,27 +53,43 @@ public class CommentService {
             else{
                 comment = Comment.builder().feed(feed).createdTime(now).member(member).content(request.getContent()).build();
             }
-            commentRepository.save(comment);
+            Comment cmt = commentRepository.save(comment);
+
+            // 호감도 갱신
+            int starMemberNo = feed.getMember().getMemberNo();
+            int fanMemberNo = member.getMemberNo();
+            likabilityService.updateExp(starMemberNo, fanMemberNo, MyConstant.EXP_FEED_COMMENT);
+
+            return commentConverter.commentResponse(cmt);
         }catch (Exception e){
             log.info(e.toString());
         }
+        return null;
     }
 
-    public void update(CommentForm request){
+    public CommentResponse update(CommentForm request){
         Optional<Comment> comment = commentRepository.findById(request.getCommentNo());
 
         if(comment.isPresent()){
             Comment updateComment = commentConverter.toEntity(request);
-            commentRepository.save(updateComment);
-        }else return;
+            Comment cmt = commentRepository.save(updateComment);
+            return  commentConverter.commentResponse(cmt);
+        }else return null;
 
     }
 
     public void delete(int commentNo){
-        Optional<Comment> comment = commentRepository.findById(commentNo);
-        if(comment.isPresent()){
-            comment.get().setRemoved(true);
-            commentRepository.save(comment.get());
+        Optional<Comment> found = commentRepository.findById(commentNo);
+        if(found.isPresent()){
+            Comment comment = found.get();
+            comment.setRemoved(true);
+
+            // 호감도 갱신
+            int starMemberNo = comment.getFeed().getMember().getMemberNo(); // 피드 작성자 번호
+            int fanMemberNo = comment.getMember().getMemberNo(); // 댓글 작성자 번호
+            likabilityService.updateExp(starMemberNo, fanMemberNo, -MyConstant.EXP_FEED_COMMENT);
+
+            commentRepository.save(comment);
         }else return;
     }
 

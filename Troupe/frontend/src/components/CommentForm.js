@@ -19,45 +19,75 @@ export default function CommentForm(props) {
   };
 
   const reviewRegister = () => {
-    const data = {
-      content: review,
-    };
-    apiClient.perfReviewNew(props.performanceNo, data, props.refreshFunction);
-    reset();
+    if (!sessionStorage.getItem("loginCheck")) {
+      if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
+        window.location.href = `/login`;
+    } else {
+      let data = {
+        content: review,
+      };
+      if (!props.feedNo) {
+        data = {
+          content: review,
+          parentCommentNo: 0,
+        };
+        apiClient.perfReviewNew(
+          props.performanceNo,
+          data,
+          props.refreshFunction,
+        );
+      } else {
+        apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
+      }
+      reset();
+    }
   };
 
   const childReviewRegister = () => {
+    console.log(props.performanceNo);
     const data = {
       content: review,
+      parentCommentNo: props.reviewNo,
     };
-    apiClient.perfChildReviewNew(
-      props.performanceNo,
-      props.reviewNo,
-      data,
-      props.refreshFunction
-    );
+    if (!props.feedNo) {
+      apiClient.perfChildReviewNew(
+        props.performanceNo,
+        props.reviewNo,
+        data,
+        props.refreshFunction,
+      );
+    } else {
+      apiClient.feedChildCommentNew(
+        props.feedNo,
+        props.parentCommentNo,
+        data,
+        props.refreshChildFunction,
+      );
+    }
     reset();
-    setIsChild(false);
   };
 
   const WriteButton = () => (
     <IconButton onClick={isChild ? childReviewRegister : reviewRegister}>
-      <CreateIcon color="gray" />
+      <CreateIcon color="grey" />
     </IconButton>
   );
 
   return (
-    <form>
+    <div>
       <TextField
         fullWidth
         id="write-review-form"
         placeholder="댓글을 입력하세요."
         value={review}
         type="text"
-        maxlength="500"
+        maxLength="500"
         onChange={onChange}
         InputProps={{ endAdornment: <WriteButton /> }}
       />
-    </form>
+      <form>
+        <input type="hidden" value={review}></input>
+      </form>
+    </div>
   );
 }

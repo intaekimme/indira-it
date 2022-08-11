@@ -5,7 +5,7 @@ import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 
 export default function CommentList(props) {
-  console.log(props);
+  // console.log(props);
 
   const comments = props.commentList;
   return (
@@ -16,16 +16,26 @@ export default function CommentList(props) {
           <Comment
             key={index}
             performanceNo={comment.pfNo}
+            feedNo={props.feedNo}
             memberNo={comment.memberNo}
             reviewNo={comment.reviewNo}
             nickname={comment.nickname}
             profileImageUrl={comment.profileImageUrl}
             comment={comment.comment}
+            isRemoved={comment.isRemoved}
+            parentCommentNo={props.parentCommentNo}
             refreshFunction={props.refreshFunction}
+            refreshChildFunction={props.refreshChildFunction}
           />
         );
       })}
-      <CommentForm refreshFunction={props.refreshFunction} />
+      {!props.parentCommentNo && (
+        <CommentForm
+          refreshFunction={props.refreshFunction}
+          feedNo={props.feedNo}
+          performanceNo={props.performanceNo}
+        />
+      )}
     </div>
   );
 }

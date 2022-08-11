@@ -14,6 +14,7 @@ import MUICarousel from "react-material-ui-carousel";
 import CarouselItem from "./CarouselItem";
 import FeedLikeButton from "./FeedLikeButton";
 import FeedSaveButton from "./FeedSaveButton";
+import CommentList from "./CommentList";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#FFF",
@@ -40,12 +41,15 @@ export default function FeedDetail(props) {
   const [like, setLike] = React.useState(0);
   const [img, setImg] = React.useState(new Map());
   const [user, setUser] = React.useState(0);
+  const [commentList, setCommentList] = React.useState([]);
   function searchTag(tagName) {
     if (tagName !== "") {
       apiClient.getFeedSearchTest(tagName).then((data) => {});
     }
   }
-
+  const refreshFunction = (newComment) => {
+    setCommentList([...commentList, newComment]);
+  };
   React.useEffect(() => {
     setFeedNo(props.feedNo);
     setOpen(props.open);
@@ -60,6 +64,22 @@ export default function FeedDetail(props) {
       });
       apiClient.getFeedTotalLike(props.feedNo).then((data) => {
         setLike(data);
+      });
+      apiClient.getFeedCommentList(props.feedNo).then((data) => {
+        const json = [];
+
+        data.forEach((item) => {
+          json.push({
+            memberNo: item.memberNo,
+            reviewNo: item.commentNo,
+            profileImageUrl: item.profileImageUrl,
+            comment: item.content,
+            nickname: item.nickname,
+            isRemoved: item.removed,
+          });
+        });
+
+        setCommentList(json);
       });
     }
   }, [props.feedNo, props.open]);
@@ -96,7 +116,7 @@ export default function FeedDetail(props) {
         <Grid item xs={6}>
           <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
           <Item elevation={0}>
-            <div
+            <Grid
               style={{
                 fontSize: "medium",
                 paddingLeft: "0px",
@@ -104,7 +124,7 @@ export default function FeedDetail(props) {
                 textAlign: "left",
               }}
             >
-              <div>
+              <Grid>
                 <a
                   style={{ textDecoration: "none" }}
                   href={"/profile/" + feedInfo.memberNo}
@@ -123,17 +143,17 @@ export default function FeedDetail(props) {
                   <span>{feedInfo.nickname}</span>
                 </a>
                 {user !== feedInfo.memberNo ? (
-                  <div>
+                  <Grid>
                     <FollowButton
                       memberNo={feedInfo.memberNo}
                       style={{ textAlign: "top" }}
                     ></FollowButton>
-                  </div>
+                  </Grid>
                 ) : (
-                  <div></div>
+                  <Grid></Grid>
                 )}
-              </div>
-              <div>
+              </Grid>
+              <Grid item xs={11}>
                 <p>{feedInfo.content}</p>
                 <div className={stylesTag.HashWrapOuter}>
                   {feedInfo.tags ? (
@@ -150,14 +170,20 @@ export default function FeedDetail(props) {
                     <div></div>
                   )}
                 </div>
-              </div>
-            </div>
+              </Grid>
+            </Grid>
           </Item>
           <FeedLikeButton feedNo={feedNo}></FeedLikeButton>
           <FeedSaveButton feedNo={feedNo}></FeedSaveButton>
-          <Grid container margin="10% 10% 10% 10%">
-            <Grid item xs={7}>
-              <Item>댓글란</Item>
+          <Grid container margin="1%  1% 1% 1% ">
+            <Grid item xs={11}>
+              <Item>
+                <CommentList
+                  refreshFunction={refreshFunction}
+                  commentList={commentList}
+                  feedNo={feedNo}
+                />
+              </Item>
             </Grid>
           </Grid>
         </Grid>

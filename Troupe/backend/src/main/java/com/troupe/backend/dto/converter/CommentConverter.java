@@ -1,15 +1,12 @@
 package com.troupe.backend.dto.converter;
 
 import com.troupe.backend.domain.comment.Comment;
-import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.dto.comment.CommentForm;
 import com.troupe.backend.dto.comment.CommentResponse;
 import com.troupe.backend.repository.comment.CommentRepository;
+import com.troupe.backend.util.MyConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class CommentConverter {
@@ -25,7 +22,7 @@ public class CommentConverter {
         response.setFeedNo(comment.getFeed().getFeedNo());
         if(comment.getParentComment()!=null) response.setParentCommentNo(comment.getParentComment().getCommentNo());
         response.setNickname(comment.getMember().getNickname());
-        response.setProfileImageUrl(comment.getMember().getProfileImageUrl());
+        response.setProfileImageUrl(MyConstant.FILE_SERVER_URL+comment.getMember().getProfileImageUrl());
         response.setCreatedTime(comment.getCreatedTime());
         response.setContent(comment.getContent());
         response.setRemoved(comment.isRemoved());
