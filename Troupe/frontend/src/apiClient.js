@@ -51,7 +51,7 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert(
-          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data,
+          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
         );
         return true;
       })
@@ -212,7 +212,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            },
+            }
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -578,9 +578,9 @@ const apiClient = {
   },
 
   //  공연 후기 대댓글 작성
-  perfChildReviewNew: (performanceNo, reviewNo, data, refreshFunction) => {
+  perfChildReviewNew: (performanceNo, data, refreshFunction) => {
     instance
-      .post(`/perf/${performanceNo}/review/${reviewNo}`, data, {
+      .post(`/perf/${performanceNo}/review`, data, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
@@ -663,6 +663,20 @@ const apiClient = {
         return error;
       });
   },
+
+  // 공연 상세 정보 불러오기
+  getPerfDetail: (performanceNo) => {
+    return instance
+      .get(`/perf/${performanceNo}`)
+      .then((response) => {
+        // console.log(response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("공연상세 불러 오기 실패 " + error);
+      });
+  },
+
   // 피드 댓글 목록 불러오기(완성)
   getFeedCommentList: (feedNo) => {
     return instance

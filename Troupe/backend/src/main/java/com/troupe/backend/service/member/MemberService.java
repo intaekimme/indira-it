@@ -14,6 +14,7 @@ import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.email.EmailTokenService;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor

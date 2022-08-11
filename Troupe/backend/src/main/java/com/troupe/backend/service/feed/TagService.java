@@ -7,9 +7,9 @@ import com.troupe.backend.repository.feed.FeedTagRepository;
 import com.troupe.backend.repository.feed.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +17,13 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TagService {
 
-    @Autowired
-    TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
-    @Autowired
-    FeedTagRepository feedTagRepository;
+    private final FeedTagRepository feedTagRepository;
 
 
     public void insert(List<Tag> tags, Feed feed){

@@ -19,20 +19,35 @@ export default function CommentForm(props) {
   };
 
   const reviewRegister = () => {
-    const data = {
-      content: review,
-    };
-    if (!props.feedNo) {
-      apiClient.perfReviewNew(props.performanceNo, data, props.refreshFunction);
+    if (!sessionStorage.getItem("loginCheck")) {
+      if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
+        window.location.href = `/login`;
     } else {
-      apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
+      let data = {
+        content: review,
+      };
+      if (!props.feedNo) {
+        data = {
+          content: review,
+          parentCommentNo: 0,
+        };
+        apiClient.perfReviewNew(
+          props.performanceNo,
+          data,
+          props.refreshFunction,
+        );
+      } else {
+        apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
+      }
+      reset();
     }
-    reset();
   };
 
   const childReviewRegister = () => {
+    console.log(props.performanceNo);
     const data = {
       content: review,
+      parentCommentNo: props.reviewNo,
     };
     if (!props.feedNo) {
       apiClient.perfChildReviewNew(

@@ -9,7 +9,6 @@ import com.troupe.backend.dto.performance.form.PerformanceForm;
 import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
 import com.troupe.backend.dto.performance.Seat;
 import com.troupe.backend.repository.category.CategoryRepository;
-import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

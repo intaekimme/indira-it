@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class EmailService {
     private final EmailTokenService emailTokenService;
 
