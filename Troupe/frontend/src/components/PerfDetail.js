@@ -21,8 +21,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 //포스터 슬라이드
-function Carousel() {
-  function CarouselItem() {
+function Carousel(props) {
+  function CarouselItem(props) {
     const [open, setOpen] = React.useState(false);
     function handleOpen() {
       setOpen(true);
@@ -73,7 +73,7 @@ function Carousel() {
               zIndex: "3",
             }}
           >
-            상영 중
+            {props.status}
           </Box>
           <Box
             style={{
@@ -86,7 +86,7 @@ function Carousel() {
               zIndex: "3",
             }}
           >
-            뮤지컬
+            {props.category}
           </Box>
         </Fragment>
       </Paper>
@@ -106,7 +106,13 @@ function Carousel() {
   return (
     <MUICarousel animation="slide" indicators="" autoPlay={false}>
       {items.map((item, i) => (
-        <CarouselItem key={i} item={item} />
+        <CarouselItem
+          key={i}
+          item={item}
+          category={props.category}
+          status={props.status}
+          imageUrl={props.imageUrl}
+        />
       ))}
     </MUICarousel>
   );
@@ -175,11 +181,36 @@ function ModifyDeleteButton(props) {
 function PerfDetail() {
   const { pfNo } = useParams();
 
-  const [title, setTitle] = React.useState("");
-  const [price, setPrice] = React.useState([]);
-  const [time, setTime] = React.useState("");
-  const [date, setDate] = React.useState("");
-  const [location, setLocation] = React.useState("");
+  const [category, setCategory] = useState(""); //  필수
+  const [createdTime, setCreatedTime] = useState(Date.now()); //  비 필수
+  const [description, setDescription] = useState(""); //  필수
+  const [detailTime, setDetailTime] = useState(""); //  필수
+  const [endDate, setEndDate] = useState(Date.now()); //  필수
+  const [imageUrl, setImageUrl] = useState({
+    //  필수
+    index: 0,
+    url: "",
+  });
+  const [location, setLocation] = useState(""); //  필수
+  const [memberInfo, setMemberInfo] = useState({
+    //  필수
+    memberNo: 0,
+    nickname: "",
+    profileImg: "", //  기본 이미지 정해서 s3에 업로드하고 그 url을 넣어주기
+  });
+  const [price, setPrice] = useState([
+    {
+      id: 0,
+      name: "",
+      price: 0,
+    },
+  ]);
+  const [removed, setRemoved] = useState(false); //  비 필수
+  const [runtime, setRuntime] = useState(0); // 필수
+  const [startDate, setStartDate] = useState(Date.now()); //  필수
+  const [status, setStatus] = useState(""); //  필수
+  const [title, setTitle] = useState(""); //  필수
+  const [updatedTime, setUpdatedTime] = useState(Date.now()); //  비 필수
 
   const [performanceNo, setPerformanceNo] = useState(pfNo);
   const [commentList, setCommentList] = React.useState([]);
@@ -188,14 +219,64 @@ function PerfDetail() {
     setCommentList([...commentList, newComment]);
   };
 
+  function convertTime(timestamp) {
+    let date = new Date(timestamp); //타임스탬프를 인자로 받아 Date 객체 생성
+
+    /* 생성한 Date 객체에서 년, 월, 일, 시, 분을 각각 문자열 곧바로 추출 */
+    let year = date.getFullYear().toString().slice(-2); //년도 뒤에 두자리
+    let month = ("0" + (date.getMonth() + 1)).slice(-2); //월 2자리 (01, 02 ... 12)
+    let day = ("0" + date.getDate()).slice(-2); //일 2자리 (01, 02 ... 31)
+    let hour = ("0" + date.getHours()).slice(-2); //시 2자리 (00, 01 ... 23)
+    let minute = ("0" + date.getMinutes()).slice(-2); //분 2자리 (00, 01 ... 59)
+    let second = ("0" + date.getSeconds()).slice(-2); //초 2자리 (00, 01 ... 59)
+
+    let returnDate =
+      year +
+      "." +
+      month +
+      "." +
+      day +
+      ". " +
+      hour +
+      ":" +
+      minute +
+      ":" +
+      second;
+    return returnDate;
+  }
+
   useEffect(() => {
     setPerformanceNo(pfNo);
+
+    apiClient.getPerfDetail(pfNo).then((data) => {
+      console.log(`return data : ${data}`);
+      setCategory(data.category);
+      setCreatedTime(data.createdTime);
+      setDescription(data.description);
+      setDetailTime(data.detailTime);
+      setEndDate(data.endDate);
+      setImageUrl(data.imageUrl);
+      setLocation(data.location);
+      setMemberInfo({
+        memberNo: data.memberNo,
+        nickname: data.nickname,
+        profileImg: data.profileImg,
+      });
+      setPrice(data.price);
+      setRemoved(data.removed);
+      setRuntime(data.runtime);
+      setStartDate(data.startDate);
+      setStatus(data.status);
+      setTitle(data.title);
+      setUpdatedTime(data.updatedTime);
+    });
 
     apiClient.getPerfReviewList(pfNo).then((data) => {
       setCommentList(data);
     });
   }, []);
 
+  // console.log(price);
   // console.log(`pfNo: ${pfNo}`);
   // console.log(`performanceNo: ${performanceNo}`);
   return (
@@ -208,7 +289,11 @@ function PerfDetail() {
               elevation={0}
               style={{ position: "relative", direction: "row" }}
             >
-              <Carousel></Carousel>
+              <Carousel
+                category={category}
+                status={status}
+                imageUrl={imageUrl}
+              ></Carousel>
             </Item>
           </Grid>
           <Grid item xs={7}>
@@ -225,7 +310,7 @@ function PerfDetail() {
                 <li>
                   <a style={{ textDecoration: "none" }} href="/">
                     <img
-                      src="https://source.unsplash.com/random"
+                      src={memberInfo.profileImg}
                       alt="random"
                       style={{
                         borderRadius: "70%",
@@ -234,20 +319,36 @@ function PerfDetail() {
                         width: "20px",
                       }}
                     ></img>
-                    짱아
+                    {memberInfo.nickname}
                   </a>
                 </li>
                 <li>제목: {title}</li>
                 <br></br>
-                <li>가격: 전석 33,000원</li>
+                <li>
+                  기간: {convertTime(startDate)} ~ {convertTime(endDate)}
+                </li>
                 <br></br>
-                <li>시간: 월, 수, 금 8시</li>
+                <li>공연 시간: {runtime}</li>
                 <br></br>
-                <li>기간: 2022.06.19 ~ 2022.09.13</li>
+                <li>장소: {location}</li>
                 <br></br>
-                <li>장소: 예술의 전당</li>
+                {price.map((item, i) =>
+                  i === 0 ? (
+                    <li id={i}>
+                      가격 : {item.name} {item.price}
+                    </li>
+                  ) : (
+                    <li id={i}>
+                      {item.name} {item.price}
+                    </li>
+                  )
+                )}
+                {/* <li>가격: 전석 33,000원</li> */}
               </ul>
             </Item>
+          </Grid>
+          <Grid itme xs={12}>
+            <Item elevation={0}>{description}</Item>
           </Grid>
         </Grid>
         <div style={{ margin: "12px" }}>

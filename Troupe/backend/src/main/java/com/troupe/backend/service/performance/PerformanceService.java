@@ -2,11 +2,13 @@ package com.troupe.backend.service.performance;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
+import com.troupe.backend.domain.performance.PerformancePrice;
 import com.troupe.backend.dto.converter.PerformanceConverter;
 import com.troupe.backend.dto.performance.form.PerformanceForm;
 import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
 import com.troupe.backend.dto.performance.response.PerformanceDetailResponse;
 import com.troupe.backend.dto.performance.response.PerformanceResponse;
+import com.troupe.backend.dto.performance.response.PriceResponse;
 import com.troupe.backend.dto.performance.response.ProfilePfResponse;
 import com.troupe.backend.exception.member.MemberNotFoundException;
 import com.troupe.backend.exception.performance.PerformanceNotFoundException;
@@ -263,6 +265,16 @@ public class PerformanceService {
         //  공연을 찾으면, url을 찾고
         Map<Integer, String> urlList = performanceImageService.findPerformanceImagesByPerformance(performance);
 
+        //  공연을 찾으면, 좌석을 찾고
+        List<PerformancePrice> priceList = performancePriceService.findAllPrice(performance);
+        List<PriceResponse> priceResponseList = new ArrayList<PriceResponse>();
+        for(PerformancePrice price : priceList){
+            priceResponseList.add(PriceResponse.builder()
+                    .id(price.getId())
+                    .name(price.getSeat())
+                    .price(price.getPrice())
+                    .build());
+        }
         // 공연 상태 계산
         // 1. LocalDateTime 객체 생성(현재 시간)
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -279,11 +291,16 @@ public class PerformanceService {
         return PerformanceDetailResponse.builder()
                 .pfNo(pfNo)
                 .imageUrl(urlList)
+                .price(priceResponseList)
                 .memberNo(performance.getMember().getMemberNo())
+                .profileImg(performance.getMember().getProfileImageUrl())
+                .nickname(performance.getMember().getNickname())
                 .title(performance.getTitle())
                 .location(performance.getLocation())
                 .runtime(performance.getRuntime())
                 .description(performance.getDescription())
+                .startDate(performance.getStartDate())
+                .endDate(performance.getEndDate())
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(performance.getUpdatedTime())
                 .category(performance.getCategory().getSmallCategory())
