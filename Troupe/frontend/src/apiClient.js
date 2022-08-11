@@ -45,7 +45,7 @@ const apiClient = {
   },
   //request pw
   requestPassword: (email) => {
-    console.log(email)
+    console.log(email);
     return instance
       .post("/member/request-password", { email: email })
       .then((response) => {
@@ -66,9 +66,7 @@ const apiClient = {
       .post(`/member/reset-password/${token}`, { password: password })
       .then((response) => {
         console.log(response);
-        alert(
-          "비밀번호가 초기화되었습니다." + response.data
-        );
+        alert("비밀번호가 초기화되었습니다." + response.data);
         return true;
       })
       .catch((error) => {
@@ -706,8 +704,8 @@ const apiClient = {
   },
 
   // 피드댓글 수정
-  feedCommentModify: (feedNo, commentNo, data, refreshFunction) => {
-    instance
+  feedCommentModify: (feedNo, commentNo, data) => {
+    return instance
       .patch(`/feed/${feedNo}/comment/${commentNo}`, data, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
@@ -716,14 +714,6 @@ const apiClient = {
       .then((response) => {
         // alert("댓글 수정 성공");
         console.log(response.data);
-        const json = {
-          memberNo: response.data.memberNo,
-          reviewNo: response.data.commentNo,
-          profileImageUrl: response.data.profileImageUrl,
-          comment: response.data.content,
-          nickname: response.data.nickname,
-        };
-        refreshFunction(json);
       })
       .catch((error) => {
         alert("댓글 수정 실패 : " + error);
@@ -733,7 +723,7 @@ const apiClient = {
   // 피드댓글 삭제
   feedCommentDelete: (feedNo, commentNo) => {
     return instance
-      .patch(`/feed/${feedNo}/comment/${commentNo}/del`, commentNo, {
+      .patch(`/feed/${feedNo}/comment/${commentNo}/del`, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
@@ -748,9 +738,17 @@ const apiClient = {
   },
 
   //  피드 대댓글 작성
-  feedChildCommentNew: (feedNo, data, refreshFunction) => {
+  feedChildCommentNew: (
+    feedNo,
+    parentCommentNo,
+    data,
+    refreshChildFunction,
+  ) => {
     instance
       .post(`/feed/${feedNo}/comment`, data, {
+        params: {
+          parentCommentNo: parentCommentNo,
+        },
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
@@ -758,10 +756,31 @@ const apiClient = {
       .then((response) => {
         alert("대댓글 등록 성공");
         console.log(response.data);
-        refreshFunction(response.data);
+        const json = {
+          memberNo: response.data.memberNo,
+          reviewNo: response.data.commentNo,
+          profileImageUrl: response.data.profileImageUrl,
+          comment: response.data.content,
+          nickname: response.data.nickname,
+        };
+        refreshChildFunction(json);
       })
       .catch((error) => {
         alert("대댓글 등록 실패 : " + error);
+      });
+  },
+
+  // 피드 대댓글 목록 불러오기
+  getFeedChildReviewList: (feedNo, commentNo) => {
+    return instance
+      .get(`/feed/${feedNo}/comment/${commentNo}`)
+      .then((response) => {
+        console.log(response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("대댓글 불러오기 실패" + error);
+        return null;
       });
   },
 };
