@@ -8,6 +8,8 @@ import com.troupe.backend.dto.performance.response.ProfilePfSaveResponse;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceSaveRepository;
+import com.troupe.backend.service.member.LikabilityService;
+import com.troupe.backend.util.MyConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ public class PerformanceSaveService {
     private final MemberRepository memberRepository;
     private final PerformanceRepository performanceRepository;
     private final PerformanceSaveRepository performanceSaveRepository;
+
+    private final LikabilityService likabilityService;
 
     /**
      * 공연 북마크
@@ -94,6 +98,11 @@ public class PerformanceSaveService {
                                 .build()
                         )
                 );
+
+        // 호감도 갱신
+        int starMemberNo = performance.getMember().getMemberNo();
+        int fanMemberNo = memberNo;
+        likabilityService.updateExp(starMemberNo, fanMemberNo, MyConstant.EXP_PERFORMANCE_SAVE);
     }
 
     /**
@@ -116,7 +125,13 @@ public class PerformanceSaveService {
         PerformanceSave found = performanceSaveRepository.findByMemberAndPf(member, performance).get();
         found.setRemoved(true);
         found.setCreatedTime(now);
+
         performanceSaveRepository.save(found);
+
+        // 호감도 갱신
+        int starMemberNo = performance.getMember().getMemberNo();
+        int fanMemberNo = memberNo;
+        likabilityService.updateExp(starMemberNo, fanMemberNo, -MyConstant.EXP_PERFORMANCE_SAVE);
     }
 
     /**
@@ -130,7 +145,7 @@ public class PerformanceSaveService {
         Member member = memberRepository.findById(memberNo).get();
         Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findByMemberAndRemovedFalse(member, pageable);
 //        Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findAllByMemberNoAndIsRemovedOrderByCreatedTimeDesc(member, false,pageable);
-        for(PerformanceSave p: performanceSaveList){
+        for (PerformanceSave p : performanceSaveList) {
             log.info(p.toString());
         }
 

@@ -9,6 +9,7 @@ import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.util.MyConstant;
 import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PerformanceImageService {

@@ -11,42 +11,34 @@ import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.service.member.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FeedService {
 
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    FeedRepository feedRepository;
+    private final FeedRepository feedRepository;
 
-    @Autowired
-    TagService tagService;
+    private final TagService tagService;
 
-    @Autowired
-    FeedImageService feedImageService;
+    private final FeedImageService feedImageService;
 
-    @Autowired
-    FeedSaveService feedSaveService;
+    private final FeedSaveService feedSaveService;
 
-    @Autowired
-    FollowService followService;
+    private final FollowService followService;
 
-    @Autowired
-    FeedConverter feedConverter;
+    private final FeedConverter feedConverter;
 
-    @Autowired
-    FeedTagRepository feedTagRepository;
+    private final FeedTagRepository feedTagRepository;
 
     public FeedResponse select(int feedNo) {
         Feed feed = feedRepository.findById(feedNo).get();

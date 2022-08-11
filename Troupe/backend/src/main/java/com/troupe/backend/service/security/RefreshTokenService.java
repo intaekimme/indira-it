@@ -3,11 +3,13 @@ package com.troupe.backend.service.security;
 import com.troupe.backend.repository.security.RefreshTokenRepository;
 import com.troupe.backend.domain.security.RefreshToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
