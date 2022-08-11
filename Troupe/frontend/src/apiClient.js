@@ -43,18 +43,37 @@ const apiClient = {
         return false;
       });
   },
-  //reset pw
-  requestPassword: (data) => {
-    instance
-      .post("/member/request-password", data)
+  //request pw
+  requestPassword: (email) => {
+    console.log(email)
+    return instance
+      .post("/member/request-password", { email: email })
       .then((response) => {
         console.log(response);
         alert(
           "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data,
         );
+        return true;
+      })
+      .catch((error) => {
+        alert("이메일 전송 실패 : " + error);
+        return false;
+      });
+  },
+  //reset pw
+  resetPassword: (token, password) => {
+    return instance
+      .post(`/member/reset-password/${token}`, { password: password })
+      .then((response) => {
+        console.log(response);
+        alert(
+          "비밀번호가 초기화되었습니다." + response.data
+        );
+        return true;
       })
       .catch((error) => {
         alert("비밀번호 초기화 실패 : " + error);
+        return false;
       });
   },
   //프로필수정
@@ -353,6 +372,21 @@ const apiClient = {
       })
       .catch((error) => {
         alert("호감도 공연자 Top3 불러오기 실패" + error);
+        return null;
+      });
+  },
+
+  //호감도 공연자 Top100
+  getPerformerTop100: (data) => {
+    return instance
+      .get(`/profile/${parseInt(data.profileMemberNo)}/likability/topfans`)
+      .then((response) => {
+        console.log(response.data);
+        alert("호감도 공연자 Top100 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("호감도 공연자 Top100 불러오기 실패" + error);
         return null;
       });
   },

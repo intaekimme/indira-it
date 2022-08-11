@@ -6,12 +6,12 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import Stage from "../img/stage.jpg";
 import PerfList from "./PerfList";
 import FeedList from "./FeedList";
 import ProfileMemberInfo from "./ProfileMemberInfo";
 import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";
+import ProfileStage from "./ProfileStage";
 
 const theme = createTheme();
 
@@ -80,18 +80,10 @@ function Profile(props) {
           <Grid
             item
             xs={gridItemxs}
-            style={{ backgroundColor: "gray", padding: 0 }}
+            style={{ backgroundColor: "gray", padding: 0, position:"relative" }}
           >
             {/* Stage start */}
-            <img
-              src={Stage}
-              alt={Stage}
-              style={{
-                objectFit: "contain",
-                width: "100%",
-                height: "100%",
-              }}
-            />
+            <ProfileStage/>
             {/* Stage finish */}
           </Grid>
           <Grid
