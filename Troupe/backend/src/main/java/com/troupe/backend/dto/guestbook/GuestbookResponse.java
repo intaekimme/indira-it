@@ -19,6 +19,6 @@ public class GuestbookResponse {
     public GuestbookResponse(Guestbook guestbook) {
         this.hostMemberInfoResponse = new MemberInfoResponse(guestbook.getHostMember());
         this.visitorMemberInfoResponse = new MemberInfoResponse(guestbook.getVisitorMember());
-        this.content = guestbook.getContent();
+        this.content = guestbook.getContent(); 
     }
 }
