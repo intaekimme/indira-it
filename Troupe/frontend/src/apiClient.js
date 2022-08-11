@@ -51,7 +51,7 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert(
-          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
+          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data,
         );
         return true;
       })
@@ -214,7 +214,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            }
+            },
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -488,7 +488,7 @@ const apiClient = {
       .get(`/feed/list/all?pageNumber=0`)
       .then((response) => {
         console.log(response.data);
-        alert("피드 불러오기 성공");
+        // alert("피드 불러오기 성공");
         return response.data;
       })
       .catch((error) => {
@@ -533,9 +533,9 @@ const apiClient = {
     }
   },
   //  공연 후기 등록(완성)
-  perfReviewNew: (performanceNo, data, refreshFunction) => {
+  perfReviewNew: (pfNo, data, refreshFunction) => {
     instance
-      .post(`/perf/${performanceNo}/review`, data, {
+      .post(`/perf/${pfNo}/review`, data, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
@@ -663,6 +663,105 @@ const apiClient = {
       .catch((error) => {
         alert("피드 저장 실패" + error);
         return error;
+      });
+  },
+  // 피드 댓글 목록 불러오기(완성)
+  getFeedCommentList: (feedNo) => {
+    return instance
+      .get(`/feed/${feedNo}/comment/list`)
+      .then((response) => {
+        // alert("피드 댓글 불러오기 성공");
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("피드 댓글 불러오기 실패" + error);
+        return null;
+      });
+  },
+  // 피드댓글 등록
+  feedCommentNew: (feedNo, data, refreshFunction) => {
+    instance
+      .post(`/feed/${feedNo}/comment`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("댓글 등록 성공");
+        console.log(response.data);
+        const json = {
+          memberNo: response.data.memberNo,
+          reviewNo: response.data.commentNo,
+          profileImageUrl: response.data.profileImageUrl,
+          comment: response.data.content,
+          nickname: response.data.nickname,
+        };
+        refreshFunction(json);
+      })
+      .catch((error) => {
+        alert("댓글 등록 실패 : " + error);
+        return error;
+      });
+  },
+
+  // 피드댓글 수정
+  feedCommentModify: (feedNo, commentNo, data, refreshFunction) => {
+    instance
+      .patch(`/feed/${feedNo}/comment/${commentNo}`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("댓글 수정 성공");
+        console.log(response.data);
+        const json = {
+          memberNo: response.data.memberNo,
+          reviewNo: response.data.commentNo,
+          profileImageUrl: response.data.profileImageUrl,
+          comment: response.data.content,
+          nickname: response.data.nickname,
+        };
+        refreshFunction(json);
+      })
+      .catch((error) => {
+        alert("댓글 수정 실패 : " + error);
+        return error;
+      });
+  },
+  // 피드댓글 삭제
+  feedCommentDelete: (feedNo, commentNo) => {
+    return instance
+      .patch(`/feed/${feedNo}/comment/${commentNo}/del`, commentNo, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("댓글 삭제 성공");
+      })
+      .catch((error) => {
+        alert("댓글 삭제 실패 : " + error);
+        return error;
+      });
+  },
+
+  //  피드 대댓글 작성
+  feedChildCommentNew: (feedNo, data, refreshFunction) => {
+    instance
+      .post(`/feed/${feedNo}/comment`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("대댓글 등록 성공");
+        console.log(response.data);
+        refreshFunction(response.data);
+      })
+      .catch((error) => {
+        alert("대댓글 등록 실패 : " + error);
       });
   },
 };
