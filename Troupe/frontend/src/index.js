@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import axios from 'axios';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -10,3 +11,4 @@ root.render(
 );
 
 
+axios.defaults.baseURL = 'http://i7a804.p.ssafy.io:8080';
