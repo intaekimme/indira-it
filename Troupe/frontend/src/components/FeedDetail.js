@@ -15,7 +15,8 @@ import CarouselItem from "./CarouselItem";
 import FeedLikeButton from "./FeedLikeButton";
 import FeedSaveButton from "./FeedSaveButton";
 import CommentList from "./CommentList";
-
+import Theme from "./Theme";
+import { ThemeProvider } from "@mui/material/styles";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#FFF",
   ...theme.typography.body2,
@@ -87,10 +88,11 @@ export default function FeedDetail(props) {
   // console.log(Object.values(img));
 
   return open ? (
-    <Box className={stylesModal.inner}>
-      <Grid container spacing={4}>
-        <Grid item xs={6} className={stylesModal.img}>
-          {/* <Carousel>
+    <ThemeProvider theme={Theme}>
+      <Box className={stylesModal.inner}>
+        <Grid container spacing={4}>
+          <Grid item xs={6} className={stylesModal.img}>
+            {/* <Carousel>
               {Object.values(img) ? (
                 Object.values(img).map((item, id) => (
                   <Item key={id} item={item} />
@@ -99,96 +101,98 @@ export default function FeedDetail(props) {
                 <div></div>
               )}
             </Carousel> */}
-          <MUICarousel
-            autoPlay={false}
-            animation="slide"
-            style={{
-              backgroudColor: "black",
-            }}
-          >
-            {Object.values(img)
-              ? Object.values(img).map((item, id) => (
-                  <CarouselItem key={id} item={item} />
-                ))
-              : null}
-          </MUICarousel>
-        </Grid>
-        <Grid item xs={6}>
-          <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
-          <Item elevation={0}>
-            <Grid
+            <MUICarousel
+              autoPlay={false}
+              animation="slide"
               style={{
-                fontSize: "medium",
-                paddingLeft: "0px",
-                fontFamily: "IBM Plex Sans KR",
-                textAlign: "left",
+                backgroudColor: "black",
               }}
             >
-              <Grid>
-                <a
-                  style={{ textDecoration: "none" }}
-                  href={"/profile/" + feedInfo.memberNo}
-                >
-                  <img
-                    src={feedInfo.profileImageUrl}
-                    alt="profile"
-                    style={{
-                      borderRadius: "70%",
-                      objectFit: "cover",
-                      height: "50px",
-                      width: "50px",
-                      marginRight: "10px",
-                    }}
-                  ></img>
-                  <span>{feedInfo.nickname}</span>
-                </a>
-                {user !== feedInfo.memberNo ? (
-                  <Grid>
-                    <FollowButton
-                      memberNo={feedInfo.memberNo}
-                      style={{ textAlign: "top" }}
-                    ></FollowButton>
-                  </Grid>
-                ) : (
-                  <Grid></Grid>
-                )}
-              </Grid>
-              <Grid item xs={11}>
-                <p>{feedInfo.content}</p>
-                <div className={stylesTag.HashWrapOuter}>
-                  {feedInfo.tags ? (
-                    feedInfo.tags.map((item, id) => (
-                      <div
-                        className={stylesTag.HashWrapInner}
-                        key={id}
-                        onClick={() => searchTag(item.trim())}
-                      >
-                        # {item}
-                      </div>
-                    ))
+              {Object.values(img)
+                ? Object.values(img).map((item, id) => (
+                    <CarouselItem key={id} item={item} />
+                  ))
+                : null}
+            </MUICarousel>
+          </Grid>
+          <Grid item xs={6}>
+            <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
+            <Item elevation={0}>
+              <Grid
+                style={{
+                  fontSize: "medium",
+                  paddingLeft: "0px",
+                  textAlign: "left",
+                }}
+              >
+                <Grid container item xs={12}>
+                  <a
+                    style={{ textDecoration: "none" }}
+                    href={"/profile/" + feedInfo.memberNo}
+                  >
+                    <Grid item xs={12}>
+                      <img
+                        src={feedInfo.profileImageUrl}
+                        alt="profile"
+                        style={{
+                          borderRadius: "70%",
+                          objectFit: "cover",
+                          height: "50px",
+                          width: "50px",
+                          marginRight: "10px",
+                        }}
+                      ></img>
+                      {feedInfo.nickname}
+                    </Grid>
+                  </a>
+                  {user !== feedInfo.memberNo ? (
+                    <Grid>
+                      <FollowButton
+                        memberNo={feedInfo.memberNo}
+                        style={{ textAlign: "top" }}
+                      ></FollowButton>
+                    </Grid>
                   ) : (
-                    <div></div>
+                    <Grid></Grid>
                   )}
-                </div>
+                </Grid>
+                <Grid item xs={11}>
+                  <div style={{ paddingTop: "20px" }}>{feedInfo.content}</div>
+                  <div className={stylesTag.HashWrapOuter}>
+                    {feedInfo.tags ? (
+                      feedInfo.tags.map((item, id) => (
+                        <div
+                          className={stylesTag.HashWrapInner}
+                          key={id}
+                          onClick={() => searchTag(item.trim())}
+                        >
+                          # {item}
+                        </div>
+                      ))
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                </Grid>
               </Grid>
-            </Grid>
-          </Item>
-          <FeedLikeButton feedNo={feedNo}></FeedLikeButton>
-          <FeedSaveButton feedNo={feedNo}></FeedSaveButton>
-          <Grid container margin="1%  1% 1% 1% ">
-            <Grid item xs={11}>
-              <Item>
-                <CommentList
-                  refreshFunction={refreshFunction}
-                  commentList={commentList}
-                  feedNo={feedNo}
-                />
-              </Item>
+            </Item>
+            <FeedLikeButton feedNo={feedNo}></FeedLikeButton>
+            <FeedSaveButton feedNo={feedNo}></FeedSaveButton>
+            <Grid container margin="3%  3% 3% 3% ">
+              <Grid item xs={11}>
+                <Item>
+                  <CommentList
+                    refreshFunction={refreshFunction}
+                    commentList={commentList}
+                    feedNo={feedNo}
+                  />
+                </Item>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </ThemeProvider>
   ) : (
     <div></div>
   );

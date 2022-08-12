@@ -3,8 +3,8 @@
 import React from "react";
 import apiClient from "../apiClient";
 
-import Button from '@mui/material/Button';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import Button from "@mui/material/Button";
+import FacebookIcon from "@mui/icons-material/Facebook";
 
 export default function SNSLoginFacebook() {
   window.fbAsyncInit = function () {
@@ -41,13 +41,13 @@ export default function SNSLoginFacebook() {
         //apiClient.login();
         alert("로그인상태");
       } else {
-        const loginData = FB.login((response)=>{
+        const loginData = FB.login((response) => {
           alert("로그인시도");
-          if(response.status==="connected"){
-          //로그인상태
-          //DB 회원가입 되있을 시 로그인
-          //없으면 새롭게 생성 후 로그인
-          //apiClient.login();
+          if (response.status === "connected") {
+            //로그인상태
+            //DB 회원가입 되있을 시 로그인
+            //없으면 새롭게 생성 후 로그인
+            //apiClient.login();
           }
         });
       }
@@ -65,12 +65,12 @@ export default function SNSLoginFacebook() {
   // userID - 앱 사용자의 ID입니다.
 
   return (
-    <div style={{position:"relative"}}>
+    <div style={{ position: "relative" }}>
       <Button
         fullWidth
         variant="contained"
         sx={{ mt: 0, mb: 1 }}
-        style={{ backgroundColor: "#365899"}}
+        style={{ backgroundColor: "#365899", fontFamily: "SBAggroB" }}
         onClick={checkLoginState}
         className="fb-login-button"
         data-max-rows="1"
@@ -81,9 +81,16 @@ export default function SNSLoginFacebook() {
         data-layout="default"
         data-auto-logout-link="false"
       >
-        <FacebookIcon style={{marginRight: "10px", color: "white", backgroundColor:"#365899"}}></FacebookIcon>FaceBook으로 계속하기
+        <FacebookIcon
+          style={{
+            marginRight: "10px",
+            color: "white",
+            backgroundColor: "#365899",
+          }}
+        ></FacebookIcon>
+        FaceBook으로 계속하기
       </Button>
-      
+
       {/* <div
         style={{ marginBottom: "10px" }}
         className="fb-login-button"

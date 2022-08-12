@@ -10,12 +10,9 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
-import styledButton from "../css/button.module.css";
-
-const theme = createTheme();
+import Theme from "./Theme";
 
 export default function Signup() {
   //frontend image update
@@ -131,7 +128,7 @@ export default function Signup() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Container maxWidth="xs">
         <CssBaseline />
         <Box
@@ -140,6 +137,7 @@ export default function Signup() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            fontFamily: "SBAggroB",
           }}
         >
           <form
@@ -147,7 +145,7 @@ export default function Signup() {
             encType="multipart/form-data"
             style={{ textAlign: "center" }}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
               <Grid item xs={9}>
                 {imgUrl === "" ? (
                   <AccountCircleIcon
@@ -171,32 +169,34 @@ export default function Signup() {
                 <Button
                   style={{
                     position: "absolute",
-                    width: "80px",
+                    width: "90px",
                     height: "30px",
-                    bottom: "0px",
+                    bottom: "45px",
                     right: "0px",
-                    backgroundColor: "#CCCCCC",
-                    color: "black",
+                    fontFamily: "SBAggroB",
                   }}
+                  variant="contained"
+                  color="green"
                 >
                   찾아보기
+                  <input
+                    style={{
+                      position: "absolute",
+                      width: "80px",
+                      height: "30px",
+                      bottom: "0px",
+                      right: "0px",
+                      opacity: "0%",
+                      backgroundColor: "white",
+                    }}
+                    id="profileImage"
+                    className="profileImage"
+                    name="profileImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={changeImage}
+                  />
                 </Button>
-                <input
-                  style={{
-                    position: "absolute",
-                    width: "80px",
-                    height: "30px",
-                    bottom: "0px",
-                    right: "0px",
-                    opacity: "0%",
-                  }}
-                  id="profileImage"
-                  className="profileImage"
-                  name="profileImage"
-                  type="file"
-                  accept="image/*"
-                  onChange={changeImage}
-                />
               </Grid>
               <Grid item xs={9}>
                 <TextField
@@ -207,19 +207,21 @@ export default function Signup() {
                   id="nickname"
                   label="닉네임"
                   onChange={changeNickname}
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               <Grid item xs={3} style={{ position: "relative" }}>
                 <Button
                   style={{
                     position: "absolute",
-                    width: "80px",
+                    width: "90px",
                     height: "30px",
-                    bottom: "0px",
+                    bottom: "13px",
                     right: "0px",
-                    backgroundColor: "#CCCCCC",
-                    color: "black",
+                    fontFamily: "SBAggroB",
                   }}
+                  variant="contained"
+                  color="green"
                   onClick={() => sameCheck("nickname")}
                 >
                   중복확인
@@ -231,7 +233,9 @@ export default function Signup() {
                 </Grid>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>nickname 중복확인이 필요합니다.</div>
+                  <div style={{ color: "red" }}>
+                    nickname 중복확인이 필요합니다.
+                  </div>
                 </Grid>
               )}
               {nicknameLength ? (
@@ -252,19 +256,21 @@ export default function Signup() {
                   name="email"
                   autoComplete="email"
                   onChange={changeEmail}
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               <Grid item xs={3} style={{ position: "relative" }}>
                 <Button
                   style={{
                     position: "absolute",
-                    width: "80px",
+                    width: "90px",
                     height: "30px",
-                    bottom: "0px",
+                    bottom: "13px",
                     right: "0px",
-                    backgroundColor: "#CCCCCC",
-                    color: "black",
+                    fontFamily: "SBAggroB",
                   }}
+                  variant="contained"
+                  color="green"
                   onClick={() => sameCheck("email")}
                 >
                   중복확인
@@ -276,7 +282,9 @@ export default function Signup() {
                 </Grid>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>email 중복확인이 필요합니다.</div>
+                  <div style={{ color: "red" }}>
+                    email 중복확인이 필요합니다.
+                  </div>
                 </Grid>
               )}
               <Grid item xs={12}>
@@ -289,6 +297,7 @@ export default function Signup() {
                   id="password"
                   autoComplete="new-password"
                   autoFocus
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               {pwLength ? (
@@ -309,6 +318,7 @@ export default function Signup() {
                   type="password"
                   id="passwordCheck"
                   autoComplete="new-password"
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               {pwSame ? (
@@ -327,6 +337,7 @@ export default function Signup() {
                   id="description"
                   label="소개글 입력"
                   name="description"
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -345,8 +356,10 @@ export default function Signup() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                color="green"
+                style={{ fontFamily: "SBAggroB" }}
               >
-                Sign Up
+                회원가입
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>

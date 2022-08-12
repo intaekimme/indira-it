@@ -13,7 +13,8 @@ import Link from "@mui/material/Link";
 import { useInfiniteQuery, useQuery } from "react-query";
 import apiClient from "../apiClient";
 import { useParams } from "react-router-dom";
-
+import frame from "../img/frame.png";
+import stylesFont from "../css/font.module.css";
 export default function PerfListCard() {
   // let {isLoading, data} = useQuery('performanceList', async () => await apiClient.getPerfList(pageNumber));
   let pageNumber = useParams().pageNumber;
@@ -44,7 +45,14 @@ export default function PerfListCard() {
       <Grid container spacing={4}>
         {performanceListQuery.data.pages.map((page) =>
           page.map((datum) => (
-            <Grid item key={datum.pfNo} xs={12} sm={6} md={4}>
+            <Grid
+              item
+              key={datum.pfNo}
+              xs={12}
+              sm={6}
+              md={4}
+              className={stylesFont.border}
+            >
               <Card
                 sx={{
                   position: "relative",

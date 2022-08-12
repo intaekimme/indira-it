@@ -7,24 +7,12 @@ import { Button, Grid, Container } from "@mui/material";
 import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-const theme = createTheme({
-  palette: {
-    neutral: {
-      main: "#fda085",
-      contrastText: "#fff",
-    },
-  },
-});
+import Theme from "./Theme";
 
 export default function FeedModify() {
   const { feedNo } = useParams();
   // 추가된 이미지 url
-  const [imgUrl, setImgUrl] = React.useState([
-    {
-      url: "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/feed/defalut.jpg",
-      file: null,
-    },
-  ]);
+  const [imgUrl, setImgUrl] = React.useState([]);
   // 추가된 이미지파일
   const [images, setImages] = React.useState([]);
   // 기존 이미지 번호+url
@@ -170,11 +158,17 @@ export default function FeedModify() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Container maxWidth="md">
         <CssBaseline />
 
-        <div style={{ textAlign: "center", marginTop: "3%" }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "3%",
+            fontFamily: "SBAggroB",
+          }}
+        >
           <Grid container spacing={12}>
             <Grid item xs={12}>
               {Object.values(oldImage) ? (
@@ -218,7 +212,7 @@ export default function FeedModify() {
                 <div></div>
               )}
               <div>
-                <Button variant="contained" component="label" color="neutral">
+                <Button variant="contained" component="label" color="green">
                   + 사진/동영상 추가
                   <input type="file" multiple hidden onChange={changeImage} />
                 </Button>
@@ -227,7 +221,9 @@ export default function FeedModify() {
           </Grid>
           <Grid container>
             <Grid item xs={12}>
-              <p id="notice">태그를 누르면 삭제됩니다</p>
+              <Grid item style={{ marginTop: "10px" }} id="notice">
+                태그를 누르면 삭제됩니다
+              </Grid>
               <div className={stylesTag.HashWrap}>
                 <div className={stylesTag.HashWrapOuter}>
                   {tags ? (
@@ -273,6 +269,7 @@ export default function FeedModify() {
                 inputProps={{
                   maxLength: 2000,
                 }}
+                style={{ backgroundColor: "white" }}
               />
             </Grid>
           </Grid>
@@ -290,6 +287,7 @@ export default function FeedModify() {
               sx={{ mt: 3, mb: 2 }}
               color="inherit"
               onClick={() => cancelForm()}
+              style={{ fontFamily: "SBAggroB" }}
             >
               취소
             </Button>
@@ -308,7 +306,8 @@ export default function FeedModify() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                color="neutral"
+                color="green"
+                style={{ fontFamily: "SBAggroB" }}
               >
                 수정 완료
               </Button>

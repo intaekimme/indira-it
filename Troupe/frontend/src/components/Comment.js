@@ -10,6 +10,12 @@ import CommentForm from "./CommentForm";
 import { Grid } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import CommentList from "./CommentList";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ReplyIcon from "@mui/icons-material/Reply";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import SendIcon from "@mui/icons-material/Send";
 export default function Comment(props) {
   const [user, setUser] = useState(0);
   // 대댓글 목록
@@ -141,7 +147,7 @@ export default function Comment(props) {
               <div>{content}</div>
             )
           ) : (
-            <div>삭제된 댓글입니다</div>
+            <div style={{ fontSize: "12px" }}>삭제된 댓글입니다.</div>
           )}
         </Typography>
       </CardContent>
@@ -157,14 +163,14 @@ export default function Comment(props) {
                     aria-label="modify"
                     onClick={() => modifyCancel()}
                   >
-                    수정 취소
+                    <CancelOutlinedIcon color="action"></CancelOutlinedIcon>
                   </Button>
                   <Button
                     size="small"
                     aria-label="modify"
                     onClick={() => modifyComment()}
                   >
-                    수정 완료
+                    <SendIcon color="action"></SendIcon>
                   </Button>
                 </div>
               ) : (
@@ -173,7 +179,7 @@ export default function Comment(props) {
                   aria-label="modify"
                   onClick={() => modifyComment()}
                 >
-                  수정
+                  <ModeEditIcon color="action"></ModeEditIcon>
                 </Button>
               )
             ) : (
@@ -185,7 +191,7 @@ export default function Comment(props) {
                 aria-label="delete"
                 onClick={() => deleteComment()}
               >
-                삭제
+                <DeleteIcon color="action"></DeleteIcon>
               </Button>
             ) : (
               <div></div>
@@ -195,8 +201,13 @@ export default function Comment(props) {
                 size="small"
                 aria-label="child-comment"
                 onClick={childCommentList}
+                color="black"
+                fontFamily="116watermelon"
               >
-                답글({childComments.length})
+                <FormatListBulletedIcon color="action"></FormatListBulletedIcon>
+                <Grid style={{ marginTop: "3px", marginLeft: "3px" }}>
+                  ({childComments.length})
+                </Grid>
               </Button>
             )}
 
@@ -209,7 +220,7 @@ export default function Comment(props) {
                 arial-lebel="child-comment-register"
                 onClick={childCommentRegister}
               >
-                답글작성
+                <ReplyIcon color="action"></ReplyIcon>
               </Button>
             ) : (
               <span></span>
@@ -220,7 +231,7 @@ export default function Comment(props) {
                 arial-lebel="child-comment-register"
                 onClick={cancelRegister}
               >
-                답글취소
+                <CancelOutlinedIcon color="action"></CancelOutlinedIcon>
               </Button>
             ) : (
               <span></span>
