@@ -370,19 +370,60 @@ const apiClient = {
       });
   },
 
-  //피드 목록 불러오기
-  getFeedList: () => {
+  //전체 피드 목록 불러오기
+  getAllFeedList: async ({pageParam = 0}) => {
+    return await instance
+    .get(`/feed/list/all?pageNumber=${pageParam}`)
+    .then((response) => {
+      console.log(response.data)
+      return response.data;
+    })
+    .catch((error) => {
+      alert("전체 피드 불러오기 실패" + error);
+    });
+},
+  getSavedFeedList: ({pageParam = 0}) => {
     instance
-      .get("/feed/list")
+      .get(`/feed/list/save?pageNumber=${pageParam}`)
       .then((response) => {
-        alert("불러오기 성공");
-        return response;
+        alert("저장 피드 불러오기 성공");
+        return response.data;
       })
       .catch((error) => {
-        alert("피드 불러오기 실패" + error);
+        alert("저장 피드 불러오기 실패" + error);
         return null;
       });
   },
+
+  getFollowFeedList: ({pageParam = 0}) => {
+    instance
+      .get(`/feed/list/follow?pageNumber=${pageParam}`)
+      .then((response) => {
+        alert("팔로우 피드 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("팔로우 피드 불러오기 실패" + error);
+        return null;
+      });
+  },
+
+  feedTagSearch: async ({pageParam = 0, tags = []}) => {
+    let url = `/feed/search?pageNumber=${pageParam}`
+    for (let i = 0; i < tags.length; i++) {
+      url = url + `&tags=${tags[i]}`
+    }
+    return await instance
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        return response.data;
+      })
+      .catch((error) => {
+        alert("검색 피드 불러오기 실패" + error);
+      });
+  },
+
   //호감도 공연자 Top3
   getPerformerTop3: (data) => {
     return instance
