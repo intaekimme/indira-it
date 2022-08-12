@@ -336,8 +336,8 @@ const apiClient = {
       });
   },
 
-   //아바타 번호, 이미지목록 불러오기
-   getAvatarList: () => {
+  //아바타 번호, 이미지목록 불러오기
+  getAvatarList: () => {
     return instance
       .get(`/avatar/all`)
       .then((response) => {
@@ -350,9 +350,9 @@ const apiClient = {
         return null;
       });
   },
-   
-   //[string]아바타 번호, 이미지목록 불러오기
-   getAvatarList: (string) => {
+
+  //[string]아바타 번호, 이미지목록 불러오기
+  getAvatarList: (string) => {
     return instance
       .get(`/avatar/${string}`)
       .then((response) => {
@@ -414,18 +414,18 @@ const apiClient = {
   },
 
   //전체 피드 목록 불러오기
-  getAllFeedList: async ({pageParam = 0}) => {
+  getAllFeedList: async ({ pageParam = 0 }) => {
     return await instance
-    .get(`/feed/list/all?pageNumber=${pageParam}`)
-    .then((response) => {
-      console.log(response.data)
-      return response.data;
-    })
-    .catch((error) => {
-      alert("전체 피드 불러오기 실패" + error);
-    });
-},
-  getSavedFeedList: ({pageParam = 0}) => {
+      .get(`/feed/list/all?pageNumber=${pageParam}`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("전체 피드 불러오기 실패" + error);
+      });
+  },
+  getSavedFeedList: ({ pageParam = 0 }) => {
     instance
       .get(`/feed/list/save?pageNumber=${pageParam}`)
       .then((response) => {
@@ -438,7 +438,7 @@ const apiClient = {
       });
   },
 
-  getFollowFeedList: ({pageParam = 0}) => {
+  getFollowFeedList: ({ pageParam = 0 }) => {
     instance
       .get(`/feed/list/follow?pageNumber=${pageParam}`)
       .then((response) => {
@@ -451,15 +451,15 @@ const apiClient = {
       });
   },
 
-  feedTagSearch: async ({pageParam = 0, tags = []}) => {
-    let url = `/feed/search?pageNumber=${pageParam}`
+  feedTagSearch: async ({ pageParam = 0, tags = [] }) => {
+    let url = `/feed/search?pageNumber=${pageParam}`;
     for (let i = 0; i < tags.length; i++) {
-      url = url + `&tags=${tags[i]}`
+      url = url + `&tags=${tags[i]}`;
     }
     return await instance
       .get(url)
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -662,7 +662,7 @@ const apiClient = {
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
         // alert("불러오기 성공");
-        // console.log(response.data);
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
