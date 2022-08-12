@@ -139,16 +139,18 @@ export default function ProfileAvatarModify() {
                   name="position"
                   defaultValue="top"
                 >
-                  {hairs.map((hair) => (
-                    <FormControlLabel
-                      key={`hair${hair.hairNo}`}
-                      value={hair.hairNo}
-                      control={<Radio />}
-                      label={
-                        <img src={hair.hairUrl} alt={hair.hairUrl} width="150px" height="200px" />
-                      }
-                      labelPlacement="bottom"
-                    />
+									{hairs.slice(0,3).map((hair) => (
+										<Grid item xs={ 4 }>
+											<FormControlLabel
+												key={`hair${hair.hairNo}`}
+												value={hair.hairNo}
+												control={<Radio />}
+												label={
+													<img src={hair.hairUrl} alt={hair.hairUrl} width="100%" height="100%"/>
+												}
+												labelPlacement="bottom"
+											/>
+										</Grid>
                   ))}
                 </RadioGroup>
               </Grid>
@@ -159,16 +161,18 @@ export default function ProfileAvatarModify() {
                   name="position"
                   defaultValue="top"
                 >
-                  {eyes.map((eye) => (
-                    <FormControlLabel
-                      key={`eye${eye.eyeNo}`}
-                      value={eye.eyeNo}
-                      control={<Radio />}
-                      label={
-                        <img src={eye.eyeUrl} alt={eye.eyeUrl} width="150px" height="200px" />
-                      }
-                      labelPlacement="bottom"
-                    />
+                  {eyes.slice(0,3).map((eye) => (
+                    <Grid item xs={ 4 }>
+										<FormControlLabel
+											key={`hair${eye.eyeNo}`}
+											value={eye.eyeNo}
+											control={<Radio />}
+											label={
+												<img src={eye.eyeUrl} alt={eye.eyeUrl} width="100%" height="100%"/>
+											}
+											labelPlacement="bottom"
+										/>
+									</Grid>
                   ))}
                 </RadioGroup>
               </Grid>
@@ -179,16 +183,18 @@ export default function ProfileAvatarModify() {
                   name="position"
                   defaultValue="top"
                 >
-                  {noses.map((nose) => (
-                    <FormControlLabel
-                      key={`nose${nose.noseNo}`}
-                      value={nose.noseNo}
-                      control={<Radio />}
-                      label={
-                        <img src={nose.noseUrl} alt={nose.noseUrl} width="150px" height="200px" />
-                      }
-                      labelPlacement="bottom"
-                    />
+                  {noses.slice(0,3).map((nose) => (
+                    <Grid item xs={ 4 }>
+										<FormControlLabel
+											key={`hair${nose.noseNo}`}
+											value={nose.noseNo}
+											control={<Radio />}
+											label={
+												<img src={nose.noseUrl} alt={nose.noseUrl} width="100%" height="100%"/>
+											}
+											labelPlacement="bottom"
+										/>
+									</Grid>
                   ))}
                 </RadioGroup>
               </Grid>
@@ -198,18 +204,22 @@ export default function ProfileAvatarModify() {
                   aria-labelledby="demo-form-control-label-placement"
                   name="position"
                   defaultValue="top"
-                >
-                  {mouthes.map((mouth) => (
-                    <FormControlLabel
-                      key={`mouth${mouth.mouthNo}`}
-                      value={mouth.mouthNo}
-                      control={<Radio />}
-                      label={
-                        <img src={mouth.mouthUrl} alt={mouth.mouthUrl} width="150px" height="200px" />
-                      }
-                      labelPlacement="bottom"
-                    />
-                  ))}
+								>
+									<Grid item xs={1}>dkdk</Grid>
+									{mouthes.slice(0,3).map((mouth) => (
+                    <Grid item xs={3}>
+										<FormControlLabel
+											key={`hair${mouth.mouthNo}`}
+											value={mouth.mouthNo}
+											control={<Radio />}
+											label={
+												<img src={mouth.mouthUrl} alt={mouth.mouthUrl} width="100%" height="100%"/>
+											}
+											labelPlacement="bottom"
+										/>
+									</Grid>
+									))}
+									<Grid item xs={1}>dkdk</Grid>
                 </RadioGroup>
               </Grid>
               <Grid item xs={12}>
@@ -219,17 +229,18 @@ export default function ProfileAvatarModify() {
                   name="position"
                   defaultValue="top"
                 >
-                  {clothes.map((cloth) => (
-                    <FormControlLabel
-                      key={`cloth${cloth.clothesNo}`}
-                      value={cloth.clothesNo}
-                      control={<Radio />}
-                      label={
-                        <img src={cloth.clothesUrl} alt={cloth.clothesUrl} width="150px" height="200px" />
-                      }
-											style={{margin:0, padding:0}}
-                      labelPlacement="bottom"
-                    />
+                  {clothes.slice(0,3).map((cloth) => (
+                    <Grid item xs={ 4 }>
+										<FormControlLabel
+											key={`hair${cloth.clothesNo}`}
+											value={cloth.clothesNo}
+											control={<Radio />}
+											label={
+												<img src={cloth.clothesUrl} alt={cloth.clothesUrl} width="100%" height="100%"/>
+											}
+											labelPlacement="bottom"
+										/>
+									</Grid>
                   ))}
                 </RadioGroup>
               </Grid>
