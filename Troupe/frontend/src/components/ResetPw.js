@@ -54,7 +54,6 @@ export default function ResetPw() {
         apiClient.resetPassword(token, password);
       }
     }
-    alert("abc");
   };
   return (
     <ThemeProvider theme={theme}>

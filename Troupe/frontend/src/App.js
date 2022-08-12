@@ -50,6 +50,7 @@ function App() {
             <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
             <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
             <Route path="/email" element={<EmailSend />}></Route>
+            <Route path="/confirm-email/:token" element={<EmailSend />}></Route>
             <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
             <Route path="/member/reset-password/:token" element={loginCheck() ? <Navigate to="/" />: <ResetPw />}></Route>
             <Route path="/profile/:memberNo" element={<Profile />}></Route>

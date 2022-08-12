@@ -59,4 +59,12 @@ public final class MyConstant {
 
     // 리다이렉트 주소
     public static final String REDIRECT = "http://localhost:3000";
+    // 아바타 관련
+    public static final String CLOTHES_LIST = "clothesList";
+    public static final String EYE_LIST = "eyeList";
+    public static final String HAIR_LIST = "hairList";
+    public static final String MOUTH_LIST = "mouthList";
+    public static final String NOSE_LIST = "noseList";
+    public static final String SHAPE_LIST = "shapeList";
+
 }

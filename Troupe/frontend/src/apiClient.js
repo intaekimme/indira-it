@@ -31,6 +31,7 @@ const apiClient = {
   },
   //회원가입
   signup: (data) => {
+    alert("회원가입 진행중입니다 잠시만 기다려주세요");
     return instance
       .post("/member/signup", data)
       .then((response) => {
@@ -43,9 +44,24 @@ const apiClient = {
         return false;
       });
   },
+  //이메일 인증
+  confirmEmail: (token) => {
+    return instance
+      .get(`/confirm-email/${token}`)
+      .then((response) => {
+        alert("이메일 인증 되었습니다." + response.data);
+        window.location.href = "/login";
+        return true;
+      })
+      .catch((error) => {
+        alert("이메일 인증 실패 : " + error);
+        window.location.href = "/email";
+        return false;
+      });
+  },
   //request pw
   requestPassword: (email) => {
-    console.log(email);
+    alert("비밀번호 초기화를 위해 이메일을 전송중입니다 잠시만 기다려주세요");
     return instance
       .post("/member/request-password", { email: email })
       .then((response) => {
@@ -67,10 +83,11 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert("비밀번호가 초기화되었습니다." + response.data);
+        window.location.href = "/login";
         return true;
       })
       .catch((error) => {
-        alert("비밀번호 초기화 실패 : " + error);
+        alert("비밀번호 초기화에 실패하였습니다. 다시 시도해주세요 : " + error);
         return false;
       });
   },

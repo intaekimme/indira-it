@@ -16,21 +16,21 @@ public class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @Test
-    @DisplayName("멤버 등록/조회 테스트")
-    public void saveAndFindTest() {
-        Member savedMember = memberRepository.save(new Member("doyoung", "doyoung"));
-
-        // 저장한 회원 조회
-        assertThat(savedMember.getEmail()).isEqualTo("doyoung");
-        assertThat(savedMember.getNickname()).isEqualTo("doyoung");
-
-        assertThat(memberRepository.findByNickname("doyoung").isPresent()).isEqualTo(true);
-        assertThat(memberRepository.findByEmail("doyoung").isPresent()).isEqualTo(true);
-
-        // 저장하지 않은 회원 조회
-        assertThat(memberRepository.findByNickname("invalidNickname").isPresent()).isEqualTo(false);
-    }
+//    @Test
+//    @DisplayName("멤버 등록/조회 테스트")
+//    public void saveAndFindTest() {
+//        Member savedMember = memberRepository.save(new Member("doyoung", "doyoung"));
+//
+//        // 저장한 회원 조회
+//        assertThat(savedMember.getEmail()).isEqualTo("doyoung");
+//        assertThat(savedMember.getNickname()).isEqualTo("doyoung");
+//
+//        assertThat(memberRepository.findByNickname("doyoung").isPresent()).isEqualTo(true);
+//        assertThat(memberRepository.findByEmail("doyoung").isPresent()).isEqualTo(true);
+//
+//        // 저장하지 않은 회원 조회
+//        assertThat(memberRepository.findByNickname("invalidNickname").isPresent()).isEqualTo(false);
+//    }
 
     @Test
     @DisplayName("멤버 등록/수정 테스트")
