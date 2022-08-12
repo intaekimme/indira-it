@@ -27,7 +27,7 @@ public class MemberInfoResponse {
         this.nickname = member.getNickname();
         this.description = member.getDescription();
         this.memberType = member.getMemberType();
-        this.profileImageUrl = MyConstant.FILE_SERVER_URL + member.getProfileImageUrl();
+        this.profileImageUrl = member.getProfileImageUrl() == null || member.getProfileImageUrl().isEmpty() ? "" : MyConstant.FILE_SERVER_URL + member.getProfileImageUrl();
         this.isRemoved = member.isRemoved();
     }
 }

@@ -56,4 +56,12 @@ public final class MyConstant {
     public static final String PREV = "공연예정";
     public static final String ING = "공연중";
     public static final String END = "공연종료";
+
+    // 아바타 관련
+    public static final String CLOTHES_LIST = "clothesList";
+    public static final String EYE_LIST = "eyeList";
+    public static final String HAIR_LIST = "hairList";
+    public static final String MOUTH_LIST = "mouthList";
+    public static final String NOSE_LIST = "noseList";
+    public static final String SHAPE_LIST = "shapeList";
 }
