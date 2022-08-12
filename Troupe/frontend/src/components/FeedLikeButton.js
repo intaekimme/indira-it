@@ -3,7 +3,7 @@ import apiClient from "../apiClient";
 import Favorite from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Button from "@mui/material/Button";
-
+import { Grid } from "@mui/material";
 export default function FeedLikeButton(props) {
   const [isLike, setIsLike] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
@@ -53,18 +53,31 @@ export default function FeedLikeButton(props) {
         justifyContent: "flex-start",
         margin: "0px",
         padding: "0px",
+        fontFamily: "116watermelon",
       }}
     >
       {isLike ? (
-        <div>
-          <Favorite color="error"></Favorite>
-          <span style={{ marginBottom: "3px" }}>{likeCount}</span>
-        </div>
+        <Grid container item xs={12}>
+          <Grid item xs={1}>
+            <Favorite color="error"></Favorite>
+          </Grid>
+          <Grid item xs={11} paddingTop="3px">
+            <div style={{ display: "inline-block", paddingBottom: "10px" }}>
+              {likeCount}
+            </div>
+          </Grid>
+        </Grid>
       ) : (
-        <div>
-          <FavoriteBorderIcon></FavoriteBorderIcon>
-          {likeCount}
-        </div>
+        <Grid container item xs={12}>
+          <Grid item xs={1}>
+            <FavoriteBorderIcon></FavoriteBorderIcon>
+          </Grid>
+          <Grid item xs={11} paddingTop="2px">
+            <div style={{ display: "inline-block", paddingBottom: "10px" }}>
+              {likeCount}
+            </div>
+          </Grid>
+        </Grid>
       )}
     </Button>
   );

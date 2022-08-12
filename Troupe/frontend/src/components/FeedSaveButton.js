@@ -1,21 +1,15 @@
 import * as React from "react";
 import apiClient from "../apiClient";
 import Button from "@mui/material/Button";
+import { Grid } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-
+import Theme from "./Theme";
 export default function FeedSaveButton(props) {
   const [save, setSave] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
 
-  const theme = createTheme({
-    palette: {
-      neutral: {
-        main: "#FFC004",
-      },
-    },
-  });
   React.useEffect(() => {
     if (save.response) return;
     setFeedNo(props.feedNo);
@@ -43,7 +37,7 @@ export default function FeedSaveButton(props) {
     }
   };
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Button
         size="small"
         onClick={SaveClick}
@@ -55,9 +49,19 @@ export default function FeedSaveButton(props) {
         }}
       >
         {save ? (
-          <TurnedInIcon color="neutral"></TurnedInIcon>
+          <Grid container item xs={12}>
+            <Grid item xs={1}>
+              <TurnedInIcon color="yellow"></TurnedInIcon>
+              <Grid item xs={11} paddingTop="3px"></Grid>
+            </Grid>
+          </Grid>
         ) : (
-          <TurnedInNotIcon></TurnedInNotIcon>
+          <Grid container item xs={12}>
+            <Grid item xs={1}>
+              <TurnedInNotIcon></TurnedInNotIcon>
+              <Grid item xs={11} paddingTop="3px"></Grid>
+            </Grid>
+          </Grid>
         )}
       </Button>
     </ThemeProvider>

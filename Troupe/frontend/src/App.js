@@ -21,7 +21,7 @@ import GuestBook from "./components/GuestBook";
 import PopupTest from "./components/Popuptest";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-
+import css from "./css/App.css";
 const queryClient = new QueryClient();
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
     return window.sessionStorage.getItem("loginCheck") === "true";
   };
   const [memberData, setMemberData] = React.useState(
-    window.sessionStorage.getItem("memberData")
+    window.sessionStorage.getItem("memberData"),
   );
   React.useEffect(() => {
     setMemberData(window.sessionStorage.getItem("memberData"));
@@ -37,8 +37,9 @@ function App() {
   const myPageCheck = () => {
     return true;
   };
+
   return (
-    <div>
+    <div id="back">
       <div>
         <Header />
       </div>

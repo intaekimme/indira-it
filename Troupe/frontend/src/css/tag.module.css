@@ -6,41 +6,46 @@
     display: flex;
     flex-wrap: wrap;
     letter-spacing: -0.6px;
-    color: #b9b9b9;
+    color: #ff6e35;
     border-bottom: 1.6px solid;
     padding: 2px 2px 8px 2px;
+
 }
 .HashWrapOuter {
-        display: flex;
-        flex-wrap: wrap;
-      }
+  display: flex;
+  flex-wrap: wrap;
+  font-family: "Cafe24SsurroundAir";
+}
   
 .HashWrapInner {
-        margin-top: 5px;
-        background: #ffeee7;
-        border-radius: 56px;
-        padding: 8px 12px;
-        color: #ff6e35;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.0rem;
-        line-height: 20px;
-        margin-right: 5px;
-        cursor: pointer;
-        font-style: italic;
-      }
+  margin-top: 5px;
+  background: #ffeee7;
+  border-radius: 56px;
+  padding: 8px 12px;
+  color: #ff6e35;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.0rem;
+  line-height: 20px;
+  margin-right: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
 .HashInput {
-        width: auto;
-        margin: 10px;
-        display: inline-flex;
-        outline: none;
-        cursor: text;
-        line-height: 2rem;
-        margin-bottom: 0.75rem;
-        min-width: 8rem;
-        border: none;
-      }
+  width: auto;
+  margin: 15px;
+  outline: none;
+  cursor: text;
+  line-height: 3rem;
+  margin-bottom: 0.75rem;
+  min-width: 10rem;
+  border: none;
+  background-color: #EEE3D0;
+  color: black;
+  font-family: "Cafe24SsurroundAir";
+  font-weight: bold;
+}
 
 .img {
   position: relative;

@@ -9,13 +9,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Link from "@mui/material/Link";
-
+import apiClient from "./apiClient";
 import MenuIcon from "@mui/icons-material/Menu";
 import MovieFilterIcon from "@mui/icons-material/MovieFilter";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-
+import logo from "./img/logo3.png";
 const useStyles = () => {
   return {
     list: {
@@ -36,9 +36,24 @@ export default function Header() {
     right: false,
   });
   const [login, setLogin] = React.useState(
-    window.sessionStorage.getItem("loginCheck") === "true"
+    window.sessionStorage.getItem("loginCheck") === "true",
   );
 
+  const [profileImageUrl, setProfileImageUrl] = React.useState(
+    "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/profile/defalut.png",
+  );
+  React.useEffect(() => {
+    if (login) {
+      // apiClient.getMyinfo().then((data) => {
+      //   if (data.profileImageUrl) {
+      //     setProfileImageUrl(
+      //       "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/" +
+      //         data.profileImageUrl,
+      //     );
+      //   }
+      // });
+    }
+  }, []);
   const logout = () => {
     window.sessionStorage.removeItem("loginCheck");
     window.sessionStorage.removeItem("loginMember");
@@ -102,7 +117,7 @@ export default function Header() {
       id="header"
       style={{
         width: "100%",
-        height: "100px",
+        height: "80px",
         background: "#EEE3D0",
         textAlign: "center",
         fontSize: "50px",
@@ -163,11 +178,21 @@ export default function Header() {
             {
               anchor: "right",
               icon: (
-                <AccountCircleIcon
-                  fontSize="large"
-                  sx={{ fontSize: "60px" }}
-                  style={{ verticalAlign: "middle" }}
-                />
+                <img
+                  src={profileImageUrl}
+                  alt="random"
+                  style={{
+                    borderRadius: "70%",
+                    objectFit: "cover",
+                    height: "40px",
+                    width: "40px",
+                  }}
+                ></img>
+                //   <AccountCircleIcon
+                //   fontSize="large"
+                //   sx={{ fontSize: "60px" }}
+                //   style={{ verticalAlign: "middle" }}
+                // />
               ),
             },
           ].map((object) => (
@@ -189,7 +214,7 @@ export default function Header() {
                     element: (
                       <Link
                         href={`/profile/${sessionStorage.getItem(
-                          "loginMember"
+                          "loginMember",
                         )}`}
                         className={styled.header}
                       >
@@ -225,14 +250,13 @@ export default function Header() {
           </Link>
         )}
       </div>
-      <div style={{ width: "100%", height: "200px" }}>
+      <div style={{ width: "100%", height: "120px" }}>
         <Link
           href="/"
           className={styled.header}
           style={{ verticalAlign: "middle" }}
-          sx={{ fontFamily: "Mainstay" }}
         >
-          Troupe
+          <img width={"200px"} src={logo}></img>
         </Link>
       </div>
     </div>

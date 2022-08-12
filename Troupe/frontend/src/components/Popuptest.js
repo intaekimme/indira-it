@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import FeedDetail from "./FeedDetail";
@@ -17,8 +17,13 @@ import Modal from "@mui/material/Modal";
 import stylesModal from "../css/modal.module.css";
 import FeedLikeButton from "./FeedLikeButton";
 import FeedSaveButton from "./FeedSaveButton";
+import stylesFont from "../css/font.module.css";
+import borderImg from "../img/borderImg.png";
+import frame from "../img/frame.png";
+import { fontFamily } from "@mui/system";
+import PlusButton from "./PlusButton";
+import Theme from "./Theme";
 // 피드상세 모달구현을 위한 임시페이지 (후에 삭제 예정)
-
 function Copyright() {
   return (
     <Typography color="text.secondary" align="center" component="span">
@@ -44,8 +49,6 @@ function range(start, end) {
   console.log(array);
   return array;
 }
-
-const theme = createTheme();
 
 export default function Album() {
   const [open, setOpen] = React.useState(false);
@@ -89,7 +92,7 @@ export default function Album() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <CssBaseline />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <PerfFeedToggle></PerfFeedToggle>
@@ -99,7 +102,14 @@ export default function Album() {
         <Container sx={{ py: 10 }} maxWidth="md">
           <Grid container spacing={4}>
             {cards.map((card, id) => (
-              <Grid item key={id} xs={12} sm={6} md={4}>
+              <Grid
+                item
+                key={id}
+                xs={12}
+                sm={6}
+                md={4}
+                className={stylesFont.border}
+              >
                 <Card
                   sx={{
                     height: "100%",
@@ -110,11 +120,8 @@ export default function Album() {
                 >
                   <Typography
                     gutterBottom
-                    style={{
-                      fontSize: "20px",
-                      fontFamily: "IBM Plex Sans KR",
-                    }}
                     component="span"
+                    fontFamily="SBAggroB"
                   >
                     <img
                       src={card.profileImageUrl}
@@ -156,6 +163,11 @@ export default function Album() {
                       feedNo={card.feedNo}
                     ></FeedSaveButton>
                   </CardActions>
+                  {/* <img
+                    src={frame}
+                    className={stylesFont.borderImg}
+                    onClick={() => handleOpen(card.feedNo)}
+                  ></img> */}
                 </Card>
               </Grid>
             ))}
@@ -175,30 +187,7 @@ export default function Album() {
           </Modal>
         </Container>
       </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 4 }} component="footer">
-        <div style={{ display: "flex", justifyContent: "center", pb: 7 }}>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="large"
-            onClick={handleCard}
-          >
-            더보기
-          </Button>
-          {/* 여기에 axios 사용 */}
-        </div>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="span"
-        >
-          Troupe
-        </Typography>
-        <Copyright />
-      </Box>
-      {/* End footer */}
+      <PlusButton handleCard={handleCard}></PlusButton>
     </ThemeProvider>
   );
 }

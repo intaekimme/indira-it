@@ -25,7 +25,6 @@ export default function ModifyDeleteButton(props) {
         style={{
           margin: "5px",
           backgroundColor: "transparent",
-          fontFamily: "IBM Plex Sans KR",
         }}
       >
         <SvgIcon component={FormatListBulletedIcon} color="action"></SvgIcon>
@@ -37,7 +36,6 @@ export default function ModifyDeleteButton(props) {
             style={{
               margin: "5px",
               backgroundColor: "transparent",
-              fontFamily: "IBM Plex Sans KR",
             }}
           >
             <SvgIcon component={ModeEditIcon} color="action"></SvgIcon>
@@ -46,7 +44,6 @@ export default function ModifyDeleteButton(props) {
             style={{
               margin: "5px",
               backgroundColor: "transparent",
-              fontFamily: "IBM Plex Sans KR",
             }}
             onClick={onRemove}
           >
