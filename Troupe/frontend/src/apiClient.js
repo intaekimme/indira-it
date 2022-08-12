@@ -260,7 +260,20 @@ const apiClient = {
         return null;
       });
   },
-
+  //유저아바타 불러오기
+  getMemberAvatar: (memberNo) => {
+    return instance
+      .get(`/member/${parseInt(memberNo)}/avatar`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Member Avatar 정보를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
   //회원정보 불러오기
   getMemberInfo: (memberNo) => {
     return instance
@@ -319,6 +332,36 @@ const apiClient = {
       .catch((error) => {
         console.log(error);
         alert("likability data를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
+
+   //아바타 번호, 이미지목록 불러오기
+   getAvatarList: () => {
+    return instance
+      .get(`/avatar/all`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Avatar 이미지 리스트를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
+   
+   //[string]아바타 번호, 이미지목록 불러오기
+   getAvatarList: (string) => {
+    return instance
+      .get(`/avatar/${string}`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Avatar 이미지 리스트를 불러오는데 실패하였습니다 : " + error);
         return null;
       });
   },
@@ -444,7 +487,7 @@ const apiClient = {
         return error;
       });
   },
-
+  //피드 수정
   feedModify: (data, feedNo) => {
     instance
       .post(`/feed/${feedNo}/modify`, data, {
@@ -463,6 +506,7 @@ const apiClient = {
         return error;
       });
   },
+  //피드 상세
   getFeedDetail: (feedNo) => {
     return instance
       .get(`/feed/${feedNo}`, {
@@ -480,7 +524,7 @@ const apiClient = {
         return error;
       });
   },
-
+  //피드 좋아요수
   getFeedTotalLike: (feedNo) => {
     return instance
       .get(`/feed/${feedNo}/like`)

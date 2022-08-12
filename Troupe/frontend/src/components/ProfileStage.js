@@ -26,6 +26,9 @@ export default function ProfileStage() {
 	//이 member의 호감도 top3
   const [performerTop3, setPerformerTop3] = React.useState([]);
   React.useEffect(() => {
+    if (!memberNo) {
+      return;
+    }
     apiClient.getPerformerTop100({ profileMemberNo: memberNo }).then((data) => {
       let top100Fans = [...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
         ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
@@ -75,21 +78,27 @@ export default function ProfileStage() {
           height: `${100}%`,
         }}
       />
-      <Grid alignItems="flex-end" container spacing={0.5} style={{paddingBottom:50}}>
+      <Grid alignItems="flex-end" container spacing={0.5} style={{ paddingBottom: 50 }}>
         {performerTop100.map((fan, index) => (
-          <Grid key={`performerTop100_${index}`} container item xs={1} style={{ position: "relative", padding: 0 }}>
+          <Grid key={`performerTop100_${index}`}
+            container item xs={1} style={{ position: "relative", padding: 0 }}
+          >
             <Avatar
               avatarResponse={fan.avatarResponse}
               imgWidth={imgWidth}
               imgHeight={imgHeight}
-              left={`${(parseInt(index/12)%2==0) ? "-50%" : 0}`}
+              left={`${parseInt(index / 12) % 2 == 0 ? "-50%" : 0}`}
             />
           </Grid>
         ))}
       </Grid>
-      <Grid justifyContent="flex-end" alignItems="flex-end" container spacing={0.5} style={{height: `${imgHeight*2}`}}>
+      <Grid justifyContent="flex-end" alignItems="flex-end"
+        container spacing={0.5} style={{ height: `${imgHeight * 2}` }}
+      >
         {performerTop3.map((fan, index) => (
-          <Grid key={`performerTop3_${index}`} item xs={2} style={{ position: "relative", padding: 0 }}>
+          <Grid key={`performerTop3_${index}`}
+            item xs={2} style={{ position: "relative", padding: 0 }}
+          >
             <Avatar
               avatarResponse={fan.avatarResponse}
               imgWidth={imgWidth * 2}

@@ -4,6 +4,7 @@ import apiClient from "../apiClient";
 
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import PerfList from "./PerfList";
@@ -12,12 +13,15 @@ import ProfileMemberInfo from "./ProfileMemberInfo";
 import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";
 import ProfileStage from "./ProfileStage";
+import Avatar from "./Avatar";
 
 const theme = createTheme();
 
 function Profile(props) {
   //memberNo
   const { memberNo } = useParams();
+  //이 member의 아바타
+  const [avatar, setAvatar] = React.useState("");
 
   //화면 width에 따른 화면분할여부
   const [gridItemxs, setGridItemxs] = React.useState(window.innerWidth<1000 ? 12 : 6);
@@ -44,6 +48,17 @@ function Profile(props) {
   React.useEffect(() => {
     setMypage(sessionStorage.getItem("loginMember") === memberNo);
   }, [sessionStorage.getItem("loginMember"), memberNo]);
+
+  //member Avatar update
+  React.useEffect(() => {
+    if (!memberNo) {
+      return;
+    }
+    apiClient.getMemberAvatar(memberNo).then((data) => {
+      console.log(data);
+      setAvatar(data);
+    });
+  }, [memberNo]);
 
   //1000보다 큰경우 2화면분할
   const handleGrid = () => {
@@ -73,6 +88,10 @@ function Profile(props) {
   const tabText = performer
     ? ["공연/전시 목록", "피드 목록", "공연/전시 북마크", "피드 북마크"]
     : ["공연/전시 북마크", "피드 북마크"];
+  
+  const modifyAvatar = () => {
+    window.location.href = `/profile/${memberNo}/modify-avatar`;
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="1920px">
@@ -91,11 +110,28 @@ function Profile(props) {
           >
             {/* Stage start */}
             <ProfileStage />
+            <Button onClick={modifyAvatar} style={{
+              display: "flex",
+              left: "25%",
+              top: "-67%",
+            }}>
+              <Avatar
+                avatarResponse={avatar}
+                imgWidth={75 * 4}
+                imgHeight={100 * 4}
+                divWidth={"100%"}
+                divHeight={"100%"}
+                // style={{
+                //   position: "absolute",
+                //   display: "flex",
+                //   justifyContent: "center",
+                //   alignItems: "center",
+                // }}
+              />
+            </Button>
             {/* Stage finish */}
           </Grid>
-          <Grid item xs={gridItemxs}
-            style={{ padding: 0 }}
-          >
+          <Grid item xs={gridItemxs} style={{ padding: 0 }}>
             <Grid container spacing={3}>
               {
                 //프로필
@@ -122,9 +158,7 @@ function Profile(props) {
           {
             //공연/전시, 피드 목록
           }
-          <Grid item xs={12}
-            style={{ padding: 0 }}
-          >
+          <Grid item xs={12} style={{ padding: 0 }}>
             <ProfileTabs tabContent={tabContent} tabText={tabText} />
           </Grid>
         </Grid>

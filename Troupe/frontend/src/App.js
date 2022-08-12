@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import EmailSend from "./components/EmailSend";
 import ProfileForm from "./components/ProfileForm";
+import ProfileAvatarModify from "./components/ProfileAvatarModify";
 import ResetPw from "./components/ResetPw";
 import Profile from "./components/Profile";
 import Test from "./components/Test";
@@ -54,7 +55,8 @@ function App() {
             <Route path="/resetpw" element={loginCheck() ? <Navigate to="/" /> : <ResetPw />}></Route>
             <Route path="/member/reset-password/:token" element={loginCheck() ? <Navigate to="/" />: <ResetPw />}></Route>
             <Route path="/profile/:memberNo" element={<Profile />}></Route>
-            <Route path="/profile/:memberNo/:modify" element={true ? <ProfileForm /> : <Navigate to="/" />}></Route>
+            <Route path="/profile/:memberNo/modify" element={true ? <ProfileForm /> : <Navigate to="/" />}></Route>
+            <Route path="/profile/:memberNo/modify-avatar" element={true ? <ProfileAvatarModify /> : <Navigate to="/" />}></Route>
             <Route path="/test" element={<Test />}></Route>
             <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
             <Route path="/perf/new" element={<PerfNew />}></Route>
