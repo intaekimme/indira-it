@@ -24,13 +24,13 @@ public class PerformanceImageTest {
     @Autowired
     PerformanceImageRepository performanceImageRepository;
 
-    @Test
-    @DisplayName("이미지 삭제")
-    void 이미지삭제(){
-        PerformanceImage targetPerformanceImage = performanceImageRepository.findById(5).get();
-        performanceImageRepository.delete(targetPerformanceImage);
-
-    }
+//    @Test
+//    @DisplayName("이미지 삭제")
+//    void 이미지삭제(){
+//        PerformanceImage targetPerformanceImage = performanceImageRepository.findById(5).get();
+//        performanceImageRepository.delete(targetPerformanceImage);
+//
+//    }
 
     @Test
     @DisplayName("공연번호에 해당하는 이미지들 조회")
