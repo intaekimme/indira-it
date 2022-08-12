@@ -11,4 +11,4 @@ root.render(
 );
 
 
-axios.defaults.baseURL = 'http://i7a804.p.ssafy.io:8080';
+axios.defaults.baseURL = 'http://i7a804.p.ssafy.io:8081';
