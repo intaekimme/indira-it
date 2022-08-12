@@ -3,7 +3,9 @@ package com.troupe.backend.config;
 import com.troupe.backend.filter.JwtAuthenticationFilter;
 import com.troupe.backend.service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.protocol.HTTP;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,9 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.cors().configurationSource(corsConfigurationSource());
+        http.cors();
         http.httpBasic().disable()
                 .authorizeRequests()
+                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() // preflight request 허용
                 .antMatchers("/test").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasRole("USER")
