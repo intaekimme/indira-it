@@ -341,10 +341,16 @@ const apiClient = {
 
   //공연 등록
   perfNew: (data) => {
+    // console.log(data);
     instance
-      .post("/perf", data)
+      .post("/perf", data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
-        alert("공연등록 되었습니다." + response);
+        alert("공연등록 되었습니다.");
       })
       .catch((error) => {
         alert("공연등록 실패 : " + error);
@@ -773,7 +779,7 @@ const apiClient = {
     feedNo,
     parentCommentNo,
     data,
-    refreshChildFunction,
+    refreshChildFunction
   ) => {
     instance
       .post(`/feed/${feedNo}/comment`, data, {

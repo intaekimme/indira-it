@@ -54,7 +54,7 @@ public class PerformanceService {
             performanceImageService.addPerformanceImage(urlList, performance);
         }
         //  공연 좌석 정보 등록 서비스 호출
-        if(!performanceform.getPrice().isEmpty())
+        if(!performanceform.getSeatPrice().isEmpty())
             performancePriceService.addPerformancePrice(performanceform, performance);
     }
 

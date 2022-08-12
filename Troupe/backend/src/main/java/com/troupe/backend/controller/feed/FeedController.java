@@ -13,6 +13,7 @@ import com.troupe.backend.service.feed.FeedService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @EnableWebMvc
 @RequestMapping("/feed")
+@Slf4j
 public class FeedController {
     @Autowired
     private final FeedService feedService;
@@ -83,6 +85,7 @@ public class FeedController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity insertFeed(Principal principal,@ModelAttribute @Valid FeedVO feedVO) throws IOException {
         try{
+            log.info(feedVO.toString());
             FeedForm feedForm = new FeedForm();
             if(principal.getName()!=null) feedForm.setMemberNo(Integer.parseInt(principal.getName()));
             if(feedVO.getContent()==null) feedVO.setContent("");
