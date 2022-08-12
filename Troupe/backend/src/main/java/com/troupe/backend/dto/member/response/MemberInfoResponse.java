@@ -2,6 +2,7 @@ package com.troupe.backend.dto.member.response;
 
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.member.MemberType;
+import com.troupe.backend.util.MyConstant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class MemberInfoResponse {
         this.nickname = member.getNickname();
         this.description = member.getDescription();
         this.memberType = member.getMemberType();
-        this.profileImageUrl = member.getProfileImageUrl();
+        this.profileImageUrl = member.getProfileImageUrl() == null || member.getProfileImageUrl().isEmpty() ? "" : MyConstant.FILE_SERVER_URL + member.getProfileImageUrl();
         this.isRemoved = member.isRemoved();
     }
 }

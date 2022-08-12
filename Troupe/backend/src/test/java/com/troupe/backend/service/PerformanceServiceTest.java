@@ -18,15 +18,15 @@ public class PerformanceServiceTest {
     @Autowired
     PerformanceRepository performanceRepository;
 
-    @Test
-    @DisplayName("공연 삭제 테스트")
-    void 공연삭제테스트(){
-        int memberNo = 3;
-        int pfNo = 20;
-
-        performanceService.deletePerformance(3, 20);
-
-        Performance performance = performanceRepository.findById(20).get();
-        Assertions.assertTrue(performance.isRemoved());
-    }
+//    @Test
+//    @DisplayName("공연 삭제 테스트")
+//    void 공연삭제테스트(){
+//        int memberNo = 3;
+//        int pfNo = 20;
+//
+//        performanceService.deletePerformance(3, 20);
+//
+//        Performance performance = performanceRepository.findById(20).get();
+//        Assertions.assertTrue(performance.isRemoved());
+//    }
 }

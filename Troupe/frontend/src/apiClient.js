@@ -31,6 +31,7 @@ const apiClient = {
   },
   //회원가입
   signup: (data) => {
+    alert("회원가입 진행중입니다 잠시만 기다려주세요");
     return instance
       .post("/member/signup", data)
       .then((response) => {
@@ -43,9 +44,24 @@ const apiClient = {
         return false;
       });
   },
+  //이메일 인증
+  confirmEmail: (token) => {
+    return instance
+      .get(`/confirm-email/${token}`)
+      .then((response) => {
+        alert("이메일 인증 되었습니다." + response.data);
+        window.location.href = "/login";
+        return true;
+      })
+      .catch((error) => {
+        alert("이메일 인증 실패 : " + error);
+        window.location.href = "/email";
+        return false;
+      });
+  },
   //request pw
   requestPassword: (email) => {
-    console.log(email);
+    alert("비밀번호 초기화를 위해 이메일을 전송중입니다 잠시만 기다려주세요");
     return instance
       .post("/member/request-password", { email: email })
       .then((response) => {
@@ -67,10 +83,11 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert("비밀번호가 초기화되었습니다." + response.data);
+        window.location.href = "/login";
         return true;
       })
       .catch((error) => {
-        alert("비밀번호 초기화 실패 : " + error);
+        alert("비밀번호 초기화에 실패하였습니다. 다시 시도해주세요 : " + error);
         return false;
       });
   },
@@ -243,7 +260,20 @@ const apiClient = {
         return null;
       });
   },
-
+  //유저아바타 불러오기
+  getMemberAvatar: (memberNo) => {
+    return instance
+      .get(`/member/${parseInt(memberNo)}/avatar`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Member Avatar 정보를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
   //회원정보 불러오기
   getMemberInfo: (memberNo) => {
     return instance
@@ -306,6 +336,36 @@ const apiClient = {
       });
   },
 
+   //아바타 번호, 이미지목록 불러오기
+   getAvatarList: () => {
+    return instance
+      .get(`/avatar/all`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Avatar 이미지 리스트를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
+   
+   //[string]아바타 번호, 이미지목록 불러오기
+   getAvatarList: (string) => {
+    return instance
+      .get(`/avatar/${string}`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Avatar 이미지 리스트를 불러오는데 실패하였습니다 : " + error);
+        return null;
+      });
+  },
+
   //공연 삭제하기
   perfRemove: (data) => {
     if (window.confirm("삭제하시겠습니까?")) {
@@ -324,10 +384,16 @@ const apiClient = {
 
   //공연 등록
   perfNew: (data) => {
+    // console.log(data);
     instance
-      .post("/perf", data)
+      .post("/perf", data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
-        alert("공연등록 되었습니다." + response);
+        alert("공연등록 되었습니다.");
       })
       .catch((error) => {
         alert("공연등록 실패 : " + error);
@@ -347,19 +413,60 @@ const apiClient = {
       });
   },
 
-  //피드 목록 불러오기
-  getFeedList: () => {
+  //전체 피드 목록 불러오기
+  getAllFeedList: async ({pageParam = 0}) => {
+    return await instance
+    .get(`/feed/list/all?pageNumber=${pageParam}`)
+    .then((response) => {
+      console.log(response.data)
+      return response.data;
+    })
+    .catch((error) => {
+      alert("전체 피드 불러오기 실패" + error);
+    });
+},
+  getSavedFeedList: ({pageParam = 0}) => {
     instance
-      .get("/feed/list")
+      .get(`/feed/list/save?pageNumber=${pageParam}`)
       .then((response) => {
-        alert("불러오기 성공");
-        return response;
+        alert("저장 피드 불러오기 성공");
+        return response.data;
       })
       .catch((error) => {
-        alert("피드 불러오기 실패" + error);
+        alert("저장 피드 불러오기 실패" + error);
         return null;
       });
   },
+
+  getFollowFeedList: ({pageParam = 0}) => {
+    instance
+      .get(`/feed/list/follow?pageNumber=${pageParam}`)
+      .then((response) => {
+        alert("팔로우 피드 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        alert("팔로우 피드 불러오기 실패" + error);
+        return null;
+      });
+  },
+
+  feedTagSearch: async ({pageParam = 0, tags = []}) => {
+    let url = `/feed/search?pageNumber=${pageParam}`
+    for (let i = 0; i < tags.length; i++) {
+      url = url + `&tags=${tags[i]}`
+    }
+    return await instance
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        return response.data;
+      })
+      .catch((error) => {
+        alert("검색 피드 불러오기 실패" + error);
+      });
+  },
+
   //호감도 공연자 Top3
   getPerformerTop3: (data) => {
     return instance
@@ -427,7 +534,7 @@ const apiClient = {
         return error;
       });
   },
-
+  //피드 수정
   feedModify: (data, feedNo) => {
     instance
       .post(`/feed/${feedNo}/modify`, data, {
@@ -446,6 +553,7 @@ const apiClient = {
         return error;
       });
   },
+  //피드 상세
   getFeedDetail: (feedNo) => {
     return instance
       .get(`/feed/${feedNo}`, {
@@ -463,7 +571,7 @@ const apiClient = {
         return error;
       });
   },
-
+  //피드 좋아요수
   getFeedTotalLike: (feedNo) => {
     return instance
       .get(`/feed/${feedNo}/like`)
@@ -756,7 +864,7 @@ const apiClient = {
     feedNo,
     parentCommentNo,
     data,
-    refreshChildFunction,
+    refreshChildFunction
   ) => {
     instance
       .post(`/feed/${feedNo}/comment`, data, {

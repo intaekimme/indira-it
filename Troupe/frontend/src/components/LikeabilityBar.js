@@ -44,7 +44,7 @@ export default function LikeabilityBar(props) {
           ))} */}
 
           {
-            <Avatar avatarResponse={likeabilityData.avatarResponse} />
+            <Avatar avatarResponse={likeabilityData.avatarResponse} left="-30%" top="-50%"/>
           }
         </Grid>
         <Grid item xs={8} style={{ position: "relative" }}>

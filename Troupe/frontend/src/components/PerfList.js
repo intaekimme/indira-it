@@ -1,70 +1,98 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import SearchBar from "./SearchBar";
-import PerfFeedToggle from "./MainButton";
-import apiClient from "../apiClient";
-import { useState, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import PerfListCard from "./PerfListCard";
+import React from "react"
+import { Button } from "@mui/material"
+import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import TurnedInIcon from '@mui/icons-material/TurnedIn';
+import Favorite from '@mui/icons-material/Favorite';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import { useInfiniteQuery, useQuery } from 'react-query';
+import apiClient from '../apiClient';
+import { useParams } from "react-router-dom";
 
-function Copyright() {
-  return (
-    <Typography color="text.secondary" align="center" component="span">
-      {"Copyright © "}
-      <Link color="inherit" href="/">
-        Troupe
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
-const theme = createTheme();
 
-export default function PerfList() {
-  let { pageNumber } = useParams();
+export default function PerfListCard(){
+  // let {isLoading, data} = useQuery('performanceList', async () => await apiClient.getPerfList(pageNumber));
+  let pageNumber = useParams().pageNumber;  
+  let performanceListQuery = useInfiniteQuery('performanceList', apiClient.getPerfList, {getNextPageParam: (lastPage, pages) => {return pages.length + 1 }})
+  console.log(performanceListQuery.data)
+  console.log(performanceListQuery.isLoading)
 
-  let [pageCounter, setPageCounter] = React.useState(pageNumber);
+  const [like, setLike] = React.useState(false)
+  const [save, setSave] = React.useState(false)
 
-  const handlePageCounter = () => {
-    setPageCounter(++pageCounter);
-  };
+  function handleLike() {
+    setLike(!like)
+  }
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <SearchBar></SearchBar>
-      </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <PerfFeedToggle></PerfFeedToggle>
-      </div>
-      <div>
-        <Container sx={{ py: 10 }} maxWidth="md">
-          <PerfListCard></PerfListCard>
-        </Container>
-      </div>
-      {/* Footer */}
-      {/* <Box sx={{ bgcolor: "background.paper", p: 4 }}>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="span"
-        >
-          Troupe
-        </Typography>
-        <Copyright />
-      </Box> */}
-      {/* End footer */}
-    </ThemeProvider>
-  );
-}
+  function handleSave() {
+    setSave(!save)
+  }
+
+  if (!performanceListQuery.isLoading) {
+    return (
+          <Grid container spacing={4}>
+            
+            {performanceListQuery.data.pages.map((page) => (
+              page.map((datum) => (
+                <Grid item key={datum.pfNo} xs={12} sm={6} md={4}>
+                <Card
+                  sx={{ position:'relative', height: '100%', display: 'flex', flexDirection: 'column' }}
+                  elevation={0}
+                >
+                  {/* <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
+                    <img src={data.image} alt='' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
+                  </Typography> */}
+                  <Box style={{ fontFamily:'IBM Plex Sans KR', background:'pink', borderRadius:'10%', position:'absolute', top:'45px', right:'5px',  i:'3'}}>상영 중</Box>
+                  <Box style={{ fontFamily:'IBM Plex Sans KR', background:'skyblue', borderRadius:'10%', position:'absolute', top:'45px', right:'60px',  i:'3'}}>뮤지컬</Box>
+                  <Link href={'/perf/detail'}>
+                    <CardMedia 
+                      component="img"
+                      sx={{
+                        pb: 1,
+                        objectFit:'cover',
+                        width:'300px',
+                        height:'300px'
+                      }}
+                      image = {Object.values(datum.image)[0]}
+                      alt=""
+                    >
+                    </CardMedia>
+                  </Link>
+                  <CardActions sx={{justifyContent: 'space-between', margin:'0px', padding:'0px'}}>
+                    <Button 
+                    size="small" 
+                    onClick={handleLike} 
+                    style={{color:'black', 
+                            justifyContent:'flex-start', 
+                            margin:'0px', 
+                            padding:'0px'}}>
+                              {like ? (<Favorite></Favorite>):(<FavoriteBorderIcon></FavoriteBorderIcon>)}
+                              30
+                              </Button>
+                    <Button 
+                    size="small" 
+                    onClick={handleSave} 
+                    style={{color:'black', 
+                            justifyContent:'flex-end', 
+                            margin:'0px', 
+                            padding:'0px'}}>
+                              {save ? (<TurnedInIcon></TurnedInIcon>):(<TurnedInNotIcon></TurnedInNotIcon>)}
+                              </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+              ))
+            ))}
+          <div style={{display:'flex', justifyContent:'center', pb:7}}>
+            <Button variant='outlined' color='primary' size='large' onClick={performanceListQuery.fetchNextPage}>더보기</Button> 
+          </div>
+          </Grid>
+    )
+  }
+  }
