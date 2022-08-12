@@ -57,15 +57,15 @@ public class PerformanceReviewTest {
 
     }
 
-    @Test
-    @DisplayName("공연번호에 해당하는 후기 리스트 불러오기")
-    public void findByPfNo(){
-        Performance performance = performanceRepository.findById(1).get();
-
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
-
-        Assertions.assertEquals(6, performanceReviewList.size());
-    }
+//    @Test
+//    @DisplayName("공연번호에 해당하는 후기 리스트 불러오기")
+//    public void findByPfNo(){
+//        Performance performance = performanceRepository.findById(1).get();
+//
+//        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
+//
+//        Assertions.assertEquals(6, performanceReviewList.size());
+//    }
 
     @Test
     @Transactional

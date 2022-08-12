@@ -29,38 +29,38 @@ public class PerformanceSaveTest {
     @Autowired
     PerformanceSaveRepository performanceSaveRepository;
 
-    @Test
-    @DisplayName("공연 저장 테스트")
-    public void saveTest() throws ParseException {
-        Member member = memberRepository.getById(3);
-        Performance performance = performanceRepository.getById(13);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-
-        PerformanceSave performanceSave = PerformanceSave.builder()
-                .member(member)
-                .pf(performance)
-                .createdTime(dateFormat.parse("20220802"))
-                .build();
-
-        PerformanceSave savePerformanceSave = performanceSaveRepository.save(performanceSave);
-
-    }
-
-    @Test
-    @DisplayName("공연 저장 삭제 테스트")
-    public void deleteTest(){
-        Member member = memberRepository.findById(3).get();
-        Performance performance = performanceRepository.findById(2).get();
-
-        //  삭제할 공연
-        PerformanceSave targetPerformanceSave = performanceSaveRepository.findByMemberAndPf(member, performance).get();
-        targetPerformanceSave.setRemoved(true);
-
-        performanceSaveRepository.save(targetPerformanceSave);
-
-        Assertions.assertTrue(targetPerformanceSave.isRemoved());
-
-    }
+//    @Test
+//    @DisplayName("공연 저장 테스트")
+//    public void saveTest() throws ParseException {
+//        Member member = memberRepository.getById(3);
+//        Performance performance = performanceRepository.getById(13);
+//
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+//
+//        PerformanceSave performanceSave = PerformanceSave.builder()
+//                .member(member)
+//                .pf(performance)
+//                .createdTime(dateFormat.parse("20220802"))
+//                .build();
+//
+//        PerformanceSave savePerformanceSave = performanceSaveRepository.save(performanceSave);
+//
+//    }
+//
+//    @Test
+//    @DisplayName("공연 저장 삭제 테스트")
+//    public void deleteTest(){
+//        Member member = memberRepository.findById(3).get();
+//        Performance performance = performanceRepository.findById(2).get();
+//
+//        //  삭제할 공연
+//        PerformanceSave targetPerformanceSave = performanceSaveRepository.findByMemberAndPf(member, performance).get();
+//        targetPerformanceSave.setRemoved(true);
+//
+//        performanceSaveRepository.save(targetPerformanceSave);
+//
+//        Assertions.assertTrue(targetPerformanceSave.isRemoved());
+//
+//    }
 
 }
