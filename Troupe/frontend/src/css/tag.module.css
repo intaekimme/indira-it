@@ -1,0 +1,65 @@
+
+.HashWrap {
+    margin-top: 24px;
+    color: rgb(52, 58, 64);
+    font-size: 1.125rem;
+    display: flex;
+    flex-wrap: wrap;
+    letter-spacing: -0.6px;
+    color: #b9b9b9;
+    border-bottom: 1.6px solid;
+    padding: 2px 2px 8px 2px;
+}
+.HashWrapOuter {
+        display: flex;
+        flex-wrap: wrap;
+      }
+  
+.HashWrapInner {
+        margin-top: 5px;
+        background: #ffeee7;
+        border-radius: 56px;
+        padding: 8px 12px;
+        color: #ff6e35;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.0rem;
+        line-height: 20px;
+        margin-right: 5px;
+        cursor: pointer;
+        font-style: italic;
+      }
+.HashInput {
+        width: auto;
+        margin: 10px;
+        display: inline-flex;
+        outline: none;
+        cursor: text;
+        line-height: 2rem;
+        margin-bottom: 0.75rem;
+        min-width: 8rem;
+        border: none;
+      }
+
+.img {
+  position: relative;
+  margin: 3px;
+}
+
+.btn1 {
+  position: absolute;
+  top : -130px;
+  right: 3px;
+  /* color: white;
+  background-color: red;
+  border-radius: 50%;
+  border: none;
+  font-weight: bold; */
+}
+
+.alert {
+  color: #ff6e35;
+  font-size: 0.9rem;
+  animation-name: vibration;
+}

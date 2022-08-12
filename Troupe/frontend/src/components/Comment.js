@@ -1,0 +1,252 @@
+import React, { useEffect, useState } from "react";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import apiClient from "../apiClient";
+import CommentForm from "./CommentForm";
+import { Grid } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import CommentList from "./CommentList";
+export default function Comment(props) {
+  const [user, setUser] = useState(0);
+  // 대댓글 목록
+  const [childComments, setchildComments] = useState([]);
+  // 대댓글 목록 가시 여부
+  const [isChild, setIsChild] = useState(false);
+  // 대댓글 등록 여부
+  const [isChildReviewRegister, setIsChildReviewRegister] = useState(false);
+
+  const [content, setContent] = useState("");
+  const [modify, setModify] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+  // 대댓글 등록 취소 여부
+  const [cancel, setCancel] = useState(false);
+
+  useEffect(() => {
+    setContent(props.comment);
+    if (sessionStorage.getItem("loginCheck"))
+      setUser(parseInt(sessionStorage.getItem("loginMember")));
+    if (!props.feedNo) {
+      apiClient
+        .getPerfChildReviewList(props.performanceNo, props.reviewNo)
+        .then((data) => {
+          console.log(data);
+          // setchildComment(data);
+        });
+    } else {
+      apiClient
+        .getFeedChildReviewList(props.feedNo, props.reviewNo)
+        .then((data) => {
+          const json = [];
+
+          data.forEach((item) => {
+            json.push({
+              memberNo: item.memberNo,
+              reviewNo: item.commentNo,
+              profileImageUrl: item.profileImageUrl,
+              comment: item.content,
+              nickname: item.nickname,
+              isRemoved: item.removed,
+            });
+          });
+          setchildComments(json);
+        });
+    }
+  }, []);
+
+  function onChangeContent(event) {
+    setContent(event.target.value);
+  }
+  //  답글 작성 클릭
+  const childCommentRegister = (event) => {
+    setCancel(!cancel);
+    setIsChild(true);
+    if (!sessionStorage.getItem("loginCheck")) {
+      if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
+        window.location.href = `/login`;
+    } else {
+      setIsChildReviewRegister(true);
+    }
+  };
+  // 대댓글 refresh
+  const refreshChildFunction = (newComment) => {
+    setchildComments([...childComments, newComment]);
+  };
+  // 대댓글 리스트 가시 여부
+  const childCommentList = () => {
+    setIsChild(!isChild);
+  };
+  const modifyComment = () => {
+    setModify(!modify);
+    if (modify) {
+      const data = {
+        content: content,
+      };
+      if (!props.feedNo) {
+        //perf
+      } else {
+        apiClient
+          .feedCommentModify(props.feedNo, props.reviewNo, data)
+          .then(() => {
+            setModify(!modify);
+          });
+      }
+    }
+  };
+  const modifyCancel = () => {
+    setContent(props.comment);
+    setModify(!modify);
+  };
+  const deleteComment = () => {
+    if (window.confirm("삭제하시겠습니까?")) {
+      if (!props.feedNo) {
+        //perf
+      } else {
+        apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
+          setContent("삭제된 댓글입니다.");
+          setDeleted(true);
+        });
+      }
+    }
+  };
+  const cancelRegister = () => {
+    setCancel(!cancel);
+    setIsChildReviewRegister(!isChildReviewRegister);
+  };
+
+  return (
+    <Card sx={{ maxWidth: "100%", m: 2 }}>
+      <CardHeader
+        avatar={<Avatar alt={props.nickname} src={props.profileImageUrl} />}
+        subheader={props.nickname}
+        style={{ textAlign: "left" }}
+      />
+      <CardContent style={{ textAlign: "left" }}>
+        <Typography variant="body1" color="textSecondary" component="p">
+          {!props.isRemoved && !deleted ? (
+            modify ? (
+              <TextField
+                fullWidth
+                id="write-review-form"
+                placeholder="댓글을 입력하세요."
+                value={content}
+                type="text"
+                maxLength="500"
+                onChange={onChangeContent}
+              />
+            ) : (
+              <div>{content}</div>
+            )
+          ) : (
+            <div>삭제된 댓글입니다</div>
+          )}
+        </Typography>
+      </CardContent>
+
+      <Grid>
+        <Grid container justifyContent="flex-end">
+          <Grid item>
+            {props.memberNo === user && !props.isRemoved && !deleted ? (
+              modify ? (
+                <div>
+                  <Button
+                    size="small"
+                    aria-label="modify"
+                    onClick={() => modifyCancel()}
+                  >
+                    수정 취소
+                  </Button>
+                  <Button
+                    size="small"
+                    aria-label="modify"
+                    onClick={() => modifyComment()}
+                  >
+                    수정 완료
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  size="small"
+                  aria-label="modify"
+                  onClick={() => modifyComment()}
+                >
+                  수정
+                </Button>
+              )
+            ) : (
+              <div></div>
+            )}
+            {props.memberNo === user && !props.isRemoved && !deleted ? (
+              <Button
+                size="small"
+                aria-label="delete"
+                onClick={() => deleteComment()}
+              >
+                삭제
+              </Button>
+            ) : (
+              <div></div>
+            )}
+            {!props.parentCommentNo && (
+              <Button
+                size="small"
+                aria-label="child-comment"
+                onClick={childCommentList}
+              >
+                답글({childComments.length})
+              </Button>
+            )}
+
+            {!props.isRemoved &&
+            !deleted &&
+            !props.parentCommentNo &&
+            !cancel ? (
+              <Button
+                size="small"
+                arial-lebel="child-comment-register"
+                onClick={childCommentRegister}
+              >
+                답글작성
+              </Button>
+            ) : (
+              <span></span>
+            )}
+            {cancel ? (
+              <Button
+                size="small"
+                arial-lebel="child-comment-register"
+                onClick={cancelRegister}
+              >
+                답글취소
+              </Button>
+            ) : (
+              <span></span>
+            )}
+          </Grid>
+        </Grid>
+        {isChildReviewRegister && (
+          <Grid item>
+            <CommentForm
+              refreshChildFunction={refreshChildFunction}
+              isChild={isChildReviewRegister}
+              performanceNo={props.performanceNo}
+              feedNo={props.feedNo}
+              parentCommentNo={props.reviewNo}
+            />
+          </Grid>
+        )}
+        {isChild && (
+          <CommentList
+            refreshChildFunction={refreshChildFunction}
+            commentList={childComments}
+            feedNo={props.feedNo}
+            parentCommentNo={props.reviewNo}
+          />
+        )}
+      </Grid>
+    </Card>
+  );
+}
