@@ -20,7 +20,7 @@ import Modal from "@mui/material/Modal";
 import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import FeedDetail from "./FeedDetail";
-
+import PlusButton from "./PlusButton";
 export default function FeedListAll() {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
@@ -51,7 +51,7 @@ export default function FeedListAll() {
     //   pageNumber: 0,
     // };
     apiClient.getFeedTest().then((data) => {
-      console.log(data);
+      // console.log(data);
       setCard(data);
     });
   }, []);
@@ -65,8 +65,8 @@ export default function FeedListAll() {
       },
     },
   );
-  console.log(FeedListAllQuery.data);
-  console.log(FeedListAllQuery.isLoading);
+  // console.log(FeedListAllQuery.data);
+  // console.log(FeedListAllQuery.isLoading);
 
   if (!FeedListAllQuery.isLoading) {
     return (
@@ -150,14 +150,7 @@ export default function FeedListAll() {
         </Grid>
         <div style={{ display: "flex", justifyContent: "center", pb: 7 }}>
           <Link href=""></Link>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="large"
-            onClick={FeedListAllQuery.fetchNextPage}
-          >
-            더보기
-          </Button>
+          <PlusButton handleCard={FeedListAllQuery.fetchNextPage}></PlusButton>
         </div>
       </Fragment>
     );

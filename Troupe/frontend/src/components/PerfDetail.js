@@ -212,7 +212,7 @@ function PerfDetail() {
   const [title, setTitle] = useState(""); //  필수
   const [updatedTime, setUpdatedTime] = useState(Date.now()); //  비 필수
 
-  const [performanceNo, setPerformanceNo] = useState(pfNo);
+  const [performanceNo, setPerformanceNo] = useState(0);
   const [commentList, setCommentList] = React.useState([]);
 
   const refreshFunction = (newComment) => {
@@ -341,13 +341,13 @@ function PerfDetail() {
                     <li id={i}>
                       {item.name} {item.price}
                     </li>
-                  )
+                  ),
                 )}
                 {/* <li>가격: 전석 33,000원</li> */}
               </ul>
             </Item>
           </Grid>
-          <Grid itme xs={12}>
+          <Grid item xs={12}>
             <Item elevation={0}>{description}</Item>
           </Grid>
         </Grid>

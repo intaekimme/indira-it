@@ -22,7 +22,7 @@ export default function CommentList(props) {
             nickname={comment.nickname}
             profileImageUrl={comment.profileImageUrl}
             comment={comment.comment}
-            isRemoved={comment.isRemoved}
+            // isRemoved={comment.isRemoved}
             parentCommentNo={props.parentCommentNo}
             refreshFunction={props.refreshFunction}
             refreshChildFunction={props.refreshChildFunction}

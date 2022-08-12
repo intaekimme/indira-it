@@ -67,7 +67,7 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert(
-          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
+          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data,
         );
         return true;
       })
@@ -229,7 +229,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            }
+            },
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -336,8 +336,8 @@ const apiClient = {
       });
   },
 
-   //아바타 번호, 이미지목록 불러오기
-   getAvatarList: () => {
+  //아바타 번호, 이미지목록 불러오기
+  getAvatarList: () => {
     return instance
       .get(`/avatar/all`)
       .then((response) => {
@@ -350,9 +350,9 @@ const apiClient = {
         return null;
       });
   },
-   
-   //[string]아바타 번호, 이미지목록 불러오기
-   getAvatarList: (string) => {
+
+  //[string]아바타 번호, 이미지목록 불러오기
+  getAvatarList: (string) => {
     return instance
       .get(`/avatar/${string}`)
       .then((response) => {
@@ -414,18 +414,18 @@ const apiClient = {
   },
 
   //전체 피드 목록 불러오기
-  getAllFeedList: async ({pageParam = 0}) => {
+  getAllFeedList: async ({ pageParam = 0 }) => {
     return await instance
-    .get(`/feed/list/all?pageNumber=${pageParam}`)
-    .then((response) => {
-      console.log(response.data)
-      return response.data;
-    })
-    .catch((error) => {
-      alert("전체 피드 불러오기 실패" + error);
-    });
-},
-  getSavedFeedList: ({pageParam = 0}) => {
+      .get(`/feed/list/all?pageNumber=${pageParam}`)
+      .then((response) => {
+        // console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("전체 피드 불러오기 실패" + error);
+      });
+  },
+  getSavedFeedList: ({ pageParam = 0 }) => {
     instance
       .get(`/feed/list/save?pageNumber=${pageParam}`)
       .then((response) => {
@@ -438,7 +438,7 @@ const apiClient = {
       });
   },
 
-  getFollowFeedList: ({pageParam = 0}) => {
+  getFollowFeedList: ({ pageParam = 0 }) => {
     instance
       .get(`/feed/list/follow?pageNumber=${pageParam}`)
       .then((response) => {
@@ -451,15 +451,15 @@ const apiClient = {
       });
   },
 
-  feedTagSearch: async ({pageParam = 0, tags = []}) => {
-    let url = `/feed/search?pageNumber=${pageParam}`
+  feedTagSearch: async ({ pageParam = 0, tags = [] }) => {
+    let url = `/feed/search?pageNumber=${pageParam}`;
     for (let i = 0; i < tags.length; i++) {
-      url = url + `&tags=${tags[i]}`
+      url = url + `&tags=${tags[i]}`;
     }
     return await instance
       .get(url)
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -593,7 +593,7 @@ const apiClient = {
     return instance
       .get(`/feed/list/all?pageNumber=0`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         // alert("피드 불러오기 성공");
         return response.data;
       })
@@ -662,7 +662,7 @@ const apiClient = {
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
         // alert("불러오기 성공");
-        // console.log(response.data);
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -864,7 +864,7 @@ const apiClient = {
     feedNo,
     parentCommentNo,
     data,
-    refreshChildFunction
+    refreshChildFunction,
   ) => {
     instance
       .post(`/feed/${feedNo}/comment`, data, {
@@ -877,7 +877,7 @@ const apiClient = {
       })
       .then((response) => {
         alert("대댓글 등록 성공");
-        console.log(response.data);
+        // console.log(response.data);
         const json = {
           memberNo: response.data.memberNo,
           reviewNo: response.data.commentNo,
@@ -897,7 +897,7 @@ const apiClient = {
     return instance
       .get(`/feed/${feedNo}/comment/${commentNo}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         return response.data;
       })
       .catch((error) => {
