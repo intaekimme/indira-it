@@ -7,8 +7,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Stage from "../img/stage.jpg";
-import PerfList from "./PerfList";
-import FeedList from "./FeedList";
 import ProfileMemberInfo from "./ProfileMemberInfo";
 import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";

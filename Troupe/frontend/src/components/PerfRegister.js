@@ -78,7 +78,6 @@ export default function PerfNew() {
     //   location: data.get("location"),
     // };
 
-    console.log(request);
 
     apiClient.perfNew(data);
   };
