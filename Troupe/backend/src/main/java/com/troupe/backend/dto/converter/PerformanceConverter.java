@@ -10,16 +10,23 @@ import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
 import com.troupe.backend.dto.performance.Seat;
 import com.troupe.backend.repository.category.CategoryRepository;
 import com.troupe.backend.util.S3FileUploadService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Component
+@Slf4j
 public class PerformanceConverter {
 
     @Autowired
@@ -44,17 +51,20 @@ public class PerformanceConverter {
 
         Category category = categoryRepository.findBySmallCategory(performanceForm.getCategory()).get();
 
+        Date startDate = StringToDate(performanceForm.getStartDate());
+        Date endDate = StringToDate(performanceForm.getEndDate());
+
         return Performance.builder()
                 .member(member)
                 .title(performanceForm.getTitle())
                 .location(performanceForm.getLocation())
-                .runtime(performanceForm.getRuntime())
+                .runtime(Integer.parseInt(performanceForm.getRuntime()))
                 .createdTime(now)
                 .category(category)
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
-                .startDate(performanceForm.getStartDate())
-                .updatedTime(performanceForm.getEndDate())
+                .startDate(startDate)
+                .updatedTime(endDate)
                 .build();
     }
 
@@ -98,7 +108,27 @@ public class PerformanceConverter {
      * @return
      */
     public List<PerformancePrice> toPerformancePriceEntityWhenCreate(PerformanceForm performanceForm, Performance performance){
-        List<Seat> seatList = performanceForm.getPrice();
+        String beforeParse = performanceForm.getSeatPrice();
+
+//        log.info(beforeParse);
+        JsonParser jsonParser = JsonParserFactory.getJsonParser();
+        List<Object> list = jsonParser.parseList(beforeParse);
+//        log.info(list.toString());
+
+        List<Seat> seatList = new ArrayList<>();
+        for(Object o : list){
+            if(o instanceof Map){
+                Map<String, Object> map = (Map<String, Object>) o;
+//                log.info(map.toString());
+                Seat result = Seat.builder()
+                        .name(map.get("seat").toString())
+                        .price(Integer.parseInt(map.get("price").toString()))
+                        .build();
+//                log.info(result.toString());
+                seatList.add(result);
+            }
+        }
+//        log.info(seatList.toString());
         List<PerformancePrice> entities = new ArrayList<PerformancePrice>();
         for(Seat seat : seatList){
             PerformancePrice p = PerformancePrice.builder()
@@ -145,4 +175,16 @@ public class PerformanceConverter {
         return performanceImageList;
     }
 
+    public Date StringToDate(String date){
+        SimpleDateFormat beforeFormat = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat afterFormat = new SimpleDateFormat("yyyymmdd");
+
+        try {
+            Date tempDate = beforeFormat.parse(date);
+            System.out.println(tempDate);
+            return tempDate;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

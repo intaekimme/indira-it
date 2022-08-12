@@ -6,9 +6,11 @@ import com.troupe.backend.dto.performance.form.PerformanceForm;
 import com.troupe.backend.dto.performance.form.PerformanceModifyForm;
 import com.troupe.backend.dto.performance.form.PfReviewForm;
 import com.troupe.backend.service.performance.*;
+import com.troupe.backend.util.MyConstant;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,7 @@ import java.util.Objects;
 @RequestMapping("/perf")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PerformanceController {
     private final PerformanceService performanceService;
     private final PerformanceSaveService performanceSaveService;
@@ -36,7 +40,7 @@ public class PerformanceController {
 
 
     /**
-     *
+     * 공연 등록
      * @param principal
      * @param performanceform
      * @return
@@ -47,9 +51,10 @@ public class PerformanceController {
     public ResponseEntity register(Principal principal,
                                    @ModelAttribute @Valid PerformanceForm performanceform)
             throws IOException {
+        log.info(performanceform.toString());
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.register(memberNo, performanceform);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create(MyConstant.REDIRECT+"/perf/list")).build();
     }
 
 

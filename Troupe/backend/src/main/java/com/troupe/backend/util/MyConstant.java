@@ -56,4 +56,7 @@ public final class MyConstant {
     public static final String PREV = "공연예정";
     public static final String ING = "공연중";
     public static final String END = "공연종료";
+
+    // 리다이렉트 주소
+    public static final String REDIRECT = "http://localhost:3000";
 }
