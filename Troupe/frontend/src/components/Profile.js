@@ -7,8 +7,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Stage from "../img/stage.jpg";
-import PerfList from "./PerfList";
-import FeedList from "./FeedList";
+import MainPerf from "./MainPerf";
+import MainFeed from "./MainFeed";
 import ProfileMemberInfo from "./ProfileMemberInfo";
 import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";
@@ -61,14 +61,14 @@ function Profile(props) {
 
   const tabContent = performer
     ? [
-        <PerfList memberInfo={memberInfo} />,
-        <FeedList memberInfo={memberInfo} />,
-        <PerfList memberInfo={memberInfo} save={true} />,
-        <FeedList memberInfo={memberInfo} save={true} />,
+        <MainPerf memberInfo={memberInfo} />,
+        <MainFeed memberInfo={memberInfo} />,
+        <MainPerf memberInfo={memberInfo} save={true} />,
+        <MainFeed memberInfo={memberInfo} save={true} />,
       ]
     : [
-        <PerfList memberInfo={memberInfo} save={true} />,
-        <FeedList memberInfo={memberInfo} save={true} />,
+        <MainPerf memberInfo={memberInfo} save={true} />,
+        <MainFeed memberInfo={memberInfo} save={true} />,
       ];
   const tabText = performer
     ? ["공연/전시 목록", "피드 목록", "공연/전시 북마크", "피드 북마크"]
