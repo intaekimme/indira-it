@@ -16,4 +16,5 @@ public class PfReviewResponse {
     String nickname;
     String profileImageUrl;
     String comment;
+    boolean isRemoved;
 }
