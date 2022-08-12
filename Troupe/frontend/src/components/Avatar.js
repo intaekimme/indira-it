@@ -8,6 +8,7 @@ export default function Avatar(props) {
   const [divWidth, setDivWidth] = React.useState(75);
   const [divHeight, setDivHeight] = React.useState(50);
   const [left, setLeft] = React.useState(0);
+  const [top, setTop] = React.useState(0);
   useEffect(() => {
     if (props.imgWidth) {
       setImgWidth(props.imgWidth);
@@ -24,15 +25,18 @@ export default function Avatar(props) {
     if (props.left) {
       setLeft(props.left);
     }
+    if (props.top) {
+      setTop(props.top);
+    }
   }, []);
   return avatarResponse ? (
-    <Grid style={{ width: divWidth, height: divHeight, paddingRight: "30px" }}>
+    <div style={{ position:"relative", width: divWidth, height: divHeight, paddingRight: "30px" }}>
       <img
         src={avatarResponse.shapeUrl}
         alt={avatarResponse.shapeUrl}
         style={{
           position: "absolute",
-          top: "0%",
+          top: top,
           left: left,
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
@@ -43,7 +47,7 @@ export default function Avatar(props) {
         alt={avatarResponse.clothesUrl}
         style={{
           position: "absolute",
-          top: "0%",
+          top: top,
           left: left,
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
@@ -54,7 +58,7 @@ export default function Avatar(props) {
         alt={avatarResponse.eyeUrl}
         style={{
           position: "absolute",
-          top: "0%",
+          top: top,
           left: left,
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
@@ -65,7 +69,7 @@ export default function Avatar(props) {
         alt={avatarResponse.mouthUrl}
         style={{
           position: "absolute",
-          top: "0%",
+          top: top,
           left: left,
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
@@ -76,7 +80,7 @@ export default function Avatar(props) {
         alt={avatarResponse.noseUrl}
         style={{
           position: "absolute",
-          top: "0%",
+          top: top,
           left: left,
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
@@ -87,13 +91,13 @@ export default function Avatar(props) {
         alt={avatarResponse.hairUrl}
         style={{
           position: "absolute",
-          top: "0%",
+          top: top,
           left: left,
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
         }}
       ></img>
-    </Grid>
+    </div>
   ) : (
       <div style={{ width: divWidth, height: divHeight }}></div>
   );
