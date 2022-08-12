@@ -205,7 +205,7 @@ function PerfDetail() {
       price: 0,
     },
   ]);
-  const [removed, setRemoved] = useState(false); //  비 필수
+  const [isRemoved, setIsRemoved] = useState(false); //  비 필수
   const [runtime, setRuntime] = useState(0); // 필수
   const [startDate, setStartDate] = useState(Date.now()); //  필수
   const [status, setStatus] = useState(""); //  필수
@@ -263,7 +263,7 @@ function PerfDetail() {
         profileImg: data.profileImg,
       });
       setPrice(data.price);
-      setRemoved(data.removed);
+      setIsRemoved(data.removed);
       setRuntime(data.runtime);
       setStartDate(data.startDate);
       setStatus(data.status);
@@ -272,7 +272,22 @@ function PerfDetail() {
     });
 
     apiClient.getPerfReviewList(pfNo).then((data) => {
-      setCommentList(data);
+      console.log(data);
+      const json = [];
+
+      data.forEach((item) => {
+        json.push({
+          memberNo: item.memberNo,
+          reviewNo: item.reviewNo,
+          profileImageUrl: item.profileImageUrl,
+          comment: item.comment,
+          nickname: item.nickname,
+          isRemoved: item.removed,
+          pfNo: item.pfNo,
+        });
+      });
+
+      setCommentList(json);
     });
   }, []);
 

@@ -254,6 +254,7 @@ export default function Comment(props) {
           <CommentList
             refreshChildFunction={refreshChildFunction}
             commentList={childComments}
+            performanceNo={props.performanceNo}
             feedNo={props.feedNo}
             parentCommentNo={props.reviewNo}
           />

@@ -48,7 +48,7 @@ function App() {
           <Routes>
             <Route path="/login" element={loginCheck() ? <Navigate to="/" /> : <Login />}></Route>
             <Route path="/signup" element={loginCheck() ? <Navigate to="/" /> : <Signup />}></Route>
-            <Route path="/" element={<MainPerf />}></Route>
+            <Route path="/" element={<Navigate to='/perf/list/0'/>}></Route>
             <Route path="/perf/list/:pageNumber" element={<MainPerf />}></Route>
             <Route path="/feed/list/all/:pageNumber" element={<MainFeed />}></Route>
             <Route path="/feed/list/follow/:pageNumber" element={loginCheck() ? <Navigate to='/login'/> : <MainFeed />}></Route>
