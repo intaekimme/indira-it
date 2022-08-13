@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 // 제목, 기간, 시간, 장소, 티켓가격
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#FFF",
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#EEE3D0",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
@@ -31,7 +31,8 @@ function Carousel(props) {
       setOpen(false);
     }
     return (
-      <Paper style={{ backgroundColor: "#FFFF" }} elevation={0}>
+      // <Paper style={{ backgroundColor: "#FFF" }} elevation={0}>
+      <Paper style={{ backgroundColor: "#EEE3D0" }} elevation={0}>
         <img
           onClick={handleOpen}
           src="https://source.unsplash.com/random"
@@ -134,7 +135,7 @@ function ModifyDeleteButton(props) {
   }
 
   return (
-    <div style={{ float: "right", backgroundColor: "#FFF" }}>
+    <div style={{ float: "right" }}>
       <Button
         variant="outlined"
         href="/perf/list"
@@ -249,7 +250,7 @@ function PerfDetail() {
     setPerformanceNo(pfNo);
 
     apiClient.getPerfDetail(pfNo).then((data) => {
-      console.log(`return data : ${data}`);
+      // console.log(`return data : 1${data}`);
       setCategory(data.category);
       setCreatedTime(data.createdTime);
       setDescription(data.description);
@@ -272,7 +273,7 @@ function PerfDetail() {
     });
 
     apiClient.getPerfReviewList(pfNo).then((data) => {
-      console.log(data);
+      // console.log("return data 2 ", data);
       const json = [];
 
       data.forEach((item) => {
@@ -289,13 +290,14 @@ function PerfDetail() {
 
       setCommentList(json);
     });
-  }, []);
+  }, [pfNo]);
 
   // console.log(price);
   // console.log(`pfNo: ${pfNo}`);
   // console.log(`performanceNo: ${performanceNo}`);
   return (
-    <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
+    // <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
+    <div style={{ fontFamily: "IBM Plex Sans KR" }}>
       <ModifyDeleteButton />
       <div>
         <Grid container spacing={4}>

@@ -173,12 +173,11 @@ public class PerformanceController {
     @PostMapping("/{pfNo}/review")
     public ResponseEntity<PfReviewResponse> registerReview(Principal principal,
                                                            @PathVariable String pfNo,
+                                                           @RequestParam(required = false) Integer parentCommentNo,
                                                            @RequestBody Map<String, String> body){
         System.out.println(body.get("content"));
         int memberNo = Integer.parseInt(principal.getName());
-
-        int parentCommentNo = Integer.parseInt(body.get("parentCommentNo"));
-
+        
         PfReviewForm request = PfReviewForm.builder()
                 .pfNo(Integer.parseInt(pfNo))
                 .memberNo(memberNo)
@@ -229,12 +228,13 @@ public class PerformanceController {
      */
     @Operation(summary = "공연 후기 수정", description = "파라미터: 후기 번호, 내용")
     @PatchMapping("/{pfNo}/review/{reviewNo}/modify")
-    public ResponseEntity modifyPfReview(Principal principal,
+    public ResponseEntity<PfReviewResponse> modifyPfReview(Principal principal,
                                          @PathVariable int pfNo,
                                          @PathVariable int reviewNo,
-                                         @RequestParam String content){
-        performanceReviewService.modify(pfNo, reviewNo, content);
-        return ResponseEntity.ok().build();
+                                         @RequestBody Map<String, String> content){
+
+        PfReviewResponse response = performanceReviewService.modify(pfNo, reviewNo, content.get("content"));
+        return ResponseEntity.ok().body(response);
     }
 
     /**
