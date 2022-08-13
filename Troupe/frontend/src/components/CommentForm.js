@@ -34,7 +34,7 @@ export default function CommentForm(props) {
         apiClient.perfReviewNew(
           props.performanceNo,
           data,
-          props.refreshFunction,
+          props.refreshFunction
         );
       } else {
         apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
@@ -47,21 +47,20 @@ export default function CommentForm(props) {
     // console.log(props.performanceNo);
     const data = {
       content: review,
-      parentCommentNo: props.reviewNo,
     };
     if (!props.feedNo) {
       apiClient.perfChildReviewNew(
         props.performanceNo,
-        props.reviewNo,
+        props.parentCommentNo,
         data,
-        props.refreshFunction,
+        props.refreshChildFunction
       );
     } else {
       apiClient.feedChildCommentNew(
         props.feedNo,
         props.parentCommentNo,
         data,
-        props.refreshChildFunction,
+        props.refreshChildFunction
       );
     }
     reset();
