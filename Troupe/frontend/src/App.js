@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import Header from "./Header";
 import MainPerf from "./components/MainPerf";
 import MainFeed from "./components/MainFeed";
@@ -59,7 +59,7 @@ function App() {
             <Route path="/member/reset-password/:token" element={loginCheck() ? <Navigate to="/" />: <ResetPw />}></Route>
             <Route path="/profile/:memberNo" element={<Profile />}></Route>
             <Route path="/profile/:memberNo/modify" element={true ? <ProfileForm /> : <Navigate to="/" />}></Route>
-            <Route path="/profile/:memberNo/modify-avatar" element={true ? <ProfileAvatarModify /> : <Navigate to="/" />}></Route>
+            <Route path="/profile/:memberNo/modify-avatar" element={<ProfileAvatarModify />}></Route>
             <Route path="/test" element={<Test />}></Route>
             <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
             <Route path="/perf/register" element={<PerfRegister />}></Route>
