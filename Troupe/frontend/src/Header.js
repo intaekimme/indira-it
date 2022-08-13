@@ -45,11 +45,12 @@ export default function Header() {
   React.useEffect(() => {
     if (login) {
       // apiClient.getMyinfo().then((data) => {
-      //   if (data.profileImageUrl) {
-      //     setProfileImageUrl(
-      //       "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/" +
-      //         data.profileImageUrl,
-      //     );
+      //   if (
+      //     data.profileImageUrl &&
+      //     data.profileImageUrl !== "" &&
+      //     data.profileImageUrl !== null
+      //   ) {
+      //     setProfileImageUrl(data.profileImageUrl);
       //   }
       // });
     }
@@ -186,6 +187,9 @@ export default function Header() {
                     objectFit: "cover",
                     height: "60px",
                     width: "60px",
+                    border: "3px white solid",
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.2)",
                   }}
                 ></img>
                 //   <AccountCircleIcon

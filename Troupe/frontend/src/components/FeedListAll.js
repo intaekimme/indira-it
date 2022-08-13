@@ -83,6 +83,10 @@ export default function FeedListAll() {
                     flexDirection: "column",
                   }}
                   elevation={0}
+                  style={{
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.5)",
+                  }}
                 >
                   <Grid container mt={1}>
                     <Grid ml={1}>
@@ -98,6 +102,8 @@ export default function FeedListAll() {
                             objectFit: "cover",
                             height: "30px",
                             width: "30px",
+                            boxShadow:
+                              "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                           }}
                         ></img>
                       </a>

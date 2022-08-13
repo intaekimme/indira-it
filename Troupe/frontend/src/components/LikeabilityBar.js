@@ -30,7 +30,7 @@ export default function LikeabilityBar(props) {
           padding: "20px",
         }}
       >
-        <Grid item xs={2} style={{position: "relative"}}>
+        <Grid item xs={2} style={{ position: "relative" }}>
           {/* {avatarUrl.map((url, index) => (
             <img
               key={`${url}${index}`}
@@ -44,7 +44,11 @@ export default function LikeabilityBar(props) {
           ))} */}
 
           {
-            <Avatar avatarResponse={likeabilityData.avatarResponse} left="-30%" top="-50%"/>
+            <Avatar
+              avatarResponse={likeabilityData.avatarResponse}
+              left="-30%"
+              top="-50%"
+            />
           }
         </Grid>
         <Grid item xs={8} style={{ position: "relative" }}>
@@ -70,7 +74,16 @@ export default function LikeabilityBar(props) {
           ></Box>
         </Grid>
         <Grid item xs={2}>
-          <div>Lv.{parseInt(exp / 100)}</div>
+          <div>
+            Lv.{" "}
+            <span
+              style={{
+                color: "#fda085",
+              }}
+            >
+              {parseInt(exp / 100)}
+            </span>
+          </div>
         </Grid>
         <Grid item xs={12}></Grid>
         <Grid item xs={12}></Grid>

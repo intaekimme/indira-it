@@ -13,7 +13,7 @@ import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Theme from "./Theme";
-
+import styledButton from "../css/button.module.css";
 export default function Signup() {
   //frontend image update
   const [imgUrl, setImgUrl] = React.useState("");
@@ -161,6 +161,9 @@ export default function Signup() {
                       width: "100px",
                       height: "100px",
                       borderRadius: "40%",
+                      border: "3px white solid",
+                      boxShadow:
+                        "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.3)",
                     }}
                   ></img>
                 )}
@@ -173,10 +176,10 @@ export default function Signup() {
                     height: "30px",
                     bottom: "45px",
                     right: "0px",
-                    fontFamily: "SBAggroB",
                   }}
                   variant="contained"
                   color="green"
+                  className={styledButton.btn2}
                 >
                   찾아보기
                   <input
@@ -218,10 +221,10 @@ export default function Signup() {
                     height: "30px",
                     bottom: "13px",
                     right: "0px",
-                    fontFamily: "SBAggroB",
                   }}
                   variant="contained"
                   color="green"
+                  className={styledButton.btn2}
                   onClick={() => sameCheck("nickname")}
                 >
                   중복확인
@@ -267,10 +270,10 @@ export default function Signup() {
                     height: "30px",
                     bottom: "13px",
                     right: "0px",
-                    fontFamily: "SBAggroB",
                   }}
                   variant="contained"
                   color="green"
+                  className={styledButton.btn2}
                   onClick={() => sameCheck("email")}
                 >
                   중복확인
@@ -353,11 +356,15 @@ export default function Signup() {
             <div>
               <Button
                 type="submit"
-                fullWidth
+                style={{
+                  width: "400px",
+                  height: "30px",
+                  right: "0px",
+                }}
+                sx={{ mt: 6, mb: 2 }}
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
                 color="green"
-                style={{ fontFamily: "SBAggroB" }}
+                className={styledButton.btn2}
               >
                 회원가입
               </Button>

@@ -64,6 +64,10 @@ export default function MainFeed() {
   };
 
   const handleShowSearch = () => {
+    if (tags.length === 0) {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
     setShowAll(false);
     setShowSave(false);
     setShowFollow(false);

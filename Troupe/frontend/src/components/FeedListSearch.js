@@ -32,9 +32,9 @@ export default function FeedListSearch(props) {
       },
     },
   );
-  console.log(FeedListSearchQuery.data);
-  console.log(FeedListSearchQuery.isLoading);
-
+  // console.log(FeedListSearchQuery.data);
+  // console.log(FeedListSearchQuery.isLoading);
+  const [change, setChange] = React.useState(false);
   if (!FeedListSearchQuery.isLoading) {
     console.log(FeedListSearchQuery.data);
     return (
@@ -50,25 +50,46 @@ export default function FeedListSearch(props) {
                     display: "flex",
                     flexDirection: "column",
                   }}
+                  style={{
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.5)",
+                  }}
                   elevation={0}
                 >
-                  <Typography
-                    gutterBottom
-                    style={{ fontSize: "20px" }}
-                    component="span"
-                  >
-                    <img
-                      src={datum.profileImageUrl}
-                      alt=""
-                      style={{
-                        borderRadius: "70%",
-                        objectFit: "cover",
-                        height: "20px",
-                        width: "20px",
-                      }}
-                    ></img>
-                    {datum.nickname}
-                  </Typography>
+                  <Grid container mt={1}>
+                    <Grid ml={1}>
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href={"/profile/" + datum.memberNo}
+                      >
+                        <img
+                          src={datum.profileImageUrl}
+                          alt=""
+                          style={{
+                            borderRadius: "70%",
+                            objectFit: "cover",
+                            height: "30px",
+                            width: "30px",
+                            boxShadow:
+                              "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                          }}
+                        ></img>
+                      </a>
+                    </Grid>
+                    <Grid ml={1} mb={2}>
+                      <Typography
+                        style={{
+                          fontSize: "13px",
+                          fontFamily: "SBAggroB",
+                          wordBreak: "break-all",
+                          overflow: "hidden",
+                        }}
+                        component="span"
+                      >
+                        {datum.nickname}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                   <Link href={"/feed/test"}>
                     <CardMedia
                       component="img"
@@ -85,12 +106,22 @@ export default function FeedListSearch(props) {
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
-                      margin: "0px",
+                      margin: "5px",
                       padding: "0px",
                     }}
                   >
-                    <FeedLikeButton></FeedLikeButton>
-                    <FeedSaveButton></FeedSaveButton>
+                    <Grid>
+                      <FeedLikeButton
+                        change={change}
+                        feedNo={datum.feedNo}
+                      ></FeedLikeButton>
+                    </Grid>
+                    <Grid mr={-3}>
+                      <FeedSaveButton
+                        change={change}
+                        feedNo={datum.feedNo}
+                      ></FeedSaveButton>
+                    </Grid>
                   </CardActions>
                 </Card>
               </Grid>
