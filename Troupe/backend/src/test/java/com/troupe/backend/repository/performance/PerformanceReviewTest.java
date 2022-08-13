@@ -32,6 +32,7 @@ public class PerformanceReviewTest {
     PerformanceReviewRepository performanceReviewRepository;
 
     @Test
+    @Transactional
     @DisplayName("공연후기 작성")
     public void saveTest() throws ParseException  {
         Member member = memberRepository.getById(3);
@@ -39,18 +40,18 @@ public class PerformanceReviewTest {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
-        for(int i=2; i<100; i++){
-            PerformanceReview performanceReview = PerformanceReview.builder()
-                    .member(member)
-                    .pf(performance)
-                    .createdTime(dateFormat.parse("20220804"))
-                    .isModified(false)
-                    .isRemoved(false)
-                    .content("댓글 "+i)
-                    .build();
-
-            PerformanceReview savePerformanceReview = performanceReviewRepository.save(performanceReview);
-        }
+//        for(int i=2; i<100; i++){
+//            PerformanceReview performanceReview = PerformanceReview.builder()
+//                    .member(member)
+//                    .pf(performance)
+//                    .createdTime(dateFormat.parse("20220804"))
+//                    .isModified(false)
+//                    .isRemoved(false)
+//                    .content("댓글 "+i)
+//                    .build();
+//
+//            PerformanceReview savePerformanceReview = performanceReviewRepository.save(performanceReview);
+//        }
 
 
 //        Assertions.assertEquals("댓글 1", savePerformanceReview.getContent());
@@ -83,6 +84,7 @@ public class PerformanceReviewTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("후기 번호에 해당하는 후기 내용 수정")
     public void updateReviewNo(){
         PerformanceReview performanceReview = performanceReviewRepository.findById(1).get();
@@ -119,6 +121,7 @@ public class PerformanceReviewTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("후기 번호에 해당하는 후기만 삭제, 대댓글은 삭제 안함")
     void 후기삭제(){
         PerformanceReview performanceReview = performanceReviewRepository.findById(1).get();

@@ -39,13 +39,26 @@ export default function Comment(props) {
       apiClient
         .getPerfChildReviewList(props.performanceNo, props.reviewNo)
         .then((data) => {
-          console.log(data);
-          // setchildComment(data);
+          const json = [];
+
+          data.forEach((item) => {
+            json.push({
+              memberNo: item.memberNo,
+              reviewNo: item.reviewNo,
+              profileImageUrl: item.profileImageUrl,
+              comment: item.comment,
+              nickname: item.nickname,
+              isRemoved: item.removed,
+              pfNo: item.pfNo,
+            });
+          });
+          setchildComments(json);
         });
     } else {
       apiClient
         .getFeedChildReviewList(props.feedNo, props.reviewNo)
         .then((data) => {
+          console.log(data);
           const json = [];
 
           data.forEach((item) => {
@@ -85,6 +98,8 @@ export default function Comment(props) {
   const childCommentList = () => {
     setIsChild(!isChild);
   };
+
+  //  댓글 수정
   const modifyComment = () => {
     setModify(!modify);
     if (modify) {
@@ -92,7 +107,11 @@ export default function Comment(props) {
         content: content,
       };
       if (!props.feedNo) {
-        //perf
+        apiClient
+          .perfReviewModify(props.performanceNo, props.reviewNo, data)
+          .then(() => {
+            setModify(!modify);
+          });
       } else {
         apiClient
           .feedCommentModify(props.feedNo, props.reviewNo, data)
@@ -102,14 +121,23 @@ export default function Comment(props) {
       }
     }
   };
+
+  //  수정 취소
   const modifyCancel = () => {
     setContent(props.comment);
     setModify(!modify);
   };
+
+  //  댓글 삭제
   const deleteComment = () => {
     if (window.confirm("삭제하시겠습니까?")) {
       if (!props.feedNo) {
-        //perf
+        apiClient
+          .perfReviewDelete(props.performanceNo, props.reviewNo)
+          .then(() => {
+            setContent("삭제된 댓글입니다.");
+            setDeleted(true);
+          });
       } else {
         apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
           setContent("삭제된 댓글입니다.");
@@ -118,11 +146,25 @@ export default function Comment(props) {
       }
     }
   };
+
+  //  댓글 등록 취소
   const cancelRegister = () => {
     setCancel(!cancel);
     setIsChildReviewRegister(!isChildReviewRegister);
   };
 
+  // console.log(props);
+  // console.log(`props.memberNo : ${props.memberNo}
+
+  // !props.isRemoved : ${!props.isRemoved}
+  // !deleted : ${!deleted}
+  // modify : ${modify}
+  // childComments : ${childComments}
+  // !props.parentCommentNo : ${!props.parentCommentNo}
+  // !cancel : ${!cancel}
+  // isChildReviewRegister : ${isChildReviewRegister}
+  // isChild : ${isChild}
+  // `);
   return (
     <Card sx={{ maxWidth: "100%", m: 2 }}>
       <CardHeader
@@ -155,6 +197,7 @@ export default function Comment(props) {
       <Grid>
         <Grid container justifyContent="flex-end">
           <Grid item>
+            {/* {props.memberNo === user && !props.isRemoved && !deleted ? ( */}
             {props.memberNo === user && !props.isRemoved && !deleted ? (
               modify ? (
                 <div>
@@ -201,7 +244,8 @@ export default function Comment(props) {
                 size="small"
                 aria-label="child-comment"
                 onClick={childCommentList}
-                color="black"
+                style={{ color: "black" }}
+                // color="black"
                 fontFamily="116watermelon"
               >
                 <FormatListBulletedIcon color="action"></FormatListBulletedIcon>
