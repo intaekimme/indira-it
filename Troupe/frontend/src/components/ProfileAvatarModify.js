@@ -1,16 +1,17 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import apiClient from "../apiClient";
+import AvatarSelectBar from "./AvatarSelectBar";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Button from "@mui/material/Button";
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+
+import stylesButton from "../css/button.module.css"
 
 import Avatar from "./Avatar";
 
@@ -20,17 +21,74 @@ export default function ProfileAvatarModify() {
 	//memberNo
 	const { memberNo } = useParams();
   //이 member의 아바타
-  const [avatar, setAvatar] = React.useState("");
+	const [avatar, setAvatar] = React.useState({
+		avatarHairResponse: {},
+		avatarEyeResponse: {},
+		avatarNoseResponse: {},
+		avatarMouthResponse: {},
+		avatarClothesResponse: {},
+		avatarShapeResponse: {},
+	});
+	
 
+	//아바타 이미지 목록
+	const [shapes, setShapes] = React.useState([]);
+	const [eyes, setEyes] = React.useState([]);
+	const [noses, setNoses] = React.useState([]);
+	const [mouthes, setMouthes] = React.useState([]);
+	const [hairs, setHairs] = React.useState([]);
+	const [clothes, setClothes] = React.useState([]);
+
+	//선택된 아바타 번호
+	const [shapeValue, setShapeValue] = React.useState(1);
+	const [eyeValue, setEyeValue] = React.useState(1);
+	const [noseValue, setNoseValue] = React.useState(1);
+	const [mouthValue, setMouthValue] = React.useState(1);
+	const [hairValue, setHairValue] = React.useState(1);
+	const [clothesValue, setClothesValue] = React.useState(1);
+
+	//memberNo update 시 아바타 update
 	React.useEffect(() => {
 		if (!memberNo) {
 			return;
 		}
     apiClient.getMemberAvatar(memberNo).then((data) => {
-      console.log(data);
+			console.log(data);
       setAvatar(data);
+
+			setShapeValue(data.avatarShapeResponse.shapeNo);
+			setEyeValue(data.avatarEyeResponse.eyeNo);
+			setNoseValue(data.avatarNoseResponse.noseNo);
+			setMouthValue(data.avatarMouthResponse.mouthNo);
+			setHairValue(data.avatarHairResponse.hairNo);
+			setClothesValue(data.avatarClothesResponse.clothesNo);
     });
 	}, [memberNo]);
+
+	React.useEffect(() => {
+		const avatarData = {
+			avatarShapeResponse: (shapes && !(shapes.length===0)) ? shapes[shapeValue - 1] : "",
+			avatarEyeResponse: (eyes && !(eyes.length===0)) ? eyes[eyeValue - 1] : "",
+			avatarNoseResponse: (noses && !(noses.length===0)) ? noses[noseValue - 1] : "" ,
+			avatarMouthResponse: (mouthes && !(mouthes.length===0)) ? mouthes[mouthValue - 1] : "" ,
+			avatarHairResponse: (hairs && !(hairs.length===0)) ? hairs[hairValue - 1] : "" ,
+			avatarClothesResponse: (clothes && !(clothes.length===0)) ? clothes[clothesValue - 1] : "" ,
+		}
+		setAvatar(avatarData);
+		console.log(avatarData);
+	}, [shapeValue, eyeValue, noseValue, mouthValue, hairValue, clothesValue]);
+
+	React.useEffect(() => {
+		apiClient.getAvatarListAll().then((data) => {
+			console.log(data.hairList);
+			setShapes(data.shapeList);
+			setEyes(data.eyeList);
+			setNoses(data.noseList);
+			setMouthes(data.mouthList);
+			setHairs(data.hairList);
+			setClothes(data.clothesList);
+		});
+	}, []);
 
 	//화면 width에 따른 화면분할여부
 	const [gridItemxs, setGridItemxs] = React.useState(window.innerWidth < 1000 ? 12 : 6);
@@ -48,48 +106,6 @@ export default function ProfileAvatarModify() {
 		window.addEventListener("resize", handleGrid);
 		console.log(memberNo);
 	}, [window.innerWidth]);
-
-	const [shapes, setShapes] = React.useState([]);
-	const [eyes, setEyes] = React.useState([]);
-	const [noses, setNoses] = React.useState([]);
-	const [mouthes, setMouthes] = React.useState([]);
-	const [hairs, setHairs] = React.useState([]);
-	const [clothes, setClothes] = React.useState([]);
-
-	React.useEffect(() => {
-		// apiClient.getAvatarList().then((data) => {
-		// 	setShape(data.shape);
-		// 	setEye(data.eye);
-		// 	setNose(data.nose);
-		// 	setMouth(data.mouth);
-		// 	setHair(data.hair);
-		// 	setClothes(data.clothes);
-		// });
-		apiClient.getAvatarList("shape").then((data) => {
-			setShapes(data);
-			console.log(data);
-		});
-		apiClient.getAvatarList("eye").then((data) => {
-			setEyes(data);
-			console.log(data);
-		});
-		apiClient.getAvatarList("nose").then((data) => {
-			setNoses(data);
-			console.log(data);
-		});
-		apiClient.getAvatarList("mouth").then((data) => {
-			setMouthes(data);
-			console.log(data);
-		});
-		apiClient.getAvatarList("hair").then((data) => {
-			setHairs(data);
-			console.log(data);
-		});
-		apiClient.getAvatarList("clothes").then((data) => {
-			setClothes(data);
-			console.log(data);
-		});
-	}, []);
 	
 	return (
     <ThemeProvider theme={theme}>
@@ -99,26 +115,27 @@ export default function ProfileAvatarModify() {
         style={{ justifyContent: "center", alignItems: "center" }}
       >
         <Grid container spacing={2} style={{ textAlign: "center" }}>
-          <Grid
+					<Grid
             item
             xs={gridItemxs}
             container
             justifyContent="center"
-            alignItems="center"
+            alignItems="flex-end"
             style={{
               backgroundColor: "gray",
               paddingRight: 20,
               paddingBottom: 50,
               position: "relative",
             }}
-          >
-            <Avatar
-              avatarResponse={avatar}
-              imgWidth={75 * 4}
-              imgHeight={100 * 4}
-              divWidth={"100%"}
-              divHeight={"100%"}
-            />
+					>
+						<Avatar
+								avatarResponse={ avatar }
+								imgWidth={75 * 4}
+								imgHeight={100 * 4}
+								divWidth={75 * 4}
+								divHeight={100 * 4}
+						/>
+						<Grid item xs={12}><Button className={stylesButton.btn} style={{color:"black", backgroundColor:"#44FFC8"}}>Finish</Button></Grid>
           </Grid>
           <Grid
             item
@@ -133,116 +150,44 @@ export default function ProfileAvatarModify() {
                 Label placement
               </FormLabel>
               <Grid item xs={12}>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-form-control-label-placement"
-                  name="position"
-                  defaultValue="top"
-                >
-									{hairs.slice(0,3).map((hair) => (
-										<Grid item xs={ 4 }>
-											<FormControlLabel
-												key={`hair${hair.hairNo}`}
-												value={hair.hairNo}
-												control={<Radio />}
-												label={
-													<img src={hair.hairUrl} alt={hair.hairUrl} width="100%" height="100%"/>
-												}
-												labelPlacement="bottom"
-											/>
-										</Grid>
-                  ))}
-                </RadioGroup>
+                <AvatarSelectBar
+                  string={"hair"}
+                  imgDatas={hairs}
+                  currentValue={hairValue}
+                  setValue={setHairValue}
+                />
               </Grid>
               <Grid item xs={12}>
-								<RadioGroup
-                  row
-                  aria-labelledby="demo-form-control-label-placement"
-                  name="position"
-                  defaultValue="top"
-                >
-                  {eyes.slice(0,3).map((eye) => (
-                    <Grid item xs={ 4 }>
-										<FormControlLabel
-											key={`hair${eye.eyeNo}`}
-											value={eye.eyeNo}
-											control={<Radio />}
-											label={
-												<img src={eye.eyeUrl} alt={eye.eyeUrl} width="100%" height="100%"/>
-											}
-											labelPlacement="bottom"
-										/>
-									</Grid>
-                  ))}
-                </RadioGroup>
+                <AvatarSelectBar
+                  string={"eye"}
+                  imgDatas={eyes}
+                  currentValue={eyeValue}
+                  setValue={setEyeValue}
+                />
               </Grid>
               <Grid item xs={12}>
-								<RadioGroup
-                  row
-                  aria-labelledby="demo-form-control-label-placement"
-                  name="position"
-                  defaultValue="top"
-                >
-                  {noses.slice(0,3).map((nose) => (
-                    <Grid item xs={ 4 }>
-										<FormControlLabel
-											key={`hair${nose.noseNo}`}
-											value={nose.noseNo}
-											control={<Radio />}
-											label={
-												<img src={nose.noseUrl} alt={nose.noseUrl} width="100%" height="100%"/>
-											}
-											labelPlacement="bottom"
-										/>
-									</Grid>
-                  ))}
-                </RadioGroup>
+                <AvatarSelectBar
+                  string={"nose"}
+                  imgDatas={noses}
+                  currentValue={noseValue}
+                  setValue={setNoseValue}
+                />
               </Grid>
               <Grid item xs={12}>
-								<RadioGroup
-                  row
-                  aria-labelledby="demo-form-control-label-placement"
-                  name="position"
-                  defaultValue="top"
-								>
-									<Grid item xs={1}>dkdk</Grid>
-									{mouthes.slice(0,3).map((mouth) => (
-                    <Grid item xs={3}>
-										<FormControlLabel
-											key={`hair${mouth.mouthNo}`}
-											value={mouth.mouthNo}
-											control={<Radio />}
-											label={
-												<img src={mouth.mouthUrl} alt={mouth.mouthUrl} width="100%" height="100%"/>
-											}
-											labelPlacement="bottom"
-										/>
-									</Grid>
-									))}
-									<Grid item xs={1}>dkdk</Grid>
-                </RadioGroup>
+                <AvatarSelectBar
+                  string={"mouth"}
+                  imgDatas={mouthes}
+                  currentValue={mouthValue}
+                  setValue={setMouthValue}
+                />
               </Grid>
               <Grid item xs={12}>
-								<RadioGroup
-                  row
-                  aria-labelledby="demo-form-control-label-placement"
-                  name="position"
-                  defaultValue="top"
-                >
-                  {clothes.slice(0,3).map((cloth) => (
-                    <Grid item xs={ 4 }>
-										<FormControlLabel
-											key={`hair${cloth.clothesNo}`}
-											value={cloth.clothesNo}
-											control={<Radio />}
-											label={
-												<img src={cloth.clothesUrl} alt={cloth.clothesUrl} width="100%" height="100%"/>
-											}
-											labelPlacement="bottom"
-										/>
-									</Grid>
-                  ))}
-                </RadioGroup>
+                <AvatarSelectBar
+                  string={"clothes"}
+                  imgDatas={clothes}
+                  currentValue={clothesValue}
+                  setValue={setClothesValue}
+                />
               </Grid>
             </FormControl>
           </Grid>
