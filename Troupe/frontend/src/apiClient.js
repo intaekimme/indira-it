@@ -337,7 +337,7 @@ const apiClient = {
   },
 
   //아바타 번호, 이미지목록 불러오기
-  getAvatarList: () => {
+  getAvatarListAll: () => {
     return instance
       .get(`/avatar/all`)
       .then((response) => {

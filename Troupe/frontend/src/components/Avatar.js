@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 
 export default function Avatar(props) {
-	const avatarResponse = props.avatarResponse;
+	const [avatarResponse, setAvatarResponse] = React.useState(props.avatarResponse);
   const [imgWidth, setImgWidth] = React.useState(75);
   const [imgHeight, setImgHeight] = React.useState(100);
   const [divWidth, setDivWidth] = React.useState(75);
   const [divHeight, setDivHeight] = React.useState(50);
   const [left, setLeft] = React.useState(0);
   const [top, setTop] = React.useState(0);
-  useEffect(() => {
+  React.useEffect(() => {
     if (props.imgWidth) {
       setImgWidth(props.imgWidth);
     }
@@ -29,11 +29,17 @@ export default function Avatar(props) {
       setTop(props.top);
     }
   }, []);
+  React.useEffect(() => {
+    if (props.avatarResponse) {
+      console.log(props.avatarResponse);
+      setAvatarResponse(props.avatarResponse);
+    }
+  },[props.avatarResponse])
   return avatarResponse ? (
     <div style={{ position:"relative", width: divWidth, height: divHeight, paddingRight: "30px" }}>
       <img
-        src={avatarResponse.shapeUrl}
-        alt={avatarResponse.shapeUrl}
+        src={avatarResponse.avatarShapeResponse.shapeUrl}
+        alt={avatarResponse.avatarShapeResponse.sshapeUrl}
         style={{
           position: "absolute",
           top: top,
@@ -43,8 +49,8 @@ export default function Avatar(props) {
         }}
       ></img>
       <img
-        src={avatarResponse.clothesUrl}
-        alt={avatarResponse.clothesUrl}
+        src={avatarResponse.avatarClothesResponse.clothesUrl}
+        alt={avatarResponse.avatarClothesResponse.clothesUrl}
         style={{
           position: "absolute",
           top: top,
@@ -54,8 +60,8 @@ export default function Avatar(props) {
         }}
       ></img>
       <img
-        src={avatarResponse.eyeUrl}
-        alt={avatarResponse.eyeUrl}
+        src={avatarResponse.avatarEyeResponse.eyeUrl}
+        alt={avatarResponse.avatarEyeResponse.eyeUrl}
         style={{
           position: "absolute",
           top: top,
@@ -65,8 +71,8 @@ export default function Avatar(props) {
         }}
       ></img>
       <img
-        src={avatarResponse.mouthUrl}
-        alt={avatarResponse.mouthUrl}
+        src={avatarResponse.avatarMouthResponse.mouthUrl}
+        alt={avatarResponse.avatarMouthResponse.mouthUrl}
         style={{
           position: "absolute",
           top: top,
@@ -76,8 +82,8 @@ export default function Avatar(props) {
         }}
       ></img>
       <img
-        src={avatarResponse.noseUrl}
-        alt={avatarResponse.noseUrl}
+        src={avatarResponse.avatarNoseResponse.noseUrl}
+        alt={avatarResponse.avatarNoseResponse.noseUrl}
         style={{
           position: "absolute",
           top: top,
@@ -87,8 +93,8 @@ export default function Avatar(props) {
         }}
       ></img>
       <img
-        src={avatarResponse.hairUrl}
-        alt={avatarResponse.hairUrl}
+        src={avatarResponse.avatarHairResponse.hairUrl}
+        alt={avatarResponse.avatarHairResponse.hairUrl}
         style={{
           position: "absolute",
           top: top,
