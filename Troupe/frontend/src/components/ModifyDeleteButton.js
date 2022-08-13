@@ -21,7 +21,7 @@ export default function ModifyDeleteButton(props) {
   return (
     <div style={{ float: "right", backgroundColor: "#FFF" }}>
       <Button
-        href="/feed/list"
+        href="/feed/list/all/0"
         style={{
           margin: "5px",
           backgroundColor: "transparent",

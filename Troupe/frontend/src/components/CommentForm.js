@@ -8,7 +8,7 @@ export default function CommentForm(props) {
   const [isChild, setIsChild] = useState(props.isChild);
 
   useEffect(() => {
-    console.log(props.isChild);
+    // console.log(props.isChild);
   }, []);
 
   const reset = () => setReview("");
@@ -44,7 +44,7 @@ export default function CommentForm(props) {
   };
 
   const childReviewRegister = () => {
-    console.log(props.performanceNo);
+    // console.log(props.performanceNo);
     const data = {
       content: review,
       parentCommentNo: props.reviewNo,

@@ -79,6 +79,7 @@ public class PerformanceReviewService {
                     .nickname(member.getNickname())
                     .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(request.getContent())
+                    .isRemoved(savedReview.getRemoved())
                     .build();
         }catch (Exception e){
 
@@ -122,6 +123,7 @@ public class PerformanceReviewService {
                     .nickname(member.getNickname())
                     .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(review.getContent())
+                    .isRemoved(review.getRemoved())
                     .build()
             );
         }
@@ -172,6 +174,7 @@ public class PerformanceReviewService {
                     .nickname(member.getNickname())
                     .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(review.getContent())
+                    .isRemoved(review.getRemoved())
                     .build()
             );
         }
