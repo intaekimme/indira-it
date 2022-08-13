@@ -358,7 +358,7 @@ function PerfDetail() {
                     <li id={i}>
                       {item.name} {item.price}
                     </li>
-                  ),
+                  )
                 )}
                 {/* <li>가격: 전석 33,000원</li> */}
               </ul>
@@ -371,7 +371,7 @@ function PerfDetail() {
         <div style={{ margin: "12px" }}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Item>
+              <Item style={{ background: "#FFFF" }}>
                 <CommentList
                   refreshFunction={refreshFunction}
                   commentList={commentList}

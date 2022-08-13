@@ -183,6 +183,7 @@ public class PerformanceService {
             performanceResponseList.add(
                     PerformanceResponse.builder()
                             .pfNo(p.getId())
+                            .title(p.getTitle())
                             .description(p.getDescription())
                             .image(imgUrlList)
                             .location(p.getLocation())
@@ -232,6 +233,7 @@ public class PerformanceService {
             performanceResponseList.add(
                     PerformanceResponse.builder()
                             .pfNo(p.getId())
+                            .title(p.getTitle())
                             .description(p.getDescription())
                             .image(imgUrlList)
                             .location(p.getLocation())

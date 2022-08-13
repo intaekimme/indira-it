@@ -22,5 +22,13 @@ public interface PerformanceReviewRepository extends JpaRepository <PerformanceR
      * @return
      */
     List<PerformanceReview> findByPf(Performance performance);
+
+    /**
+     * 공연 번호에 해당하는 원댓글만 불러오기(대댓글은 없음)
+     * @param performance
+     * @return
+     */
+    Optional<List<PerformanceReview>> findByPfAndParentPerformanceReviewIsNull(Performance performance);
+
     List<PerformanceReview> findByPfAndParentPerformanceReview(Performance ParentPerformance, PerformanceReview performanceReview);
 }
