@@ -274,6 +274,23 @@ const apiClient = {
         return null;
       });
   },
+  //유저아바타 수정
+  modifyAvatar: (avatarData) =>{
+    return instance
+      .patch(`/member/myavatar`, avatarData, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("아바타 수정 성공" + response);
+        return true;
+      })
+      .catch((error) => {
+        alert("아바타 수정 실패" + error);
+        return false;
+      });
+  },
   //회원정보 불러오기
   getMemberInfo: (memberNo) => {
     return instance
