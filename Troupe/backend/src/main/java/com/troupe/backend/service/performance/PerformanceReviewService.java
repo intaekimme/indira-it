@@ -107,7 +107,7 @@ public class PerformanceReviewService {
     }
 
     /**
-     * 공연 후기 리스트 반환
+     * 공연 후기 리스트 반환(대댓글 없음)
      * @param pfNo
      * @return
      */
@@ -115,7 +115,9 @@ public class PerformanceReviewService {
     public List<PfReviewResponse> findPfReviewList(int pfNo){
         Performance performance = performanceRepository.findById(pfNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfAndParentPerformanceReviewIsNull(performance)
+                .orElse(new ArrayList<>());
+
         List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
         for (PerformanceReview review : performanceReviewList){
             Member member = review.getMember();

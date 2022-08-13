@@ -36,7 +36,7 @@ export default function Comment(props) {
     if (sessionStorage.getItem("loginCheck"))
       setUser(parseInt(sessionStorage.getItem("loginMember")));
     if (!props.feedNo) {
-      //perf
+      //  공연 후기 대댓글 목록 불러오기
       apiClient
         .getPerfChildReviewList(props.performanceNo, props.reviewNo)
         .then((data) => {
@@ -56,6 +56,7 @@ export default function Comment(props) {
           setchildComments(json);
         });
     } else {
+      //  피드 댓글의 대댓글 목록 불러오기
       apiClient
         .getFeedChildReviewList(props.feedNo, props.reviewNo)
         .then((data) => {
