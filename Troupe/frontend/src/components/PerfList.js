@@ -37,7 +37,6 @@ export default function PerfListCard(){
   if (!performanceListQuery.isLoading) {
     return (
           <Grid container spacing={4}>
-            
             {performanceListQuery.data.pages.map((page) => (
               page.map((datum) => (
                 <Grid item key={datum.pfNo} xs={12} sm={6} md={4}>
