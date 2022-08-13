@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Theme from "./Theme";
 
-export default function PlusButton(pros) {
+export default function PlusButton(props) {
   return (
     <ThemeProvider theme={Theme}>
       <Container sx={{ py: 4 }} maxWidth="md">
@@ -15,7 +15,7 @@ export default function PlusButton(pros) {
             variant="contained"
             color="yellow"
             size="large"
-            onClick={pros.handleCard}
+            onClick={props.handleCard}
           >
             <Typography gutterBottom fontFamily="SBAggroB" fontSize="17px">
               더보기

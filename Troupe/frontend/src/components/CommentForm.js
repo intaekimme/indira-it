@@ -44,7 +44,7 @@ export default function CommentForm(props) {
   };
 
   const childReviewRegister = () => {
-    console.log(props.performanceNo);
+    // console.log(props.performanceNo);
     const data = {
       content: review,
     };

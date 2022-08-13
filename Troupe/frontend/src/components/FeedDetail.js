@@ -23,7 +23,7 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
-  margin: "100px 0px",
+  margin: "30px 0px",
 }));
 
 export default function FeedDetail(props) {
@@ -92,15 +92,6 @@ export default function FeedDetail(props) {
       <Box className={stylesModal.inner}>
         <Grid container spacing={4}>
           <Grid item xs={6} className={stylesModal.img}>
-            {/* <Carousel>
-              {Object.values(img) ? (
-                Object.values(img).map((item, id) => (
-                  <Item key={id} item={item} />
-                ))
-              ) : (
-                <div></div>
-              )}
-            </Carousel> */}
             <MUICarousel
               autoPlay={false}
               animation="slide"
@@ -118,19 +109,13 @@ export default function FeedDetail(props) {
           <Grid item xs={6}>
             <ModifyDeleteButton feedNo={feedNo} memberNo={feedInfo.memberNo} />
             <Item elevation={0}>
-              <Grid
-                style={{
-                  fontSize: "medium",
-                  paddingLeft: "0px",
-                  textAlign: "left",
-                }}
-              >
-                <Grid container item xs={12}>
-                  <a
-                    style={{ textDecoration: "none" }}
-                    href={"/profile/" + feedInfo.memberNo}
-                  >
-                    <Grid item xs={12}>
+              <Grid container item xs={12} spacing={2}>
+                <Grid container item xs={9}>
+                  <Grid>
+                    <a
+                      style={{ textDecoration: "none" }}
+                      href={"/profile/" + feedInfo.memberNo}
+                    >
                       <img
                         src={feedInfo.profileImageUrl}
                         alt="profile"
@@ -142,43 +127,61 @@ export default function FeedDetail(props) {
                           marginRight: "10px",
                         }}
                       ></img>
-                      {feedInfo.nickname}
-                    </Grid>
-                  </a>
-                  {user !== feedInfo.memberNo ? (
-                    <Grid>
-                      <FollowButton
-                        memberNo={feedInfo.memberNo}
-                        style={{ textAlign: "top" }}
-                      ></FollowButton>
-                    </Grid>
+                    </a>
+                  </Grid>
+                  <Grid ml={1} mt={3}>
+                    {feedInfo.nickname}
+                  </Grid>
+                </Grid>
+                {user !== feedInfo.memberNo ? (
+                  <Grid item xs={3}>
+                    <FollowButton
+                      memberNo={feedInfo.memberNo}
+                      style={{ textAlign: "top" }}
+                    ></FollowButton>
+                  </Grid>
+                ) : (
+                  <Grid item xs={2}></Grid>
+                )}
+              </Grid>
+              <Grid item xs={11}>
+                <div
+                  style={{
+                    paddingTop: "20px",
+                    textAlign: "left",
+                    fontSize: "medium",
+                  }}
+                >
+                  {feedInfo.content}
+                </div>
+                <div
+                  className={stylesTag.HashWrapOuter}
+                  style={{ marginTop: "100px" }}
+                >
+                  {feedInfo.tags ? (
+                    feedInfo.tags.map((item, id) => (
+                      <div
+                        className={stylesTag.HashWrapInner}
+                        key={id}
+                        onClick={() => searchTag(item.trim())}
+                      >
+                        # {item}
+                      </div>
+                    ))
                   ) : (
-                    <Grid></Grid>
+                    <div></div>
                   )}
-                </Grid>
-                <Grid item xs={11}>
-                  <div style={{ paddingTop: "20px" }}>{feedInfo.content}</div>
-                  <div className={stylesTag.HashWrapOuter}>
-                    {feedInfo.tags ? (
-                      feedInfo.tags.map((item, id) => (
-                        <div
-                          className={stylesTag.HashWrapInner}
-                          key={id}
-                          onClick={() => searchTag(item.trim())}
-                        >
-                          # {item}
-                        </div>
-                      ))
-                    ) : (
-                      <div></div>
-                    )}
-                  </div>
-                </Grid>
+                </div>
               </Grid>
             </Item>
-            <FeedLikeButton feedNo={feedNo}></FeedLikeButton>
-            <FeedSaveButton feedNo={feedNo}></FeedSaveButton>
-            <Grid container margin="3%  3% 3% 3% ">
+            <Grid container spacing={2} ml={1}>
+              <Grid item xs={10}>
+                <FeedLikeButton feedNo={feedNo}></FeedLikeButton>
+              </Grid>
+              <Grid item xs={2}>
+                <FeedSaveButton feedNo={feedNo}></FeedSaveButton>
+              </Grid>
+
               <Grid item xs={11}>
                 <Item>
                   <CommentList

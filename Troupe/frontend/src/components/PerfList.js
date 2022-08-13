@@ -13,6 +13,7 @@ import Link from "@mui/material/Link";
 import { useInfiniteQuery, useQuery } from "react-query";
 import apiClient from "../apiClient";
 import { useParams } from "react-router-dom";
+import PlusButton from "./PlusButton";
 
 export default function PerfListCard() {
   // let {isLoading, data} = useQuery('performanceList', async () => await apiClient.getPerfList(pageNumber));
@@ -142,16 +143,9 @@ export default function PerfListCard() {
             </Grid>
           ))
         )}
-        <div style={{ display: "flex", justifyContent: "center", pb: 7 }}>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="large"
-            onClick={performanceListQuery.fetchNextPage}
-          >
-            더보기
-          </Button>
-        </div>
+        <PlusButton
+          handleCard={performanceListQuery.fetchNextPage}
+        ></PlusButton>
       </Grid>
     );
   }

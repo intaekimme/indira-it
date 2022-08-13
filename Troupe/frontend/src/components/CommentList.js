@@ -9,6 +9,7 @@ export default function CommentList(props) {
 
   const comments = props.commentList;
   // console.log(comments);
+
   return (
     <div>
       <CommentCount listSize={props.commentList.length} />

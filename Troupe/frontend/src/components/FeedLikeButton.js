@@ -72,7 +72,7 @@ export default function FeedLikeButton(props) {
           <Grid item xs={1}>
             <FavoriteBorderIcon></FavoriteBorderIcon>
           </Grid>
-          <Grid item xs={11} paddingTop="2px">
+          <Grid item xs={11} paddingTop="3px">
             <div style={{ display: "inline-block", paddingBottom: "10px" }}>
               {likeCount}
             </div>

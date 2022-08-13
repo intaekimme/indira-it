@@ -50,17 +50,17 @@ export default function FeedSaveButton(props) {
       >
         {save ? (
           <Grid container item xs={12}>
-            <Grid item xs={1}>
+            <Grid item xs={11}>
               <TurnedInIcon color="yellow"></TurnedInIcon>
-              <Grid item xs={11} paddingTop="3px"></Grid>
             </Grid>
+            <Grid item xs={1} paddingTop="3px"></Grid>
           </Grid>
         ) : (
           <Grid container item xs={12}>
-            <Grid item xs={1}>
+            <Grid item xs={11}>
               <TurnedInNotIcon></TurnedInNotIcon>
-              <Grid item xs={11} paddingTop="3px"></Grid>
             </Grid>
+            <Grid item xs={1} paddingTop="3px"></Grid>
           </Grid>
         )}
       </Button>
