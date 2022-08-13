@@ -36,7 +36,7 @@ export default function Avatar(props) {
     }
   },[props.avatarResponse])
   return avatarResponse ? (
-    <div style={{ position:"relative", width: divWidth, height: divHeight, paddingRight: "30px" }}>
+    <div style={{ position:"relative", width: divWidth, height: divHeight, paddingRight: "30px", zIndex:"4" }}>
       <img
         src={avatarResponse.avatarShapeResponse.shapeUrl}
         alt={avatarResponse.avatarShapeResponse.sshapeUrl}

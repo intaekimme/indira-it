@@ -48,6 +48,10 @@ export default function FeedListFollow() {
                     display: "flex",
                     flexDirection: "column",
                   }}
+                  style={{
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.5)",
+                  }}
                   elevation={0}
                 >
                   <Typography

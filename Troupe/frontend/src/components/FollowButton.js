@@ -49,7 +49,11 @@ export default function FollowButton(props) {
       <Button
         className={styledButton.btn}
         onClick={followClick}
-        style={{ fontFamily: "SBAggroB", width: "130px", color: "black" }}
+        style={{
+          width: "130px",
+          color: "black",
+          border: "3px solid white",
+        }}
       >
         - UnFollow
       </Button>
@@ -57,13 +61,12 @@ export default function FollowButton(props) {
   ) : (
     <ThemeProvider theme={Theme}>
       <Button
-        className={styledButton.btn}
+        className={styledButton.btn2}
+        variant="contained"
         color="green"
         style={{
-          // backgroundColor: "#45E3C6",
-          backgroundColor: "#66cc66",
-          color: "white",
-          fontFamily: "SBAggroB",
+          width: "130px",
+          border: "3px solid white",
         }}
         onClick={followClick}
       >

@@ -10,14 +10,12 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
+import Theme from "./Theme";
 import styledButton from "../css/button.module.css";
 
-import Stage from "../img/stage.jpg"
-
-const theme = createTheme();
+import Stage from "../img/stage.jpg";
 
 export default function ProfileForm() {
   //memberNo
@@ -35,7 +33,7 @@ export default function ProfileForm() {
   //   // removed: false,
   //   // }
   // );
-  
+
   //default nickname
   const [defaultNickname, setDefaultNickname] = React.useState("");
 
@@ -51,7 +49,7 @@ export default function ProfileForm() {
   const [description, setDescription] = React.useState("");
   //memberType 초기화
   const [memberType, setMemberType] = React.useState("AUDIENCE");
-  
+
   //nickname 중복확인
   const [nicknameCheck, setNicknameCheck] = React.useState(true);
   //nickname 길이확인
@@ -86,10 +84,9 @@ export default function ProfileForm() {
   //nickname Change
   const changeNickname = (e) => {
     setNickname(e.target.value);
-    if (defaultNickname===e.target.value) {
+    if (defaultNickname === e.target.value) {
       setNicknameCheck(true);
-    }
-    else {
+    } else {
       setNicknameCheck(false);
     }
   };
@@ -123,29 +120,32 @@ export default function ProfileForm() {
   //입력된 값이 올바른지 확인
   const checkValue = (data) => {
     //현재 비밀번호 일치 확인
-    return apiClient.pwCurrentCheck(data.currentPassword).then((data) => {
-      setPwCurrent(data);
-      if (!pwCurrent) {
-        return false;
-      } else {
-        //닉네임 2~20자
-        const nicknameLength = data.nickname.length;
-        const nicknameCheck = nicknameLength >= 2 && nicknameLength <= 20;
-        setNicknameLength(nicknameCheck);
-        //password 8~20자
-        const pwLength = data.password.length;
-        const pwCheck = pwLength >= 8 && pwLength <= 20;
-        setPwLength(pwCheck);
-        //paswword 일치확인
-        const pwSame = data.password === data.passwordCheck;
-        setPwSame(pwSame);
+    return apiClient
+      .pwCurrentCheck(data.currentPassword)
+      .then((data) => {
+        setPwCurrent(data);
+        if (!pwCurrent) {
+          return false;
+        } else {
+          //닉네임 2~20자
+          const nicknameLength = data.nickname.length;
+          const nicknameCheck = nicknameLength >= 2 && nicknameLength <= 20;
+          setNicknameLength(nicknameCheck);
+          //password 8~20자
+          const pwLength = data.password.length;
+          const pwCheck = pwLength >= 8 && pwLength <= 20;
+          setPwLength(pwCheck);
+          //paswword 일치확인
+          const pwSame = data.password === data.passwordCheck;
+          setPwSame(pwSame);
 
-        return nicknameCheck && pwCheck && pwSame;
-      }
-    }).catch((error) => {
-      console.log(error);
-      return false;
-    });
+          return nicknameCheck && pwCheck && pwSame;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        return false;
+      });
   };
 
   //회원가입버튼 클릭
@@ -159,7 +159,7 @@ export default function ProfileForm() {
       profileImage: formData.get("imgUpload"),
       nickname: formData.get("nickname"),
       email: formData.get("email"),
-      currentPassword: formData.get('currentpassword'),
+      currentPassword: formData.get("currentpassword"),
       password: formData.get("password"),
       passwordCheck: formData.get("passwordCheck"),
       profileMessage: formData.get("profileMessage"),
@@ -180,7 +180,7 @@ export default function ProfileForm() {
     window.location.href = `/profile/${memberNo}`;
   };
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Container maxWidth="xs">
         <CssBaseline />
         <Box
@@ -189,6 +189,8 @@ export default function ProfileForm() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            fontFamily: "SBAggroB",
+            paddingBottom: "100px",
           }}
         >
           <form
@@ -212,6 +214,9 @@ export default function ProfileForm() {
                       width: "100px",
                       height: "100px",
                       borderRadius: "40%",
+                      border: "3px white solid",
+                      boxShadow:
+                        "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.3)",
                     }}
                   ></img>
                 )}
@@ -220,32 +225,31 @@ export default function ProfileForm() {
                 <Button
                   style={{
                     position: "absolute",
-                    width: "80px",
+                    width: "100px",
                     height: "30px",
-                    bottom: "0px",
+                    bottom: "40px",
                     right: "0px",
-                    backgroundColor: "#CCCCCC",
-                    color: "black",
                   }}
+                  className={styledButton.btn2}
                 >
                   찾아보기
+                  <input
+                    style={{
+                      position: "absolute",
+                      width: "80px",
+                      height: "30px",
+                      bottom: "0px",
+                      right: "0px",
+                      opacity: "0%",
+                    }}
+                    id="profileImage"
+                    className="profileImage"
+                    name="profileImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={changeImage}
+                  />{" "}
                 </Button>
-                <input
-                  style={{
-                    position: "absolute",
-                    width: "80px",
-                    height: "30px",
-                    bottom: "0px",
-                    right: "0px",
-                    opacity: "0%",
-                  }}
-                  id="profileImage"
-                  className="profileImage"
-                  name="profileImage"
-                  type="file"
-                  accept="image/*"
-                  onChange={changeImage}
-                />
               </Grid>
               <Grid item xs={6}>
                 <TextField
@@ -255,6 +259,8 @@ export default function ProfileForm() {
                   label="memberType"
                   id="memberType"
                   value={memberType}
+                  style={{ backgroundColor: "white" }}
+                  disabled
                 />
               </Grid>
 
@@ -272,9 +278,8 @@ export default function ProfileForm() {
                       height: "30px",
                       bottom: "0px",
                       right: "0px",
-                      backgroundColor: "#CCCCCC",
-                      color: "black",
                     }}
+                    className={styledButton.btn2}
                     // onClick={() => 본인인증()}
                   >
                     본인인증
@@ -284,7 +289,7 @@ export default function ProfileForm() {
               <Grid
                 item
                 xs={12}
-                style={{ margin: "10px", textAlign: "left", fontSize: "20px" }}
+                style={{ textAlign: "left", fontSize: "20px" }}
               >
                 <TextField
                   required
@@ -293,6 +298,8 @@ export default function ProfileForm() {
                   label="email"
                   id="email"
                   value={email}
+                  style={{ backgroundColor: "white" }}
+                  disabled
                 />
               </Grid>
               <Grid item xs={9}>
@@ -306,6 +313,7 @@ export default function ProfileForm() {
                     label="닉네임"
                     defaultValue={defaultNickname}
                     onChange={changeNickname}
+                    style={{ backgroundColor: "white" }}
                   />
                 ) : (
                   <div></div>
@@ -317,11 +325,10 @@ export default function ProfileForm() {
                     position: "absolute",
                     width: "80px",
                     height: "30px",
-                    bottom: "0px",
+                    bottom: "13px",
                     right: "0px",
-                    backgroundColor: "#CCCCCC",
-                    color: "black",
                   }}
+                  className={styledButton.btn2}
                   onClick={() => sameCheck("nickname")}
                 >
                   중복확인
@@ -356,6 +363,7 @@ export default function ProfileForm() {
                   type="password"
                   id="currentpassword"
                   autoFocus
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               {pwCurrent ? (
@@ -375,6 +383,7 @@ export default function ProfileForm() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               {pwLength ? (
@@ -394,6 +403,7 @@ export default function ProfileForm() {
                   type="password"
                   id="passwordCheck"
                   autoComplete="new-password"
+                  style={{ backgroundColor: "white" }}
                 />
               </Grid>
               {pwSame ? (
@@ -414,6 +424,7 @@ export default function ProfileForm() {
                     label="소개글 입력"
                     defaultValue={description}
                     name="description"
+                    style={{ backgroundColor: "white" }}
                   />
                 ) : (
                   <div></div>
@@ -436,13 +447,11 @@ export default function ProfileForm() {
               <Grid item xs={6}>
                 <Button
                   type="submit"
-                  className={styledButton.btn}
                   style={{
                     width: "100%",
                     height: "100%",
-                    backgroundColor: "#45E3C6",
-                    color: "black",
                   }}
+                  className={styledButton.btn3}
                 >
                   프로필수정
                 </Button>

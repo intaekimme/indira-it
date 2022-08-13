@@ -72,7 +72,7 @@ export default function InterestPolygon(props) {
           L ${width / 2 + (unitLength / 2) * j} ${
             height / 2 - ((unitLength * 6) / 5) * j
           }`}
-        ></path>
+        ></path>,
       );
     }
     interestElement.push(
@@ -88,7 +88,7 @@ export default function InterestPolygon(props) {
         transform-origin={`${width / 2} ${height / 2}`}
         d={`M ${width / 2} ${height / 2}
         L ${width / 2} ${height / 2 - interestUnit * 0.05 * interest[i]}`}
-      ></path>
+      ></path>,
     );
   }
   return (
@@ -97,9 +97,9 @@ export default function InterestPolygon(props) {
         <div
           style={{
             position: "absolute",
-            left: `${width / 2 - interestUnit * 0.4}px`,
+            left: `${width / 2 - interestUnit * 0.3}px`,
             top: `${height / 2 - interestUnit * 5.6}px`,
-            fontSize: "10px",
+            fontSize: "12px",
           }}
         >
           연극
@@ -109,7 +109,7 @@ export default function InterestPolygon(props) {
             position: "absolute",
             left: `${width / 2 - interestUnit * 4.6}px`,
             top: `${height / 2 - interestUnit * 4}px`,
-            fontSize: "10px",
+            fontSize: "12px",
           }}
         >
           뮤지컬
@@ -118,8 +118,8 @@ export default function InterestPolygon(props) {
           style={{
             position: "absolute",
             left: `${width / 2 - interestUnit * 5.8}px`,
-            top: `${height / 2 + interestUnit * 0}px`,
-            fontSize: "10px",
+            top: `${height / 2 + interestUnit * -0.2}px`,
+            fontSize: "12px",
           }}
         >
           무용
@@ -127,9 +127,9 @@ export default function InterestPolygon(props) {
         <div
           style={{
             position: "absolute",
-            left: `${width / 2 - interestUnit * 4.6}px`,
-            top: `${height / 2 + interestUnit * 3.4}px`,
-            fontSize: "10px",
+            left: `${width / 2 - interestUnit * 4.7}px`,
+            top: `${height / 2 + interestUnit * 3.6}px`,
+            fontSize: "12px",
           }}
         >
           클래식
@@ -138,8 +138,8 @@ export default function InterestPolygon(props) {
           style={{
             position: "absolute",
             left: `${width / 2 - interestUnit * 0.6}px`,
-            top: `${height / 2 + interestUnit * 5}px`,
-            fontSize: "10px",
+            top: `${height / 2 + interestUnit * 5.2}px`,
+            fontSize: "12px",
           }}
         >
           오페라
@@ -148,8 +148,8 @@ export default function InterestPolygon(props) {
           style={{
             position: "absolute",
             left: `${width / 2 + interestUnit * 3.6}px`,
-            top: `${height / 2 + interestUnit * 3.4}px`,
-            fontSize: "10px",
+            top: `${height / 2 + interestUnit * 3.7}px`,
+            fontSize: "12px",
           }}
         >
           국악
@@ -158,8 +158,8 @@ export default function InterestPolygon(props) {
           style={{
             position: "absolute",
             left: `${width / 2 + interestUnit * 5.2}px`,
-            top: `${height / 2 + interestUnit * 0}px`,
-            fontSize: "10px",
+            top: `${height / 2 + interestUnit * -0.2}px`,
+            fontSize: "12px",
           }}
         >
           가요
@@ -169,7 +169,7 @@ export default function InterestPolygon(props) {
             position: "absolute",
             left: `${width / 2 + interestUnit * 3.6}px`,
             top: `${height / 2 - interestUnit * 4}px`,
-            fontSize: "10px",
+            fontSize: "12px",
           }}
         >
           전시
