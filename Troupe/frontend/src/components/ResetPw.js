@@ -1,19 +1,17 @@
 import React from "react";
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-
+import Theme from "./Theme";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import apiClient from "../apiClient";
 
-const theme = createTheme();
-
 export default function ResetPw() {
-  const {token} = useParams();
+  const { token } = useParams();
   const [resetPossible, setResetPossible] = React.useState(false);
   //password 길이확인
   const [pwLength, setPwLength] = React.useState(true);
@@ -22,24 +20,22 @@ export default function ResetPw() {
 
   React.useEffect(() => {
     console.log(token);
-    if(token){
+    if (token) {
       setResetPossible(true);
-    }
-    else {
+    } else {
       setResetPossible(false);
     }
   }, [token]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email");
     console.log(email);
     if (email) {
       apiClient.requestPassword(email);
-    }
-    else {
+    } else {
       const password = formData.get("password");
       const passwordCheck = formData.get("passwordCheck");
       //password 8~20자
@@ -56,7 +52,7 @@ export default function ResetPw() {
     }
   };
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -65,6 +61,8 @@ export default function ResetPw() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            fontFamily: "SBAggroB",
+            paddingBottom: "1000px",
           }}
         >
           <Box
@@ -85,6 +83,7 @@ export default function ResetPw() {
                   id="password"
                   autoComplete="new-password"
                   autoFocus
+                  style={{ backgroudColor: "white" }}
                 />
                 {pwLength ? (
                   <div></div>
@@ -104,6 +103,7 @@ export default function ResetPw() {
                   type="password"
                   id="passwordCheck"
                   autoComplete="new-password"
+                  style={{ backgroudColor: "white" }}
                 />
                 {pwSame ? (
                   <div></div>
@@ -125,6 +125,7 @@ export default function ResetPw() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                style={{ backgroundColor: "white" }}
               />
             )}
             <Button
@@ -132,7 +133,8 @@ export default function ResetPw() {
               fullWidth
               variant="contained"
               sx={{ mt: 2, mb: 1 }}
-              style={{ backgroundColor: "gray" }}
+              color="yellow"
+              style={{ fontFamily: "SBAggroB" }}
             >
               비밀번호 초기화
             </Button>

@@ -36,11 +36,12 @@ export default function Comment(props) {
     if (sessionStorage.getItem("loginCheck"))
       setUser(parseInt(sessionStorage.getItem("loginMember")));
     if (!props.feedNo) {
+      //perf
       apiClient
         .getPerfChildReviewList(props.performanceNo, props.reviewNo)
         .then((data) => {
           console.log(data);
-          // setchildComment(data);
+          setchildComments(data);
         });
     } else {
       apiClient

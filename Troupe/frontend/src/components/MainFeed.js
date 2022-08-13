@@ -1,77 +1,73 @@
-import * as React from 'react';
-import { useCallback } from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider} from '@mui/material/styles';
-import SearchBar from './SearchBar'
-import PerfFeedToggle from './MainButton';
-import apiClient from '../apiClient';
-import { useState, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import FeedListAll from './FeedListAll';
+import * as React from "react";
+import { useCallback } from "react";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import SearchBar from "./SearchBar";
+import PerfFeedToggle from "./MainButton";
+import apiClient from "../apiClient";
+import { useState, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import FeedListAll from "./FeedListAll";
 import stylesTag from "../css/tag.module.css";
-import FeedListFollow from './FeedListFollow'
-import FeedListSave from './FeedListSave'
-import FeedListSearch from './FeedListSearch';
-
-
+import FeedListFollow from "./FeedListFollow";
+import FeedListSave from "./FeedListSave";
+import FeedListSearch from "./FeedListSearch";
+import Theme from "./Theme";
+import SearchIcon from "@mui/icons-material/Search";
 function Copyright() {
   return (
     <Typography color="text.secondary" align="center" component="span">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="/">
         Troupe
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
-
-const theme = createTheme();
-
 export default function MainFeed() {
-  let {pageNumber} = useParams();
+  let { pageNumber } = useParams();
   const [tags, setTagList] = React.useState([]);
-  const [tag, setTag] = React.useState('');
-  const[showAll, setShowAll] = React.useState(true);
-  const[showFollow, setShowFollow] = React.useState(false);
-  const[showSave, setShowSave] = React.useState(false);
-  const[showSearch, setShowSearch] = React.useState(false);
-
+  const [tag, setTag] = React.useState("");
+  const [showAll, setShowAll] = React.useState(true);
+  const [showFollow, setShowFollow] = React.useState(false);
+  const [showSave, setShowSave] = React.useState(false);
+  const [showSearch, setShowSearch] = React.useState(false);
 
   const handleShowAll = () => {
-    setShowAll(true)
-    setShowSave(false)
-    setShowFollow(false)
-    setShowSearch(false)
+    setShowAll(true);
+    setShowSave(false);
+    setShowFollow(false);
+    setShowSearch(false);
   };
 
   const handleShowFollow = () => {
-    setShowAll(false)
-    setShowSave(false)
-    setShowFollow(true)
-    setShowSearch(false)
+    setShowAll(false);
+    setShowSave(false);
+    setShowFollow(true);
+    setShowSearch(false);
   };
 
   const handleShowSave = () => {
-    setShowAll(false)
-    setShowSave(true)
-    setShowFollow(false)
-    setShowSearch(false)
+    setShowAll(false);
+    setShowSave(true);
+    setShowFollow(false);
+    setShowSearch(false);
   };
 
   const handleShowSearch = () => {
-    setShowAll(false)
-    setShowSave(false)
-    setShowFollow(false)
-    setShowSearch(true)
+    setShowAll(false);
+    setShowSave(false);
+    setShowFollow(false);
+    setShowSearch(true);
   };
 
   const changeTag = (event) => {
@@ -119,71 +115,141 @@ export default function MainFeed() {
 
   function deleteTag(tagName) {
     setTagList(tags.filter((tag) => tag !== tagName));
-  };
-  
+  }
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <CssBaseline />
-      <div style={{display:'flex', justifyContent:'center'}}>
+      <Grid container style={{ display: "flex", justifyContent: "center" }}>
         <PerfFeedToggle></PerfFeedToggle>
-      </div>
-      <div style={{display:'flex', justifyContent:'center'}}>
-        <Grid container>
-        <Grid item xs={6}>
-              <p id="notice">태그를 누르면 삭제됩니다</p>
-              <div className={stylesTag.HashWrap}>
-                <div className={stylesTag.HashWrapOuter}>
-                  {tags ? (
-                    tags.map((item, id) => (
-                      <div
-                        className={stylesTag.HashWrapInner}
-                        key={id}
-                        onClick={() => deleteTag(item)}
-                      >
-                        # {item}
-                      </div>
-                    ))
-                  ) : (
-                    <div></div>
-                  )}
-                </div>
-              </div>
-              <input
-                className={stylesTag.HashInput}
-                label="태그"
-                value={tag}
-                onChange={changeTag}
-                onKeyUp={addTagFunc}
-                placeholder="태그입력 후 엔터를 치세요"
-                maxLength={20}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Button onClick={handleShowSearch}>검색</Button>
-              <Button onClick={handleShowAll}>전체피드</Button>
-              <Button onClick={handleShowSave}>저장피드</Button>
-              <Button onClick={handleShowFollow}>팔로우 피드</Button>
-            </Grid>
+
+        <Grid
+          item
+          xs={12}
+          id="notice"
+          mt={2}
+          style={{ textAlign: "center", fontFamily: "SBAggroB" }}
+        >
+          태그를 누르면 삭제됩니다
         </Grid>
-      </div>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={4} mt={6}>
+          <div item className={stylesTag.HashWrap}>
+            <div className={stylesTag.HashWrapOuter}>
+              {tags ? (
+                tags.map((item, id) => (
+                  <div
+                    className={stylesTag.HashWrapInner}
+                    key={id}
+                    onClick={() => deleteTag(item)}
+                  >
+                    # {item}
+                  </div>
+                ))
+              ) : (
+                <div></div>
+              )}
+            </div>
+          </div>
+        </Grid>
+        <Grid item xs={4} mt={6}>
+          <Button
+            onClick={handleShowSearch}
+            style={{
+              fontFamily: "SBAggroB",
+              width: "50px",
+              height: "30px",
+              color: "black",
+            }}
+          >
+            <SearchIcon color="neutral"></SearchIcon>
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid item xs={4} style={{ textAlign: "center" }}>
+        <input
+          className={stylesTag.HashInput}
+          label="태그"
+          value={tag}
+          onChange={changeTag}
+          onKeyUp={addTagFunc}
+          placeholder="태그입력 후 엔터를 치세요"
+          maxLength={20}
+        />
+      </Grid>
+      <Grid
+        container
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          textAlign: " center",
+        }}
+        spacing={2}
+      >
+        <Grid item xs={2}>
+          <Button
+            onClick={handleShowAll}
+            variant="contained"
+            color="neutral"
+            style={{
+              fontFamily: "Cafe24SsurroundAir",
+              fontWeight: "bold",
+              width: "150px",
+              height: "30px",
+            }}
+          >
+            최신순 피드
+          </Button>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            onClick={handleShowSave}
+            variant="contained"
+            color="neutral"
+            style={{
+              fontFamily: "Cafe24SsurroundAir",
+              fontWeight: "bold",
+              width: "150px",
+              height: "30px",
+            }}
+          >
+            북마크 피드
+          </Button>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            onClick={handleShowFollow}
+            variant="contained"
+            color="neutral"
+            style={{
+              fontFamily: "Cafe24SsurroundAir",
+              fontWeight: "bold",
+              width: "150px",
+              height: "30px",
+            }}
+          >
+            팔로우 피드
+          </Button>
+        </Grid>
+      </Grid>
+
       <div>
         <Container sx={{ py: 10 }} maxWidth="md">
-          {showFollow? <FeedListFollow></FeedListFollow> : null}
-          {showSave? <FeedListSave></FeedListSave> : null}
-          {showAll? <FeedListAll></FeedListAll> : null}
-          {showSearch? <FeedListSearch tags={tags}></FeedListSearch>: null}
+          {showFollow ? <FeedListFollow></FeedListFollow> : null}
+          {showSave ? <FeedListSave></FeedListSave> : null}
+          {showAll ? <FeedListAll></FeedListAll> : null}
+          {showSearch ? <FeedListSearch tags={tags}></FeedListSearch> : null}
         </Container>
       </div>
       {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 4 }}>
-
+      <Box sx={{ bgcolor: "background.paper", p: 4 }}>
         <Typography
           variant="subtitle1"
           align="center"
           color="text.secondary"
           component="span"
         >
-          Troupe
+          인디라IT
         </Typography>
         <Copyright />
       </Box>

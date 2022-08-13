@@ -75,7 +75,7 @@ export default function FeedRegister() {
       if (process.browser) {
         // 요소 불러오기
         const HashWrapOuter = document.querySelector(
-          `.${stylesTag.HashWrapOuter}`
+          `.${stylesTag.HashWrapOuter}`,
         );
         const HashWrapInner = document.createElement("div");
         HashWrapInner.className = stylesTag.HashWrapInner;
@@ -106,7 +106,7 @@ export default function FeedRegister() {
         }
       }
     },
-    [tag, tags]
+    [tag, tags],
   );
 
   function deleteImage(imgFile) {
@@ -120,7 +120,7 @@ export default function FeedRegister() {
 
   const cancelForm = () => {
     if (window.confirm("등록을 취소하시겠습니까?")) {
-      window.location.href = "/feed/list";
+      window.location.href = "/feed/list/all/0";
     } else {
       return;
     }

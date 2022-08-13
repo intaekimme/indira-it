@@ -46,8 +46,12 @@ export default function FollowButton(props) {
 
   return isFollowing ? (
     <ThemeProvider theme={Theme}>
-      <Button className={styledButton.btn} onClick={followClick}>
-        -UnFollow
+      <Button
+        className={styledButton.btn}
+        onClick={followClick}
+        style={{ fontFamily: "SBAggroB", width: "130px", color: "black" }}
+      >
+        - UnFollow
       </Button>
     </ThemeProvider>
   ) : (
@@ -58,11 +62,12 @@ export default function FollowButton(props) {
         style={{
           // backgroundColor: "#45E3C6",
           backgroundColor: "#66cc66",
-          color: "black",
+          color: "white",
+          fontFamily: "SBAggroB",
         }}
         onClick={followClick}
       >
-        +Follow
+        + Follow
       </Button>
     </ThemeProvider>
   );
