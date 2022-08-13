@@ -143,11 +143,9 @@ export default function PerfListCard() {
             </Grid>
           )),
         )}
-        <div style={{ display: "flex", justifyContent: "center", pb: 7 }}>
-          <PlusButton
-            handleCard={performanceListQuery.fetchNextPage}
-          ></PlusButton>
-        </div>
+        <PlusButton
+          handleCard={performanceListQuery.fetchNextPage}
+        ></PlusButton>
       </Grid>
     );
   }

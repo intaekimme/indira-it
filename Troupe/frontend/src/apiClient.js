@@ -526,7 +526,7 @@ const apiClient = {
       })
       .then((response) => {
         alert("피드 등록 성공");
-        window.location.href = "/feed/list";
+        window.location.href = "/feed/list/all/0";
         return response;
       })
       .catch((error) => {
@@ -545,7 +545,7 @@ const apiClient = {
       })
       .then((response) => {
         alert("피드 수정 성공");
-        window.location.href = "/feed/list";
+        window.location.href = "/feed/list/all/0";
         return response;
       })
       .catch((error) => {
@@ -628,7 +628,7 @@ const apiClient = {
         .patch(`/feed/${feedNo}/del`)
         .then((response) => {
           alert("피드가 삭제되었습니다" + response);
-          window.location.href = "/feed/list";
+          window.location.href = "/feed/list/all/0";
         })
         .catch((error) => {
           alert("피드 삭제 실패 :" + error + feedNo);
@@ -808,7 +808,7 @@ const apiClient = {
         },
       })
       .then((response) => {
-        alert("댓글 등록 성공");
+        // alert("댓글 등록 성공");
         console.log(response.data);
         const json = {
           memberNo: response.data.memberNo,
@@ -851,7 +851,7 @@ const apiClient = {
         },
       })
       .then((response) => {
-        alert("댓글 삭제 성공");
+        // alert("댓글 삭제 성공");
       })
       .catch((error) => {
         alert("댓글 삭제 실패 : " + error);
@@ -876,7 +876,7 @@ const apiClient = {
         },
       })
       .then((response) => {
-        alert("대댓글 등록 성공");
+        // alert("대댓글 등록 성공");
         // console.log(response.data);
         const json = {
           memberNo: response.data.memberNo,

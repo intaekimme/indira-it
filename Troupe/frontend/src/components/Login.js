@@ -54,64 +54,67 @@ export default function Login() {
       <div id="back" style={{ fontFamily: "SBAggroB" }}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
-          <Item>
+
+          <Box
+            sx={{
+              marginTop: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              paddingBottom: "300px",
+            }}
+          >
+            <Avatar sx={{ m: 4, bgcolor: "primary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              로그인
+            </Typography>
             <Box
-              sx={{
-                marginTop: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 4 }}
+              style={{ textAlign: "center" }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                로그인
-              </Typography>
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 4 }}
-                style={{ textAlign: "center" }}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="이메일"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                style={{ backgroundColor: "white" }}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="비밀번호"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                style={{ backgroundColor: "white" }}
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="로그인 유지"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2, mb: 1 }}
+                color="yellow"
+                style={{ fontFamily: "SBAggroB" }}
               >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="로그인 유지"
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 2, mb: 1 }}
-                  color="yellow"
-                  style={{ fontFamily: "SBAggroB" }}
-                >
-                  로그인
-                </Button>
-                <SNSLoginFacebook />
-                {/* <Button
+                로그인
+              </Button>
+              <SNSLoginFacebook />
+              {/* <Button
               fullWidth
               variant="contained"
               sx={{ mt: 0, mb: 1 }}
@@ -120,30 +123,29 @@ export default function Login() {
             >
               FaceBook 로그인
             </Button> */}
-                <Button
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 0, mb: 1 }}
-                  style={{ backgroundColor: "purple", fontFamily: "SBAggroB" }}
-                  onClick={instagramLogin}
-                >
-                  Instagram 로그인
-                </Button>
-                <Grid container justifyContent="space-between">
-                  <Grid>
-                    <Link href="/resetpw" variant="body2">
-                      비밀번호 찾기
-                    </Link>
-                  </Grid>
-                  <Grid>
-                    <Link href="/signup" variant="body2">
-                      회원가입
-                    </Link>
-                  </Grid>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 0, mb: 1 }}
+                style={{ backgroundColor: "purple", fontFamily: "SBAggroB" }}
+                onClick={instagramLogin}
+              >
+                Instagram 로그인
+              </Button>
+              <Grid container justifyContent="space-between">
+                <Grid>
+                  <Link href="/resetpw" variant="body2">
+                    비밀번호 찾기
+                  </Link>
                 </Grid>
-              </Box>
+                <Grid>
+                  <Link href="/signup" variant="body2">
+                    회원가입
+                  </Link>
+                </Grid>
+              </Grid>
             </Box>
-          </Item>
+          </Box>
         </Container>
       </div>
     </ThemeProvider>

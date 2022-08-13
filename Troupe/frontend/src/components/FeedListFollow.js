@@ -95,12 +95,7 @@ export default function FeedListFollow() {
             )),
           )}
         </Grid>
-        <div style={{ display: "flex", justifyContent: "center", pb: 7 }}>
-          <Link href=""></Link>
-          <PlusButton
-            handleCard={FeedListFollowQuery.fetchNextPage}
-          ></PlusButton>
-        </div>
+        <PlusButton handleCard={FeedListFollowQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
   }

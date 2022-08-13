@@ -95,10 +95,7 @@ export default function FeedListSave() {
             )),
           )}
         </Grid>
-        <div style={{ display: "flex", justifyContent: "center", pb: 7 }}>
-          <Link href=""></Link>
-          <PlusButton handleCard={FeedListSaveQuery.fetchNextPage}></PlusButton>
-        </div>
+        <PlusButton handleCard={FeedListSaveQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
   }

@@ -152,7 +152,7 @@ export default function Header() {
                 {
                   text: "공연/전시 목록",
                   element: (
-                    <Link href="/perf/list" className={styled.header}>
+                    <Link href="/perf/list/0" className={styled.header}>
                       공연/전시 목록
                     </Link>
                   ),
@@ -161,7 +161,7 @@ export default function Header() {
                 {
                   text: "피드 목록",
                   element: (
-                    <Link href="/feed/list" className={styled.header}>
+                    <Link href="/feed/list/all/0" className={styled.header}>
                       피드 목록
                     </Link>
                   ),
@@ -184,8 +184,8 @@ export default function Header() {
                   style={{
                     borderRadius: "70%",
                     objectFit: "cover",
-                    height: "40px",
-                    width: "40px",
+                    height: "60px",
+                    width: "60px",
                   }}
                 ></img>
                 //   <AccountCircleIcon
@@ -256,7 +256,7 @@ export default function Header() {
           className={styled.header}
           style={{ verticalAlign: "middle" }}
         >
-          <img width={"200px"} src={logo}></img>
+          <img width={"270px"} src={logo}></img>
         </Link>
       </div>
     </div>

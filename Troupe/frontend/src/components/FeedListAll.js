@@ -84,23 +84,38 @@ export default function FeedListAll() {
                   }}
                   elevation={0}
                 >
-                  <Typography
-                    gutterBottom
-                    style={{ fontSize: "20px", fontFamily: "IBM Plex Sans KR" }}
-                    component="span"
-                  >
-                    <img
-                      src={datum.profileImageUrl}
-                      alt=""
-                      style={{
-                        borderRadius: "70%",
-                        objectFit: "cover",
-                        height: "20px",
-                        width: "20px",
-                      }}
-                    ></img>
-                    {datum.nickname}
-                  </Typography>
+                  <Grid container mt={1}>
+                    <Grid ml={1}>
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href={"/profile/" + datum.memberNo}
+                      >
+                        <img
+                          src={datum.profileImageUrl}
+                          alt=""
+                          style={{
+                            borderRadius: "70%",
+                            objectFit: "cover",
+                            height: "30px",
+                            width: "30px",
+                          }}
+                        ></img>
+                      </a>
+                    </Grid>
+                    <Grid ml={1} mb={2}>
+                      <Typography
+                        style={{
+                          fontSize: "13px",
+                          fontFamily: "SBAggroB",
+                          wordBreak: "break-all",
+                          overflow: "hidden",
+                        }}
+                        component="span"
+                      >
+                        {datum.nickname}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                   <CardMedia
                     component="img"
                     sx={{
@@ -116,18 +131,22 @@ export default function FeedListAll() {
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
-                      margin: "0px",
+                      margin: "5px",
                       padding: "0px",
                     }}
                   >
-                    <FeedLikeButton
-                      change={change}
-                      feedNo={datum.feedNo}
-                    ></FeedLikeButton>
-                    <FeedSaveButton
-                      change={change}
-                      feedNo={datum.feedNo}
-                    ></FeedSaveButton>
+                    <Grid>
+                      <FeedLikeButton
+                        change={change}
+                        feedNo={datum.feedNo}
+                      ></FeedLikeButton>
+                    </Grid>
+                    <Grid mr={-3}>
+                      <FeedSaveButton
+                        change={change}
+                        feedNo={datum.feedNo}
+                      ></FeedSaveButton>
+                    </Grid>
                   </CardActions>
                 </Card>
                 <Modal
@@ -148,10 +167,7 @@ export default function FeedListAll() {
             )),
           )}
         </Grid>
-        <div style={{ display: "flex", justifyContent: "center", pb: 7 }}>
-          <Link href=""></Link>
-          <PlusButton handleCard={FeedListAllQuery.fetchNextPage}></PlusButton>
-        </div>
+        <PlusButton handleCard={FeedListAllQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
   }

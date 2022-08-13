@@ -30,7 +30,7 @@ export default function FeedModify() {
     apiClient.getFeedDetail(feedNo).then((data) => {
       if (parseInt(sessionStorage.getItem("loginMember")) !== data.memberNo) {
         alert("권한이 없습니다");
-        window.location.href = "/feed/list";
+        window.location.href = "/feed/list/all/0";
       }
       setImgKeys(data.images);
       setOldImage(data.images);
@@ -41,7 +41,7 @@ export default function FeedModify() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (images === []) {
+    if (images.length === 0 && oldImage.length === 0) {
       alert("사진을 업로드하세요");
       return;
     }
@@ -90,7 +90,7 @@ export default function FeedModify() {
 
   const cancelForm = () => {
     if (window.confirm("수정을 취소하시겠습니까?")) {
-      window.location.href = "/feed/list";
+      window.location.href = "/feed/list/all/0";
     } else {
       return;
     }
