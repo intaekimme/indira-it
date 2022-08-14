@@ -74,12 +74,15 @@ public class PerformanceReviewService {
         try {
             PerformanceReview savedReview = performanceReviewRepository.save(performanceReview);
             response = PfReviewResponse.builder()
-                    .memberNo(member.getMemberNo())
                     .reviewNo(savedReview.getId())
+                    .pfNo(performance.getId())
+                    .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())
                     .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(request.getContent())
                     .isRemoved(savedReview.getRemoved())
+                    .isModified(savedReview.isModified())
+                    .createdTime(savedReview.getCreatedTime())
                     .build();
         }catch (Exception e){
 
@@ -104,7 +107,7 @@ public class PerformanceReviewService {
     }
 
     /**
-     * 공연 후기 리스트 반환
+     * 공연 후기 리스트 반환(대댓글 없음)
      * @param pfNo
      * @return
      */
@@ -112,11 +115,13 @@ public class PerformanceReviewService {
     public List<PfReviewResponse> findPfReviewList(int pfNo){
         Performance performance = performanceRepository.findById(pfNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
+        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfAndParentPerformanceReviewIsNull(performance)
+                .orElse(new ArrayList<>());
+
         List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
         for (PerformanceReview review : performanceReviewList){
             Member member = review.getMember();
-            pfReviewResponseList.add( PfReviewResponse.builder()
+            PfReviewResponse item = PfReviewResponse.builder()
                     .reviewNo(review.getId())
                     .pfNo(performance.getId())
                     .memberNo(member.getMemberNo())
@@ -124,8 +129,14 @@ public class PerformanceReviewService {
                     .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(review.getContent())
                     .isRemoved(review.getRemoved())
-                    .build()
-            );
+                    .isModified(review.isModified())
+                    .createdTime(review.getCreatedTime())
+                    .build();
+
+            if(review.getParentPerformanceReview() != null) item.setParentCommentNo(review.getParentPerformanceReview().getId());
+            else item.setParentCommentNo(0);
+
+            pfReviewResponseList.add(item);
         }
         return pfReviewResponseList;
     }
@@ -138,17 +149,38 @@ public class PerformanceReviewService {
      * @param content
      */
     @Transactional
-    public void modify(int pfNo, int reviewNo, String content) {
+    public PfReviewResponse modify(int pfNo, int reviewNo, String content) {
         //  공연 엔티티를 하나 불러오고
-        Performance performance = performanceRepository.findById(pfNo).get();
+        Performance performance = performanceRepository.findById(pfNo)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연 입니다."));
         //  리뷰테이블에서 공연 엔티티와 id: reviewNo로 리뷰 엔티티를 찾고
-        PerformanceReview performanceReview = performanceReviewRepository.findByPfAndId(performance, reviewNo).get();
+        PerformanceReview performanceReview = performanceReviewRepository.findByPfAndId(performance, reviewNo)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 리뷰 입니다."));
         //  is_modified 값과, content 값만 변경해서 set 해주고, 나머지는 그대로
         performanceReview.setModified(true);
         performanceReview.setContent(content);
         //  save
-        performanceReviewRepository.save(performanceReview);
+        PerformanceReview result = performanceReviewRepository.save(performanceReview);
+
+        PfReviewResponse response = PfReviewResponse.builder()
+                .reviewNo(result.getId())
+                .pfNo(performance.getId())
+                .memberNo(result.getMember().getMemberNo())
+                .nickname(result.getMember().getNickname())
+                .profileImageUrl(MyConstant.FILE_SERVER_URL + result.getMember().getProfileImageUrl())
+                .comment(result.getContent())
+                .isRemoved(result.getRemoved())
+                .isModified(result.isModified())
+                .createdTime(result.getCreatedTime())
+                .build();
+
+        if(result.getParentPerformanceReview() != null) {
+            response.setParentCommentNo(result.getParentPerformanceReview().getId());
+        }
+
+        return response;
     }
+
 
     /**
      * 공연후기대댓글
@@ -169,14 +201,22 @@ public class PerformanceReviewService {
         List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
         for (PerformanceReview review : childReviewList){
             Member member = review.getMember();
-            pfReviewResponseList.add(PfReviewResponse.builder()
+            PfReviewResponse item = PfReviewResponse.builder()
+                    .reviewNo(review.getId())
+                    .pfNo(performance.getId())
                     .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())
                     .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
                     .comment(review.getContent())
                     .isRemoved(review.getRemoved())
-                    .build()
-            );
+                    .isModified(review.isModified())
+                    .createdTime(review.getCreatedTime())
+                    .build();
+
+            if(review.getParentPerformanceReview() != null) item.setParentCommentNo(review.getParentPerformanceReview().getId());
+            else item.setParentCommentNo(0);
+
+            pfReviewResponseList.add(item);
         }
 
         return pfReviewResponseList;

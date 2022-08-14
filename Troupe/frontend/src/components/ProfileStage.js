@@ -3,10 +3,8 @@ import { useParams } from "react-router-dom";
 import apiClient from "../apiClient";
 
 import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import Stage from "../img/stage.jpg";
+import Stage from "../img/stage2.jpg";
 import ProfileMemberInfo from "./ProfileMemberInfo";
 import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";
@@ -74,6 +72,11 @@ export default function ProfileStage() {
           left: "0%",
           width: `${100}%`,
           height: `${100}%`,
+          border: "5px solid white",
+          borderRadius: "5px",
+          boxShadow:
+            "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.6)",
+          zIndex: "1",
         }}
       />
       <Grid alignItems="flex-end" container spacing={0.5} style={{ paddingBottom: 50 }}>

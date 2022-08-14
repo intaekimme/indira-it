@@ -8,8 +8,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 import stylesButton from "../css/button.module.css"
 
@@ -52,9 +50,13 @@ export default function ProfileAvatarModify() {
 		if (!memberNo) {
 			return;
 		}
+    if(!(parseInt(window.sessionStorage.getItem("loginMember"))===parseInt(memberNo))){
+      window.location.href=`/profile/${memberNo}`;
+      return;
+    };
     apiClient.getMemberAvatar(memberNo).then((data) => {
 			console.log(data);
-      setAvatar(data);
+      //setAvatar(data);
 
 			setShapeValue(data.avatarShapeResponse.shapeNo);
 			setEyeValue(data.avatarEyeResponse.eyeNo);
@@ -62,20 +64,45 @@ export default function ProfileAvatarModify() {
 			setMouthValue(data.avatarMouthResponse.mouthNo);
 			setHairValue(data.avatarHairResponse.hairNo);
 			setClothesValue(data.avatarClothesResponse.clothesNo);
+
+      const avatarData = {
+        avatarShapeResponse: data.avatarShapeResponse,
+        avatarEyeResponse: data.avatarEyeResponse,
+        avatarNoseResponse: data.avatarNoseResponse,
+        avatarMouthResponse: data.avatarMouthResponse,
+        avatarHairResponse: data.avatarHairResponse,
+        avatarClothesResponse: data.avatarClothesResponse,
+      }
+      if(avatarData.avatarShapeResponse &&
+        avatarData.avatarEyeResponse &&
+        avatarData.avatarNoseResponse &&
+        avatarData.avatarMouthResponse &&
+        avatarData.avatarHairResponse &&
+        avatarData.avatarClothesResponse){
+          console.log(avatarData);
+          setAvatar(avatarData);
+      }
     });
 	}, [memberNo]);
 
 	React.useEffect(() => {
-		const avatarData = {
-			avatarShapeResponse: (shapes && !(shapes.length===0)) ? shapes[shapeValue - 1] : "",
-			avatarEyeResponse: (eyes && !(eyes.length===0)) ? eyes[eyeValue - 1] : "",
-			avatarNoseResponse: (noses && !(noses.length===0)) ? noses[noseValue - 1] : "" ,
-			avatarMouthResponse: (mouthes && !(mouthes.length===0)) ? mouthes[mouthValue - 1] : "" ,
-			avatarHairResponse: (hairs && !(hairs.length===0)) ? hairs[hairValue - 1] : "" ,
-			avatarClothesResponse: (clothes && !(clothes.length===0)) ? clothes[clothesValue - 1] : "" ,
-		}
-		setAvatar(avatarData);
-		console.log(avatarData);
+		if((shapes && !(shapes.length===0)) &&
+    (eyes && !(eyes.length===0)) &&
+    (noses && !(noses.length===0)) &&
+    (mouthes && !(mouthes.length===0)) &&
+    (hairs && !(hairs.length===0)) &&
+    (clothes && !(clothes.length===0))){
+        const avatarData = {
+          avatarShapeResponse: shapes[shapeValue - 1],
+          avatarEyeResponse: eyes[eyeValue - 1],
+          avatarNoseResponse: noses[noseValue - 1],
+          avatarMouthResponse: mouthes[mouthValue - 1],
+          avatarHairResponse: hairs[hairValue - 1],
+          avatarClothesResponse: clothes[clothesValue - 1],
+        }
+        console.log(avatarData);
+        setAvatar(avatarData);
+    }
 	}, [shapeValue, eyeValue, noseValue, mouthValue, hairValue, clothesValue]);
 
 	React.useEffect(() => {
@@ -107,6 +134,23 @@ export default function ProfileAvatarModify() {
 		console.log(memberNo);
 	}, [window.innerWidth]);
 	
+  //수정완료
+  const finish = ()=>{
+    const avatarData = {
+      shapeNo: parseInt(shapeValue),
+      eyeNo: parseInt(eyeValue),
+      noseNo: parseInt(noseValue),
+      mouthNo: parseInt(mouthValue),
+      hairNo: parseInt(hairValue),
+      clothesNo: parseInt(clothesValue),
+    }
+    apiClient.modifyAvatar(avatarData).then((data)=>{
+      if(data){
+        window.location.href=`/profile/${memberNo}`;
+      }
+    });
+  };
+
 	return (
     <ThemeProvider theme={theme}>
       <Container
@@ -115,7 +159,7 @@ export default function ProfileAvatarModify() {
         style={{ justifyContent: "center", alignItems: "center" }}
       >
         <Grid container spacing={2} style={{ textAlign: "center" }}>
-					<Grid
+          <Grid
             item
             xs={gridItemxs}
             container
@@ -127,15 +171,23 @@ export default function ProfileAvatarModify() {
               paddingBottom: 50,
               position: "relative",
             }}
-					>
-						<Avatar
-								avatarResponse={ avatar }
-								imgWidth={75 * 4}
-								imgHeight={100 * 4}
-								divWidth={75 * 4}
-								divHeight={100 * 4}
-						/>
-						<Grid item xs={12}><Button className={stylesButton.btn} style={{color:"black", backgroundColor:"#44FFC8"}}>Finish</Button></Grid>
+          >
+            <Avatar
+              avatarResponse={avatar}
+              imgWidth={75 * 4}
+              imgHeight={100 * 4}
+              divWidth={75 * 4}
+              divHeight={100 * 4}
+            />
+            <Grid item xs={12}>
+              <Button
+                className={stylesButton.btn}
+                style={{ color: "black", backgroundColor: "#44FFC8" }}
+                onClick={finish}
+              >
+                Finish
+              </Button>
+            </Grid>
           </Grid>
           <Grid
             item
@@ -145,51 +197,46 @@ export default function ProfileAvatarModify() {
             alignItems="center"
             style={{ backgroundColor: "blue", padding: 0 }}
           >
-            <FormControl>
-              <FormLabel id="demo-form-control-label-placement">
-                Label placement
-              </FormLabel>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"hair"}
-                  imgDatas={hairs}
-                  currentValue={hairValue}
-                  setValue={setHairValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"eye"}
-                  imgDatas={eyes}
-                  currentValue={eyeValue}
-                  setValue={setEyeValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"nose"}
-                  imgDatas={noses}
-                  currentValue={noseValue}
-                  setValue={setNoseValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"mouth"}
-                  imgDatas={mouthes}
-                  currentValue={mouthValue}
-                  setValue={setMouthValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"clothes"}
-                  imgDatas={clothes}
-                  currentValue={clothesValue}
-                  setValue={setClothesValue}
-                />
-              </Grid>
-            </FormControl>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"hair"}
+              imgDatas={hairs}
+              currentValue={hairValue}
+              setValue={setHairValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"eye"}
+              imgDatas={eyes}
+              currentValue={eyeValue}
+              setValue={setEyeValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"nose"}
+              imgDatas={noses}
+              currentValue={noseValue}
+              setValue={setNoseValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"mouth"}
+              imgDatas={mouthes}
+              currentValue={mouthValue}
+              setValue={setMouthValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"clothes"}
+              imgDatas={clothes}
+              currentValue={clothesValue}
+              setValue={setClothesValue}
+            />
+          </Grid>
           </Grid>
         </Grid>
       </Container>

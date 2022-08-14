@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @DataJpaTest
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
+//@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class PerformancePriceTest {
     @Autowired

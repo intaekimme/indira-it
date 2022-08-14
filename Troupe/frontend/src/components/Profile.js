@@ -5,10 +5,8 @@ import apiClient from "../apiClient";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 
-
-import Stage from "../img/stage.jpg";
 import MainPerf from "./MainPerf";
 import MainFeed from "./MainFeed";
 import ProfileMemberInfo from "./ProfileMemberInfo";
@@ -16,8 +14,7 @@ import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";
 import ProfileStage from "./ProfileStage";
 import Avatar from "./Avatar";
-
-const theme = createTheme();
+import Theme from "./Theme";
 
 function Profile(props) {
   //memberNo
@@ -26,7 +23,9 @@ function Profile(props) {
   const [avatar, setAvatar] = React.useState("");
 
   //화면 width에 따른 화면분할여부
-  const [gridItemxs, setGridItemxs] = React.useState(window.innerWidth<1000 ? 12 : 6);
+  const [gridItemxs, setGridItemxs] = React.useState(
+    window.innerWidth < 1000 ? 12 : 6,
+  );
 
   //memberInfo 초기화
   const [memberInfo, setMemberInfo] = React.useState("");
@@ -90,14 +89,18 @@ function Profile(props) {
   const tabText = performer
     ? ["공연/전시 목록", "피드 목록", "공연/전시 북마크", "피드 북마크"]
     : ["공연/전시 북마크", "피드 북마크"];
-  
+
   const modifyAvatar = () => {
     window.location.href = `/profile/${memberNo}/modify-avatar`;
-  }
+  };
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Container component="main" maxWidth="1920px">
-        <Grid container spacing={2} style={{ textAlign: "center" }}>
+        <Grid
+          container
+          spacing={2}
+          style={{ textAlign: "center", fontFamily: "SBAggroB" }}
+        >
           <Grid
             item
             container
@@ -112,17 +115,22 @@ function Profile(props) {
           >
             {/* Stage start */}
             <ProfileStage />
-            <Button onClick={modifyAvatar} style={{
-              display: "flex",
-              left: "25%",
-              top: "-67%",
-            }}>
+            <Button
+              onClick={modifyAvatar}
+              style={{
+                display: "flex",
+                left: "25%",
+                top: "-67%",
+              }}
+            >
               <Avatar
                 avatarResponse={avatar}
                 imgWidth={75 * 4}
                 imgHeight={100 * 4}
-                divWidth={"100%"}
-                divHeight={"100%"}
+                divWidth={75 * 4}
+                divHeight="100%"
+                
+
                 // style={{
                 //   position: "absolute",
                 //   display: "flex",
@@ -150,6 +158,7 @@ function Profile(props) {
               }
               <Grid item xs={12}>
                 <ProfileAnalyze
+                  width="100%"
                   nickname={memberInfo.nickname}
                   performer={performer}
                   myPage={myPage}
@@ -160,7 +169,7 @@ function Profile(props) {
           {
             //공연/전시, 피드 목록
           }
-          <Grid item xs={12} style={{ padding: 0 }}>
+          <Grid item xs={12} style={{ padding: 0, paddingTop: "30px" }}>
             <ProfileTabs tabContent={tabContent} tabText={tabText} />
           </Grid>
         </Grid>

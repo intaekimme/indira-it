@@ -32,14 +32,15 @@ export default function Avatar(props) {
   React.useEffect(() => {
     if (props.avatarResponse) {
       console.log(props.avatarResponse);
+      console.log(props.avatarResponse.avatarShapeResponse)
       setAvatarResponse(props.avatarResponse);
     }
   },[props.avatarResponse])
   return avatarResponse ? (
-    <div style={{ position:"relative", width: divWidth, height: divHeight, paddingRight: "30px" }}>
+    <div style={{ position:"relative", width: divWidth, height: divHeight, paddingRight: "30px", zIndex:"4" }}>
       <img
         src={avatarResponse.avatarShapeResponse.shapeUrl}
-        alt={avatarResponse.avatarShapeResponse.sshapeUrl}
+        alt={avatarResponse.avatarShapeResponse.shapeUrl}
         style={{
           position: "absolute",
           top: top,

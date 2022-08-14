@@ -167,6 +167,7 @@ export default function FeedModify() {
             textAlign: "center",
             marginTop: "3%",
             fontFamily: "SBAggroB",
+            paddingBottom: "400px",
           }}
         >
           <Grid container spacing={12}>
@@ -178,7 +179,13 @@ export default function FeedModify() {
                       key={id}
                       src={item}
                       alt=""
-                      style={{ height: "150px", width: "150px" }}
+                      style={{
+                        height: "150px",
+                        width: "150px",
+                        border: "3px white solid",
+                        boxShadow:
+                          "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.2)",
+                      }}
                     ></img>
                     <RemoveCircleOutlineIcon
                       color="error"
@@ -276,44 +283,45 @@ export default function FeedModify() {
           <div style={{ textAlign: "right", color: "grey" }}>
             {content.length}/2000
           </div>
-        </div>
-        <Grid container spacing={2}>
-          <Grid item xs={8}></Grid>
-          <Grid item xs={2}>
-            <Button
-              type="button"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              color="inherit"
-              onClick={() => cancelForm()}
-              style={{ fontFamily: "SBAggroB" }}
-            >
-              취소
-            </Button>
-          </Grid>
-          <Grid item xs={2}>
-            <form
-              onSubmit={handleSubmit}
-              encType="multipart/form-data"
-              style={{ textAlign: "center" }}
-            >
-              <input type="hidden" value={tags} multiple name="tags"></input>
-              <input type="hidden" value={content} name="content"></input>
-              <input type="hidden" value={imageNo} name="imageNo"></input>
+
+          <Grid container spacing={2}>
+            <Grid item xs={8}></Grid>
+            <Grid item xs={2}>
               <Button
-                type="submit"
+                type="button"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                color="green"
+                color="inherit"
+                onClick={() => cancelForm()}
                 style={{ fontFamily: "SBAggroB" }}
               >
-                수정 완료
+                취소
               </Button>
-            </form>
+            </Grid>
+            <Grid item xs={2}>
+              <form
+                onSubmit={handleSubmit}
+                encType="multipart/form-data"
+                style={{ textAlign: "center" }}
+              >
+                <input type="hidden" value={tags} multiple name="tags"></input>
+                <input type="hidden" value={content} name="content"></input>
+                <input type="hidden" value={imageNo} name="imageNo"></input>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  color="green"
+                  style={{ fontFamily: "SBAggroB" }}
+                >
+                  수정 완료
+                </Button>
+              </form>
+            </Grid>
           </Grid>
-        </Grid>
+        </div>
       </Container>
     </ThemeProvider>
   );

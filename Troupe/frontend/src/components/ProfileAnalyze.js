@@ -13,7 +13,7 @@ import styledTooltip from "../css/tooltip.module.css";
 
 export default function ProfileAnalyze(props) {
   const [loginCheck, setLoginCheck] = React.useState(
-    sessionStorage.getItem("loginCheck")
+    sessionStorage.getItem("loginCheck"),
   );
   React.useEffect(() => {
     setLoginCheck(sessionStorage.getItem("loginCheck"));
@@ -42,7 +42,7 @@ export default function ProfileAnalyze(props) {
   const [interestCategory, setInterestCategory] = React.useState([
     10, 20, 30, 40, 50, 60, 70, 80,
   ]);
-// 이 member에 대한 나의 호감도 data
+  // 이 member에 대한 나의 호감도 data
   const [myLikeabilityData, setMyLikeabilityData] = React.useState([]);
   //이 member의 호감도 data
   const [performerTop3, setPerformerTop3] = React.useState([]);
@@ -51,12 +51,14 @@ export default function ProfileAnalyze(props) {
       console.log(data);
       setPerformerTop3(data.top3Stars);
     });
-    apiClient.getMyLikeabilityData({profileMemberNo: memberNo}).then((data) => {
-      console.log(data);
-      setMyLikeabilityData([data]);
-    });
+    apiClient
+      .getMyLikeabilityData({ profileMemberNo: memberNo })
+      .then((data) => {
+        console.log(data);
+        setMyLikeabilityData([data]);
+      });
   }, [memberNo]);
-  
+
   //이 member에 대한 나의 호감도 exp
   const [myLikeabilityExp, setMyLikeabilityExp] = React.useState(1222);
   //이 member에 대한 나의 호감도 순위
@@ -77,7 +79,13 @@ export default function ProfileAnalyze(props) {
   return (
     <Card
       sx={{ width: props.width }}
-      style={{ border: "5px solid #FFCF24", backgroundColor: "#FFFFFF" }}
+      style={{
+        border: "5px solid #FFCF24",
+        backgroundColor: "#FFFFFF",
+        borderRadius: "5px",
+        boxShadow:
+          "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.6)",
+      }}
     >
       <CardContent>
         {likeabilityWithMember ? (
@@ -88,15 +96,27 @@ export default function ProfileAnalyze(props) {
                 <div className={styledTooltip.tooltip}>
                   <InfoOutlinedIcon />
                   <Button
-                    style={{ color: "black" }}
+                    style={{
+                      color: "black",
+                      fontFamily: "Cafe24SsurroundAir",
+                      marginBottom: "14px",
+                    }}
                     onClick={changeLikeability}
                   >
                     {props.nickname} 님의 호감도 순위 보기
                   </Button>
                   <div
                     className={`${styledTooltip.tooltiptext} ${styledTooltip.tooltipleft}`}
+                    style={{ fontFamily: "Cafe24SsurroundAir" }}
                   >
-                    {props.nickname} 님의 호감도 순위
+                    {props.nickname} 님의{" "}
+                    <span
+                      style={{
+                        color: "#fda085",
+                      }}
+                    >
+                      호감도 순위
+                    </span>
                   </div>
                 </div>
               </div>
@@ -117,11 +137,7 @@ export default function ProfileAnalyze(props) {
             alignItems="center"
             style={{ textAlign: "center" }}
           >
-            <Grid item xs={6}>
-              <div style={{ position: "relative", textAlign: "left" }}>
-                <div>{props.nickname} 님의 관심사</div>
-              </div>
-            </Grid>
+            <Grid item xs={6}></Grid>
             <Grid item xs={6}>
               {myPage || !performer || !loginCheck ? (
                 <div></div>
@@ -131,15 +147,27 @@ export default function ProfileAnalyze(props) {
                     <div className={styledTooltip.tooltip}>
                       <InfoOutlinedIcon />
                       <Button
-                        style={{ color: "black" }}
+                        style={{
+                          color: "black",
+                          fontFamily: "Cafe24SsurroundAir",
+                          marginBottom: "14px",
+                        }}
                         onClick={changeLikeability}
                       >
                         나와의 호감도 보기
                       </Button>
                       <div
                         className={`${styledTooltip.tooltiptext} ${styledTooltip.tooltipleft}`}
+                        style={{ fontFamily: "Cafe24SsurroundAir" }}
                       >
-                        {props.nickname} 님에 대한 나의 호감도 순위
+                        {props.nickname} 님에 대한{" "}
+                        <span
+                          style={{
+                            color: "#fda085",
+                          }}
+                        >
+                          나의 호감도 순위
+                        </span>
                       </div>
                     </div>
                     {/* )} */}
@@ -161,10 +189,34 @@ export default function ProfileAnalyze(props) {
                 width={props.width}
               ></LikeabilityRank>
             </Grid>
-            <Grid item xs={6}></Grid>
             <Grid item xs={6}>
-              <div style={{ position: "relative", bottom: "0%" }}>
-                {props.nickname} 님의 호감도 순위
+              {" "}
+              <div
+                style={{
+                  position: "relative",
+                  textAlign: "center",
+                  marginTop: "10px",
+                }}
+              >
+                {props.nickname} 님의{" "}
+                <span style={{ color: "#fda085" }}>관심사</span>
+              </div>
+            </Grid>
+            <Grid item xs={6}>
+              <div
+                style={{
+                  position: "relative",
+                  bottom: "0%",
+                }}
+              >
+                {props.nickname} 님의{" "}
+                <span
+                  style={{
+                    color: "#fda085",
+                  }}
+                >
+                  호감도 순위
+                </span>
               </div>
             </Grid>
           </Grid>

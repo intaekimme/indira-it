@@ -25,7 +25,7 @@ export default function PerfListCard() {
       getNextPageParam: (lastPage, pages) => {
         return pages.length + 1;
       },
-    },
+    }
   );
   console.log(performanceListQuery.data);
   console.log(performanceListQuery.isLoading);
@@ -70,7 +70,7 @@ export default function PerfListCard() {
                     i: "3",
                   }}
                 >
-                  상영 중
+                  {datum.status}
                 </Box>
                 <Box
                   style={{
@@ -83,9 +83,9 @@ export default function PerfListCard() {
                     i: "3",
                   }}
                 >
-                  뮤지컬
+                  {datum.category}
                 </Box>
-                <Link href={"/perf/detail"}>
+                <Link href={`/perf/detail/${datum.pfNo}`}>
                   <CardMedia
                     component="img"
                     sx={{
@@ -141,7 +141,7 @@ export default function PerfListCard() {
                 </CardActions>
               </Card>
             </Grid>
-          )),
+          ))
         )}
         <PlusButton
           handleCard={performanceListQuery.fetchNextPage}

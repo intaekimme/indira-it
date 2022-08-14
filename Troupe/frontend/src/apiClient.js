@@ -67,7 +67,7 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert(
-          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data,
+          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
         );
         return true;
       })
@@ -229,7 +229,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            },
+            }
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -662,7 +662,7 @@ const apiClient = {
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
         // alert("불러오기 성공");
-        console.log(response.data);
+        // console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -686,20 +686,28 @@ const apiClient = {
   },
 
   //  공연 후기 대댓글 작성
-  perfChildReviewNew: (performanceNo, data, refreshFunction) => {
+  perfChildReviewNew: (
+    performanceNo,
+    parentCommentNo,
+    data,
+    refreshChildFunction
+  ) => {
     instance
       .post(`/perf/${performanceNo}/review`, data, {
+        params: {
+          parentCommentNo: parentCommentNo,
+        },
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
       })
       .then((response) => {
-        alert("댓글 등록 성공");
+        alert("대댓글 등록 성공");
         console.log(response.data);
-        refreshFunction(response.data);
+        refreshChildFunction(response.data);
       })
       .catch((error) => {
-        alert("댓글 등록 실패 : " + error);
+        alert("대댓글 등록 실패 : " + error);
       });
   },
 
@@ -864,7 +872,7 @@ const apiClient = {
     feedNo,
     parentCommentNo,
     data,
-    refreshChildFunction,
+    refreshChildFunction
   ) => {
     instance
       .post(`/feed/${feedNo}/comment`, data, {
@@ -903,6 +911,41 @@ const apiClient = {
       .catch((error) => {
         console.log("대댓글 불러오기 실패" + error);
         return null;
+      });
+  },
+
+  //
+  //  공연 후기 수정
+  perfReviewModify: (performanceNo, reviewNo, data) => {
+    return instance
+      .patch(`/perf/${performanceNo}/review/${reviewNo}/modify`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        alert("댓글 수정 실패 : " + error);
+        return error;
+      });
+  },
+
+  //  공연 후기 삭제
+  perfReviewDelete: (performanceNo, reviewNo) => {
+    return instance
+      .patch(`/perf/${performanceNo}/review/${reviewNo}/del`, null, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("댓글 삭제 성공");
+      })
+      .catch((error) => {
+        alert("댓글 삭제 실패 : " + error);
+        return error;
       });
   },
 };
