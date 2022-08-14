@@ -34,11 +34,16 @@ export default function FeedListSearch(props) {
       },
     },
   );
+  // console.log(FeedListSearchQuery.data);
+  // console.log(FeedListSearchQuery.isLoading);
+  const [change, setChange] = React.useState(false);
+
   console.log(FeedListSearchQuery.data);
   console.log(FeedListSearchQuery.isLoading);
   if (props.howManySearch > 1) {
     FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 })
   }
+
 
   if (!FeedListSearchQuery.isLoading) {
     console.log(FeedListSearchQuery.data);
