@@ -42,6 +42,7 @@ export default function MainFeed() {
   const [showFollow, setShowFollow] = React.useState(false);
   const [showSave, setShowSave] = React.useState(false);
   const [showSearch, setShowSearch] = React.useState(false);
+  const [hide, setHide] = React.useState(true);
   const [howManySearch, setHowManySearch] = React.useState(0);
 
   const handleShowAll = () => {
@@ -81,6 +82,7 @@ export default function MainFeed() {
     setTag(event.target.value);
   };
 
+
   const addTagFunc = useCallback(
     (event) => {
       if (process.browser) {
@@ -95,6 +97,7 @@ export default function MainFeed() {
           event.preventDefault();
           // HashWrapInner.innerHTML = "# " + event.target.value;
           // HashWrapOuter.appendChild(HashWrapInner);
+           setHide(false);
           if (tags.length >= 5) {
             // alert("최대 5개까지 등록할 수 있습니다");
             const notice = document.querySelector("#notice");
@@ -122,23 +125,27 @@ export default function MainFeed() {
 
   function deleteTag(tagName) {
     setTagList(tags.filter((tag) => tag !== tagName));
+    if(tags.length===0) setHide(true)
   }
-
+  
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
       <Grid container style={{ display: "flex", justifyContent: "center" }}>
         <PerfFeedToggle></PerfFeedToggle>
-
-        <Grid
-          item
-          xs={12}
-          id="notice"
-          mt={2}
-          style={{ textAlign: "center", fontFamily: "SBAggroB" }}
-        >
-          태그를 누르면 삭제됩니다
-        </Grid>
+       <Grid item xs={12} style={{ textAlign: "center" }}>
+        <input
+          className={stylesTag.HashInput}
+          label="태그"
+          value={tag}
+          onChange={changeTag}
+          onKeyUp={addTagFunc}
+          placeholder="이곳에 태그입력 후 엔터를 치세요."
+          maxLength={20}
+          style={{textAlign: "center"}}
+        />
+       </Grid>
+       
         <Grid item xs={4}></Grid>
         <Grid item xs={4} mt={6}>
           <div item className={stylesTag.HashWrap}>
@@ -162,28 +169,31 @@ export default function MainFeed() {
         <Grid item xs={4} mt={6}>
           <Button
             onClick={handleShowSearch}
+            variant="contained"
+            color="neutral"
             style={{
               fontFamily: "SBAggroB",
               width: "50px",
               height: "30px",
               color: "black",
+              marginLeft: "10px",
+              boxShadow:
+              "0 10px 30px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.08)"
             }}
           >
-            <SearchIcon color="neutral"></SearchIcon>
+            <SearchIcon color="white"></SearchIcon>
           </Button>
         </Grid>
       </Grid>
-      <Grid item xs={4} style={{ textAlign: "center" }}>
-        <input
-          className={stylesTag.HashInput}
-          label="태그"
-          value={tag}
-          onChange={changeTag}
-          onKeyUp={addTagFunc}
-          placeholder="태그입력 후 엔터를 치세요"
-          maxLength={20}
-        />
-      </Grid>
+      <Grid
+          item
+          xs={4}
+          id="notice"
+          mt={2}
+          style={{ textAlign: "center", fontFamily: "SBAggroB", marginBottom: "30px"}}
+        >
+        {!hide ?( <span>태그를 누르면 삭제됩니다</span>):(<span></span>)}
+        </Grid>
       <Grid
         container
         style={{
@@ -249,7 +259,7 @@ export default function MainFeed() {
         </Container>
       </div>
       {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 4 }}>
+      <Box sx={{  p: 4 }}>
         <Typography
           variant="subtitle1"
           align="center"

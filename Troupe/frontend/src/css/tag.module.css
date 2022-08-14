@@ -1,5 +1,6 @@
 
 .HashWrap {
+  padding-top: 100px;
     margin-top: 24px;
     color: rgb(52, 58, 64);
     font-size: 1.125rem;
@@ -39,13 +40,17 @@
   outline: none;
   cursor: text;
   line-height: 3rem;
+  margin-top: 80px;
   margin-bottom: 0.75rem;
-  min-width: 10rem;
+  min-width: 14rem;
   border: none;
-  background-color: #EEE3D0;
+  background-color: #ffffff;
   color: black;
   font-family: "Cafe24SsurroundAir";
   font-weight: bold;
+  border-radius: 5px;
+  box-shadow:
+  0 10px 30px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.08);
 }
 
 .img {

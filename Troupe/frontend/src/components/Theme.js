@@ -16,6 +16,9 @@ const theme = createTheme({
     black: {
       main: "#000000",
     },
+    white: {
+      main: "#FFFFFF"
+    }
   },
   typography: {
     fontFamily: [

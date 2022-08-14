@@ -39,7 +39,8 @@ export default function AvatarSelectBar(props) {
 
 	return (
 		<Grid container item xs={12} alignItems="center"
-			style={{margin:"10px", border:"3px solid white", backgroundColor:"#FFCF24"}}>
+			style={{margin:"10px", border:"5px solid white", backgroundColor:"#ffd400",  boxShadow: "3px 3px 5px #000",
+			borderRadius: "1%"}}>
 			<Grid item xs={1.5}><Button onClick={previousButton}><ArrowBackIosNewIcon style={{color:"black"}} /></Button></Grid>
 			{(imgDatas && !(imgDatas.length===0)) ?
 				<Grid container item xs={9}>
