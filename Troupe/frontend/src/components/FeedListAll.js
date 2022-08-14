@@ -68,7 +68,7 @@ export default function FeedListAll() {
   // console.log(FeedListAllQuery.data);
   // console.log(FeedListAllQuery.isLoading);
 
-  if (!FeedListAllQuery.isLoading) {
+  if (!FeedListAllQuery.isLoading && FeedListAllQuery.data.pages[0]) {
     return (
       <Fragment>
         <Grid container spacing={4}>
@@ -173,7 +173,7 @@ export default function FeedListAll() {
             )),
           )}
         </Grid>
-        <PlusButton handleCard={FeedListAllQuery.fetchNextPage}></PlusButton>
+        <PlusButton handleCard={() => FeedListAllQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
   }
