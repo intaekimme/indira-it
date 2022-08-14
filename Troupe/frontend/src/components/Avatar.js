@@ -47,6 +47,7 @@ export default function Avatar(props) {
           left: left,
           width: `${imgWidth}px`,
           height: `${imgHeight}px`,
+          filter: "drop-shadow(3px 3px 1.8px #000)",
         }}
       ></img>
       <img

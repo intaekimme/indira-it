@@ -51,7 +51,7 @@ export default function MainPerf() {
         </Container>
       </Grid>
       {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 4 }}>
+      <Box sx={{  p: 4 }}>
         <Typography
           variant="subtitle1"
           align="center"

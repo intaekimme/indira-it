@@ -45,7 +45,7 @@ export default function ProfileMemberInfo(props) {
             height: "200px",
             objectFit: "cover",
             borderRadius: "30%",
-            border: "8px #FFCF24 solid",
+            border: "8px white solid",
             boxShadow: "3px 3px 5px #000",
           }}
         />,
