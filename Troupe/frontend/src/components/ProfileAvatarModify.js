@@ -8,8 +8,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 import stylesButton from "../css/button.module.css"
 
@@ -199,51 +197,46 @@ export default function ProfileAvatarModify() {
             alignItems="center"
             style={{ backgroundColor: "blue", padding: 0 }}
           >
-            <FormControl>
-              <FormLabel id="demo-form-control-label-placement">
-                Label placement
-              </FormLabel>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"hair"}
-                  imgDatas={hairs}
-                  currentValue={hairValue}
-                  setValue={setHairValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"eye"}
-                  imgDatas={eyes}
-                  currentValue={eyeValue}
-                  setValue={setEyeValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"nose"}
-                  imgDatas={noses}
-                  currentValue={noseValue}
-                  setValue={setNoseValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"mouth"}
-                  imgDatas={mouthes}
-                  currentValue={mouthValue}
-                  setValue={setMouthValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"clothes"}
-                  imgDatas={clothes}
-                  currentValue={clothesValue}
-                  setValue={setClothesValue}
-                />
-              </Grid>
-            </FormControl>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"hair"}
+              imgDatas={hairs}
+              currentValue={hairValue}
+              setValue={setHairValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"eye"}
+              imgDatas={eyes}
+              currentValue={eyeValue}
+              setValue={setEyeValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"nose"}
+              imgDatas={noses}
+              currentValue={noseValue}
+              setValue={setNoseValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"mouth"}
+              imgDatas={mouthes}
+              currentValue={mouthValue}
+              setValue={setMouthValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"clothes"}
+              imgDatas={clothes}
+              currentValue={clothesValue}
+              setValue={setClothesValue}
+            />
+          </Grid>
           </Grid>
         </Grid>
       </Container>

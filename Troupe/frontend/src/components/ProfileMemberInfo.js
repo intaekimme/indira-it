@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -24,6 +25,8 @@ export default function ProfileMemberInfo(props) {
   const [profileImageUrl, setProfileImageUrl] = React.useState(
     props.memberInfo.profileImageUrl,
   );
+  //프로필 <img> element
+  const [profileImage, setProfileImage] = React.useState(<div></div>);
   //프로필 이미지 update
   React.useEffect(() => {
     setMemberInfo(props.memberInfo);
@@ -33,7 +36,7 @@ export default function ProfileMemberInfo(props) {
       props.memberInfo.profileImageUrl !== null
     ) {
       //프로필이미지 세팅
-      setProfileImageUrl(
+      setProfileImage(
         <img
           src={props.memberInfo.profileImageUrl}
           alt={props.memberInfo.profileImageUrl}
@@ -49,7 +52,7 @@ export default function ProfileMemberInfo(props) {
       );
     } else {
       //기본이미지 세팅
-      setProfileImageUrl(
+      setProfileImage(
         <AccountCircleIcon
           fontSize="large"
           sx={{ fontSize: "200px" }}
@@ -95,18 +98,17 @@ export default function ProfileMemberInfo(props) {
         fontFamily: "SBAggroB",
         position: "relative",
         overflow: "visible",
-        marginTop: "120px",
+        marginBottom: "10px",
         borderRadius: "5px",
         boxShadow:
           "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.6)",
-        height: "240px",
+        // height: "240px",
       }}
     >
       <CardContent
         style={{
           position: "relative",
           left: "10px",
-          top: "-160px",
         }}
       >
         <div style={{ position: "relative", margin: "20px" }}>
@@ -123,58 +125,72 @@ export default function ProfileMemberInfo(props) {
           >
             신고하기
           </Button> */}
-          <div>{profileImageUrl}</div>
-          <div style={{ padding: "20px", marginLeft: "20px", color: "white" }}>
-            <span
-              style={{
-                textShadow: "1px 1px 1px #000",
-              }}
-            >
-              {memberInfo.nickname}
-            </span>
-          </div>
-          <div
-            style={{
-              float: "right",
-              width: "200px",
-              position: "absolute",
-              right: "0px",
-              bottom: "0px",
-              textAlign: "right",
-            }}
+          <div>{profileImage}</div>
+          <Grid
+            container
+            item
+            spacing={0.5}
+            justifyContent="center"
+            alignItems="flex-end"
           >
-            <Button
-              style={{
-                fontFamily: "SBAggroB",
-                color: "black",
-                marginTop: "17px",
-                marginRight: "-7px",
-              }}
+            <Grid
+              item
+              xs={4}
+              spacing={0.5}
+              justifyContent="center"
+              alignItems="flex-end"
+            ></Grid>
+            <Grid
+              item
+              xs={4}
+              spacing={0.5}
+              justifyContent="center"
+              alignItems="flex-end"
             >
-              {NumberFilter(followerCount)}
-            </Button>
-            {myPage ? (
-              <Button
-                style={{
-                  width: "100px",
-                  fontSize: "12px",
-                  borderRadius: "15px",
-                  margin: "10px",
-                  marginTop: "20px",
-                  border: "3px solid white",
-                }}
-                variant="contained"
-                color="green"
-                onClick={modifyProfile}
-                className={styledButton.btn2}
+              <div
+                style={{ padding: "20px", marginLeft: "20px", color: "white" }}
               >
-                프로필수정
-              </Button>
-            ) : (
-              <FollowButton memberNo={memberNo} />
-            )}
-          </div>
+                <span
+                  style={{
+                    textShadow: "1px 1px 1px #000",
+                  }}
+                >
+                  {memberInfo.nickname}
+                </span>
+              </div>
+            </Grid>
+            <Grid
+              item
+              xs={4}
+              spacing={0.5}
+              justifyContent="center"
+              alignItems="flex-end"
+            >
+              <div
+                style={{
+                  float: "right",
+                  // width: "200px",
+                  // position: "absolute",
+                  // right: "0px",
+                  // bottom: "0px",
+                  textAlign: "right",
+                }}
+              >
+                <Button
+                  style={{
+                    fontFamily: "SBAggroB",
+                    color: "black",
+                    marginTop: "17px",
+                    marginRight: "-7px",
+                  }}
+                >
+                  follower : {NumberFilter(followerCount)}
+                </Button>
+              </div>
+            </Grid>
+          </Grid>
         </div>
+
         <Typography
           variant="body2"
           color="text.secondary"
@@ -186,6 +202,28 @@ export default function ProfileMemberInfo(props) {
         >
           {memberInfo.description}
         </Typography>
+        <div>
+          {myPage ? (
+            <Button
+              style={{
+                width: "100px",
+                fontSize: "12px",
+                borderRadius: "15px",
+                margin: "10px",
+                marginTop: "20px",
+                border: "3px solid white",
+              }}
+              variant="contained"
+              color="green"
+              onClick={modifyProfile}
+              className={styledButton.btn2}
+            >
+              프로필수정
+            </Button>
+          ) : (
+            <FollowButton memberNo={memberNo} />
+          )}
+        </div>
       </CardContent>
     </Card>
   );
