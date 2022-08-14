@@ -127,8 +127,9 @@ function Profile(props) {
                 avatarResponse={avatar}
                 imgWidth={75 * 4}
                 imgHeight={100 * 4}
-                divWidth={"100%"}
-                divHeight={"100%"}
+                divWidth={75 * 4}
+                divHeight="100%"
+                
 
                 // style={{
                 //   position: "absolute",

@@ -67,7 +67,7 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         alert(
-          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data,
+          "비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data
         );
         return true;
       })
@@ -229,7 +229,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            },
+            }
           )
           .then((response) => {
             alert("팔로우 하였습니다." + response.data);
@@ -872,7 +872,7 @@ const apiClient = {
     feedNo,
     parentCommentNo,
     data,
-    refreshChildFunction,
+    refreshChildFunction
   ) => {
     instance
       .post(`/feed/${feedNo}/comment`, data, {
@@ -918,7 +918,7 @@ const apiClient = {
   //  공연 후기 수정
   perfReviewModify: (performanceNo, reviewNo, data) => {
     return instance
-      .patch(`/perf/${performanceNo}/review/${reviewNo}`, data, {
+      .patch(`/perf/${performanceNo}/review/${reviewNo}/modify`, data, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
@@ -935,7 +935,7 @@ const apiClient = {
   //  공연 후기 삭제
   perfReviewDelete: (performanceNo, reviewNo) => {
     return instance
-      .patch(`/perf/${performanceNo}/review/${reviewNo}/del`, {
+      .patch(`/perf/${performanceNo}/review/${reviewNo}/del`, null, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },

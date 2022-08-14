@@ -14,6 +14,7 @@ import java.util.Map;
 @Builder
 public class PerformanceResponse {
     int pfNo;
+    String title;
     String description;
     Map<Integer, String> image;
     String location;
