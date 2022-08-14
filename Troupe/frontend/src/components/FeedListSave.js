@@ -19,11 +19,45 @@ import { Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
+import FeedDetail from "./FeedDetail";
 import PlusButton from "./PlusButton";
+export default function FeedListAll() {
+  const [open, setOpen] = React.useState(false);
+  const [feedNo, setFeedNo] = React.useState(0);
+  let [cards, setCard] = React.useState([
+    {
+      feedNo: 0,
+      nickname: "",
+      profileImageUrl: "",
+    },
+  ]);
+  const [change, setChange] = React.useState(false);
+  function handleOpen(no) {
+    setOpen(true);
+    setFeedNo(no);
+    setChange(false);
+  }
+  function handleClose() {
+    setOpen(false);
+    setChange(true);
+  }
 
-export default function FeedListSave() {
+  const changeFunction = (check) => {
+    setChange(check);
+  };
+  React.useEffect(() => {
+    // const data = {
+    //   change: "all",
+    //   pageNumber: 0,
+    // };
+    apiClient.getFeedTest().then((data) => {
+      // console.log(data);
+      setCard(data);
+    });
+  }, []);
+
   let FeedListSaveQuery = useInfiniteQuery(
-    "SavedFeed",
+    "AllFeeds",
     apiClient.getSavedFeedList,
     {
       getNextPageParam: (lastPage, pages) => {
@@ -34,7 +68,7 @@ export default function FeedListSave() {
   console.log(FeedListSaveQuery.data);
   console.log(FeedListSaveQuery.isLoading);
 
-  if (!FeedListSaveQuery.isLoading) {
+  if (!FeedListSaveQuery.isLoading && FeedListSaveQuery.data.pages[0]) {
     return (
       <Fragment>
         <Grid container spacing={4}>
@@ -54,52 +88,90 @@ export default function FeedListSave() {
                   }}
                   elevation={0}
                 >
-                  <Typography
-                    gutterBottom
-                    style={{ fontSize: "20px", fontFamily: "IBM Plex Sans KR" }}
-                    component="span"
-                  >
-                    <img
-                      src={datum.profileImageUrl}
-                      alt=""
-                      style={{
-                        borderRadius: "70%",
-                        objectFit: "cover",
-                        height: "20px",
-                        width: "20px",
-                      }}
-                    ></img>
-                    {datum.nickname}
-                  </Typography>
-                  <Link href={"/feed/test"}>
-                    <CardMedia
-                      component="img"
-                      sx={{
-                        pb: 1,
-                        objectFit: "cover",
-                        width: "300px",
-                        height: "300px",
-                      }}
-                      image={Object.values(datum.images)[0]}
-                      alt=""
-                    ></CardMedia>
-                  </Link>
+                  <Grid container mt={1}>
+                    <Grid ml={1}>
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href={"/profile/" + datum.memberNo}
+                      >
+                        <img
+                          src={datum.profileImageUrl}
+                          alt=""
+                          style={{
+                            borderRadius: "70%",
+                            objectFit: "cover",
+                            height: "30px",
+                            width: "30px",
+                          }}
+                        ></img>
+                      </a>
+                    </Grid>
+                    <Grid ml={1} mb={2}>
+                      <Typography
+                        style={{
+                          fontSize: "13px",
+                          fontFamily: "SBAggroB",
+                          wordBreak: "break-all",
+                          overflow: "hidden",
+                        }}
+                        component="span"
+                      >
+                        {datum.nickname}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      pb: 1,
+                      objectFit: "cover",
+                      width: "300px",
+                      height: "300px",
+                    }}
+                    image={Object.values(datum.images)[0]}
+                    alt=""
+                    onClick={() => handleOpen(datum.feedNo)}
+                  ></CardMedia>
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
-                      margin: "0px",
+                      margin: "5px",
                       padding: "0px",
                     }}
                   >
-                    <FeedLikeButton></FeedLikeButton>
-                    <FeedSaveButton></FeedSaveButton>
+                    <Grid>
+                      <FeedLikeButton
+                        change={change}
+                        feedNo={datum.feedNo}
+                      ></FeedLikeButton>
+                    </Grid>
+                    <Grid mr={-3}>
+                      <FeedSaveButton
+                        change={change}
+                        feedNo={datum.feedNo}
+                      ></FeedSaveButton>
+                    </Grid>
                   </CardActions>
                 </Card>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="simple-modal-title"
+                  aria-describedby="simple-modal-description"
+                  className={stylesModal.outer}
+                  animationType={"fade"}
+                >
+                  <FeedDetail
+                    setChange={setChange}
+                    feedNo={feedNo}
+                    open={open}
+                  ></FeedDetail>
+                </Modal>
               </Grid>
             )),
           )}
         </Grid>
-        <PlusButton handleCard={FeedListSaveQuery.fetchNextPage}></PlusButton>
+        <PlusButton handleCard={() => FeedListSaveQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
   }
