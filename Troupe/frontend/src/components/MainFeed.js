@@ -18,6 +18,7 @@ import stylesTag from "../css/tag.module.css";
 import FeedListFollow from "./FeedListFollow";
 import FeedListSave from "./FeedListSave";
 import FeedListSearch from "./FeedListSearch";
+import FeedListSearchQuery from './FeedListSearch'
 import Theme from "./Theme";
 import SearchIcon from "@mui/icons-material/Search";
 function Copyright() {
@@ -25,7 +26,7 @@ function Copyright() {
     <Typography color="text.secondary" align="center" component="span">
       {"Copyright © "}
       <Link color="inherit" href="/">
-        Troupe
+        Indielight
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -41,6 +42,7 @@ export default function MainFeed() {
   const [showFollow, setShowFollow] = React.useState(false);
   const [showSave, setShowSave] = React.useState(false);
   const [showSearch, setShowSearch] = React.useState(false);
+  const [howManySearch, setHowManySearch] = React.useState(0);
 
   const handleShowAll = () => {
     setShowAll(true);
@@ -68,6 +70,7 @@ export default function MainFeed() {
     setShowSave(false);
     setShowFollow(false);
     setShowSearch(true);
+    setHowManySearch(howManySearch + 1);
   };
 
   const changeTag = (event) => {
@@ -238,7 +241,7 @@ export default function MainFeed() {
           {showFollow ? <FeedListFollow></FeedListFollow> : null}
           {showSave ? <FeedListSave></FeedListSave> : null}
           {showAll ? <FeedListAll></FeedListAll> : null}
-          {showSearch ? <FeedListSearch tags={tags}></FeedListSearch> : null}
+          {showSearch ? <FeedListSearch tags={tags} howManySearch={howManySearch}></FeedListSearch> : null}
         </Container>
       </div>
       {/* Footer */}

@@ -427,9 +427,12 @@ const apiClient = {
   },
   getSavedFeedList: ({ pageParam = 0 }) => {
     instance
-      .get(`/feed/list/save?pageNumber=${pageParam}`)
+      .get(`/feed/list/save?pageNumber=${pageParam}`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
       .then((response) => {
-        alert("저장 피드 불러오기 성공");
         return response.data;
       })
       .catch((error) => {
@@ -440,9 +443,12 @@ const apiClient = {
 
   getFollowFeedList: ({ pageParam = 0 }) => {
     instance
-      .get(`/feed/list/follow?pageNumber=${pageParam}`)
+      .get(`/feed/list/follow?pageNumber=${pageParam}`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
       .then((response) => {
-        alert("팔로우 피드 불러오기 성공");
         return response.data;
       })
       .catch((error) => {

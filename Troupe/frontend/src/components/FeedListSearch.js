@@ -22,6 +22,8 @@ import { Fragment } from "react";
 import PlusButton from "./PlusButton";
 
 export default function FeedListSearch(props) {
+  // [searchTags, setSearchTags] = React.useState(props.tags)
+  
   let FeedListSearchQuery = useInfiniteQuery(
     ["tagSearch"],
     () => apiClient.feedTagSearch({ pageParam: 0, tags: props.tags }),
@@ -34,6 +36,9 @@ export default function FeedListSearch(props) {
   );
   console.log(FeedListSearchQuery.data);
   console.log(FeedListSearchQuery.isLoading);
+  if (props.howManySearch > 1) {
+    FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 })
+  }
 
   if (!FeedListSearchQuery.isLoading) {
     console.log(FeedListSearchQuery.data);
@@ -98,7 +103,7 @@ export default function FeedListSearch(props) {
           )}
         </Grid>
 
-        <PlusButton handleCard={FeedListSearchQuery.fetchNextPage}></PlusButton>
+        <PlusButton handleCard={() => FeedListSearchQuery.fetchNextPage} disabled={!FeedListSearchQuery.hasNextPage}></PlusButton>
       </Fragment>
     );
   }
