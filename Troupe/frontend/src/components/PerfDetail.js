@@ -8,7 +8,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
 import CommentList from "./CommentList";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 // 제목, 기간, 시간, 장소, 티켓가격
 
@@ -134,6 +134,10 @@ function ModifyDeleteButton(props) {
     apiClient.perfRemove(data);
   }
 
+  function moveToModify() {
+    window.location.href = `/perf/modify/${props.performanceNo}`;
+  }
+
   return (
     <div style={{ float: "right" }}>
       <Button
@@ -149,33 +153,17 @@ function ModifyDeleteButton(props) {
       </Button>
       {user ? (
         <Fragment>
-          <Link
-            to={{
-              pathname: `/perf/modify/${props.performanceNo}`,
-              state: {
-                name: "asdf",
-              },
-            }}
-            // href={`perf/modify/${props.performanceNo}`}
+          <Button
             variant="outlined"
             style={{
               margin: "8px",
               backgroundColor: "skyblue",
               fontFamily: "IBM Plex Sans KR",
             }}
+            onClick={moveToModify}
           >
-            {/* <Button
-              variant="outlined"
-              style={{
-                margin: "8px",
-                backgroundColor: "skyblue",
-                fontFamily: "IBM Plex Sans KR",
-              }}
-            >
-              수정
-            </Button> */}
             수정
-          </Link>
+          </Button>
           <Button
             variant="outlined"
             style={{
@@ -218,7 +206,7 @@ function PerfDetail() {
   const [price, setPrice] = useState([
     {
       id: 0,
-      name: "",
+      seat: "",
       price: 0,
     },
   ]);
@@ -305,7 +293,6 @@ function PerfDetail() {
         });
       });
 
-      console.log(json);
       setCommentList(json);
     });
   }, [pfNo]);
@@ -370,11 +357,11 @@ function PerfDetail() {
                 {price.map((item, i) =>
                   i === 0 ? (
                     <li id={i}>
-                      가격 : {item.name} {item.price}
+                      가격 : {item.seat} {item.price}
                     </li>
                   ) : (
                     <li id={i}>
-                      {item.name} {item.price}
+                      {item.seat} {item.price}
                     </li>
                   )
                 )}
