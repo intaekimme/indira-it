@@ -165,12 +165,12 @@ export default function FeedListAll() {
                   aria-labelledby="simple-modal-title"
                   aria-describedby="simple-modal-description"
                   className={stylesModal.outer}
-                  animationType={"fade"}
                 >
                   <FeedDetail
                     setChange={setChange}
                     feedNo={feedNo}
                     open={open}
+                    handleClose ={handleClose}
                   ></FeedDetail>
                 </Modal>
               </Grid>

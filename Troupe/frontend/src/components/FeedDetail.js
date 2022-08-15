@@ -48,12 +48,9 @@ export default function FeedDetail(props) {
   const [tag, setTag] = React.useState("");
   function searchTag(tagName) {
     if (tagName !== "") {
-      // apiClient.getFeedSearchTest(tagName).then((data) => {});
-      // setSearch(!search);
-      // window.location.href='/feed/list/search'
+      // apiClient.feedTagSearch({ pageParam: 0, tags: tagName });
       setTag(tagName);
-      apiClient.feedTagSearch({ pageParam: 0, tags: tagName });
-      setOpen(!open);
+      console.log(tag);
     }
   }
   const refreshFunction = (newComment) => {
@@ -168,18 +165,26 @@ export default function FeedDetail(props) {
                 >
                   {feedInfo.tags ? (
                     feedInfo.tags.map((item, id) => (
-                      <Link
-                        to="/feed/list/search"
-                        style={{ textDecoration: "none" }}
-                      >
+                      // <Link
+                      //   to={{
+                      //     pathname: `/feed/list/search`,
+                      //     state: {
+                      //     tags: item
+                      //   }}}
+                      //   style={{ textDecoration: "none" }}
+                      // >
+                      //   </Link>
                         <div
                           className={stylesTag.HashWrapInner}
                           key={id}
-                          onClick={() => searchTag(item.trim())}
+                          // onClick={() => searchTag(item.trim())}
+                        onClick={() => {
+                          searchTag(item.trim())
+                          props.handleClose()
+                        }}
                         >
                           # {item}
                         </div>
-                      </Link>
                     ))
                   ) : (
                     <div></div>
@@ -210,6 +215,6 @@ export default function FeedDetail(props) {
       </Box>
     </ThemeProvider>
   ) : (
-    <div></div>
+    <Link to="/perf/list"></Link>
   );
 }
