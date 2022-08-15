@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-// import SearchBar from "./SearchBar";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import { useState, useParams } from "react-router-dom";
@@ -95,6 +94,7 @@ export default function MainPerf() {
       </Grid>
       <Grid>
         <Container sx={{ py: 10 }} maxWidth="md">
+<<<<<<< HEAD
           {showList ? <PerfList></PerfList> : null}
           {showSearch ? (
             <PerfSearchList
@@ -103,6 +103,10 @@ export default function MainPerf() {
               howManySearch={howManySearch}
             ></PerfSearchList>
           ) : null}
+=======
+          {showList? <PerfList></PerfList> : null}
+          {showSearch? <PerfSearchList condition={searchCategory} keyword={searchWord} howManySearch={howManySearch} setHowManySearch={setHowManySearch}></PerfSearchList> : null}
+>>>>>>> jaehyun
         </Container>
       </Grid>
       {/* Footer */}

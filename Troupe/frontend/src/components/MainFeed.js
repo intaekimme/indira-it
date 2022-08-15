@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-// import SearchBar from "./SearchBar";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import { useState, useParams } from "react-router-dom";
@@ -279,12 +278,16 @@ export default function MainFeed() {
           {showFollow ? <FeedListFollow></FeedListFollow> : null}
           {showSave ? <FeedListSave></FeedListSave> : null}
           {showAll ? <FeedListAll></FeedListAll> : null}
+<<<<<<< HEAD
           {showSearch ? (
             <FeedListSearch
               tags={tags}
               howManySearch={howManySearch}
             ></FeedListSearch>
           ) : null}
+=======
+          {showSearch ? <FeedListSearch tags={tags} howManySearch={howManySearch} setHowManySearch={setHowManySearch}></FeedListSearch> : null}
+>>>>>>> jaehyun
         </Container>
       </div>
       {/* Footer */}

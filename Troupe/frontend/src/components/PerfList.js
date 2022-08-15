@@ -32,6 +32,7 @@ export default function PerfListCard() {
   console.log(performanceListQuery.isLoading);
 
   const [change, setChange] = React.useState(false);
+  const [isHover, setIsHover] = React.useState(-1);
 
   const changeFunction = (check) => {
     setChange(check);
@@ -91,7 +92,7 @@ export default function PerfListCard() {
                 <Link href={`/perf/detail/${datum.pfNo}`}>
                   <CardMedia
                     component="img"
-                    sx={{
+                    style={{
                       pb: 1,
                       objectFit: "cover",
                       width: "300px",
@@ -99,7 +100,10 @@ export default function PerfListCard() {
                     }}
                     image={Object.values(datum.image)[0]}
                     alt=""
+                    onMouseEnter={()=>setIsHover(datum.pfNo)}
+                    onMouseLeave={()=>setIsHover(-1)}
                   ></CardMedia>
+                  {isHover === datum.pfNo ? <div style={{position:'absolute', top:150, right:100}}>호버텍스트</div> : null}
                 </Link>
                 <CardActions
                   sx={{
