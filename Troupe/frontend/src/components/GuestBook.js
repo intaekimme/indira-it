@@ -84,7 +84,7 @@ export default function GuestBook(props) {
         style={{width:"100%", height:"100%"}}
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title">
+          <Typography id="modal-modal-title" component="span">
             {sessionStorage.getItem("loginCheck") === "true" ? (
               existMyGuestBook ? (
                 <div>
@@ -133,7 +133,7 @@ export default function GuestBook(props) {
               <div></div>
             )}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography component="span" id="modal-modal-description" sx={{ mt: 2 }}>
             <Grid
               container
               item

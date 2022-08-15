@@ -118,7 +118,7 @@ export default function Header() {
       id="header"
       style={{
         width: "100%",
-        height: "80px",
+        height: "150px",
         background: "#EEE3D0",
         textAlign: "center",
         fontSize: "50px",
@@ -254,7 +254,7 @@ export default function Header() {
           </Link>
         )}
       </div>
-      <div style={{ width: "100%", height: "120px" }}>
+      <div style={{ width: "100%"}}>
         <Link
           href="/"
           className={styled.header}

@@ -104,10 +104,10 @@ function Profile(props) {
         >
           <Grid
             item
+            xs={gridItemxs}
             container
             justifyContent="flex-start"
             alignItems="flex-end"
-            xs={gridItemxs}
             style={{
               backgroundColor: "gray",
               paddingRight: 20,
