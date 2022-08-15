@@ -107,7 +107,7 @@ const apiClient = {
       });
   },
   //유저아바타 수정
-  modifyAvatar: (avatarData) =>{
+  modifyAvatar: (avatarData) => {
     return instance
       .patch(`/member/myavatar`, avatarData, {
         headers: {
@@ -389,10 +389,9 @@ const apiClient = {
       .then((response) => {
         console.log(response.data);
         alert("방명록 목록조회 성공 : " + response.data);
-        if(response.data==="" || response.data.length==0){
+        if (response.data === "" || response.data.length == 0) {
           return [];
-        }
-        else{
+        } else {
           return response.data;
         }
       })
@@ -658,8 +657,8 @@ const apiClient = {
       .then((response) => {
         console.log(response.data);
         alert("피드 검색 불러오기 성공");
-        window.location.href='/feed/list/search'
-        console.log(response.data)
+        window.location.href = "/feed/list/search";
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -708,7 +707,7 @@ const apiClient = {
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
         // alert("불러오기 성공");
-        console.log(response.data);
+        // console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -1003,7 +1002,6 @@ const apiClient = {
         },
       })
       .then((response) => {
-
         return response.data;
       })
       .catch((error) => {
@@ -1042,7 +1040,7 @@ const apiClient = {
         return error;
       });
   },
-  perfSearch: async ({ condition = 'title', keyword='' }) => {
+  perfSearch: async ({ condition = "title", keyword = "" }) => {
     let url = `/perf/list/search?condition=${condition}&keyword=${keyword}`;
     return await instance
       .get(url)

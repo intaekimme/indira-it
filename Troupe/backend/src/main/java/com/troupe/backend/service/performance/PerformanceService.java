@@ -277,7 +277,7 @@ public class PerformanceService {
         for(PerformancePrice price : priceList){
             priceResponseList.add(PriceResponse.builder()
                     .id(price.getId())
-                    .name(price.getSeat())
+                    .seat(price.getSeat())
                     .price(price.getPrice())
                     .build());
         }
