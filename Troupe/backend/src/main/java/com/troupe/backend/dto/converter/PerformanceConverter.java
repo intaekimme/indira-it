@@ -64,7 +64,7 @@ public class PerformanceConverter {
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
                 .startDate(startDate)
-                .updatedTime(endDate)
+                .endDate(endDate)
                 .build();
     }
 
