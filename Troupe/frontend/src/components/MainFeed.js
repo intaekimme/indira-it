@@ -278,6 +278,7 @@ export default function MainFeed() {
             <FeedListSearch
               tags={tags}
               howManySearch={howManySearch}
+              setHowManySearch={setHowManySearch}
             ></FeedListSearch>
           ) : null}
         </Container>

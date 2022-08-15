@@ -24,13 +24,17 @@ export default function PerfSearchList(props) {
   console.log(performanceSearchListQuery.isLoading);
 
   const [change, setChange] = React.useState(false);
+  const [isHover, setIsHover] = React.useState(false);
+
+
 
   const changeFunction = (check) => {
     setChange(check);
   };
 
-  if (props.howManySearch > 1) {
-    performanceSearchListQuery.refetch()
+  if (props.howManySearch > 0) {
+    performanceSearchListQuery.refetch();
+    props.setHowManySearch(0)
   }
 
   if (!performanceSearchListQuery.isLoading && performanceSearchListQuery.data) {
@@ -47,9 +51,6 @@ export default function PerfSearchList(props) {
                 }}
                 elevation={0}
               >
-                {/* <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
-                    <img src={data.image} alt='' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
-                  </Typography> */}
                 <Box
                   style={{
                     fontFamily: "IBM Plex Sans KR",

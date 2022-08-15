@@ -148,6 +148,7 @@ export default function MainPerf() {
               condition={searchCategory}
               keyword={searchWord}
               howManySearch={howManySearch}
+              setHowManySearch={setHowManySearch}
             ></PerfSearchList>
           ) : null}
         </Container>
