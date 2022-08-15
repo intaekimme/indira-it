@@ -51,8 +51,8 @@ public class PerformanceConverter {
 
         Category category = categoryRepository.findBySmallCategory(performanceForm.getCategory()).get();
 
-        Date startDate = StringToDate(performanceForm.getStartDate());
-        Date endDate = StringToDate(performanceForm.getEndDate());
+//        Date startDate = StringToDate(performanceForm.getStartDate());
+//        Date endDate = StringToDate(performanceForm.getEndDate());
 
         return Performance.builder()
                 .member(member)
@@ -63,8 +63,8 @@ public class PerformanceConverter {
                 .category(category)
                 .detailTime(performanceForm.getDetailTime())
                 .description(performanceForm.getDescription())
-                .startDate(startDate)
-                .updatedTime(endDate)
+                .startDate(performanceForm.getStartDate())
+                .endDate(performanceForm.getEndDate())
                 .build();
     }
 

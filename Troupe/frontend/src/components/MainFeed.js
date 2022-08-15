@@ -7,18 +7,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-// import SearchBar from "./SearchBar";
+import { ThemeProvider } from "@mui/material/styles";
 import PerfFeedToggle from "./MainButton";
-import apiClient from "../apiClient";
-import { useState, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import FeedListAll from "./FeedListAll";
 import stylesTag from "../css/tag.module.css";
+import stylesButton from "../css/button.module.css";
 import FeedListFollow from "./FeedListFollow";
 import FeedListSave from "./FeedListSave";
 import FeedListSearch from "./FeedListSearch";
-import FeedListSearchQuery from "./FeedListSearch";
 import Theme from "./Theme";
 import SearchIcon from "@mui/icons-material/Search";
 function Copyright() {
@@ -176,14 +173,12 @@ export default function MainFeed() {
             onClick={handleShowSearch}
             variant="contained"
             color="neutral"
+            className={stylesButton.btn2}
             style={{
-              fontFamily: "SBAggroB",
-              width: "50px",
-              height: "30px",
+              backgroundColor: "#fda085",
               color: "black",
+              width: "50px",
               marginLeft: "10px",
-              boxShadow:
-                "0 10px 30px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.08)",
             }}
           >
             <SearchIcon color="white"></SearchIcon>
@@ -257,7 +252,7 @@ export default function MainFeed() {
             팔로우 피드
           </Button>
         </Grid>
-        <Grid item xs={2}>
+        {/* <Grid item xs={2}>
           <Button
             href="/feed/register"
             variant="contained"
@@ -271,7 +266,7 @@ export default function MainFeed() {
           >
             피드 등록
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
 
       <div>
