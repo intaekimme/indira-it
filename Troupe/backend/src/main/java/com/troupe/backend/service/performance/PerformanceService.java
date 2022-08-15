@@ -299,7 +299,7 @@ public class PerformanceService {
                 .imageUrl(urlList)
                 .price(priceResponseList)
                 .memberNo(performance.getMember().getMemberNo())
-                .profileImg(performance.getMember().getProfileImageUrl())
+                .profileImg(MyConstant.FILE_SERVER_URL + performance.getMember().getProfileImageUrl())
                 .nickname(performance.getMember().getNickname())
                 .title(performance.getTitle())
                 .location(performance.getLocation())
