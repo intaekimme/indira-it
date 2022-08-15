@@ -43,7 +43,7 @@ public interface PerformanceSaveRepository extends JpaRepository<PerformanceSave
             "where pfs.member = :member " +
             "and pfs.pf = :performance " +
             "and pfs.isRemoved = false ")
-    PerformanceSave findByMemberAndPfAndRemovedFalse(Member member, Performance performance);
+    Optional<PerformanceSave> findByMemberAndPfAndRemovedFalse(Member member, Performance performance);
 
     /**
      * 유저가 저장한 공연 목록 반환

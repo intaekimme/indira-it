@@ -708,7 +708,7 @@ const apiClient = {
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
         // alert("불러오기 성공");
-        // console.log(response.data);
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {

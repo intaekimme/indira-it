@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -287,6 +288,18 @@ public class PerformanceController {
         PageRequest pageRequest = PageRequest.of(pageNumber,6);
         List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageRequest);
         return ResponseEntity.ok().body(profilePfResponseList);
+    }
+
+
+    @Operation(summary = "공연 북마크 여부 불러오기", description = "파라미터 공연 번호")
+    @GetMapping("/{PfNo}/save/now")
+    public ResponseEntity pfSavecheck(Principal principal, @PathVariable int PfNo) throws IOException {
+        try{
+            return new ResponseEntity(performanceSaveService.checkPfSave(Integer.parseInt(principal.getName()),PfNo), HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("feedSave check FAIL", HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

@@ -115,26 +115,61 @@ public class PerformanceReviewService {
     public List<PfReviewResponse> findPfReviewList(int pfNo){
         Performance performance = performanceRepository.findById(pfNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연입니다."));
+
+        //  공연 번호로 찾은 원댓글들
         List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPfAndParentPerformanceReviewIsNull(performance)
                 .orElse(new ArrayList<>());
-
+        //  원 댓글 응답을 담은 배열
         List<PfReviewResponse> pfReviewResponseList = new ArrayList<>();
+
+        //  찾은 원댓글을 순회하며
         for (PerformanceReview review : performanceReviewList){
-            Member member = review.getMember();
+            Member fromMember = review.getMember();
+
+            //  원 댓글에 달려있는 대댓글 리뷰들
+            List<PerformanceReview> childReviewList = review.getChildrenPerformanceReview();
+            //  원 댓글 응답에 추가할 대댓글 응답 배열
+            List<PfReviewResponse> childReviewResponseList = new ArrayList<>();
+
+            //  대댓글이 없으면 대댓글 응답을 만들 필요가 없음
+            if(!childReviewList.isEmpty()){
+                for(PerformanceReview children : childReviewList){
+                    Member toMember = review.getMember();   //  대댓글 작성자
+                    PfReviewResponse childrenItem = PfReviewResponse.builder()
+                            .reviewNo(children.getId())
+                            .pfNo(performance.getId())
+                            .memberNo(toMember.getMemberNo())
+                            .nickname(toMember.getNickname())
+                            .profileImageUrl(MyConstant.PROFILE_IMAGE_URL + toMember.getProfileImageUrl())
+                            .comment(children.getContent())
+                            .isRemoved(children.getRemoved())
+                            .isModified(children.isModified())
+                            .createdTime(children.getCreatedTime())
+                            .parentCommentNo(review.getId())    //  부모 댓글 번호는 순회하는 댓글의 id
+                            .childComments(new ArrayList<>())   //  depth가 2이므로 하위 대댓글이 존재하지 않음
+                            .build();
+                    //  대댓글 응답에 추가
+                    childReviewResponseList.add(childrenItem);
+                }
+            }
+
+            //  댓글 응답
             PfReviewResponse item = PfReviewResponse.builder()
                     .reviewNo(review.getId())
                     .pfNo(performance.getId())
-                    .memberNo(member.getMemberNo())
-                    .nickname(member.getNickname())
-                    .profileImageUrl(MyConstant.FILE_SERVER_URL + member.getProfileImageUrl())
+                    .memberNo(fromMember.getMemberNo())
+                    .nickname(fromMember.getNickname())
+                    .profileImageUrl(MyConstant.FILE_SERVER_URL + fromMember.getProfileImageUrl())
                     .comment(review.getContent())
                     .isRemoved(review.getRemoved())
                     .isModified(review.isModified())
                     .createdTime(review.getCreatedTime())
+                    .parentCommentNo(0)     //  원댓글은 부모가 존재하지 않으므로 부모 댓글 번호 0으로 설정
+                    .childComments(childReviewResponseList)
                     .build();
 
-            if(review.getParentPerformanceReview() != null) item.setParentCommentNo(review.getParentPerformanceReview().getId());
-            else item.setParentCommentNo(0);
+//            if(review.getParentPerformanceReview() != null) item.setParentCommentNo(review.getParentPerformanceReview().getId());
+//            else item.setParentCommentNo(0);
 
             pfReviewResponseList.add(item);
         }
