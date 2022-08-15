@@ -251,9 +251,10 @@ public class FeedController {
 
     @Operation(summary = "피드 태그 검색 ", description = "파라미터: 태그명들 ")
     @GetMapping("/search")
-    public ResponseEntity tagSearch (@RequestParam List<String> tags, int pageNumber) throws IOException {
+    public ResponseEntity tagSearch (@RequestParam(required = false) List<String> tags, int pageNumber) throws IOException {
         try{
             PageRequest pageRequest = PageRequest.of(pageNumber,6);
+            if(tags==null) return new ResponseEntity(feedService.selectAll("all", 0,pageRequest), HttpStatus.OK);
              List<FeedResponse> list = feedService.selectAllBySearch(tags, pageRequest);
             return new ResponseEntity(list, HttpStatus.OK);
         }catch (Exception e){

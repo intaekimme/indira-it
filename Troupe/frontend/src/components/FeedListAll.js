@@ -21,6 +21,7 @@ import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import FeedDetail from "./FeedDetail";
 import PlusButton from "./PlusButton";
+
 export default function FeedListAll() {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
@@ -65,10 +66,10 @@ export default function FeedListAll() {
       },
     },
   );
-  // console.log(FeedListAllQuery.data);
-  // console.log(FeedListAllQuery.isLoading);
+  console.log(FeedListAllQuery.data);
+  console.log(FeedListAllQuery.isLoading);
 
-  if (!FeedListAllQuery.isLoading) {
+  if (!FeedListAllQuery.isLoading && FeedListAllQuery.data.pages[0]) {
     return (
       <Fragment>
         <Grid container spacing={4}>

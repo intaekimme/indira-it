@@ -106,6 +106,23 @@ const apiClient = {
         alert("프로필수정 실패 : " + error);
       });
   },
+  //유저아바타 수정
+  modifyAvatar: (avatarData) =>{
+    return instance
+      .patch(`/member/myavatar`, avatarData, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("아바타 수정 성공" + response);
+        return true;
+      })
+      .catch((error) => {
+        alert("아바타 수정 실패" + error);
+        return false;
+      });
+  },
 
   //이메일 중복체크
   existEmail: (data) => {
@@ -365,6 +382,26 @@ const apiClient = {
         return null;
       });
   },
+  //방명록 불러오기
+  getGuestBookList: (memberNo) => {
+    return instance
+      .get(`/guestbook/${parseInt(memberNo)}/list`)
+      .then((response) => {
+        console.log(response.data);
+        alert("방명록 목록조회 성공 : " + response.data);
+        if(response.data==="" || response.data.length==0){
+          return [];
+        }
+        else{
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("방명록 목록을 불러오는데 실패하였습니다 : " + error);
+        return [];
+      });
+  },
 
   //공연 삭제하기
   perfRemove: (data) => {
@@ -394,6 +431,7 @@ const apiClient = {
       })
       .then((response) => {
         alert("공연등록 되었습니다.");
+        window.location.href = "/perf/list/0";
       })
       .catch((error) => {
         alert("공연등록 실패 : " + error);
@@ -425,11 +463,14 @@ const apiClient = {
         alert("전체 피드 불러오기 실패" + error);
       });
   },
-  getSavedFeedList: ({ pageParam = 0 }) => {
-    instance
-      .get(`/feed/list/save?pageNumber=${pageParam}`)
+  getSavedFeedList: async ({ pageParam = 0 }) => {
+    return await instance
+      .get(`/feed/list/save?pageNumber=${pageParam}`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
       .then((response) => {
-        alert("저장 피드 불러오기 성공");
         return response.data;
       })
       .catch((error) => {
@@ -438,11 +479,14 @@ const apiClient = {
       });
   },
 
-  getFollowFeedList: ({ pageParam = 0 }) => {
-    instance
-      .get(`/feed/list/follow?pageNumber=${pageParam}`)
+  getFollowFeedList: async ({ pageParam = 0 }) => {
+    return await instance
+      .get(`/feed/list/follow?pageNumber=${pageParam}`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
       .then((response) => {
-        alert("팔로우 피드 불러오기 성공");
         return response.data;
       })
       .catch((error) => {
@@ -614,6 +658,8 @@ const apiClient = {
       .then((response) => {
         console.log(response.data);
         alert("피드 검색 불러오기 성공");
+        window.location.href='/feed/list/search'
+        console.log(response.data)
         return response.data;
       })
       .catch((error) => {
@@ -946,6 +992,66 @@ const apiClient = {
       .catch((error) => {
         alert("댓글 삭제 실패 : " + error);
         return error;
+      });
+  },
+
+  perfSaveCheck: (pfNo) => {
+    return instance
+      .get(`/perf/${pfNo}/save/now`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+
+        return response.data;
+      })
+      .catch((error) => {
+        return error;
+      });
+  },
+  perfSave: (performanceNo) => {
+    return instance
+      .post(`/perf/${performanceNo}/save`, performanceNo, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("북마크저장")
+        return response.data;
+      })
+      .catch((error) => {
+        alert("공연 북마크 실패" + error);
+        return error;
+      });
+  },
+  perfSaveDelete: (performanceNo) => {
+    return instance
+      .patch(`/perf/${performanceNo}/save/del`, performanceNo, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("북마크저장 취소")
+        return response.data;
+      })
+      .catch((error) => {
+        alert("공연 북마크 취소 실패" + error);
+        return error;
+      });
+  },
+  perfSearch: async ({ condition = 'title', keyword='' }) => {
+    let url = `/perf/list/search?condition=${condition}&keyword=${keyword}`;
+    return await instance
+      .get(url)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("검색 피드 불러오기 실패" + error);
       });
   },
 };

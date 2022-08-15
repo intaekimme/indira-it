@@ -16,20 +16,12 @@ import { useParams } from "react-router-dom";
 import PlusButton from "./PlusButton";
 import PerfSaveButton from "./PerfSaveButton";
 
-export default function PerfListCard() {
-  // let {isLoading, data} = useQuery('performanceList', async () => await apiClient.getPerfList(pageNumber));
+export default function PerfSearchList(props) {
+  let performanceSearchListQuery = useQuery('performanceSearchList', async () => await apiClient.perfSearch({condition: props.condition, keyword: props.keyword}));
   let pageNumber = useParams().pageNumber;
-  let performanceListQuery = useInfiniteQuery(
-    "performanceList",
-    apiClient.getPerfList,
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
-      },
-    },
-  );
-  console.log(performanceListQuery.data);
-  console.log(performanceListQuery.isLoading);
+ 
+  console.log(performanceSearchListQuery.data);
+  console.log(performanceSearchListQuery.isLoading);
 
   const [change, setChange] = React.useState(false);
 
@@ -37,11 +29,14 @@ export default function PerfListCard() {
     setChange(check);
   };
 
-  if (!performanceListQuery.isLoading && performanceListQuery.data.pages[0]) {
+  if (props.howManySearch > 1) {
+    performanceSearchListQuery.refetch()
+  }
+
+  if (!performanceSearchListQuery.isLoading && performanceSearchListQuery.data) {
     return (
       <Grid container spacing={4}>
-        {performanceListQuery.data.pages.map((page) =>
-          page.map((datum) => (
+        {performanceSearchListQuery.data.map((datum) =>
             <Grid item key={datum.pfNo} xs={12} sm={6} md={4}>
               <Card
                 sx={{
@@ -51,39 +46,32 @@ export default function PerfListCard() {
                   flexDirection: "column",
                 }}
                 elevation={0}
-                style={{
-                  fontSize: "16px",
-                  fontFamily: "SBAggroB",
-                  color: "black",
-                  boxShadow:
-                    "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.5)",
-                }}
               >
                 {/* <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
                     <img src={data.image} alt='' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                   </Typography> */}
                 <Box
                   style={{
+                    fontFamily: "IBM Plex Sans KR",
                     background: "pink",
                     borderRadius: "10%",
                     position: "absolute",
-                    top: "10px",
+                    top: "45px",
                     right: "5px",
                     i: "3",
-                    padding: "2px",
                   }}
                 >
                   {datum.status}
                 </Box>
                 <Box
                   style={{
+                    fontFamily: "IBM Plex Sans KR",
                     background: "skyblue",
                     borderRadius: "10%",
                     position: "absolute",
-                    top: "10px",
+                    top: "45px",
                     right: "60px",
                     i: "3",
-                    padding: "2px",
                   }}
                 >
                   {datum.category}
@@ -103,25 +91,20 @@ export default function PerfListCard() {
                 </Link>
                 <CardActions
                   sx={{
-                    justifyContent: "space-between",
-                    margin: "5px",
+                    margin: "0px",
                     padding: "0px",
                   }}
                 >
-                  <Grid></Grid>
-                  <Grid mr={-3}>
-                    <PerfSaveButton
-                      change={change}
-                      pfNo={datum.pfNo}
-                    ></PerfSaveButton>
-                  </Grid>
+                  <PerfSaveButton
+                    change={change}
+                    pfNo={datum.pfNo}
+                  ></PerfSaveButton>
                 </CardActions>
               </Card>
             </Grid>
-          )),
         )}
         <PlusButton
-          handleCard={performanceListQuery.fetchNextPage}
+          handleCard={performanceSearchListQuery.fetchNextPage}
         ></PlusButton>
       </Grid>
     );

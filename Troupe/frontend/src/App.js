@@ -62,12 +62,16 @@ function App() {
               element={<MainFeed />}
             ></Route>
             <Route
-              path="/feed/list/follow/:pageNumber"
-              element={loginCheck() ? <Navigate to="/login" /> : <MainFeed />}
+              path="/feed/list/follow"
+              element={loginCheck() ? <MainFeed /> : <Navigate to="/login" />}
             ></Route>
             <Route
-              path="/feed/list/save/:pageNumber"
-              element={loginCheck() ? <Navigate to="/login" /> : <MainFeed />}
+              path="/feed/list/save"
+              element={loginCheck() ? <MainFeed /> : <Navigate to="/login" />}
+            ></Route>
+            <Route
+              path="/feed/list/search"
+              element={loginCheck() ? <MainFeed /> : <Navigate to="/login" />}
             ></Route>
             <Route path="/email" element={<EmailSend />}></Route>
             <Route path="/confirm-email/:token" element={<EmailSend />}></Route>
@@ -103,7 +107,7 @@ function App() {
               element={loginCheck() ? <FeedModify /> : <Navigate to="/login" />}
             ></Route>
             <Route path="/guestbook/test" element={<GuestBook />}></Route>
-            <Route path="/feed/test" element={<PopupTest />}></Route>
+            {/* <Route path="/feed/test" element={<PopupTest />}></Route> */}
             {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}
           </Routes>
         </Router>

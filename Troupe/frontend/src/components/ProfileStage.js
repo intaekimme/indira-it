@@ -76,7 +76,7 @@ export default function ProfileStage() {
           borderRadius: "5px",
           boxShadow:
             "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.6)",
-          zIndex: "1",
+          // zIndex: "1",
         }}
       />
       <Grid alignItems="flex-end" container spacing={0.5} style={{ paddingBottom: 50 }}>

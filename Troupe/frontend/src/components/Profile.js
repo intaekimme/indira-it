@@ -13,6 +13,7 @@ import ProfileMemberInfo from "./ProfileMemberInfo";
 import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";
 import ProfileStage from "./ProfileStage";
+import GuestBook from "./GuestBook";
 import Avatar from "./Avatar";
 import Theme from "./Theme";
 
@@ -104,12 +105,14 @@ function Profile(props) {
           <Grid
             item
             container
+            justifyContent="flex-start"
             alignItems="flex-end"
             xs={gridItemxs}
             style={{
               backgroundColor: "gray",
               paddingRight: 20,
-              paddingBottom: 50,
+              paddingLeft: 10,
+              paddingBottom: 10,
               position: "relative",
             }}
           >
@@ -127,8 +130,8 @@ function Profile(props) {
                 avatarResponse={avatar}
                 imgWidth={75 * 4}
                 imgHeight={100 * 4}
-                divWidth={"100%"}
-                divHeight={"100%"}
+                divWidth={75 * 4}
+                divHeight="100%"
 
                 // style={{
                 //   position: "absolute",
@@ -139,6 +142,8 @@ function Profile(props) {
               />
             </Button>
             {/* Stage finish */}
+            {/* 방명록 */}
+            <GuestBook memberNo={memberNo}/>
           </Grid>
           <Grid item xs={gridItemxs} style={{ padding: 0 }}>
             <Grid container spacing={3}>

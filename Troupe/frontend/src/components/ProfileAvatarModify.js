@@ -3,19 +3,16 @@ import { useParams } from "react-router-dom";
 import apiClient from "../apiClient";
 import AvatarSelectBar from "./AvatarSelectBar";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 import stylesButton from "../css/button.module.css"
 
 import Avatar from "./Avatar";
-
-const theme = createTheme();
+import Theme from "./Theme";
 
 export default function ProfileAvatarModify() {
 	//memberNo
@@ -153,12 +150,17 @@ export default function ProfileAvatarModify() {
     });
   };
 
+  const reset = (memberNo) => {
+    if (window.confirm("캐릭터 수정을 취소하고 돌아가시겠습니까?")) {
+      window.location.href = "/profile/" + memberNo;
+    } 
+  }
 	return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <Container
         component="main"
         maxWidth="1920px"
-        style={{ justifyContent: "center", alignItems: "center" }}
+        style={{ justifyContent: "center", alignItems: "center", fontFamily: "SBAggroB" }}
       >
         <Grid container spacing={2} style={{ textAlign: "center" }}>
           <Grid
@@ -168,12 +170,18 @@ export default function ProfileAvatarModify() {
             justifyContent="center"
             alignItems="flex-end"
             style={{
-              backgroundColor: "gray",
+              backgroundColor: "#fda085",
+              border: "5px solid white",
               paddingRight: 20,
               paddingBottom: 50,
               position: "relative",
+              boxShadow: "3px 3px 5px #000",
+              borderRadius: "1%",
+              paddingBottom : "300px"
             }}
           >
+            
+            <Grid item xs={12} style={{color: "white", textShadow: "1px 1px 1px #000", fontSize: "40px"}}>내 모습을 꾸며보세요!</Grid>
             <Avatar
               avatarResponse={avatar}
               imgWidth={75 * 4}
@@ -181,13 +189,26 @@ export default function ProfileAvatarModify() {
               divWidth={75 * 4}
               divHeight={100 * 4}
             />
-            <Grid item xs={12}>
-              <Button
+            <Grid  item xs={12}>
+            <Button
                 className={stylesButton.btn}
-                style={{ color: "black", backgroundColor: "#44FFC8" }}
-                onClick={finish}
+                variant="contained"
+                color="neutral"
+                style={{border: "3px solid white", marginRight:"5px", color:"black"}}
+                onClick={()=>reset(memberNo)}
+                maxWidth
               >
-                Finish
+                돌아가기
+              </Button>
+              <Button
+                className={stylesButton.btn2}
+                variant="contained"
+                color="neutral"
+                style={{border: "3px solid white", marginLeft:"5px", color:"black"}}
+                onClick={finish}
+                maxWidth
+              >
+                저장하기
               </Button>
             </Grid>
           </Grid>
@@ -197,53 +218,48 @@ export default function ProfileAvatarModify() {
             container
             justifyContent="center"
             alignItems="center"
-            style={{ backgroundColor: "blue", padding: 0 }}
+            style={{ padding: 0, }}
           >
-            <FormControl>
-              <FormLabel id="demo-form-control-label-placement">
-                Label placement
-              </FormLabel>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"hair"}
-                  imgDatas={hairs}
-                  currentValue={hairValue}
-                  setValue={setHairValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"eye"}
-                  imgDatas={eyes}
-                  currentValue={eyeValue}
-                  setValue={setEyeValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"nose"}
-                  imgDatas={noses}
-                  currentValue={noseValue}
-                  setValue={setNoseValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"mouth"}
-                  imgDatas={mouthes}
-                  currentValue={mouthValue}
-                  setValue={setMouthValue}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <AvatarSelectBar
-                  string={"clothes"}
-                  imgDatas={clothes}
-                  currentValue={clothesValue}
-                  setValue={setClothesValue}
-                />
-              </Grid>
-            </FormControl>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"hair"}
+              imgDatas={hairs}
+              currentValue={hairValue}
+              setValue={setHairValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"eye"}
+              imgDatas={eyes}
+              currentValue={eyeValue}
+              setValue={setEyeValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"nose"}
+              imgDatas={noses}
+              currentValue={noseValue}
+              setValue={setNoseValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"mouth"}
+              imgDatas={mouthes}
+              currentValue={mouthValue}
+              setValue={setMouthValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <AvatarSelectBar
+              string={"clothes"}
+              imgDatas={clothes}
+              currentValue={clothesValue}
+              setValue={setClothesValue}
+            />
+          </Grid>
           </Grid>
         </Grid>
       </Container>

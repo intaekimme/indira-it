@@ -20,8 +20,44 @@ import Modal from "@mui/material/Modal";
 import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import PlusButton from "./PlusButton";
+import FeedDetail from "./FeedDetail";
 
 export default function FeedListSearch(props) {
+  const [change, setChange] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [feedNo, setFeedNo] = React.useState(0);
+  let [cards, setCard] = React.useState([
+    {
+      feedNo: 0,
+      nickname: "",
+      profileImageUrl: "",
+    },
+  ]);
+
+  function handleOpen(no) {
+    setOpen(true);
+    setFeedNo(no);
+    setChange(false);
+  }
+  function handleClose() {
+    setOpen(false);
+    setChange(true);
+  }
+
+  const changeFunction = (check) => {
+    setChange(check);
+  };
+  React.useEffect(() => {
+    // const data = {
+    //   change: "all",
+    //   pageNumber: 0,
+    // };
+    apiClient.getFeedTest().then((data) => {
+      // console.log(data);
+      setCard(data);
+    });
+  }, []);
+
   let FeedListSearchQuery = useInfiniteQuery(
     ["tagSearch"],
     () => apiClient.feedTagSearch({ pageParam: 0, tags: props.tags }),
@@ -34,7 +70,14 @@ export default function FeedListSearch(props) {
   );
   // console.log(FeedListSearchQuery.data);
   // console.log(FeedListSearchQuery.isLoading);
-  const [change, setChange] = React.useState(false);
+
+  console.log(FeedListSearchQuery.data);
+  console.log(FeedListSearchQuery.isLoading);
+  if (props.howManySearch > 1) {
+    FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 })
+  }
+
+
   if (!FeedListSearchQuery.isLoading) {
     console.log(FeedListSearchQuery.data);
     return (
@@ -90,7 +133,6 @@ export default function FeedListSearch(props) {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Link href={"/feed/test"}>
                     <CardMedia
                       component="img"
                       sx={{
@@ -101,8 +143,8 @@ export default function FeedListSearch(props) {
                       }}
                       image={Object.values(datum.images)[0]}
                       alt=""
+                      onClick={() => handleOpen(datum.feedNo)}
                     ></CardMedia>
-                  </Link>
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
@@ -124,12 +166,26 @@ export default function FeedListSearch(props) {
                     </Grid>
                   </CardActions>
                 </Card>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="simple-modal-title"
+                  aria-describedby="simple-modal-description"
+                  className={stylesModal.outer}
+                  animationType={"fade"}
+                >
+                  <FeedDetail
+                    setChange={setChange}
+                    feedNo={feedNo}
+                    open={open}
+                  ></FeedDetail>
+                </Modal>
               </Grid>
             )),
           )}
         </Grid>
 
-        <PlusButton handleCard={FeedListSearchQuery.fetchNextPage}></PlusButton>
+        <PlusButton handleCard={() => FeedListSearchQuery.fetchNextPage} disabled={!FeedListSearchQuery.hasNextPage}></PlusButton>
       </Fragment>
     );
   }

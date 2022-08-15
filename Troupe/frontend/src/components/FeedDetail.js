@@ -43,9 +43,13 @@ export default function FeedDetail(props) {
   const [img, setImg] = React.useState(new Map());
   const [user, setUser] = React.useState(0);
   const [commentList, setCommentList] = React.useState([]);
+  const [search, setSearch] = React.useState(false);
   function searchTag(tagName) {
     if (tagName !== "") {
-      apiClient.getFeedSearchTest(tagName).then((data) => {});
+      // apiClient.getFeedSearchTest(tagName).then((data) => {});
+      setSearch(!search);
+      window.location.href='/feed/list/search'
+      apiClient.feedTagSearch({ pageParam: 0, tags: tagName })
     }
   }
   const refreshFunction = (newComment) => {

@@ -15,7 +15,7 @@ import MovieFilterIcon from "@mui/icons-material/MovieFilter";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-import logo from "./img/logo3.png";
+import logo from "./img/logo4.png";
 const useStyles = () => {
   return {
     list: {

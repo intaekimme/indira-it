@@ -14,6 +14,7 @@ export default function FeedRegister() {
   const [tags, setTagList] = React.useState([]);
   const [tag, setTag] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [hide, setHide] = React.useState(true);
   // const [isReady, setIsReady] = React.useState(false);
 
   // React.useState(() => {
@@ -84,6 +85,7 @@ export default function FeedRegister() {
           event.preventDefault();
           // HashWrapInner.innerHTML = "# " + event.target.value;
           // HashWrapOuter.appendChild(HashWrapInner);
+          setHide(false);
           if (tags.length >= 5) {
             // alert("최대 5개까지 등록할 수 있습니다");
             const notice = document.querySelector("#notice");
@@ -176,9 +178,17 @@ export default function FeedRegister() {
           </Grid>
           <Grid container>
             <Grid item xs={12}>
-              <Grid item style={{ marginTop: "10px" }} id="notice">
-                태그를 누르면 삭제됩니다
-              </Grid>
+            <input
+                className={stylesTag.HashInput}
+                label="태그"
+                value={tag}
+                onChange={changeTag}
+                onKeyUp={addTagFunc}
+                placeholder="이곳에 태그입력 후 엔터를 치세요"
+                maxLength={20}
+                style={{textAlign: "center"}}
+              />
+             
               <div className={stylesTag.HashWrap}>
                 <div className={stylesTag.HashWrapOuter}>
                   {tags ? (
@@ -196,15 +206,9 @@ export default function FeedRegister() {
                   )}
                 </div>
               </div>
-              <input
-                className={stylesTag.HashInput}
-                label="태그"
-                value={tag}
-                onChange={changeTag}
-                onKeyUp={addTagFunc}
-                placeholder="태그입력 후 엔터를 치세요"
-                maxLength={20}
-              />
+              <Grid item style={{ marginTop: "10px", marginBottom: "20px" }} id="notice">
+              {!hide ?( <span>태그를 누르면 삭제됩니다</span>):(<span></span>)}
+              </Grid>
             </Grid>
           </Grid>
           <Grid container>

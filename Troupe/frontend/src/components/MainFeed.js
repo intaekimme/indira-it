@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import { useState, useParams } from "react-router-dom";
@@ -18,6 +18,7 @@ import stylesTag from "../css/tag.module.css";
 import FeedListFollow from "./FeedListFollow";
 import FeedListSave from "./FeedListSave";
 import FeedListSearch from "./FeedListSearch";
+import FeedListSearchQuery from "./FeedListSearch";
 import Theme from "./Theme";
 import SearchIcon from "@mui/icons-material/Search";
 function Copyright() {
@@ -25,7 +26,7 @@ function Copyright() {
     <Typography color="text.secondary" align="center" component="span">
       {"Copyright © "}
       <Link color="inherit" href="/">
-        Troupe
+        Indielight
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -41,6 +42,8 @@ export default function MainFeed() {
   const [showFollow, setShowFollow] = React.useState(false);
   const [showSave, setShowSave] = React.useState(false);
   const [showSearch, setShowSearch] = React.useState(false);
+  const [hide, setHide] = React.useState(true);
+  const [howManySearch, setHowManySearch] = React.useState(0);
 
   const handleShowAll = () => {
     setShowAll(true);
@@ -50,6 +53,9 @@ export default function MainFeed() {
   };
 
   const handleShowFollow = () => {
+    if (!sessionStorage.getItem("loginCheck")) {
+      window.location.href = "/login";
+    }
     setShowAll(false);
     setShowSave(false);
     setShowFollow(true);
@@ -57,6 +63,9 @@ export default function MainFeed() {
   };
 
   const handleShowSave = () => {
+    if (!sessionStorage.getItem("loginCheck")) {
+      window.location.href = "/login";
+    }
     setShowAll(false);
     setShowSave(true);
     setShowFollow(false);
@@ -72,6 +81,7 @@ export default function MainFeed() {
     setShowSave(false);
     setShowFollow(false);
     setShowSearch(true);
+    setHowManySearch(howManySearch + 1);
   };
 
   const changeTag = (event) => {
@@ -92,6 +102,7 @@ export default function MainFeed() {
           event.preventDefault();
           // HashWrapInner.innerHTML = "# " + event.target.value;
           // HashWrapOuter.appendChild(HashWrapInner);
+          setHide(false);
           if (tags.length >= 5) {
             // alert("최대 5개까지 등록할 수 있습니다");
             const notice = document.querySelector("#notice");
@@ -119,6 +130,7 @@ export default function MainFeed() {
 
   function deleteTag(tagName) {
     setTagList(tags.filter((tag) => tag !== tagName));
+    if (tags.length === 0) setHide(true);
   }
 
   return (
@@ -126,16 +138,19 @@ export default function MainFeed() {
       <CssBaseline />
       <Grid container style={{ display: "flex", justifyContent: "center" }}>
         <PerfFeedToggle></PerfFeedToggle>
-
-        <Grid
-          item
-          xs={12}
-          id="notice"
-          mt={2}
-          style={{ textAlign: "center", fontFamily: "SBAggroB" }}
-        >
-          태그를 누르면 삭제됩니다
+        <Grid item xs={12} style={{ textAlign: "center" }}>
+          <input
+            className={stylesTag.HashInput}
+            label="태그"
+            value={tag}
+            onChange={changeTag}
+            onKeyUp={addTagFunc}
+            placeholder="이곳에 태그입력 후 엔터를 치세요."
+            maxLength={20}
+            style={{ textAlign: "center" }}
+          />
         </Grid>
+
         <Grid item xs={4}></Grid>
         <Grid item xs={4} mt={6}>
           <div item className={stylesTag.HashWrap}>
@@ -159,27 +174,34 @@ export default function MainFeed() {
         <Grid item xs={4} mt={6}>
           <Button
             onClick={handleShowSearch}
+            variant="contained"
+            color="neutral"
             style={{
               fontFamily: "SBAggroB",
               width: "50px",
               height: "30px",
               color: "black",
+              marginLeft: "10px",
+              boxShadow:
+                "0 10px 30px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.08)",
             }}
           >
-            <SearchIcon color="neutral"></SearchIcon>
+            <SearchIcon color="white"></SearchIcon>
           </Button>
         </Grid>
       </Grid>
-      <Grid item xs={4} style={{ textAlign: "center" }}>
-        <input
-          className={stylesTag.HashInput}
-          label="태그"
-          value={tag}
-          onChange={changeTag}
-          onKeyUp={addTagFunc}
-          placeholder="태그입력 후 엔터를 치세요"
-          maxLength={20}
-        />
+      <Grid
+        item
+        xs={4}
+        id="notice"
+        mt={2}
+        style={{
+          textAlign: "center",
+          fontFamily: "SBAggroB",
+          marginBottom: "30px",
+        }}
+      >
+        {!hide ? <span>태그를 누르면 삭제됩니다</span> : <span></span>}
       </Grid>
       <Grid
         container
@@ -235,6 +257,21 @@ export default function MainFeed() {
             팔로우 피드
           </Button>
         </Grid>
+        <Grid item xs={2}>
+          <Button
+            href="/feed/register"
+            variant="contained"
+            color="neutral"
+            style={{
+              fontFamily: "Cafe24SsurroundAir",
+              fontWeight: "bold",
+              width: "150px",
+              height: "30px",
+            }}
+          >
+            피드 등록
+          </Button>
+        </Grid>
       </Grid>
 
       <div>
@@ -242,11 +279,16 @@ export default function MainFeed() {
           {showFollow ? <FeedListFollow></FeedListFollow> : null}
           {showSave ? <FeedListSave></FeedListSave> : null}
           {showAll ? <FeedListAll></FeedListAll> : null}
-          {showSearch ? <FeedListSearch tags={tags}></FeedListSearch> : null}
+          {showSearch ? (
+            <FeedListSearch
+              tags={tags}
+              howManySearch={howManySearch}
+            ></FeedListSearch>
+          ) : null}
         </Container>
       </div>
       {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 4 }}>
+      <Box sx={{ p: 4 }}>
         <Typography
           variant="subtitle1"
           align="center"
