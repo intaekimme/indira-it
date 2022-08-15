@@ -1,18 +1,10 @@
 import React from "react";
-import { Button } from "@mui/material";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import apiClient from "../apiClient";
-import { useParams } from "react-router-dom";
 import FeedSaveButton from "./FeedSaveButton";
 import FeedLikeButton from "./FeedLikeButton";
 import { Typography } from "@mui/material";
@@ -26,13 +18,7 @@ export default function FeedListAll() {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   const [isHover, setIsHover] = React.useState(-1);
-  let [cards, setCard] = React.useState([
-    {
-      feedNo: 0,
-      nickname: "",
-      profileImageUrl: "",
-    },
-  ]);
+
   const [change, setChange] = React.useState(false);
   function handleOpen(no) {
     setOpen(true);
@@ -43,20 +29,6 @@ export default function FeedListAll() {
     setOpen(false);
     setChange(true);
   }
-
-  const changeFunction = (check) => {
-    setChange(check);
-  };
-  React.useEffect(() => {
-    // const data = {
-    //   change: "all",
-    //   pageNumber: 0,
-    // };
-    apiClient.getFeedTest().then((data) => {
-      // console.log(data);
-      setCard(data);
-    });
-  }, []);
 
   let FeedListAllQuery = useInfiniteQuery(
     "AllFeeds",
@@ -131,29 +103,41 @@ export default function FeedListAll() {
                       objectFit: "cover",
                       width: "300px",
                       height: "300px",
-                      opacity: isHover===datum.feedNo? 0.5 : null,
-                      transform: isHover===datum.feedNo? 'scale(1.1)' : null,
-                      transition: '0.5s',
+                      opacity: isHover === datum.feedNo ? 0.5 : null,
+                      transform: isHover === datum.feedNo ? "scale(1.1)" : null,
+                      transition: "0.5s",
                     }}
                     image={Object.values(datum.images)[0]}
                     alt=""
                     onClick={() => handleOpen(datum.feedNo)}
-                    onMouseEnter={()=>setIsHover(datum.feedNo)}
-                    onMouseLeave={()=>setIsHover(-1)}
+                    onMouseEnter={() => setIsHover(datum.feedNo)}
+                    onMouseLeave={() => setIsHover(-1)}
                   ></CardMedia>
-                  {isHover === datum.feedNo ? 
-                    <div 
-                    style={{lineHeight:'300px', position:'absolute', height:'300px', width:'265px', color:'black', top:0}} 
-                    onMouseEnter={()=>setIsHover(datum.feedNo)}                     
-                    onMouseLeave={()=>setIsHover(-1)}
-                    onClick={() => handleOpen(datum.feedNo)}
+                  {isHover === datum.feedNo ? (
+                    <div
+                      style={{
+                        lineHeight: "300px",
+                        position: "absolute",
+                        height: "300px",
+                        width: "265px",
+                        color: "black",
+                        top: 0,
+                      }}
+                      onMouseEnter={() => setIsHover(datum.feedNo)}
+                      onMouseLeave={() => setIsHover(-1)}
+                      onClick={() => handleOpen(datum.feedNo)}
                     >
-                      <ul style={{listStyleType:'none', listStylePosition:'none'}}>
+                      <ul
+                        style={{
+                          listStyleType: "none",
+                          listStylePosition: "none",
+                        }}
+                      >
                         <li># 공연장소:{datum.location}</li>
                         <li># 공연기간:{datum.detailTime}</li>
                       </ul>
-                      </div> 
-                  : null}
+                    </div>
+                  ) : null}
                   <CardActions
                     sx={{
                       justifyContent: "space-between",

@@ -17,6 +17,7 @@ import FeedSaveButton from "./FeedSaveButton";
 import CommentList from "./CommentList";
 import Theme from "./Theme";
 import { ThemeProvider } from "@mui/material/styles";
+import Link from "@mui/material/Link";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#FFF",
   ...theme.typography.body2,
@@ -44,12 +45,15 @@ export default function FeedDetail(props) {
   const [user, setUser] = React.useState(0);
   const [commentList, setCommentList] = React.useState([]);
   const [search, setSearch] = React.useState(false);
+  const [tag, setTag] = React.useState("");
   function searchTag(tagName) {
     if (tagName !== "") {
       // apiClient.getFeedSearchTest(tagName).then((data) => {});
-      setSearch(!search);
-      window.location.href='/feed/list/search'
-      apiClient.feedTagSearch({ pageParam: 0, tags: tagName })
+      // setSearch(!search);
+      // window.location.href='/feed/list/search'
+      setTag(tagName);
+      apiClient.feedTagSearch({ pageParam: 0, tags: tagName });
+      setOpen(!open);
     }
   }
   const refreshFunction = (newComment) => {
@@ -164,13 +168,18 @@ export default function FeedDetail(props) {
                 >
                   {feedInfo.tags ? (
                     feedInfo.tags.map((item, id) => (
-                      <div
-                        className={stylesTag.HashWrapInner}
-                        key={id}
-                        onClick={() => searchTag(item.trim())}
+                      <Link
+                        to="/feed/list/search"
+                        style={{ textDecoration: "none" }}
                       >
-                        # {item}
-                      </div>
+                        <div
+                          className={stylesTag.HashWrapInner}
+                          key={id}
+                          onClick={() => searchTag(item.trim())}
+                        >
+                          # {item}
+                        </div>
+                      </Link>
                     ))
                   ) : (
                     <div></div>

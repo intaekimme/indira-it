@@ -1,18 +1,10 @@
 import React from "react";
-import { Button } from "@mui/material";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import apiClient from "../apiClient";
-import { useParams } from "react-router-dom";
 import FeedSaveButton from "./FeedSaveButton";
 import FeedLikeButton from "./FeedLikeButton";
 import { Typography } from "@mui/material";
@@ -26,13 +18,6 @@ export default function FeedListSearch(props) {
   const [change, setChange] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
-  let [cards, setCard] = React.useState([
-    {
-      feedNo: 0,
-      nickname: "",
-      profileImageUrl: "",
-    },
-  ]);
 
   function handleOpen(no) {
     setOpen(true);
@@ -47,16 +32,6 @@ export default function FeedListSearch(props) {
   const changeFunction = (check) => {
     setChange(check);
   };
-  React.useEffect(() => {
-    // const data = {
-    //   change: "all",
-    //   pageNumber: 0,
-    // };
-    apiClient.getFeedTest().then((data) => {
-      // console.log(data);
-      setCard(data);
-    });
-  }, []);
 
   let FeedListSearchQuery = useInfiniteQuery(
     ["tagSearch"],
@@ -76,9 +51,8 @@ export default function FeedListSearch(props) {
 
   if (props.howManySearch > 0) {
     FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 });
-    props.setHowManySearch(0)
+    props.setHowManySearch(0);
   }
-
 
   if (!FeedListSearchQuery.isLoading) {
     console.log(FeedListSearchQuery.data);
@@ -135,18 +109,18 @@ export default function FeedListSearch(props) {
                       </Typography>
                     </Grid>
                   </Grid>
-                    <CardMedia
-                      component="img"
-                      sx={{
-                        pb: 1,
-                        objectFit: "cover",
-                        width: "300px",
-                        height: "300px",
-                      }}
-                      image={Object.values(datum.images)[0]}
-                      alt=""
-                      onClick={() => handleOpen(datum.feedNo)}
-                    ></CardMedia>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      pb: 1,
+                      objectFit: "cover",
+                      width: "300px",
+                      height: "300px",
+                    }}
+                    image={Object.values(datum.images)[0]}
+                    alt=""
+                    onClick={() => handleOpen(datum.feedNo)}
+                  ></CardMedia>
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
@@ -187,7 +161,10 @@ export default function FeedListSearch(props) {
           )}
         </Grid>
 
-        <PlusButton handleCard={() => FeedListSearchQuery.fetchNextPage} disabled={!FeedListSearchQuery.hasNextPage}></PlusButton>
+        <PlusButton
+          handleCard={FeedListSearchQuery.fetchNextPage}
+          disabled={!FeedListSearchQuery.hasNextPage}
+        ></PlusButton>
       </Fragment>
     );
   }
