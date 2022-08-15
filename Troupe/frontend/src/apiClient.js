@@ -620,6 +620,8 @@ const apiClient = {
       .then((response) => {
         console.log(response.data);
         alert("피드 검색 불러오기 성공");
+        window.location.href='/feed/list/search'
+        console.log(response.data)
         return response.data;
       })
       .catch((error) => {
@@ -952,6 +954,51 @@ const apiClient = {
       .catch((error) => {
         alert("댓글 삭제 실패 : " + error);
         return error;
+      });
+  },
+
+  perfSaveCheck: (pfNo) => {
+    return instance
+      .get(`/perf/${pfNo}/save/now`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+
+        return response.data;
+      })
+      .catch((error) => {
+        return error;
+      });
+  },
+  perfSave: (performanceNo) => {
+    return instance
+      .patch(`/perf/${performanceNo}/save`, performanceNo, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+
+        return response.data;
+      })
+      .catch((error) => {
+        alert("공연 북마크 실패" + error);
+        return error;
+      });
+  },
+  
+  perfSearch: async ({ condition = 'title', keyword='' }) => {
+    let url = `/perf/list/search?condition=${condition}&keyword=${keyword}`;
+    return await instance
+      .get(url)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        alert("검색 피드 불러오기 실패" + error);
       });
   },
 };

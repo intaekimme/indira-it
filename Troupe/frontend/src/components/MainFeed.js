@@ -52,6 +52,9 @@ export default function MainFeed() {
   };
 
   const handleShowFollow = () => {
+    if (!sessionStorage.getItem("loginCheck")) {
+      window.location.href = "/login";
+    }
     setShowAll(false);
     setShowSave(false);
     setShowFollow(true);
@@ -59,6 +62,9 @@ export default function MainFeed() {
   };
 
   const handleShowSave = () => {
+    if (!sessionStorage.getItem("loginCheck")) {
+      window.location.href = "/login";
+    }
     setShowAll(false);
     setShowSave(true);
     setShowFollow(false);
@@ -236,6 +242,21 @@ export default function MainFeed() {
             }}
           >
             팔로우 피드
+          </Button>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            href='/feed/register'
+            variant="contained"
+            color="neutral"
+            style={{
+              fontFamily: "Cafe24SsurroundAir",
+              fontWeight: "bold",
+              width: "150px",
+              height: "30px",
+            }}
+          >
+            피드 등록
           </Button>
         </Grid>
       </Grid>
