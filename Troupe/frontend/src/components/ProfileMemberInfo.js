@@ -136,14 +136,12 @@ export default function ProfileMemberInfo(props) {
             <Grid
               item
               xs={4}
-              spacing={0.5}
               justifyContent="center"
               alignItems="flex-end"
             ></Grid>
             <Grid
               item
               xs={4}
-              spacing={0.5}
               justifyContent="center"
               alignItems="flex-end"
             >
@@ -162,7 +160,6 @@ export default function ProfileMemberInfo(props) {
             <Grid
               item
               xs={4}
-              spacing={0.5}
               justifyContent="center"
               alignItems="flex-end"
             >

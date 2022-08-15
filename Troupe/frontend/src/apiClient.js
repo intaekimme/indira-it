@@ -365,6 +365,26 @@ const apiClient = {
         return null;
       });
   },
+  //방명록 불러오기
+  getGuestBookList: (memberNo) => {
+    return instance
+      .get(`/guestbook/${parseInt(memberNo)}/list`)
+      .then((response) => {
+        console.log(response.data);
+        alert("방명록 목록조회 성공 : " + response.data);
+        if(response.data==="" || response.data.length==0){
+          return [];
+        }
+        else{
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("방명록 목록을 불러오는데 실패하였습니다 : " + error);
+        return [];
+      });
+  },
 
   //공연 삭제하기
   perfRemove: (data) => {
