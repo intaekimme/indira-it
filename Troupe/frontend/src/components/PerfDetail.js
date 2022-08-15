@@ -8,7 +8,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
 import CommentList from "./CommentList";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 // 제목, 기간, 시간, 장소, 티켓가격
 
@@ -112,7 +112,7 @@ function Carousel(props) {
           item={item}
           category={props.category}
           status={props.status}
-          imageUrl={props.imageUrl}
+          imgUrl={props.imgUrl}
         />
       ))}
     </MUICarousel>
@@ -138,7 +138,7 @@ function ModifyDeleteButton(props) {
     <div style={{ float: "right" }}>
       <Button
         variant="outlined"
-        href="/perf/list"
+        href="/perf/list/0"
         style={{
           margin: "8px",
           backgroundColor: "beige",
@@ -149,17 +149,33 @@ function ModifyDeleteButton(props) {
       </Button>
       {user ? (
         <Fragment>
-          <Button
+          <Link
+            to={{
+              pathname: `/perf/modify/${props.performanceNo}`,
+              state: {
+                name: "asdf",
+              },
+            }}
+            // href={`perf/modify/${props.performanceNo}`}
             variant="outlined"
-            href="/perf/new"
             style={{
               margin: "8px",
               backgroundColor: "skyblue",
               fontFamily: "IBM Plex Sans KR",
             }}
           >
+            {/* <Button
+              variant="outlined"
+              style={{
+                margin: "8px",
+                backgroundColor: "skyblue",
+                fontFamily: "IBM Plex Sans KR",
+              }}
+            >
+              수정
+            </Button> */}
             수정
-          </Button>
+          </Link>
           <Button
             variant="outlined"
             style={{
@@ -187,7 +203,7 @@ function PerfDetail() {
   const [description, setDescription] = useState(""); //  필수
   const [detailTime, setDetailTime] = useState(""); //  필수
   const [endDate, setEndDate] = useState(Date.now()); //  필수
-  const [imageUrl, setImageUrl] = useState({
+  const [imgUrl, setImgUrl] = useState({
     //  필수
     index: 0,
     url: "",
@@ -256,7 +272,7 @@ function PerfDetail() {
       setDescription(data.description);
       setDetailTime(data.detailTime);
       setEndDate(data.endDate);
-      setImageUrl(data.imageUrl);
+      setImgUrl(data.imgUrl);
       setLocation(data.location);
       setMemberInfo({
         memberNo: data.memberNo,
@@ -285,9 +301,11 @@ function PerfDetail() {
           nickname: item.nickname,
           isRemoved: item.removed,
           pfNo: item.pfNo,
+          childComments: item.childComments,
         });
       });
 
+      console.log(json);
       setCommentList(json);
     });
   }, [pfNo]);
@@ -298,7 +316,7 @@ function PerfDetail() {
   return (
     // <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
     <div style={{ fontFamily: "IBM Plex Sans KR" }}>
-      <ModifyDeleteButton />
+      <ModifyDeleteButton performanceNo={pfNo} perfName={title} />
       <div>
         <Grid container spacing={4}>
           <Grid item xs={5}>
@@ -309,7 +327,7 @@ function PerfDetail() {
               <Carousel
                 category={category}
                 status={status}
-                imageUrl={imageUrl}
+                imgUrl={imgUrl}
               ></Carousel>
             </Item>
           </Grid>

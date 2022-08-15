@@ -188,4 +188,16 @@ public class PerformanceSaveService {
         return categoryCount;
     }
 
+    @Transactional(readOnly = true)
+    public boolean checkPfSave(int memberNo, int PfNo){
+        Member member = memberRepository.findById(memberNo)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저 입니다."));
+
+        Performance performance = performanceRepository.findById(PfNo)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 공연 입니다."));
+
+        Optional<PerformanceSave> check = performanceSaveRepository.findByMemberAndPfAndRemovedFalse(member, performance);
+        if (check.isPresent()) return true;
+        else return false;
+    }
 }

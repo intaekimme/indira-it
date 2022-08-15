@@ -84,4 +84,18 @@ public class PerformanceReview implements Serializable {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "PerformanceReview{" +
+                "id=" + id +
+                ", pf=" + pf.getId() +
+                ", member=" + member.getMemberNo() +
+                ", createdTime=" + createdTime +
+                ", isModified=" + isModified +
+                ", isRemoved=" + isRemoved +
+                ", content='" + content + '\'' +
+                ", parentPerformanceReview=" + parentPerformanceReview +
+                ", childrenPerformanceReview=" + childrenPerformanceReview +
+                '}';
+    }
 }
