@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import SearchBar from "./SearchBar";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import { useState, useParams } from "react-router-dom";
@@ -90,7 +89,7 @@ export default function MainPerf() {
       <Grid>
         <Container sx={{ py: 10 }} maxWidth="md">
           {showList? <PerfList></PerfList> : null}
-          {showSearch? <PerfSearchList condition={searchCategory} keyword={searchWord} howManySearch={howManySearch}></PerfSearchList> : null}
+          {showSearch? <PerfSearchList condition={searchCategory} keyword={searchWord} howManySearch={howManySearch} setHowManySearch={setHowManySearch}></PerfSearchList> : null}
         </Container>
       </Grid>
       {/* Footer */}

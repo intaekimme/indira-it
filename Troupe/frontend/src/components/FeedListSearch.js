@@ -73,8 +73,10 @@ export default function FeedListSearch(props) {
 
   console.log(FeedListSearchQuery.data);
   console.log(FeedListSearchQuery.isLoading);
-  if (props.howManySearch > 1) {
-    FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 })
+
+  if (props.howManySearch > 0) {
+    FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 });
+    props.setHowManySearch(0)
   }
 
 
