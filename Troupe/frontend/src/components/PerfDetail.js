@@ -24,6 +24,7 @@ const Item = styled(Paper)(({ theme }) => ({
 function Carousel(props) {
   function CarouselItem(props) {
     const [open, setOpen] = React.useState(false);
+    console.log(props);
     function handleOpen() {
       setOpen(true);
     }
@@ -35,7 +36,7 @@ function Carousel(props) {
       <Paper style={{ backgroundColor: "#EEE3D0" }} elevation={0}>
         <img
           onClick={handleOpen}
-          src="https://source.unsplash.com/random"
+          src={props.imgUrl}
           alt="random"
           style={{ height: "500px", width: "400px" }}
         ></img>
@@ -56,7 +57,7 @@ function Carousel(props) {
           >
             <img
               onClick={handleOpen}
-              src="https://source.unsplash.com/random"
+              src={props.imgUrl}
               alt="random"
               style={{ height: "700px", width: "550px" }}
             ></img>
@@ -93,26 +94,15 @@ function Carousel(props) {
       </Paper>
     );
   }
-  var items = [
-    {
-      name: "Random Name #1",
-      description: "Probably the most random thing you have ever seen!",
-    },
-    {
-      name: "Random Name #2",
-      description: "Hello World!",
-    },
-  ];
 
   return (
     <MUICarousel animation="slide" indicators="" autoPlay={false}>
-      {items.map((item, i) => (
+      {props.imgUrl.map((image, i) => (
         <CarouselItem
           key={i}
-          item={item}
           category={props.category}
           status={props.status}
-          imgUrl={props.imgUrl}
+          imgUrl={image}
         />
       ))}
     </MUICarousel>
@@ -191,11 +181,7 @@ function PerfDetail() {
   const [description, setDescription] = useState(""); //  필수
   const [detailTime, setDetailTime] = useState(""); //  필수
   const [endDate, setEndDate] = useState(Date.now()); //  필수
-  const [imgUrl, setImgUrl] = useState({
-    //  필수
-    index: 0,
-    url: "",
-  });
+  const [imgUrl, setImgUrl] = useState([]); // 필수
   const [location, setLocation] = useState(""); //  필수
   const [memberInfo, setMemberInfo] = useState({
     //  필수
@@ -254,13 +240,13 @@ function PerfDetail() {
     setPerformanceNo(pfNo);
 
     apiClient.getPerfDetail(pfNo).then((data) => {
-      // console.log(`return data : 1${data}`);
+      console.log(data);
       setCategory(data.category);
       setCreatedTime(data.createdTime);
       setDescription(data.description);
       setDetailTime(data.detailTime);
       setEndDate(data.endDate);
-      setImgUrl(data.imgUrl);
+      setImgUrl(Object.values(data.imageUrl));
       setLocation(data.location);
       setMemberInfo({
         memberNo: data.memberNo,
@@ -300,6 +286,7 @@ function PerfDetail() {
   // console.log(price);
   // console.log(`pfNo: ${pfNo}`);
   // console.log(`performanceNo: ${performanceNo}`);
+  console.log(imgUrl);
   return (
     // <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
     <div style={{ fontFamily: "IBM Plex Sans KR" }}>
