@@ -204,28 +204,31 @@ export default function PerfNew() {
             <Grid item xs={12}>
               {imgUrl ? (
                 <div>
-                  {imgUrl.map((item, id) => (
-                    <span key={id} className={stylesTag.img}>
-                      <img
-                        key={id}
-                        src={item.url}
-                        alt=""
-                        style={{
-                          height: "450px",
-                          width: "300px",
-                          border: "3px white solid",
-                          boxShadow:
-                            "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.2)",
-                        }}
-                      ></img>
-                      <RemoveCircleOutlineIcon
-                        color="error"
-                        onClick={() => deleteImage(item.file)}
-                        className={stylesTag.btn1}
-                        style={{ top: "-420px" }}
-                      ></RemoveCircleOutlineIcon>
-                    </span>
-                  ))}
+                  {imgUrl.map((item, id) => {
+                    console.log(item);
+                    return (
+                      <span key={id} className={stylesTag.img}>
+                        <img
+                          key={id}
+                          src={item.url}
+                          alt=""
+                          style={{
+                            height: "450px",
+                            width: "300px",
+                            border: "3px white solid",
+                            boxShadow:
+                              "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.2)",
+                          }}
+                        ></img>
+                        <RemoveCircleOutlineIcon
+                          color="error"
+                          onClick={() => deleteImage(item.file)}
+                          className={stylesTag.btn1}
+                          style={{ top: "-420px" }}
+                        ></RemoveCircleOutlineIcon>
+                      </span>
+                    );
+                  })}
                 </div>
               ) : (
                 <Box style={{ height: "100px", width: "100px" }}></Box>
@@ -382,9 +385,13 @@ export default function PerfNew() {
                   onChange={changeCategory}
                   style={{ backgroundColor: "white" }}
                 >
-                  <MenuItem value={"뮤지컬"}>뮤지컬</MenuItem>
                   <MenuItem value={"연극"}>연극</MenuItem>
+                  <MenuItem value={"뮤지컬"}>뮤지컬</MenuItem>
+                  <MenuItem value={"무용"}>무용</MenuItem>
+                  <MenuItem value={"클래식"}>클래식</MenuItem>
+                  <MenuItem value={"오페라"}>오페라</MenuItem>
                   <MenuItem value={"국악"}>국악</MenuItem>
+                  <MenuItem value={"복합"}>복합</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
