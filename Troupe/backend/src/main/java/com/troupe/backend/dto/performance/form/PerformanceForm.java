@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,8 +24,8 @@ public class PerformanceForm {
     private String detailTime;
     private List<MultipartFile> images;
     private String seatPrice;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     private String category;
 
 

@@ -16,6 +16,7 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import logo from "./img/logo4.png";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 const useStyles = () => {
   return {
     list: {
@@ -157,7 +158,11 @@ export default function Header() {
                       공연/전시 목록
                     </Link>
                   ),
-                  icon: <MovieFilterIcon fontSize="large" />,
+                  icon: (
+                    <Link href="/perf/list/0" className={styled.header}>
+                      <MovieFilterIcon fontSize="large" />
+                    </Link>
+                  ),
                 },
                 {
                   text: "피드 목록",
@@ -166,7 +171,11 @@ export default function Header() {
                       피드 목록
                     </Link>
                   ),
-                  icon: <CreditCardIcon fontSize="large" />,
+                  icon: (
+                    <Link href="/feed/list/all/0" className={styled.header}>
+                      <CreditCardIcon fontSize="large" />
+                    </Link>
+                  ),
                 },
               ])}
             </Drawer>
@@ -227,6 +236,33 @@ export default function Header() {
                     ),
                     icon: <AccountCircleIcon fontSize="large" />,
                   },
+
+                  {
+                    text: "공연 등록",
+                    element: (
+                      <Link href="/perf/register" className={styled.header}>
+                        공연 등록
+                      </Link>
+                    ),
+                    icon: (
+                      <Link href="/perf/register" className={styled.header}>
+                        <AddCircleIcon fontSize="large" color="action" />
+                      </Link>
+                    ),
+                  },
+                  {
+                    text: "피드 등록",
+                    element: (
+                      <Link href="/feed/register" className={styled.header}>
+                        피드 등록
+                      </Link>
+                    ),
+                    icon: (
+                      <Link href="/feed/register" className={styled.header}>
+                        <AddCircleIcon fontSize="large" color="action" />
+                      </Link>
+                    ),
+                  },
                   {
                     text: "로그아웃",
                     element: (
@@ -254,7 +290,7 @@ export default function Header() {
           </Link>
         )}
       </div>
-      <div style={{ width: "100%"}}>
+      <div style={{ width: "100%" }}>
         <Link
           href="/"
           className={styled.header}
