@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
 @Slf4j
 @Service
 @Transactional
@@ -84,6 +86,10 @@ public class MemberService implements UserDetailsService {
 
     public Member login(LoginForm loginForm) {
         Member foundMember = memberRepository.findByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword()).get();
+
+        if (foundMember.isRemoved()) {
+            throw new NoSuchElementException("탈퇴한 회원입니다.\n");
+        }
 
         // 이메일 인증 여부 확인
         if (foundMember.isAuthenticatedEmail()) {
@@ -254,7 +260,7 @@ public class MemberService implements UserDetailsService {
     /**
      * 비밀번호 재설정 이메일 전송
      */
-    public void sendResetPasswordEmail (String email) {
+    public void sendResetPasswordEmail(String email) {
         emailTokenService.sendResetPasswordEmail(email);
     }
 

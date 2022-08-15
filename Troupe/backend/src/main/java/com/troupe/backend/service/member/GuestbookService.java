@@ -74,7 +74,7 @@ public class GuestbookService {
      */
     public List<Guestbook> findGuestbookListOfHost(int hostMemberNo) {
         Member hostMember = memberRepository.findById(hostMemberNo).get();
-        return guestbookRepository.findAllByHostMember(hostMember);
+        return guestbookRepository.findAllByHostMemberOrderByCreatedTimeDesc(hostMember);
     }
 
     /**

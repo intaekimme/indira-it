@@ -16,6 +16,5 @@ public interface GuestbookRepository extends JpaRepository<Guestbook, Integer> {
     /**
      * 호스트의 방명록에 있는 모든 글 조회
      */
-    List<Guestbook> findAllByHostMember(Member hostMember);
-
+    List<Guestbook> findAllByHostMemberOrderByCreatedTimeDesc(Member hostMember);
 }
