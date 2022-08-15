@@ -21,4 +21,7 @@ public class PerformanceResponse {
     String detailTime;
     String category;
     String status;
+    int runtime;
+    String startDate;
+    String endDate;
 }

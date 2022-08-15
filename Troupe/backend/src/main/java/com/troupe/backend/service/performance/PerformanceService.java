@@ -162,7 +162,8 @@ public class PerformanceService {
      */
     @Transactional(readOnly = true)
     public List<PerformanceResponse> findAll(Pageable sortedByCreatedTime){
-        Slice<Performance> performanceList = performanceRepository.findAll(sortedByCreatedTime);
+        Slice<Performance> performanceList =
+                performanceRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false, sortedByCreatedTime).get();
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
@@ -190,6 +191,9 @@ public class PerformanceService {
                             .detailTime(p.getDetailTime())
                             .category(p.getCategory().getSmallCategory())
                             .status(sb.toString())
+                            .runtime(p.getRuntime())
+                            .startDate(p.getStartDate().toString())
+                            .endDate(p.getEndDate().toString())
                             .build()
             );
         }
