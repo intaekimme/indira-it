@@ -7,12 +7,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+// import SearchBar from "./SearchBar";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import { useState, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import PerfList from "./PerfList";
-import PerfSearchList from './PerfSearchList'
+import PerfSearchList from "./PerfSearchList";
 import Theme from "./Theme";
 import { FormControl, Select, MenuItem, TextField } from "@mui/material";
 function Copyright() {
@@ -32,10 +33,10 @@ export default function MainPerf() {
   let { pageNumber } = useParams();
 
   let [pageCounter, setPageCounter] = React.useState(pageNumber);
-  let [searchCategory, setSearchCategory] = React.useState('title')
-  let [searchWord, setSearchWord] = React.useState('')
-  let [showList, setShowList] = React.useState(true)
-  let [showSearch, setShowSearch] = React.useState(false)
+  let [searchCategory, setSearchCategory] = React.useState("title");
+  let [searchWord, setSearchWord] = React.useState("");
+  let [showList, setShowList] = React.useState(true);
+  let [showSearch, setShowSearch] = React.useState(false);
   const [howManySearch, setHowManySearch] = React.useState(0);
 
   const handlePageCounter = () => {
@@ -75,25 +76,37 @@ export default function MainPerf() {
       </Grid>
       <Grid style={{ display: "flex", justifyContent: "center" }}>
         <FormControl>
-          <Select onChange={handleSearchCategory} label='category' value={searchCategory}>
-            <MenuItem value={'title'}>제목+내용</MenuItem>
-            <MenuItem value={'nickname'}>작성자</MenuItem>
+          <Select
+            onChange={handleSearchCategory}
+            label="category"
+            value={searchCategory}
+          >
+            <MenuItem value={"title"}>제목+내용</MenuItem>
+            <MenuItem value={"nickname"}>작성자</MenuItem>
           </Select>
           <TextField onChange={handleSearchWord}></TextField>
           <Button onClick={handleShowSearch}>검색</Button>
         </FormControl>
       </Grid>
       <Grid style={{ display: "flex", justifyContent: "center" }}>
-        <Button href='/perf/register' variant="contained">공연등록</Button>
+        <Button href="/perf/register" variant="contained">
+          공연등록
+        </Button>
       </Grid>
       <Grid>
         <Container sx={{ py: 10 }} maxWidth="md">
-          {showList? <PerfList></PerfList> : null}
-          {showSearch? <PerfSearchList condition={searchCategory} keyword={searchWord} howManySearch={howManySearch}></PerfSearchList> : null}
+          {showList ? <PerfList></PerfList> : null}
+          {showSearch ? (
+            <PerfSearchList
+              condition={searchCategory}
+              keyword={searchWord}
+              howManySearch={howManySearch}
+            ></PerfSearchList>
+          ) : null}
         </Container>
       </Grid>
       {/* Footer */}
-      <Box sx={{  p: 4 }}>
+      <Box sx={{ p: 4 }}>
         <Typography
           variant="subtitle1"
           align="center"

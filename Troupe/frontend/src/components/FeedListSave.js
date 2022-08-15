@@ -1,18 +1,10 @@
 import React from "react";
-import { Button } from "@mui/material";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import apiClient from "../apiClient";
-import { useParams } from "react-router-dom";
 import FeedSaveButton from "./FeedSaveButton";
 import FeedLikeButton from "./FeedLikeButton";
 import { Typography } from "@mui/material";
@@ -24,13 +16,7 @@ import PlusButton from "./PlusButton";
 export default function FeedListAll() {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
-  let [cards, setCard] = React.useState([
-    {
-      feedNo: 0,
-      nickname: "",
-      profileImageUrl: "",
-    },
-  ]);
+  let [cards, setCard] = React.useState([]);
   const [change, setChange] = React.useState(false);
   function handleOpen(no) {
     setOpen(true);
@@ -42,16 +28,8 @@ export default function FeedListAll() {
     setChange(true);
   }
 
-  const changeFunction = (check) => {
-    setChange(check);
-  };
   React.useEffect(() => {
-    // const data = {
-    //   change: "all",
-    //   pageNumber: 0,
-    // };
     apiClient.getFeedTest().then((data) => {
-      // console.log(data);
       setCard(data);
     });
   }, []);
@@ -102,6 +80,8 @@ export default function FeedListAll() {
                             objectFit: "cover",
                             height: "30px",
                             width: "30px",
+                            boxShadow:
+                              "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                           }}
                         ></img>
                       </a>
@@ -171,7 +151,7 @@ export default function FeedListAll() {
             )),
           )}
         </Grid>
-        <PlusButton handleCard={() => FeedListSaveQuery.fetchNextPage}></PlusButton>
+        <PlusButton handleCard={FeedListSaveQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
   }

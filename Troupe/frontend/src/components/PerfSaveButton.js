@@ -15,12 +15,12 @@ export default function PerfSaveButton(props) {
   React.useEffect(() => {
     if (save.response) return;
     setPerformanceNo(props.pfNo);
-    if (sessionStorage.getItem("loginCheck") && props.pfNo) {
-      apiClient.perfSaveCheck(props.pfNo).then((data) => {
-        // console.log(data);
-        setSave(data);
-      });
-    }
+    // if (sessionStorage.getItem("loginCheck") && props.pfNo) {
+    //   apiClient.perfSaveCheck(props.pfNo).then((data) => {
+    //     // console.log(data);
+    //     setSave(data);
+    //   });
+    // }
   }, [props.PfNo, props.change, save]);
 
   const SaveClick = () => {
@@ -29,13 +29,23 @@ export default function PerfSaveButton(props) {
       window.location.href = "/login";
     } else {
       const currentSave = save;
-      setSave(!save);
-      apiClient
-        .perfSave(PerformanceNo)
-        .then((data) => {})
-        .catch(() => {
-          setSave(currentSave);
-        });
+      if (!save) {
+        setSave(!save);
+        apiClient
+          .perfSave(PerformanceNo)
+          .then((data) => {})
+          .catch(() => {
+            setSave(currentSave);
+          });        
+      } else {
+        setSave(!save);
+        apiClient
+          .perfSaveDelete(PerformanceNo)
+          .then((data) => {})
+          .catch(() => {
+            setSave(currentSave);
+          });    
+      }
     }
   };
   return (
