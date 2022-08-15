@@ -414,6 +414,7 @@ const apiClient = {
       })
       .then((response) => {
         alert("공연등록 되었습니다.");
+        window.location.href = "/perf/list/0";
       })
       .catch((error) => {
         alert("공연등록 실패 : " + error);
@@ -445,8 +446,8 @@ const apiClient = {
         alert("전체 피드 불러오기 실패" + error);
       });
   },
-  getSavedFeedList: ({ pageParam = 0 }) => {
-    instance
+  getSavedFeedList: async ({ pageParam = 0 }) => {
+    return await instance
       .get(`/feed/list/save?pageNumber=${pageParam}`, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
@@ -461,8 +462,8 @@ const apiClient = {
       });
   },
 
-  getFollowFeedList: ({ pageParam = 0 }) => {
-    instance
+  getFollowFeedList: async ({ pageParam = 0 }) => {
+    return await instance
       .get(`/feed/list/follow?pageNumber=${pageParam}`, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
@@ -994,13 +995,13 @@ const apiClient = {
   },
   perfSave: (performanceNo) => {
     return instance
-      .patch(`/perf/${performanceNo}/save`, performanceNo, {
+      .post(`/perf/${performanceNo}/save`, performanceNo, {
         headers: {
           accessToken: sessionStorage.getItem("accessToken"),
         },
       })
       .then((response) => {
-
+        // alert("북마크저장")
         return response.data;
       })
       .catch((error) => {
@@ -1008,7 +1009,22 @@ const apiClient = {
         return error;
       });
   },
-  
+  perfSaveDelete: (performanceNo) => {
+    return instance
+      .patch(`/perf/${performanceNo}/save/del`, performanceNo, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        // alert("북마크저장 취소")
+        return response.data;
+      })
+      .catch((error) => {
+        alert("공연 북마크 취소 실패" + error);
+        return error;
+      });
+  },
   perfSearch: async ({ condition = 'title', keyword='' }) => {
     let url = `/perf/list/search?condition=${condition}&keyword=${keyword}`;
     return await instance

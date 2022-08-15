@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar";
 import PerfFeedToggle from "./MainButton";
 import apiClient from "../apiClient";
 import { useState, useParams } from "react-router-dom";

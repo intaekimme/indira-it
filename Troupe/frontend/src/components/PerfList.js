@@ -26,7 +26,7 @@ export default function PerfListCard() {
       getNextPageParam: (lastPage, pages) => {
         return pages.length + 1;
       },
-    }
+    },
   );
   console.log(performanceListQuery.data);
   console.log(performanceListQuery.isLoading);
@@ -51,32 +51,39 @@ export default function PerfListCard() {
                   flexDirection: "column",
                 }}
                 elevation={0}
+                style={{
+                  fontSize: "16px",
+                  fontFamily: "SBAggroB",
+                  color: "black",
+                  boxShadow:
+                    "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.5)",
+                }}
               >
                 {/* <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
                     <img src={data.image} alt='' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                   </Typography> */}
                 <Box
                   style={{
-                    fontFamily: "IBM Plex Sans KR",
                     background: "pink",
                     borderRadius: "10%",
                     position: "absolute",
-                    top: "45px",
+                    top: "10px",
                     right: "5px",
                     i: "3",
+                    padding: "2px",
                   }}
                 >
                   {datum.status}
                 </Box>
                 <Box
                   style={{
-                    fontFamily: "IBM Plex Sans KR",
                     background: "skyblue",
                     borderRadius: "10%",
                     position: "absolute",
-                    top: "45px",
+                    top: "10px",
                     right: "60px",
                     i: "3",
+                    padding: "2px",
                   }}
                 >
                   {datum.category}
@@ -96,18 +103,22 @@ export default function PerfListCard() {
                 </Link>
                 <CardActions
                   sx={{
-                    margin: "0px",
+                    justifyContent: "space-between",
+                    margin: "5px",
                     padding: "0px",
                   }}
                 >
-                  <PerfSaveButton
-                    change={change}
-                    pfNo={datum.pfNo}
-                  ></PerfSaveButton>
+                  <Grid></Grid>
+                  <Grid mr={-3}>
+                    <PerfSaveButton
+                      change={change}
+                      pfNo={datum.pfNo}
+                    ></PerfSaveButton>
+                  </Grid>
                 </CardActions>
               </Card>
             </Grid>
-          ))
+          )),
         )}
         <PlusButton
           handleCard={performanceListQuery.fetchNextPage}
