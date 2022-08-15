@@ -278,16 +278,7 @@ export default function MainFeed() {
           {showFollow ? <FeedListFollow></FeedListFollow> : null}
           {showSave ? <FeedListSave></FeedListSave> : null}
           {showAll ? <FeedListAll></FeedListAll> : null}
-<<<<<<< HEAD
-          {showSearch ? (
-            <FeedListSearch
-              tags={tags}
-              howManySearch={howManySearch}
-            ></FeedListSearch>
-          ) : null}
-=======
           {showSearch ? <FeedListSearch tags={tags} howManySearch={howManySearch} setHowManySearch={setHowManySearch}></FeedListSearch> : null}
->>>>>>> jaehyun
         </Container>
       </div>
       {/* Footer */}

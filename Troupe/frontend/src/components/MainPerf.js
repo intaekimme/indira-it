@@ -94,19 +94,8 @@ export default function MainPerf() {
       </Grid>
       <Grid>
         <Container sx={{ py: 10 }} maxWidth="md">
-<<<<<<< HEAD
-          {showList ? <PerfList></PerfList> : null}
-          {showSearch ? (
-            <PerfSearchList
-              condition={searchCategory}
-              keyword={searchWord}
-              howManySearch={howManySearch}
-            ></PerfSearchList>
-          ) : null}
-=======
           {showList? <PerfList></PerfList> : null}
           {showSearch? <PerfSearchList condition={searchCategory} keyword={searchWord} howManySearch={howManySearch} setHowManySearch={setHowManySearch}></PerfSearchList> : null}
->>>>>>> jaehyun
         </Container>
       </Grid>
       {/* Footer */}
