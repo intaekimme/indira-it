@@ -24,7 +24,7 @@ export default function PerfSearchList(props) {
   console.log(performanceSearchListQuery.isLoading);
 
   const [change, setChange] = React.useState(false);
-  const [isHover, setIsHover] = React.useState(false);
+  const [isHover, setIsHover] = React.useState(-1);
 
 
 
@@ -85,10 +85,27 @@ export default function PerfSearchList(props) {
                       objectFit: "cover",
                       width: "300px",
                       height: "300px",
+                      opacity: isHover===datum.pfNo? 0.5 : null,
+                      transform: isHover===datum.pfNo? 'scale(1.1)' : null,
+                      transition: '0.5s',
                     }}
                     image={Object.values(datum.image)[0]}
                     alt=""
+                    onMouseEnter={()=>setIsHover(datum.pfNo)}
+                    onMouseLeave={()=>setIsHover(-1)}
                   ></CardMedia>
+                  {isHover === datum.pfNo ? 
+                    <div 
+                    style={{lineHeight:'300px', position:'absolute', height:'300px', width:'265px', color:'black', top:0}} 
+                    onMouseEnter={()=>setIsHover(datum.pfNo)}                     
+                    onMouseLeave={()=>setIsHover(-1)}
+                    >
+                      <ul style={{listStyleType:'none', listStylePosition:'none'}}>
+                        <li># 공연장소:{datum.location}</li>
+                        <li># 공연기간:{datum.detailTime}</li>
+                      </ul>
+                      </div> 
+                  : null}
                 </Link>
                 <CardActions
                   sx={{

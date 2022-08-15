@@ -25,6 +25,7 @@ import PlusButton from "./PlusButton";
 export default function FeedListAll() {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
+  const [isHover, setIsHover] = React.useState(-1);
   let [cards, setCard] = React.useState([
     {
       feedNo: 0,
@@ -130,11 +131,29 @@ export default function FeedListAll() {
                       objectFit: "cover",
                       width: "300px",
                       height: "300px",
+                      opacity: isHover===datum.feedNo? 0.5 : null,
+                      transform: isHover===datum.feedNo? 'scale(1.1)' : null,
+                      transition: '0.5s',
                     }}
                     image={Object.values(datum.images)[0]}
                     alt=""
                     onClick={() => handleOpen(datum.feedNo)}
+                    onMouseEnter={()=>setIsHover(datum.feedNo)}
+                    onMouseLeave={()=>setIsHover(-1)}
                   ></CardMedia>
+                  {isHover === datum.feedNo ? 
+                    <div 
+                    style={{lineHeight:'300px', position:'absolute', height:'300px', width:'265px', color:'black', top:0}} 
+                    onMouseEnter={()=>setIsHover(datum.feedNo)}                     
+                    onMouseLeave={()=>setIsHover(-1)}
+                    onClick={() => handleOpen(datum.feedNo)}
+                    >
+                      <ul style={{listStyleType:'none', listStylePosition:'none'}}>
+                        <li># 공연장소:{datum.location}</li>
+                        <li># 공연기간:{datum.detailTime}</li>
+                      </ul>
+                      </div> 
+                  : null}
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
