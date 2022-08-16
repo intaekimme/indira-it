@@ -305,6 +305,8 @@ function PerfDetail() {
                         boxShadow:
                           "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                         padding: "3px",
+                        border: "2px solid white",
+                        color: "white",
                       }}
                     >
                       {status}
@@ -319,6 +321,8 @@ function PerfDetail() {
                         boxShadow:
                           "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                         padding: "3px",
+                        border: "2px solid white",
+                        color: "white",
                       }}
                     >
                       {category}

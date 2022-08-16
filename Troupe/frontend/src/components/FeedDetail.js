@@ -3,11 +3,9 @@ import { styled } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import apiClient from "../apiClient";
-import { useParams } from "react-router-dom";
 import stylesTag from "../css/tag.module.css";
 import FollowButton from "./FollowButton";
 import ModifyDeleteButton from "./ModifyDeleteButton";
-import Carousel from "./Carousel";
 import Box from "@mui/material/Box";
 import stylesModal from "../css/modal.module.css";
 import MUICarousel from "react-material-ui-carousel";
@@ -44,13 +42,11 @@ export default function FeedDetail(props) {
   const [img, setImg] = React.useState(new Map());
   const [user, setUser] = React.useState(0);
   const [commentList, setCommentList] = React.useState([]);
-  const [search, setSearch] = React.useState(false);
-  const [tag, setTag] = React.useState("");
+
   function searchTag(tagName) {
     if (tagName !== "") {
-      // apiClient.feedTagSearch({ pageParam: 0, tags: tagName });
-      setTag(tagName);
-      console.log(tag);
+      props.setTagList([tagName]);
+      props.handleShowSearch(!props.showSearch);
     }
   }
   const refreshFunction = (newComment) => {
@@ -181,8 +177,8 @@ export default function FeedDetail(props) {
                         key={id}
                         // onClick={() => searchTag(item.trim())}
                         onClick={() => {
-                          searchTag(item.trim());
                           props.handleClose();
+                          searchTag(item.trim());
                         }}
                       >
                         # {item}

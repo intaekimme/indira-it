@@ -148,12 +148,15 @@ export default function FeedListSearch(props) {
                   aria-labelledby="simple-modal-title"
                   aria-describedby="simple-modal-description"
                   className={stylesModal.outer}
-                  animationType={"fade"}
                 >
                   <FeedDetail
                     setChange={setChange}
                     feedNo={feedNo}
                     open={open}
+                    handleClose={handleClose}
+                    showSearch={props.showSearch}
+                    handleShowSearch={props.handleShowSearch}
+                    setTagList={props.setTagList}
                   ></FeedDetail>
                 </Modal>
               </Grid>
