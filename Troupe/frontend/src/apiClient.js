@@ -6,6 +6,29 @@ import instance from "axios";
 // });
 
 const apiClient = {
+  //accessToken Refresh
+  refreshAccessToken: () => {
+    console.log("refreshAccessToken");
+    const memberNo = window.sessionStorage.getItem("loginMember");
+    const refreshToken = window.sessionStorage.getItem("refreshToken");
+    return instance
+      .post(`/refresh`, {memberNo: parseInt(memberNo), refreshToken: refreshToken,})
+      .then((response) => {
+        console.log(response.data);
+        alert("토큰 새로고침 성공 : " + response.data);
+        if (!response.data || response.data === "") {
+          return false;
+        } else {
+          sessionStorage.setItem("accessToken", response.data.accessToken);
+          return true;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("토큰 새로고침 실패하였습니다 : " + error);
+        return false;
+      });
+  },
   //로그인
   login: (loginInfo) => {
     return instance
@@ -14,6 +37,7 @@ const apiClient = {
         window.sessionStorage.setItem("loginCheck", true);
         window.sessionStorage.setItem("loginMember", response.data.memberNo);
         window.sessionStorage.setItem("accessToken", response.data.accessToken);
+        window.sessionStorage.setItem("refreshToken", response.data.refreshToken);
         alert("로그인 되었습니다.");
         const href = sessionStorage.getItem("currentHref");
         sessionStorage.removeItem("currentHref");
@@ -103,6 +127,12 @@ const apiClient = {
         alert("프로필수정 되었습니다." + response.data);
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("프로필수정 실패 : " + error);
       });
   },
@@ -119,7 +149,80 @@ const apiClient = {
         return true;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("아바타 수정 실패" + error);
+        return false;
+      });
+  },
+  //방명록 불러오기
+  getGuestBookList: (memberNo) => {
+    return instance
+      .get(`/guestbook/${parseInt(memberNo)}/list`)
+      .then((response) => {
+        console.log(response.data);
+        alert("방명록 목록조회 성공 : " + response.data);
+        if(response.data==="" || response.data.length==0){
+          return [];
+        }
+        else{
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("방명록 목록을 불러오는데 실패하였습니다 : " + error);
+        return [];
+      });
+  },
+  //로그인한 유저가 쓴 방명록 조회
+  getMyGuestBook: (memberNo) => {
+    return instance
+      .get(`/guestbook/${parseInt(memberNo)}`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("내가 쓴 방명록 조회 성공 : " + response);
+        return response.data;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        alert("내가 쓴 방명록 조회 실패 : " + error);
+        return {};
+      });
+  },
+  //방명록 등록
+  registGuestBook: (memberNo, content) => {
+    console.log(content);
+    return instance
+      .post(`/guestbook/${parseInt(memberNo)}`, content, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        alert("방명록 등록 성공 : " + response);
+        return true;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        alert("방명록 등록 실패 : " + error);
         return false;
       });
   },
@@ -177,6 +280,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("pwCurrentCheck 정보를 불러오는데 실패하였습니다 : " + error);
         return null;
       });
@@ -212,6 +321,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         console.log(error);
         alert("isFollowing 정보를 불러오는데 실패하였습니다 : " + error);
         return { isFollowing: false };
@@ -234,6 +349,12 @@ const apiClient = {
             return true;
           })
           .catch((error) => {
+            if (error.response.status === 500) {
+              const refresh = apiClient.refreshAccessToken();
+              if (refresh) {
+                alert("잠시 후 다시 시도해 주세요");
+              }
+            }
             console.log(error);
             alert(" 팔로우 취소실패 : " + error);
             return false;
@@ -253,6 +374,12 @@ const apiClient = {
             return true;
           })
           .catch((error) => {
+            if (error.response.status === 500) {
+              const refresh = apiClient.refreshAccessToken();
+              if (refresh) {
+                alert("잠시 후 다시 시도해 주세요");
+              }
+            }
             console.log(error);
             alert(" 팔로우실패 : " + error);
             return false;
@@ -272,6 +399,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         console.log(error);
         alert("Member 정보를 불러오는데 실패하였습니다 : " + error);
         return null;
@@ -382,26 +515,6 @@ const apiClient = {
         return null;
       });
   },
-  //방명록 불러오기
-  getGuestBookList: (memberNo) => {
-    return instance
-      .get(`/guestbook/${parseInt(memberNo)}/list`)
-      .then((response) => {
-        console.log(response.data);
-        alert("방명록 목록조회 성공 : " + response.data);
-        if(response.data==="" || response.data.length==0){
-          return [];
-        }
-        else{
-          return response.data;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("방명록 목록을 불러오는데 실패하였습니다 : " + error);
-        return [];
-      });
-  },
 
   //공연 삭제하기
   perfRemove: (data) => {
@@ -434,6 +547,12 @@ const apiClient = {
         window.location.href = "/perf/list/0";
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("공연등록 실패 : " + error);
       });
   },
@@ -474,6 +593,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("저장 피드 불러오기 실패" + error);
         return null;
       });
@@ -490,6 +615,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("팔로우 피드 불러오기 실패" + error);
         return null;
       });
@@ -554,6 +685,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("공연자에 대한 나의 호감도 data 불러오기 실패" + error);
         return null;
       });
@@ -574,6 +711,12 @@ const apiClient = {
         return response;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("피드 등록 실패" + error);
         return error;
       });
@@ -593,6 +736,12 @@ const apiClient = {
         return response;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("피드 수정 실패" + error);
         return error;
       });
@@ -611,6 +760,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("피드 상세 불러오기 실패" + error);
         return error;
       });
@@ -698,6 +853,12 @@ const apiClient = {
         refreshFunction(response.data);
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("댓글 등록 실패 : " + error);
       });
   },
@@ -753,6 +914,12 @@ const apiClient = {
         refreshChildFunction(response.data);
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("대댓글 등록 실패 : " + error);
       });
   },
@@ -770,6 +937,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         // alert("피드 좋아요 여부 get 실패" + error);
         return error;
       });
@@ -787,6 +960,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("피드 좋아요 실패" + error);
         return error;
       });
@@ -804,6 +983,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         // alert("피드 저장 여부 get 실패" + error);
         return error;
       });
@@ -821,6 +1006,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("피드 저장 실패" + error);
         return error;
       });
@@ -874,6 +1065,12 @@ const apiClient = {
         refreshFunction(json);
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("댓글 등록 실패 : " + error);
         return error;
       });
@@ -892,6 +1089,12 @@ const apiClient = {
         console.log(response.data);
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("댓글 수정 실패 : " + error);
         return error;
       });
@@ -908,6 +1111,12 @@ const apiClient = {
         // alert("댓글 삭제 성공");
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("댓글 삭제 실패 : " + error);
         return error;
       });
@@ -942,6 +1151,12 @@ const apiClient = {
         refreshChildFunction(json);
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("대댓글 등록 실패 : " + error);
       });
   },
@@ -973,6 +1188,12 @@ const apiClient = {
         console.log(response.data);
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("댓글 수정 실패 : " + error);
         return error;
       });
@@ -990,6 +1211,12 @@ const apiClient = {
         alert("댓글 삭제 성공");
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("댓글 삭제 실패 : " + error);
         return error;
       });
@@ -1007,6 +1234,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         return error;
       });
   },
@@ -1022,6 +1255,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("공연 북마크 실패" + error);
         return error;
       });
@@ -1038,6 +1277,12 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
         alert("공연 북마크 취소 실패" + error);
         return error;
       });

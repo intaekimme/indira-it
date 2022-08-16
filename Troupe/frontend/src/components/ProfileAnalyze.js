@@ -47,10 +47,40 @@ export default function ProfileAnalyze(props) {
   //이 member의 호감도 data
   const [performerTop3, setPerformerTop3] = React.useState([]);
   React.useEffect(() => {
+    if (!memberNo) {
+      return;
+    }
+    //이 member가 호감도가 높은 공연자 탑3
     apiClient.getPerformerTop3({ profileMemberNo: memberNo }).then((data) => {
       console.log(data);
       setPerformerTop3(data.top3Stars);
     });
+    //이 member의 관심카테고리
+    apiClient.getInterestCategory(memberNo).then((data) => {
+      console.log(data);
+      if (data[0]) {
+        let counts = [];
+        let totalCount = 0;
+        data.map((object) => {
+          counts.push(object.count);
+          totalCount += object.count;
+        });
+        for (let i = 0; i < counts.length; i++){
+          counts[i] = counts[i] * 100 / totalCount;
+        }
+        console.log(counts);
+        setInterestCategory(counts);
+      }
+      // {
+      //   categoryNo: int, 
+      //   bigCategory : String
+      //   smallCategory: String
+      //   codeName: String
+      //   count : int
+      // }
+      // setInterestCategory(data);
+    })
+    //이 member의 호감도 data
     apiClient
       .getMyLikeabilityData({ profileMemberNo: memberNo })
       .then((data) => {

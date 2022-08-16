@@ -37,6 +37,7 @@ const style = {
 
 export default function GuestBook(props) {
   const [existMyGuestBook, setExistMyGuestBook] = React.useState(false);
+  const [myGuestBookContent, setMyGuestBookContent] = React.useState({});
   const [guestBookList, setGuestBookList] = React.useState([]);
   React.useEffect(()=>{
     if(!props.memberNo){
@@ -50,8 +51,38 @@ export default function GuestBook(props) {
   }, [props.memberNo]);
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  //방명록 모달 열기
+  const handleOpen = () => {
+    apiClient.getGuestBookList(props.memberNo).then((data) => {
+      console.log(data);
+      setGuestBookList(data);
+    });
+    apiClient.getMyGuestBook(props.memberNo).then((data) => {
+      console.log(data);
+      if(!data || data===""){
+        return;
+      }
+      else {
+        setExistMyGuestBook(true);
+        setMyGuestBookContent(data);
+      }
+    });
+    setOpen(true);
+  }
+  //방명록 모달 닫기
   const handleClose = () => setOpen(false);
+
+  //방명록 작성
+  const registGuestBook = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const content = formData.get("content");
+    console.log(content);
+    if (!content || content==='') {
+      return;
+    }
+    apiClient.registGuestBook(props.memberNo, {content: content});
+  };
   
   return (
     <div>
@@ -81,7 +112,7 @@ export default function GuestBook(props) {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={{width:"100%", height:"100%"}}
+        style={{ width: "100%", height: "100%" }}
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" component="span">
@@ -89,62 +120,78 @@ export default function GuestBook(props) {
               existMyGuestBook ? (
                 <div>
                   <br />
-                  기존에 썼던 방명록 (댓글폼 붙일예정)
+                  {myGuestBookContent.content}
                 </div>
               ) : (
-                <Grid
-                  container
-                  item
-                  xs={12}
-                  style={{ padding: 10, textAlign: "right" }}
+                <form
+                  onSubmit={registGuestBook}
+                  encType="multipart/form-data"
+                  style={{ textAlign: "center" }}
                 >
-                  <Grid item xs={12}>
-                    <TextField
-                      id="outlined-multiline-static"
-                      label="방명록"
-                      multiline
-                      rows={4}
-                      placeholder="방명록을 작성해 주세요"
-                      variant="outlined"
-                      style={{
-                        width: "100%",
-                        marginBottom: "10px",
-                      }}
-                    />
+                  <Grid
+                    container
+                    item
+                    xs={12}
+                    style={{ padding: 10, textAlign: "right" }}
+                  >
+                    <Grid item xs={12}>
+                      <TextField
+                        id="content"
+                        name="content"
+                        label="방명록"
+                        multiline
+                        rows={4}
+                        placeholder="방명록을 작성해 주세요"
+                        variant="outlined"
+                        style={{
+                          width: "100%",
+                          marginBottom: "10px",
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} style={{ textAlign: "right" }}>
+                      <Button
+                        type="submit"
+                        className={styledButton.btn}
+                        style={{
+                          width: "100px",
+                          height: "100%",
+                          backgroundColor: "#45E3C6",
+                          color: "black",
+                          alignContent: "right",
+                        }}
+                      >
+                        방명록 작성
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} style={{ textAlign: "right" }}>
-                    <Button
-                      type="submit"
-                      className={styledButton.btn}
-                      style={{
-                        width: "100px",
-                        height: "100%",
-                        backgroundColor: "#45E3C6",
-                        color: "black",
-                        alignContent: "right",
-                      }}
-                    >
-                      방명록 작성
-                    </Button>
-                  </Grid>
-                </Grid>
+                </form>
               )
             ) : (
               <div></div>
             )}
           </Typography>
-          <Typography component="span" id="modal-modal-description" sx={{ mt: 2 }}>
-            <Grid
+          <Typography
+            component="span"
+            id="modal-modal-description"
+            sx={{ mt: 2 }}
+          >
+            {/* <Grid
               container
               item
               xs={12}
               style={{ padding: 10, textAlign: "right" }}
-            >
-              {guestBookList.map((guestBook, index)=>(
-                <div key={`guestBook${index}`}>{guestBook.memberNo} {guestBook.nickname}
-                <br/>{guestBook.content}<br/>{guestBook.profileImageUrl}</div>
+            > */}
+              {guestBookList.map((guestBook, index) => (
+                <div key={`guestBook${index}`}>
+                  {guestBook.visitorMemberInfoResponse.memberNo} {guestBook.visitorMemberInfoResponse.nickname}
+                  <br />
+                  {guestBook.content}
+                  <br />
+                  {guestBook.visitorMemberInfoResponse.profileImageUrl}
+                </div>
               ))}
-            </Grid>
+            {/* </Grid> */}
             {/* <Card>
               <CardHeader
                 title={
