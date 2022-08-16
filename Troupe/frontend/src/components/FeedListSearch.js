@@ -35,9 +35,9 @@ export default function FeedListSearch(props) {
 
   let FeedListSearchQuery = useInfiniteQuery(
     ["tagSearch", props.tags],
-    () => apiClient.feedTagSearch(props.tags),
+    apiClient.feedTagSearch,
     {
-      getNextPageParam: (lastPage, pages) => pages.length
+      getNextPageParam: (lastPage, pages) => {return pages.length + 1}
     },
   );
   // console.log(FeedListSearchQuery.data);
@@ -47,23 +47,18 @@ export default function FeedListSearch(props) {
   console.log(FeedListSearchQuery.isLoading);
 
 
-
-  function propRefetch() {
-    FeedListSearchQuery.refetch()
-  }
-
   if (props.howManySearch > 0) {
     FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 });
     props.setHowManySearch(0);
   }
 
-  if (!FeedListSearchQuery.isLoading && FeedListSearchQuery.data.pages[0]) {
+  if (!FeedListSearchQuery.isLoading && typeof FeedListSearchQuery.data.pages[0]) {
     console.log(FeedListSearchQuery.data);
     return (
       <Fragment>
         <Grid container spacing={4}>
           {FeedListSearchQuery.data.pages.map((page) =>
-            page.map((datum) => (
+            page.items.map((datum) => (
               <Grid item key={datum.feedNo} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
@@ -166,8 +161,11 @@ export default function FeedListSearch(props) {
             )),
           )}
         </Grid>
-        <PlusButton handleCard={() => FeedListSearchQuery.fetchNextPage()}></PlusButton>
+        <PlusButton handleCard={FeedListSearchQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
+  }
+  else {
+    return (<div></div>)
   }
 }

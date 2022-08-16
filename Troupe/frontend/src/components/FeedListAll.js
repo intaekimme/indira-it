@@ -46,7 +46,7 @@ export default function FeedListAll(props) {
   console.log(FeedListAllQuery.data);
   console.log(FeedListAllQuery.isLoading);
 
-  if (!FeedListAllQuery.isLoading && FeedListAllQuery.data.pages[0]) {
+  if (!FeedListAllQuery.isLoading && typeof FeedListAllQuery.data.pages[0]) {
     return (
       <Fragment>
         <Grid container spacing={4}>

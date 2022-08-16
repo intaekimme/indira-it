@@ -39,7 +39,7 @@ export default function FeedListFollow(props) {
   // console.log(FeedListFollowQuery.data);
   // console.log(FeedListFollowQuery.isLoading);
 
-  if (!FeedListFollowQuery.isLoading && FeedListFollowQuery.data.pages[0]) {
+  if (!FeedListFollowQuery.isLoading && typeof FeedListFollowQuery.data.pages[0]) {
     return (
       <Fragment>
         <Grid container spacing={4}>

@@ -170,7 +170,7 @@ export default function MainFeed() {
         </Grid>
         <Grid item xs={4} mt={6}>
           <Button
-            onClick={handleShowSearch}
+            onClick={tags.length === 0 ? ()=>{window.alert('태그를 입력하세요.')} : handleShowSearch}
             variant="contained"
             color="neutral"
             className={stylesButton.btn2}
