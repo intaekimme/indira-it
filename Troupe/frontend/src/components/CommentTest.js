@@ -16,7 +16,9 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SendIcon from "@mui/icons-material/Send";
-export default function Comment(props) {
+
+export default function CommentTest(props) {
+  console.log(props);
   const [user, setUser] = useState(0);
   // 대댓글 목록
   const [childComments, setchildComments] = useState([]);
@@ -32,50 +34,51 @@ export default function Comment(props) {
   const [cancel, setCancel] = useState(false);
 
   useEffect(() => {
-    setContent(props.comment);
+    setContent(props.data.comment.comment);
+    setchildComments(props.data.comment.childComments);
     if (sessionStorage.getItem("loginCheck"))
       setUser(parseInt(sessionStorage.getItem("loginMember")));
-    if (!props.feedNo) {
-      //  공연 후기 대댓글 목록 불러오기
-      apiClient
-        .getPerfChildReviewList(props.performanceNo, props.reviewNo)
-        .then((data) => {
-          const json = [];
+    // if (!props.feedNo) {
+    //   //  공연 후기 대댓글 목록 불러오기
+    //   apiClient
+    //     .getPerfChildReviewList(props.performanceNo, props.reviewNo)
+    //     .then((data) => {
+    //       const json = [];
 
-          data.forEach((item) => {
-            json.push({
-              memberNo: item.memberNo,
-              reviewNo: item.reviewNo,
-              profileImageUrl: item.profileImageUrl,
-              comment: item.comment,
-              nickname: item.nickname,
-              isRemoved: item.removed,
-              pfNo: item.pfNo,
-            });
-          });
-          setchildComments(json);
-        });
-    } else {
-      //  피드 댓글의 대댓글 목록 불러오기
-      apiClient
-        .getFeedChildReviewList(props.feedNo, props.reviewNo)
-        .then((data) => {
-          console.log(data);
-          const json = [];
+    //       data.forEach((item) => {
+    //         json.push({
+    //           memberNo: item.memberNo,
+    //           reviewNo: item.reviewNo,
+    //           profileImageUrl: item.profileImageUrl,
+    //           comment: item.comment,
+    //           nickname: item.nickname,
+    //           isRemoved: item.removed,
+    //           pfNo: item.pfNo,
+    //         });
+    //       });
+    //       setchildComments(json);
+    //     });
+    // } else {
+    //   //  피드 댓글의 대댓글 목록 불러오기
+    //   apiClient
+    //     .getFeedChildReviewList(props.feedNo, props.reviewNo)
+    //     .then((data) => {
+    //       console.log(data);
+    //       const json = [];
 
-          data.forEach((item) => {
-            json.push({
-              memberNo: item.memberNo,
-              reviewNo: item.commentNo,
-              profileImageUrl: item.profileImageUrl,
-              comment: item.content,
-              nickname: item.nickname,
-              isRemoved: item.removed,
-            });
-          });
-          setchildComments(json);
-        });
-    }
+    //       data.forEach((item) => {
+    //         json.push({
+    //           memberNo: item.memberNo,
+    //           reviewNo: item.commentNo,
+    //           profileImageUrl: item.profileImageUrl,
+    //           comment: item.content,
+    //           nickname: item.nickname,
+    //           isRemoved: item.removed,
+    //         });
+    //       });
+    //       setchildComments(json);
+    //     });
+    // }
   }, []);
 
   function onChangeContent(event) {
@@ -108,23 +111,24 @@ export default function Comment(props) {
       const data = {
         content: content,
       };
-      // props.modifyCommentFunc(props.somethingNo, props.reviewNo, data)
-      //   .then(() => {
-      //     setModify(!modify);
-      //   });
-      if (!props.feedNo) {
-        apiClient
-          .perfReviewModify(props.performanceNo, props.reviewNo, data)
-          .then(() => {
-            setModify(!modify);
-          });
-      } else {
-        apiClient
-          .feedCommentModify(props.feedNo, props.reviewNo, data)
-          .then(() => {
-            setModify(!modify);
-          });
-      }
+      props
+        .modifyCommentFunc(props.somethingNo, props.reviewNo, data)
+        .then(() => {
+          setModify(!modify);
+        });
+      // if (!props.feedNo) {
+      //   apiClient
+      //     .perfReviewModify(props.performanceNo, props.reviewNo, data)
+      //     .then(() => {
+      //       setModify(!modify);
+      //     });
+      // } else {
+      //   apiClient
+      //     .feedCommentModify(props.feedNo, props.reviewNo, data)
+      //     .then(() => {
+      //       setModify(!modify);
+      //     });
+      // }
     }
   };
 
@@ -137,24 +141,23 @@ export default function Comment(props) {
   //  댓글 삭제
   const deleteComment = () => {
     if (window.confirm("삭제하시겠습니까?")) {
-      // props.deleteCommentFunc(props.somethingNo, props.reviewNo)
-      //   .then(() => {
+      props.deleteCommentFunc(props.somethingNo, props.reviewNo).then(() => {
+        setContent("삭제된 댓글입니다.");
+        setDeleted(true);
+      });
+      // if (!props.feedNo) {
+      //   apiClient
+      //     .perfReviewDelete(props.performanceNo, props.reviewNo)
+      //     .then(() => {
+      //       setContent("삭제된 댓글입니다.");
+      //       setDeleted(true);
+      //     });
+      // } else {
+      //   apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
       //     setContent("삭제된 댓글입니다.");
       //     setDeleted(true);
-      // })
-      if (!props.feedNo) {
-        apiClient
-          .perfReviewDelete(props.performanceNo, props.reviewNo)
-          .then(() => {
-            setContent("삭제된 댓글입니다.");
-            setDeleted(true);
-          });
-      } else {
-        apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
-          setContent("삭제된 댓글입니다.");
-          setDeleted(true);
-        });
-      }
+      //   });
+      // }
     }
   };
 
@@ -176,16 +179,23 @@ export default function Comment(props) {
   // isChildReviewRegister : ${isChildReviewRegister}
   // isChild : ${isChild}
   // `);
+  console.log(content);
+  console.log(childComments);
   return (
     <Card sx={{ maxWidth: "100%", m: 2 }}>
       <CardHeader
-        avatar={<Avatar alt={props.nickname} src={props.profileImageUrl} />}
-        subheader={props.nickname}
+        avatar={
+          <Avatar
+            alt={props.data.comment.nickname}
+            src={props.data.comment.profileImageUrl}
+          />
+        }
+        subheader={props.data.comment.nickname}
         style={{ textAlign: "left" }}
       />
       <CardContent style={{ textAlign: "left" }}>
         <Typography variant="body1" color="textSecondary" component="p">
-          {!props.isRemoved && !deleted ? (
+          {!props.data.comment.isRemoved && !deleted ? (
             modify ? (
               <TextField
                 fullWidth
@@ -209,7 +219,9 @@ export default function Comment(props) {
         <Grid container justifyContent="flex-end">
           <Grid item>
             {/* {props.memberNo === user && !props.isRemoved && !deleted ? ( */}
-            {props.memberNo === user && !props.isRemoved && !deleted ? (
+            {props.data.comment.memberNo === user &&
+            !props.data.comment.isRemoved &&
+            !deleted ? (
               modify ? (
                 <div>
                   <Button
@@ -239,7 +251,9 @@ export default function Comment(props) {
             ) : (
               <div></div>
             )}
-            {props.memberNo === user && !props.isRemoved && !deleted ? (
+            {props.data.comment.memberNo === user &&
+            !props.data.comment.isRemoved &&
+            !deleted ? (
               <Button
                 size="small"
                 aria-label="delete"
@@ -266,9 +280,9 @@ export default function Comment(props) {
               </Button>
             )}
 
-            {!props.isRemoved &&
+            {!props.data.comment.isRemoved &&
             !deleted &&
-            !props.parentCommentNo &&
+            !props.data.comment.parentCommentNo &&
             !cancel ? (
               <Button
                 size="small"
@@ -304,15 +318,13 @@ export default function Comment(props) {
             />
           </Grid>
         )}
-        {isChild && (
-          <CommentList
-            refreshChildFunction={refreshChildFunction}
-            commentList={childComments}
-            performanceNo={props.performanceNo}
-            feedNo={props.feedNo}
-            parentCommentNo={props.reviewNo}
-          />
-        )}
+        {/* {isChild && (childComments.map((comment, index) => {
+            <CommentTest
+              refreshChildFunction={refreshChildFunction}
+              comment={comment}
+            />
+        }))
+        } */}
       </Grid>
     </Card>
   );

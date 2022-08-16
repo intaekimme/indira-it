@@ -9,6 +9,10 @@ import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
 import CommentList from "./CommentList";
 import { useParams } from "react-router-dom";
+import CommentForm from "./CommentForm";
+import Comment from "./Comment";
+import CommentCount from "./CommentCount";
+import CommentPerf from "./CommentPerf";
 import Theme from "./Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
@@ -452,7 +456,7 @@ function PerfDetail() {
                       <li id={i}>
                         {item.seat} {item.price}
                       </li>
-                    ),
+                    )
                   )}
                   <br />
                   <li>
@@ -468,12 +472,27 @@ function PerfDetail() {
                   <br />
                 </ul>
               </Item>
+              <Item elevation={0}>{description}</Item>
             </Grid>
           </Grid>
           <div style={{ margin: "12px" }}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Item style={{ background: "#FFFF" }}>
+                  <CommentCount listSize={commentList.length} />
+                  {commentList.map((comment, index) => {
+                    return (
+                      <CommentPerf
+                        key={index}
+                        refreshFunction={refreshFunction}
+                        comment={comment}
+                      />
+                    );
+                  })}
+                  <CommentForm
+                    refreshFunction={refreshFunction}
+                    performanceNo={performanceNo}
+                  />
                   <CommentList
                     refreshFunction={refreshFunction}
                     commentList={commentList}
