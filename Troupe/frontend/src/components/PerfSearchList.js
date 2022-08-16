@@ -43,7 +43,7 @@ export default function PerfSearchList(props) {
     typeof performanceSearchListQuery.data
   ) {
     return (
-      <Grid container spacing={4}>
+      <Grid container spacing={4} paddingBottom="300px">
         {performanceSearchListQuery.data.map((datum) => (
           <Grid item key={datum.pfNo} xs={12} sm={6} md={4}>
             <Card

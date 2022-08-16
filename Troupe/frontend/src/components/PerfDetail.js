@@ -9,17 +9,14 @@ import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
 import CommentList from "./CommentList";
 import { useParams } from "react-router-dom";
-import CommentForm from "./CommentForm";
-import Comment from "./Comment";
-import CommentCount from "./CommentCount";
 import Theme from "./Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { textAlign } from "@mui/system";
 import CssBaseline from "@mui/material/CssBaseline";
+import styledFont from "../css/font.module.css";
 // 제목, 기간, 시간, 장소, 티켓가격
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -108,10 +105,6 @@ function ModifyDeleteButton(props) {
   React.useEffect(() => {
     setUser(parseInt(sessionStorage.getItem("loginMember")) === props.memberNo);
   }, [sessionStorage.getItem("loginMember"), props.memberNo]);
-
-  function handleUser() {
-    setUser(!user);
-  }
 
   function onRemove() {
     apiClient.perfRemove(props.performanceNo);
@@ -389,30 +382,74 @@ function PerfDetail() {
                       </Grid>
                     </Grid>
                   </li>
-                  <li>공연제목 : {title}</li>
-                  <br></br>
                   <li>
-                    기간 : {convertTime(startDate)}~{convertTime(endDate)}
+                    공연제목 :{" "}
+                    <span className={styledFont.highlighter}> {title}</span>
                   </li>
                   <br></br>
-                  <li>공연 시간 : {runtime}</li>
+                  <li>
+                    기간 :{" "}
+                    {
+                      <span className={styledFont.highlighter}>
+                        {" "}
+                        {convertTime(startDate)}
+                      </span>
+                    }{" "}
+                    ~{" "}
+                    {
+                      <span className={styledFont.highlighter}>
+                        {" "}
+                        {convertTime(endDate)}
+                      </span>
+                    }
+                  </li>
                   <br></br>
-                  <li>장소 : {location}</li>
+                  <li>
+                    공연 시간 :{" "}
+                    <span className={styledFont.highlighter}> {runtime}분</span>
+                  </li>
                   <br></br>
+                  <li>
+                    장소 :{" "}
+                    <span className={styledFont.highlighter}> {location}</span>
+                  </li>
+                  <br></br>
+                  좌석 :{" "}
                   {price.map((item, i) =>
                     i === 0 ? (
                       <li id={i}>
-                        좌석 : {item.seat + "       "}
-                        가격 : {item.price}
+                        <span className={styledFont.highlighter2}>
+                          {" "}
+                          {item.seat}
+                        </span>
+                        -{" "}
+                        <span className={styledFont.highlighter}>
+                          {" "}
+                          {item.price}원
+                        </span>
                       </li>
                     ) : (
                       <li id={i}>
-                        {item.seat} {item.price}
+                        <span className={styledFont.highlighter2}>
+                          {" "}
+                          {item.seat}
+                        </span>
+                        -{" "}
+                        <span className={styledFont.highlighter}>
+                          {" "}
+                          {item.price}원
+                        </span>
                       </li>
                     ),
                   )}
                   <br />
-                  <li>상세 설명 : {description}</li>
+                  <li>
+                    상세 설명 :{" "}
+                    <span className={styledFont.highlighter}>
+                      {" "}
+                      {description}
+                    </span>
+                  </li>
                   <br />
                 </ul>
               </Item>

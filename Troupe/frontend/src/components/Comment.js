@@ -258,10 +258,15 @@ export default function Comment(props) {
                 onClick={childCommentList}
                 style={{ color: "black", marginBottom: "20px" }}
                 // color="black"
-                fontFamily="116watermelon"
               >
                 <FormatListBulletedIcon color="action"></FormatListBulletedIcon>
-                <Grid style={{ marginTop: "3px", marginLeft: "3px" }}>
+                <Grid
+                  style={{
+                    marginTop: "3px",
+                    marginLeft: "3px",
+                    fontFamily: "Cafe24SsurroundAir",
+                  }}
+                >
                   ({childComments.length})
                 </Grid>
               </Button>
