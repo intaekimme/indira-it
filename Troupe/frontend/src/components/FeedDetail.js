@@ -197,14 +197,12 @@ export default function FeedDetail(props) {
               </Grid>
 
               <Grid item xs={11}>
-                <Item>
-                  <CommentList
-                    refreshFunction={refreshFunction}
-                    commentList={commentList}
-                    feedNo={feedNo}
-                    kind={"feed"}
-                  />
-                </Item>
+                <CommentList
+                  refreshFunction={refreshFunction}
+                  commentList={commentList}
+                  feedNo={feedNo}
+                  kind={"feed"}
+                />
               </Grid>
             </Grid>
           </Grid>

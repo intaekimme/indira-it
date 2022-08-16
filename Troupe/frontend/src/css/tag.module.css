@@ -7,7 +7,7 @@
     display: flex;
     flex-wrap: wrap;
     letter-spacing: -0.6px;
-    color: #ff6e35;
+    /* color: #ff6e35; */
     border-bottom: 1.6px solid;
     padding: 2px 2px 8px 2px;
 }
