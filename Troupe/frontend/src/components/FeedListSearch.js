@@ -18,6 +18,23 @@ export default function FeedListSearch(props) {
   const [change, setChange] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
+  const [cards, setCards] = React.useState([]);
+  const [pageNumber, setPageNumber] = React.useState(1);
+
+  React.useEffect( () =>{
+      apiClient.feedTagSearch(props.tags, 0).then((data)=>{
+      setCards(data);
+    });
+  }, [props.tags])
+
+  async function fetchMore() {
+    setPageNumber(pageNumber + 1);
+    console.log(pageNumber)
+    apiClient.feedTagSearch(props.tags, pageNumber).then((data)=>{
+      setCards([...cards, ...data])
+    })
+    console.log(cards)
+  }
 
   function handleOpen(no) {
     setOpen(true);
@@ -33,37 +50,12 @@ export default function FeedListSearch(props) {
     setChange(check);
   };
 
-  let FeedListSearchQuery = useInfiniteQuery(
-    ["tagSearch", props.tags],
-    apiClient.feedTagSearch,
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
-      },
-    },
-  );
-  // console.log(FeedListSearchQuery.data);
-  // console.log(FeedListSearchQuery.isLoading);
-
-  console.log(FeedListSearchQuery.data);
-  console.log(FeedListSearchQuery.isLoading);
-
-  if (props.howManySearch > 0) {
-    FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 });
-    props.setHowManySearch(0);
-  }
-
-  if (
-    !FeedListSearchQuery.isLoading &&
-    typeof FeedListSearchQuery.data.pages[0]
-  ) {
-    console.log(FeedListSearchQuery.data);
+  if (true) {
     return (
       <Fragment>
         <Grid container spacing={4}>
-          {FeedListSearchQuery.data.pages.map((page) =>
-            page.items.map((datum) => (
-              <Grid item key={datum.feedNo} xs={12} sm={6} md={4}>
+          {cards.map(card => (
+              <Grid item key={card.feedNo} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
                     position: "relative",
@@ -81,10 +73,10 @@ export default function FeedListSearch(props) {
                     <Grid ml={1}>
                       <a
                         style={{ textDecoration: "none" }}
-                        href={"/profile/" + datum.memberNo}
+                        href={"/profile/" + card.memberNo}
                       >
                         <img
-                          src={datum.profileImageUrl}
+                          src={card.profileImageUrl}
                           alt=""
                           style={{
                             borderRadius: "70%",
@@ -107,7 +99,7 @@ export default function FeedListSearch(props) {
                         }}
                         component="span"
                       >
-                        {datum.nickname}
+                        {card.nickname}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -119,9 +111,9 @@ export default function FeedListSearch(props) {
                       width: "300px",
                       height: "300px",
                     }}
-                    image={Object.values(datum.images)[0]}
+                    image={Object.values(card.images)[0]}
                     alt=""
-                    onClick={() => handleOpen(datum.feedNo)}
+                    onClick={() => handleOpen(card.feedNo)}
                   ></CardMedia>
                   <CardActions
                     sx={{
@@ -133,13 +125,13 @@ export default function FeedListSearch(props) {
                     <Grid>
                       <FeedLikeButton
                         change={change}
-                        feedNo={datum.feedNo}
+                        feedNo={card.feedNo}
                       ></FeedLikeButton>
                     </Grid>
                     <Grid mr={-3}>
                       <FeedSaveButton
                         change={change}
-                        feedNo={datum.feedNo}
+                        feedNo={card.feedNo}
                       ></FeedSaveButton>
                     </Grid>
                   </CardActions>
@@ -162,12 +154,10 @@ export default function FeedListSearch(props) {
                   ></FeedDetail>
                 </Modal>
               </Grid>
-            )),
-          )}
+          ))}
+
         </Grid>
-        <PlusButton
-          handleCard={() => FeedListSearchQuery.fetchNextPage()}
-        ></PlusButton>
+        <PlusButton handleCard={fetchMore}></PlusButton>
       </Fragment>
     );
   } else {

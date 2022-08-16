@@ -36,6 +36,7 @@ export default function FeedListAll(props) {
     "AllFeeds",
     apiClient.getAllFeedList,
     {
+      retry:true,
       getNextPageParam: (lastPage, pages) => {
         return pages.length + 1;
       },
@@ -43,6 +44,7 @@ export default function FeedListAll(props) {
   );
   console.log(FeedListAllQuery.data);
   console.log(FeedListAllQuery.isLoading);
+
 
   if (!FeedListAllQuery.isLoading && typeof FeedListAllQuery.data.pages[0]) {
     return (
@@ -183,5 +185,8 @@ export default function FeedListAll(props) {
         <PlusButton handleCard={FeedListAllQuery.fetchNextPage}></PlusButton>
       </Fragment>
     );
+  }
+  else {
+    return (<div></div>)
   }
 }
