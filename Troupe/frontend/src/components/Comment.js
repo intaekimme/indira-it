@@ -16,10 +16,11 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SendIcon from "@mui/icons-material/Send";
+
 export default function Comment(props) {
   const [user, setUser] = useState(0);
   // 대댓글 목록
-  const [childComments, setchildComments] = useState([]);
+  const [childComments, setChildComments] = useState([]);
   // 대댓글 목록 가시 여부
   const [isChild, setIsChild] = useState(false);
   // 대댓글 등록 여부
@@ -33,9 +34,17 @@ export default function Comment(props) {
 
   useEffect(() => {
     setContent(props.comment);
+    // if(!props.parentCommentNo)
+    //   setContent(props.comment);
+    // else {
+    //   if(props.)
+    // }
     if (sessionStorage.getItem("loginCheck"))
       setUser(parseInt(sessionStorage.getItem("loginMember")));
-    if (!props.feedNo) {
+
+    // setChildComments(props.childComments);
+
+    if (props.kind === "performance") {
       //  공연 후기 대댓글 목록 불러오기
       apiClient
         .getPerfChildReviewList(props.performanceNo, props.reviewNo)
@@ -53,9 +62,9 @@ export default function Comment(props) {
               pfNo: item.pfNo,
             });
           });
-          setchildComments(json);
+          setChildComments(json);
         });
-    } else {
+    } else if (props.kind === "feed") {
       //  피드 댓글의 대댓글 목록 불러오기
       apiClient
         .getFeedChildReviewList(props.feedNo, props.reviewNo)
@@ -73,7 +82,7 @@ export default function Comment(props) {
               isRemoved: item.removed,
             });
           });
-          setchildComments(json);
+          setChildComments(json);
         });
     }
   }, []);
@@ -87,14 +96,15 @@ export default function Comment(props) {
     setIsChild(true);
     if (!sessionStorage.getItem("loginCheck")) {
       if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
-        window.location.href = `/login`;
+        sessionStorage.setItem("currentHref", window.location.href);
+      window.location.href = `/login`;
     } else {
       setIsChildReviewRegister(true);
     }
   };
   // 대댓글 refresh
   const refreshChildFunction = (newComment) => {
-    setchildComments([...childComments, newComment]);
+    setChildComments([...childComments, newComment]);
   };
   // 대댓글 리스트 가시 여부
   const childCommentList = () => {
@@ -165,17 +175,6 @@ export default function Comment(props) {
   };
 
   // console.log(props);
-  // console.log(`props.memberNo : ${props.memberNo}
-
-  // !props.isRemoved : ${!props.isRemoved}
-  // !deleted : ${!deleted}
-  // modify : ${modify}
-  // childComments : ${childComments}
-  // !props.parentCommentNo : ${!props.parentCommentNo}
-  // !cancel : ${!cancel}
-  // isChildReviewRegister : ${isChildReviewRegister}
-  // isChild : ${isChild}
-  // `);
   return (
     <Card sx={{ maxWidth: "100%", m: 2 }}>
       <CardHeader
@@ -232,6 +231,7 @@ export default function Comment(props) {
                   size="small"
                   aria-label="modify"
                   onClick={() => modifyComment()}
+                  style={{ marginBottom: "20px" }}
                 >
                   <ModeEditIcon color="action"></ModeEditIcon>
                 </Button>
@@ -244,6 +244,7 @@ export default function Comment(props) {
                 size="small"
                 aria-label="delete"
                 onClick={() => deleteComment()}
+                style={{ marginBottom: "20px" }}
               >
                 <DeleteIcon color="action"></DeleteIcon>
               </Button>
@@ -255,7 +256,7 @@ export default function Comment(props) {
                 size="small"
                 aria-label="child-comment"
                 onClick={childCommentList}
-                style={{ color: "black" }}
+                style={{ color: "black", marginBottom: "20px" }}
                 // color="black"
                 fontFamily="116watermelon"
               >
@@ -274,6 +275,7 @@ export default function Comment(props) {
                 size="small"
                 arial-lebel="child-comment-register"
                 onClick={childCommentRegister}
+                style={{ marginBottom: "20px" }}
               >
                 <ReplyIcon color="action"></ReplyIcon>
               </Button>
@@ -306,6 +308,7 @@ export default function Comment(props) {
         )}
         {isChild && (
           <CommentList
+            kind={props.kind}
             refreshChildFunction={refreshChildFunction}
             commentList={childComments}
             performanceNo={props.performanceNo}

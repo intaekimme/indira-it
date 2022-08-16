@@ -426,7 +426,7 @@ export default function Signup() {
                 <FormControlLabel
                   required
                   control={
-                    <Checkbox defaultValue="allowExtraEmails" color="primary" />
+                    <Checkbox defaultValue="allowExtraEmails" color="success" />
                   }
                   label="이메일 전송에 동의합니다."
                 />

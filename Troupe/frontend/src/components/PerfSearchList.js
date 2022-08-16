@@ -37,7 +37,7 @@ export default function PerfSearchList(props) {
     props.setHowManySearch(0)
   }
 
-  if (!performanceSearchListQuery.isLoading && performanceSearchListQuery.data) {
+  if (!performanceSearchListQuery.isLoading && typeof performanceSearchListQuery.data) {
     return (
       <Grid container spacing={4}>
         {performanceSearchListQuery.data.map((datum) =>

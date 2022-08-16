@@ -33,7 +33,7 @@ export default function PerfListCard() {
     setChange(check);
   };
 
-  if (!performanceListQuery.isLoading && performanceListQuery.data.pages[0]) {
+  if (!performanceListQuery.isLoading && typeof performanceListQuery.data.pages[0]) {
     return (
       <Grid container spacing={4}>
         {performanceListQuery.data.pages.map((page) =>

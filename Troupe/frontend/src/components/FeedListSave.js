@@ -39,7 +39,7 @@ export default function FeedListSave(props) {
   console.log(FeedListSaveQuery.data);
   console.log(FeedListSaveQuery.isLoading);
 
-  if (!FeedListSaveQuery.isLoading && FeedListSaveQuery.data.pages[0]) {
+  if (!FeedListSaveQuery.isLoading && typeof FeedListSaveQuery.data.pages[0]) {
     return (
       <Fragment>
         <Grid container spacing={4}>
