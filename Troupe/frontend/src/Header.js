@@ -45,15 +45,15 @@ export default function Header() {
   );
   React.useEffect(() => {
     if (login) {
-      // apiClient.getMyinfo().then((data) => {
-      //   if (
-      //     data.profileImageUrl &&
-      //     data.profileImageUrl !== "" &&
-      //     data.profileImageUrl !== null
-      //   ) {
-      //     setProfileImageUrl(data.profileImageUrl);
-      //   }
-      // });
+      apiClient.getMyinfo().then((data) => {
+        if (
+          data.profileImageUrl &&
+          data.profileImageUrl !== "" &&
+          data.profileImageUrl !== null
+        ) {
+          setProfileImageUrl(data.profileImageUrl);
+        }
+      });
     }
   }, []);
   const logout = () => {

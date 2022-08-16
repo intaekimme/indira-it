@@ -13,6 +13,7 @@ import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import FeedDetail from "./FeedDetail";
 import PlusButton from "./PlusButton";
+import stylesTag from '../css/tag.module.css'
 
 export default function FeedListAll(props) {
   const [open, setOpen] = React.useState(false);
@@ -20,6 +21,9 @@ export default function FeedListAll(props) {
   const [isHover, setIsHover] = React.useState(-1);
 
   const [change, setChange] = React.useState(false);
+
+  
+
   function handleOpen(no) {
     setOpen(true);
     setFeedNo(no);
@@ -113,31 +117,16 @@ export default function FeedListAll(props) {
                     onMouseEnter={() => setIsHover(datum.feedNo)}
                     onMouseLeave={() => setIsHover(-1)}
                   ></CardMedia>
-                  {isHover === datum.feedNo ? (
-                    <div
-                      style={{
-                        lineHeight: "300px",
-                        position: "absolute",
-                        height: "300px",
-                        width: "265px",
-                        color: "black",
-                        top: 0,
-                      }}
-                      onMouseEnter={() => setIsHover(datum.feedNo)}
-                      onMouseLeave={() => setIsHover(-1)}
-                      onClick={() => handleOpen(datum.feedNo)}
+                  {isHover=== datum.feedNo ? 
+                    <div 
+                    style={{marginLeft:'0.5em', display:'inline', position:'absolute', height:'300px', width:'265px', color:'black', top:'150px'}} 
+                    onMouseEnter={()=>setIsHover(datum.feedNo)}                     
+                    onMouseLeave={()=>setIsHover(-1)}
+                    onClick={() => handleOpen(datum.feedNo)}
                     >
-                      <ul
-                        style={{
-                          listStyleType: "none",
-                          listStylePosition: "none",
-                        }}
-                      >
-                        <li># 공연장소:{datum.location}</li>
-                        <li># 공연기간:{datum.detailTime}</li>
-                      </ul>
-                    </div>
-                  ) : null}
+                      {datum.tags.map((tag) => (<div style={{marginLeft:'0.5em', display:'inline',width:'120px',wordBreak:'break-all', wordBreak:'break-all',padding:'0.2em'}} className={stylesTag.HashWrapInner}>#{tag}</div>))}
+                    </div> 
+                  : null}
                   <CardActions
                     sx={{
                       justifyContent: "space-between",

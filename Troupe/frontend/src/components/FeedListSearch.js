@@ -34,13 +34,10 @@ export default function FeedListSearch(props) {
   };
 
   let FeedListSearchQuery = useInfiniteQuery(
-    ["tagSearch"],
-    () => apiClient.feedTagSearch({ pageParam: 0, tags: props.tags }),
+    ["tagSearch", props.tags],
+    () => apiClient.feedTagSearch(props.tags),
     {
-      retry: true,
-      getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
-      },
+      getNextPageParam: (lastPage, pages) => pages.length
     },
   );
   // console.log(FeedListSearchQuery.data);
@@ -49,12 +46,18 @@ export default function FeedListSearch(props) {
   console.log(FeedListSearchQuery.data);
   console.log(FeedListSearchQuery.isLoading);
 
+
+
+  function propRefetch() {
+    FeedListSearchQuery.refetch()
+  }
+
   if (props.howManySearch > 0) {
     FeedListSearchQuery.refetch({ refetchPage: (page, index) => index === 0 });
     props.setHowManySearch(0);
   }
 
-  if (!FeedListSearchQuery.isLoading) {
+  if (!FeedListSearchQuery.isLoading && FeedListSearchQuery.data.pages[0]) {
     console.log(FeedListSearchQuery.data);
     return (
       <Fragment>
@@ -163,11 +166,7 @@ export default function FeedListSearch(props) {
             )),
           )}
         </Grid>
-
-        <PlusButton
-          handleCard={FeedListSearchQuery.fetchNextPage}
-          disabled={!FeedListSearchQuery.hasNextPage}
-        ></PlusButton>
+        <PlusButton handleCard={() => FeedListSearchQuery.fetchNextPage()}></PlusButton>
       </Fragment>
     );
   }
