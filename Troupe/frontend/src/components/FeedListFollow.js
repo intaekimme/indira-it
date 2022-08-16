@@ -134,7 +134,6 @@ export default function FeedListFollow() {
                   aria-labelledby="simple-modal-title"
                   aria-describedby="simple-modal-description"
                   className={stylesModal.outer}
-                  animationType={"fade"}
                 >
                   <FeedDetail
                     setChange={setChange}

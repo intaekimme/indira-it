@@ -9,7 +9,12 @@ import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
 import CommentList from "./CommentList";
 import { useParams } from "react-router-dom";
-
+import Theme from "./Theme";
+import { ThemeProvider } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
 // 제목, 기간, 시간, 장소, 티켓가격
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -33,12 +38,19 @@ function Carousel(props) {
     }
     return (
       // <Paper style={{ backgroundColor: "#FFF" }} elevation={0}>
-      <Paper style={{ backgroundColor: "#EEE3D0" }} elevation={0}>
+      <Paper
+        style={{
+          backgroundColor: "#EEE3D0",
+          height: "800px",
+          width: "700px",
+        }}
+        elevation={0}
+      >
         <img
           onClick={handleOpen}
           src={props.imgUrl}
           alt="random"
-          style={{ height: "500px", width: "400px" }}
+          style={{ height: "100%", width: "100%" }}
         ></img>
         <Modal
           open={open}
@@ -49,48 +61,23 @@ function Carousel(props) {
           <Box
             style={{
               position: "absolute",
-              top: "2%",
-              left: "30%",
-              height: "700px",
-              width: "550px",
+              margin: "100px 0px",
+              left: "50%",
+              width: "100%",
+              height: "100%",
+              maxHeight: "800px",
+              maxWidth: "800px",
+              transform: "translateX(-50%)",
             }}
           >
             <img
               onClick={handleOpen}
               src={props.imgUrl}
               alt="random"
-              style={{ height: "700px", width: "550px" }}
+              style={{ height: "100%", width: "100%" }}
             ></img>
           </Box>
         </Modal>
-        <Fragment>
-          <Box
-            style={{
-              fontFamily: "IBM Plex Sans KR",
-              background: "pink",
-              borderRadius: "10%",
-              position: "absolute",
-              top: "15px",
-              right: "115px",
-              zIndex: "3",
-            }}
-          >
-            {props.status}
-          </Box>
-          <Box
-            style={{
-              fontFamily: "IBM Plex Sans KR",
-              background: "skyblue",
-              borderRadius: "10%",
-              position: "absolute",
-              top: "15px",
-              right: "165px",
-              zIndex: "3",
-            }}
-          >
-            {props.category}
-          </Box>
-        </Fragment>
       </Paper>
     );
   }
@@ -113,6 +100,10 @@ function Carousel(props) {
 function ModifyDeleteButton(props) {
   const [user, setUser] = React.useState(true);
 
+  React.useEffect(() => {
+    setUser(parseInt(sessionStorage.getItem("loginMember")) === props.memberNo);
+  }, [sessionStorage.getItem("loginMember"), props.memberNo]);
+
   function handleUser() {
     setUser(!user);
   }
@@ -131,39 +122,33 @@ function ModifyDeleteButton(props) {
   return (
     <div style={{ float: "right" }}>
       <Button
-        variant="outlined"
         href="/perf/list/0"
         style={{
-          margin: "8px",
-          backgroundColor: "beige",
-          fontFamily: "IBM Plex Sans KR",
+          margin: "5px",
+          backgroundColor: "transparent",
         }}
       >
-        목록
+        <FormatListBulletedIcon color="action"></FormatListBulletedIcon>
       </Button>
       {user ? (
         <Fragment>
           <Button
-            variant="outlined"
             style={{
-              margin: "8px",
-              backgroundColor: "skyblue",
-              fontFamily: "IBM Plex Sans KR",
+              margin: "5px",
+              backgroundColor: "transparent",
             }}
             onClick={moveToModify}
           >
-            수정
+            <ModeEditIcon color="action"></ModeEditIcon>
           </Button>
           <Button
-            variant="outlined"
             style={{
-              margin: "8px",
-              backgroundColor: "pink",
-              fontFamily: "IBM Plex Sans KR",
+              margin: "5px",
+              backgroundColor: "transparent",
             }}
             onClick={onRemove}
           >
-            삭제
+            <DeleteIcon color="action"></DeleteIcon>
           </Button>
         </Fragment>
       ) : (
@@ -217,22 +202,11 @@ function PerfDetail() {
     let year = date.getFullYear().toString().slice(-2); //년도 뒤에 두자리
     let month = ("0" + (date.getMonth() + 1)).slice(-2); //월 2자리 (01, 02 ... 12)
     let day = ("0" + date.getDate()).slice(-2); //일 2자리 (01, 02 ... 31)
-    let hour = ("0" + date.getHours()).slice(-2); //시 2자리 (00, 01 ... 23)
-    let minute = ("0" + date.getMinutes()).slice(-2); //분 2자리 (00, 01 ... 59)
-    let second = ("0" + date.getSeconds()).slice(-2); //초 2자리 (00, 01 ... 59)
+    // let hour = ("0" + date.getHours()).slice(-2); //시 2자리 (00, 01 ... 23)
+    // let minute = ("0" + date.getMinutes()).slice(-2); //분 2자리 (00, 01 ... 59)
+    // let second = ("0" + date.getSeconds()).slice(-2); //초 2자리 (00, 01 ... 59)
 
-    let returnDate =
-      year +
-      "." +
-      month +
-      "." +
-      day +
-      ". " +
-      hour +
-      ":" +
-      minute +
-      ":" +
-      second;
+    let returnDate = year + "." + month + "." + day;
     return returnDate;
   }
 
@@ -288,93 +262,226 @@ function PerfDetail() {
   // console.log(`performanceNo: ${performanceNo}`);
   console.log(imgUrl);
   return (
-    // <div style={{ background: "#FFFF", fontFamily: "IBM Plex Sans KR" }}>
-    <div style={{ fontFamily: "IBM Plex Sans KR" }}>
-      <ModifyDeleteButton performanceNo={pfNo} perfName={title} />
-      <div>
-        <Grid container spacing={4}>
-          <Grid item xs={5}>
-            <Item
-              elevation={0}
-              style={{ position: "relative", direction: "row" }}
-            >
-              <Carousel
-                category={category}
-                status={status}
-                imgUrl={imgUrl}
-              ></Carousel>
-            </Item>
-          </Grid>
-          <Grid item xs={7}>
-            <Item elevation={0}>
-              <ul
-                style={{
-                  fontSize: "large",
-                  listStyle: "none",
-                  paddingLeft: "0px",
-                  fontFamily: "IBM Plex Sans KR",
-                  textAlign: "left",
-                }}
+    <ThemeProvider theme={Theme}>
+      <div style={{ background: "#EEE3D0", fontFamily: "SBAggroB" }}>
+        <ModifyDeleteButton
+          performanceNo={pfNo}
+          perfName={title}
+          memberNo={memberInfo.memberNo}
+        />
+        <div>
+          <Grid container spacing={4}>
+            <Grid item xs={5}>
+              <Item
+                elevation={0}
+                style={{ position: "relative", direction: "row" }}
               >
-                <li>
-                  <a style={{ textDecoration: "none" }} href="/">
-                    <img
-                      src={memberInfo.profileImg}
-                      alt="random"
+                <Carousel
+                  category={category}
+                  status={status}
+                  imgUrl={imgUrl}
+                ></Carousel>
+              </Item>
+            </Grid>
+            <Grid item xs={7}>
+              <Item elevation={0}>
+                <ul
+                  style={{
+                    fontSize: "large",
+                    listStyle: "none",
+                    paddingLeft: "0px",
+                    textAlign: "left",
+                  }}
+                >
+                  <li>
+                    <span
                       style={{
-                        borderRadius: "70%",
-                        objectFit: "cover",
-                        height: "20px",
-                        width: "20px",
+                        background: "#66cc66",
+                        borderRadius: "10%",
+                        fontSize: "20px",
+                        width: "80px",
+                        position: "relative",
+                        marginRight: "5px",
+                        boxShadow:
+                          "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                        padding: "3px",
                       }}
-                    ></img>
-                    {memberInfo.nickname}
-                  </a>
-                </li>
-                <li>제목: {title}</li>
-                <br></br>
-                <li>
-                  기간: {convertTime(startDate)} ~ {convertTime(endDate)}
-                </li>
-                <br></br>
-                <li>공연 시간: {runtime}</li>
-                <br></br>
-                <li>장소: {location}</li>
-                <br></br>
-                {price.map((item, i) =>
-                  i === 0 ? (
-                    <li id={i}>
-                      가격 : {item.seat} {item.price}
-                    </li>
-                  ) : (
-                    <li id={i}>
-                      {item.seat} {item.price}
-                    </li>
-                  )
-                )}
-                {/* <li>가격: 전석 33,000원</li> */}
-              </ul>
-            </Item>
-          </Grid>
-          <Grid item xs={12}>
-            <Item elevation={0}>{description}</Item>
-          </Grid>
-        </Grid>
-        <div style={{ margin: "12px" }}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Item style={{ background: "#FFFF" }}>
-                <CommentList
-                  refreshFunction={refreshFunction}
-                  commentList={commentList}
-                  performanceNo={performanceNo}
-                />
+                    >
+                      {status}
+                    </span>
+                    <span
+                      style={{
+                        background: "#ffd400",
+                        borderRadius: "10%",
+                        fontSize: "20px",
+                        width: "80px",
+                        position: "relative",
+                        boxShadow:
+                          "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                        padding: "3px",
+                      }}
+                    >
+                      {category}
+                    </span>
+                    <div style={{ marginTop: "19px" }}>
+                      {/* <a
+                        style={{
+                          textDecoration: "none",
+                        }}
+                        href={"/profile/" + memberInfo.memberNo}
+                      >
+                        <img
+                          src={memberInfo.profileImg}
+                          alt="random"
+                          style={{
+                            borderRadius: "70%",
+                            objectFit: "cover",
+                            height: "65px",
+                            width: "65px",
+                            boxShadow:
+                              "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                          }}
+                        ></img>
+                        <span
+                          style={{
+                            display: "inline-block",
+                            paddingBottom: "30px",
+                          }}
+                        >
+                          {" "}
+                          {memberInfo.nickname}
+                        </span>
+                      </a> */}
+                      <Grid container item xs={9}>
+                        <Grid>
+                          <a
+                            style={{ textDecoration: "none" }}
+                            href={"/profile/" + memberInfo.memberNo}
+                          >
+                            <img
+                              src={memberInfo.profileImg}
+                              alt="profile"
+                              style={{
+                                borderRadius: "70%",
+                                objectFit: "cover",
+                                height: "50px",
+                                width: "50px",
+                                marginRight: "10px",
+                                boxShadow:
+                                  "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                              }}
+                            ></img>
+                          </a>
+                        </Grid>
+                        <Grid ml={1} mt={2}>
+                          {memberInfo.nickname}
+                        </Grid>
+                      </Grid>
+                    </div>
+                  </li>
+                  <li>
+                    {" "}
+                    <TextField
+                      label="공연 제목"
+                      value={title}
+                      style={{
+                        width: "500px",
+                        marginTop: "10px",
+                      }}
+                    />
+                  </li>
+                  <br></br>
+                  <li>
+                    <TextField
+                      label="시작 날짜"
+                      value={convertTime(startDate)}
+                      style={{
+                        width: "200px",
+                        marginTop: "10px",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <TextField
+                      label="종료 날짜"
+                      value={convertTime(endDate)}
+                      style={{ width: "200px", marginTop: "10px" }}
+                    />
+                    {/* 기간: {convertTime(startDate)} ~ {convertTime(endDate)} */}
+                  </li>
+                  <br></br>
+                  <li>
+                    <TextField
+                      label="공연 시간"
+                      value={runtime}
+                      style={{ width: "200px", marginTop: "10px" }}
+                    />
+                  </li>
+                  <br></br>
+                  <li>
+                    {" "}
+                    <TextField
+                      label="장소"
+                      value={location}
+                      style={{ width: "200px", marginTop: "10px" }}
+                    />
+                  </li>
+                  <br></br>
+                  {price.map((item, i) =>
+                    i === 0 ? (
+                      <li id={i}>
+                        <TextField
+                          label="좌석"
+                          value={item.seat}
+                          style={{
+                            width: "200px",
+                            marginTop: "10px",
+                            marginRight: " 10px",
+                          }}
+                        />
+                        <TextField
+                          label="가격"
+                          value={item.price}
+                          style={{ width: "200px", marginTop: "10px" }}
+                        />
+                      </li>
+                    ) : (
+                      <li id={i}>
+                        {item.seat} {item.price}
+                      </li>
+                    ),
+                  )}
+                  <br />
+                  <li>
+                    {" "}
+                    <TextField
+                      multiline
+                      label="상세설명"
+                      value={description}
+                      rows={6}
+                      style={{ marginTop: "10px", width: "600px" }}
+                    />
+                  </li>
+                  <br />
+                </ul>
               </Item>
             </Grid>
           </Grid>
+          <div style={{ margin: "12px" }}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <Item style={{ background: "#FFFF" }}>
+                  <CommentList
+                    refreshFunction={refreshFunction}
+                    commentList={commentList}
+                    performanceNo={performanceNo}
+                  />
+                </Item>
+              </Grid>
+            </Grid>
+          </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 

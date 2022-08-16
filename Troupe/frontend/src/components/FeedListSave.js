@@ -16,7 +16,6 @@ import PlusButton from "./PlusButton";
 export default function FeedListAll() {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
-  let [cards, setCard] = React.useState([]);
   const [change, setChange] = React.useState(false);
   function handleOpen(no) {
     setOpen(true);
@@ -27,12 +26,6 @@ export default function FeedListAll() {
     setOpen(false);
     setChange(true);
   }
-
-  React.useEffect(() => {
-    apiClient.getFeedTest().then((data) => {
-      setCard(data);
-    });
-  }, []);
 
   let FeedListSaveQuery = useInfiniteQuery(
     "AllFeeds",
@@ -139,7 +132,6 @@ export default function FeedListAll() {
                   aria-labelledby="simple-modal-title"
                   aria-describedby="simple-modal-description"
                   className={stylesModal.outer}
-                  animationType={"fade"}
                 >
                   <FeedDetail
                     setChange={setChange}
