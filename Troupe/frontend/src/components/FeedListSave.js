@@ -13,7 +13,7 @@ import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import FeedDetail from "./FeedDetail";
 import PlusButton from "./PlusButton";
-export default function FeedListAll() {
+export default function FeedListSave(props) {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   const [change, setChange] = React.useState(false);
@@ -137,6 +137,10 @@ export default function FeedListAll() {
                     setChange={setChange}
                     feedNo={feedNo}
                     open={open}
+                    handleClose={handleClose}
+                    showSearch={props.showSearch}
+                    handleShowSearch={props.handleShowSearch}
+                    setTagList={props.setTagList}
                   ></FeedDetail>
                 </Modal>
               </Grid>

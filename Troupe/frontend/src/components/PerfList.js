@@ -1,16 +1,11 @@
 import React from "react";
-import { Button, stepClasses } from "@mui/material";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import apiClient from "../apiClient";
 import { useParams } from "react-router-dom";
 import PlusButton from "./PlusButton";
@@ -70,10 +65,12 @@ export default function PerfListCard() {
                     position: "absolute",
                     top: "10px",
                     right: "5px",
+                    border: "2px solid white",
                     i: "3",
                     padding: "2px",
                     boxShadow:
                       "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                    color: "white",
                   }}
                 >
                   {datum.status}
@@ -83,12 +80,14 @@ export default function PerfListCard() {
                     background: "#ffd400",
                     borderRadius: "10%",
                     position: "absolute",
+                    border: "2px solid white",
                     top: "10px",
                     left: "5px",
                     i: "3",
                     padding: "2px",
                     boxShadow:
                       "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                    color: "white",
                   }}
                 >
                   {datum.category}

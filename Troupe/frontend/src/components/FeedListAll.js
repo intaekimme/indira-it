@@ -14,7 +14,7 @@ import { Fragment } from "react";
 import FeedDetail from "./FeedDetail";
 import PlusButton from "./PlusButton";
 
-export default function FeedListAll() {
+export default function FeedListAll(props) {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   const [isHover, setIsHover] = React.useState(-1);
@@ -170,7 +170,10 @@ export default function FeedListAll() {
                     setChange={setChange}
                     feedNo={feedNo}
                     open={open}
-                    handleClose ={handleClose}
+                    handleClose={handleClose}
+                    showSearch={props.showSearch}
+                    handleShowSearch={props.handleShowSearch}
+                    setTagList={props.setTagList}
                   ></FeedDetail>
                 </Modal>
               </Grid>

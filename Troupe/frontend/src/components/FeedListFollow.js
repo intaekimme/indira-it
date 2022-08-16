@@ -13,7 +13,7 @@ import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import PlusButton from "./PlusButton";
 import FeedDetail from "./FeedDetail";
-export default function FeedListFollow() {
+export default function FeedListFollow(props) {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   const [change, setChange] = React.useState(false);
@@ -26,7 +26,6 @@ export default function FeedListFollow() {
     setOpen(false);
     setChange(true);
   }
-
 
   let FeedListFollowQuery = useInfiniteQuery(
     "FollowFeed",
@@ -94,19 +93,19 @@ export default function FeedListFollow() {
                       </Typography>
                     </Grid>
                   </Grid>
-                    <CardMedia
-                      component="img"
-                      sx={{
-                        pb: 1,
-                        objectFit: "cover",
-                        width: "300px",
-                        height: "300px",
-                      }}
-                      image={Object.values(datum.images)[0]}
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      pb: 1,
+                      objectFit: "cover",
+                      width: "300px",
+                      height: "300px",
+                    }}
+                    image={Object.values(datum.images)[0]}
                     alt=""
-                      onClick={() => handleOpen(datum.feedNo)}
-                    ></CardMedia>
-                  
+                    onClick={() => handleOpen(datum.feedNo)}
+                  ></CardMedia>
+
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
@@ -114,7 +113,7 @@ export default function FeedListFollow() {
                       padding: "0px",
                     }}
                   >
-                     <Grid>
+                    <Grid>
                       <FeedLikeButton
                         change={change}
                         feedNo={datum.feedNo}
@@ -139,6 +138,10 @@ export default function FeedListFollow() {
                     setChange={setChange}
                     feedNo={feedNo}
                     open={open}
+                    handleClose={handleClose}
+                    showSearch={props.showSearch}
+                    handleShowSearch={props.handleShowSearch}
+                    setTagList={props.setTagList}
                   ></FeedDetail>
                 </Modal>
               </Grid>
