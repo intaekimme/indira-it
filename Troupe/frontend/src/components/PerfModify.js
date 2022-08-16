@@ -76,8 +76,8 @@ export default function PerfModify() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log(event.currentTarget);
-    // console.log(formData);
+    console.log(event.currentTarget);
+    // console.log(data);
 
     let imageList = [...images];
     imageList.forEach((item) => {

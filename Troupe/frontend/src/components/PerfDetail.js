@@ -114,10 +114,7 @@ function ModifyDeleteButton(props) {
   }
 
   function onRemove() {
-    const data = {
-      pfNo: props,
-    };
-    apiClient.perfRemove(data);
+    apiClient.perfRemove(props.performanceNo);
   }
 
   function moveToModify() {

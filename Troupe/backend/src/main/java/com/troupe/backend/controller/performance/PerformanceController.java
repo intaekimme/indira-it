@@ -67,7 +67,7 @@ public class PerformanceController {
      * @return
      */
     @Operation(summary = "공연 수정", description = "파라미터: 공연 번호, 공연 수정 폼")
-    @PostMapping(value = "{pfNo}/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{pfNo}/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity modify(Principal principal,
                                  @PathVariable int pfNo,
                                  @ModelAttribute @Valid PerformanceModifyForm performanceModifyForm)
@@ -84,7 +84,7 @@ public class PerformanceController {
      * @return
      */
     @Operation(summary = "공연 삭제", description = "파라미터: 공연 번호")
-    @PatchMapping("{pfNo}/del")
+    @PatchMapping("/{pfNo}/del")
     public ResponseEntity delete(Principal principal,
                                  @PathVariable int pfNo){
         int memberNo = Integer.parseInt(principal.getName());
