@@ -186,7 +186,7 @@ export default function PerfModify() {
 
   //  공연 등록 폼 취소
   const cancelForm = () => {
-    if (window.confirm("등록을 취소하시겠습니까?")) {
+    if (window.confirm("수정을 취소하시겠습니까?")) {
       window.location.href = "/perf/list";
     } else {
       return;

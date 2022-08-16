@@ -83,6 +83,7 @@ public class PerformanceReviewService {
                     .isRemoved(savedReview.getRemoved())
                     .isModified(savedReview.isModified())
                     .createdTime(savedReview.getCreatedTime())
+                    .childComments(new ArrayList<>())   //  첫 원댓글이므로 대댓글이 존재하지 않음
                     .build();
         }catch (Exception e){
 

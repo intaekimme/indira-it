@@ -9,6 +9,10 @@ import Box from "@mui/material/Box";
 import apiClient from "../apiClient";
 import CommentList from "./CommentList";
 import { useParams } from "react-router-dom";
+import CommentForm from "./CommentForm";
+import Comment from "./Comment";
+import CommentCount from "./CommentCount";
+import CommentPerf from "./CommentPerf";
 
 // 제목, 기간, 시간, 장소, 티켓가격
 
@@ -364,6 +368,20 @@ function PerfDetail() {
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Item style={{ background: "#FFFF" }}>
+                <CommentCount listSize={commentList.length} />
+                {commentList.map((comment, index) => {
+                  return (
+                    <CommentPerf
+                      key={index}
+                      refreshFunction={refreshFunction}
+                      comment={comment}
+                    />
+                  );
+                })}
+                <CommentForm
+                  refreshFunction={refreshFunction}
+                  performanceNo={performanceNo}
+                />
                 <CommentList
                   refreshFunction={refreshFunction}
                   commentList={commentList}
