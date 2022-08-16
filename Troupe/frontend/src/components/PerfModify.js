@@ -26,19 +26,26 @@ export default function PerfModify() {
   const performanceNo = location1.pathname.split("/")[3];
   // console.log("location1", location1.pathname.split("/")[3]);
 
-  //공연 포스터
+  
+  // 추가된 이미지 url
   const [imgUrl, setImgUrl] = React.useState([]);
-
+  // 추가된 이미지파일
   const [images, setImages] = React.useState([]);
+  // 기존 이미지 번호+url
+  const [oldImage, setOldImage] = React.useState(new Map());
+  // 삭제된 이미지 번호
+  const [imageNo, setImageNo] = React.useState([]);
+  // 삭제된 이미지 번호들의 키(filter거르면 key값 변경되기 때문에 원본 서치용)
+  const [imgKeys, setImgKeys] = React.useState(new Map());
 
   //공연 제목
   const [perfName, setPerfName] = React.useState("");
   //가격, 좌석
   const [seatPrice, setSeatPrice] = React.useState([{ seat: "", price: 0 }]);
   //공연시작 일자
-  const [perfStartDate, setPerfStartDate] = React.useState("");
+  const [perfStartDate, setPerfStartDate] = React.useState(new Date());
   //공연 종료 일자
-  const [perfEndDate, setPerfEndDate] = React.useState("");
+  const [perfEndDate, setPerfEndDate] = React.useState(new Date());
   //공연 카테고리
   const [category, setCategory] = React.useState("");
   //공연시간
@@ -54,8 +61,10 @@ export default function PerfModify() {
       setDescription(data.description);
       setPerfStartDate(data.startDate);
       setPerfEndDate(data.endDate);
-      setImgUrl(Object.values(data.imageUrl));
-      console.log(imgUrl);
+     
+      setImgKeys(data.imageUrl);
+      setOldImage(data.imageUrl);
+
       setLocation(data.location);
       setRuntime(data.runtime);
       setPerfName(data.title);
@@ -63,7 +72,7 @@ export default function PerfModify() {
     });
   }, []);
 
-  //  공연 등록 버튼 클릭
+  //  공연 수정 버튼 클릭
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -76,7 +85,7 @@ export default function PerfModify() {
     });
     data.append("seatPrice", JSON.stringify(seatPrice));
 
-    apiClient.perfNew(data);
+    apiClient.perfModify(performanceNo, data);
   };
 
   //image 업로드
@@ -84,24 +93,20 @@ export default function PerfModify() {
     const imageLists = event.target.files;
     let imageUrlLists = [...imgUrl];
     let imageList = [...images];
+    let size = Object.values(oldImage).length;
     for (let i = 0; i < imageLists.length; i++) {
       const currentImageUrl = URL.createObjectURL(imageLists[i]);
       imageUrlLists.push({ url: currentImageUrl, file: imageLists[i] });
       imageList.push(imageLists[i]);
     }
 
-    console.log(imageUrlLists);
-    console.log(imageList);
-    if (imageUrlLists.length > 10) {
-      imageUrlLists = imageUrlLists.slice(0, 10);
-      imageList = imageList.slice(0, 10);
+    if (imageUrlLists.length > 10 - size) {
+      imageUrlLists = imageUrlLists.slice(0, 10 - size);
+      imageList = imageList.slice(0, 10 - size);
       alert("최대 10개 까지 업로드 할 수 있습니다");
     }
-
     setImgUrl(imageUrlLists);
-    // console.log(imgUrl);
     setImages(imageList);
-    // console.log(images);
   };
 
   //공연제목 Change
@@ -177,6 +182,23 @@ export default function PerfModify() {
   //   }
   // }
 
+  function deleteOldImage(imgUrl) {
+    console.log(Object.values(oldImage).length);
+    // 보이는거 지우고
+    let imgNo = getKeyByValue(imgKeys, imgUrl);
+    // 새로 정렬 돼서 문제..
+    setOldImage(Object.values(oldImage).filter((url) => url !== imgUrl));
+
+    // 삭제된 번호 넣기
+    let list = [...imageNo];
+    list.push(imgNo);
+    // console.log(imgNo);
+    setImageNo(list);
+  }
+  function getKeyByValue(object, value) {
+    // console.log(value);
+    return Object.keys(object).find((key) => object[key] === value);
+  }
   //  공연 이미지 삭제
   function deleteImage(imgFile) {
     setImgUrl(imgUrl.filter((imgUrl) => imgUrl.file !== imgFile));
@@ -187,7 +209,7 @@ export default function PerfModify() {
   //  공연 등록 폼 취소
   const cancelForm = () => {
     if (window.confirm("수정을 취소하시겠습니까?")) {
-      window.location.href = "/perf/list";
+      window.location.href = `/perf/detail/${performanceNo}`;
     } else {
       return;
     }
@@ -210,10 +232,36 @@ export default function PerfModify() {
         >
           <Grid container spacing={2} style={{ fontFamily: "SBAggroB" }}>
             <Grid item xs={12}>
+            {Object.values(oldImage) ? (
+                Object.values(oldImage).map((item, id) => (
+                  <span key={id} className={stylesTag.img}>
+                    <img
+                      key={id}
+                      src={item}
+                      alt=""
+                      style={{
+                        height: "450px",
+                        width: "300px",
+                        border: "3px white solid",
+                        boxShadow:
+                          "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.2)",
+                      }}
+                    ></img>
+                    <RemoveCircleOutlineIcon
+                      color="error"
+                      onClick={() => deleteOldImage(item)}
+                      className={stylesTag.btn1}
+                      style={{ top: "-420px" }}
+                    ></RemoveCircleOutlineIcon>
+                  </span>
+                ))
+              ) : (
+                <div></div>
+              )}
               {imgUrl ? (
-                <div>
+                <span>
                   {imgUrl.map((item, id) => (
-                    <span key={id} className={stylesTag.img}>
+                    <div key={id} className={stylesTag.img}>
                       <img
                         key={id}
                         src={item.url}
@@ -232,11 +280,12 @@ export default function PerfModify() {
                         className={stylesTag.btn1}
                         style={{ top: "-420px" }}
                       ></RemoveCircleOutlineIcon>
-                    </span>
+                    </div>
                   ))}
-                </div>
+                </span>
               ) : (
-                <Box style={{ height: "100px", width: "100px" }}></Box>
+                // <Box style={{ height: "100px", width: "100px" }}></Box>
+                  <div></div>
               )}
               <Button
                 variant="contained"
@@ -480,7 +529,7 @@ export default function PerfModify() {
                     sx={{ mt: 3, mb: 2 }}
                     style={{ fontFamily: "SBAggroB" }}
                   >
-                    공연 등록
+                    공연 수정
                   </Button>
                 </form>
               </Grid>

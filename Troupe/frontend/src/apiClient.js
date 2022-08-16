@@ -1507,5 +1507,33 @@ const apiClient = {
         return error;
       });
   },
+
+  // 공연 수정
+  perfModify: (performanceNo, data) => {
+    console.log(data);
+    instance
+      .post(`/perf/${performanceNo}/modify`, data, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        window.location.href = `/perf/detail/${performanceNo}`
+        return response;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        console.log(error);
+        console.log("공연 수정 실패" + error);
+        // alert("피드 수정 실패" + error);
+        return error;
+      });
+  }
 };
 export default apiClient;

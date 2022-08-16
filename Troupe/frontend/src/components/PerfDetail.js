@@ -462,7 +462,7 @@ function PerfDetail() {
                       label="상세설명"
                       value={description}
                       rows={6}
-                      style={{ marginTop: "10px", width: "600px", textAlign:"left"}}
+                      style={{ marginTop: "10px", width: "600px" }}
                     />
                   </li>
                   <br />
