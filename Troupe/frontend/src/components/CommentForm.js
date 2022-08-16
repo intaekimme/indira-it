@@ -21,7 +21,8 @@ export default function CommentForm(props) {
   const reviewRegister = () => {
     if (!sessionStorage.getItem("loginCheck")) {
       if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
-        window.location.href = `/login`;
+        sessionStorage.setItem("currentHref", window.location.href);
+      window.location.href = `/login`;
     } else {
       let data = {
         content: review,
@@ -35,9 +36,9 @@ export default function CommentForm(props) {
         apiClient.perfReviewNew(
           props.performanceNo,
           data,
-          props.refreshFunction
+          props.refreshFunction,
         );
-      } else if(props.kind === "feed"){
+      } else if (props.kind === "feed") {
         apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
       }
       reset();
@@ -54,14 +55,14 @@ export default function CommentForm(props) {
         props.performanceNo,
         props.parentCommentNo,
         data,
-        props.refreshChildFunction
+        props.refreshChildFunction,
       );
     } else {
       apiClient.feedChildCommentNew(
         props.feedNo,
         props.parentCommentNo,
         data,
-        props.refreshChildFunction
+        props.refreshChildFunction,
       );
     }
     reset();
@@ -90,7 +91,7 @@ export default function CommentForm(props) {
               borderColor: "#66cc66",
             },
           },
-          background: "white"
+          background: "white",
         }}
       />
       <form>

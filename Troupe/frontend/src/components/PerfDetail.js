@@ -18,13 +18,15 @@ import TextField from "@mui/material/TextField";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { textAlign } from "@mui/system";
+import CssBaseline from "@mui/material/CssBaseline";
 // 제목, 기간, 시간, 장소, 티켓가격
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#EEE3D0",
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "center",
+  textAlign: "left",
   color: theme.palette.text.secondary,
 }));
 
@@ -86,7 +88,7 @@ function Carousel(props) {
   }
 
   return (
-    <MUICarousel animation="slide" indicators="" autoPlay={false}>
+    <MUICarousel animation="slide" indicators="">
       {props.imgUrl.map((image, i) => (
         <CarouselItem
           key={i}
@@ -123,41 +125,43 @@ function ModifyDeleteButton(props) {
   }
 
   return (
-    <div style={{ float: "right" }}>
-      <Button
-        href="/perf/list/0"
-        style={{
-          margin: "5px",
-          backgroundColor: "transparent",
-        }}
-      >
-        <FormatListBulletedIcon color="action"></FormatListBulletedIcon>
-      </Button>
-      {user ? (
-        <Fragment>
-          <Button
-            style={{
-              margin: "5px",
-              backgroundColor: "transparent",
-            }}
-            onClick={moveToModify}
-          >
-            <ModeEditIcon color="action"></ModeEditIcon>
-          </Button>
-          <Button
-            style={{
-              margin: "5px",
-              backgroundColor: "transparent",
-            }}
-            onClick={onRemove}
-          >
-            <DeleteIcon color="action"></DeleteIcon>
-          </Button>
-        </Fragment>
-      ) : (
-        ""
-      )}
-    </div>
+    <Grid>
+      <Grid style={{ float: "right", marginRight: "280px" }}>
+        <Button
+          href="/perf/list/0"
+          style={{
+            margin: "5px",
+            backgroundColor: "transparent",
+          }}
+        >
+          <FormatListBulletedIcon color="action"></FormatListBulletedIcon>
+        </Button>
+        {user ? (
+          <Fragment>
+            <Button
+              style={{
+                margin: "5px",
+                backgroundColor: "transparent",
+              }}
+              onClick={moveToModify}
+            >
+              <ModeEditIcon color="action"></ModeEditIcon>
+            </Button>
+            <Button
+              style={{
+                margin: "5px",
+                backgroundColor: "transparent",
+              }}
+              onClick={onRemove}
+            >
+              <DeleteIcon color="action"></DeleteIcon>
+            </Button>
+          </Fragment>
+        ) : (
+          ""
+        )}
+      </Grid>
+    </Grid>
   );
 }
 
@@ -263,19 +267,24 @@ function PerfDetail() {
 
   return (
     <ThemeProvider theme={Theme}>
-      <div style={{ background: "#EEE3D0", fontFamily: "SBAggroB" }}>
-        <ModifyDeleteButton
-          performanceNo={pfNo}
-          perfName={title}
-          memberNo={memberInfo.memberNo}
-        />
+      <CssBaseline />
+      <Grid
+        style={{
+          background: "#EEE3D0",
+          fontFamily: "SBAggroB",
+          textAlign: "center",
+        }}
+      >
         <div>
-          <Grid container spacing={4}>
+          <ModifyDeleteButton
+            performanceNo={pfNo}
+            perfName={title}
+            memberNo={memberInfo.memberNo}
+          />
+          <Grid container>
+            <Grid item xs={2}></Grid>
             <Grid item xs={5}>
-              <Item
-                elevation={0}
-                style={{ position: "relative", direction: "row" }}
-              >
+              <Item elevation={0} style={{ marginTop: "18px" }}>
                 <Carousel
                   category={category}
                   status={status}
@@ -283,17 +292,17 @@ function PerfDetail() {
                 ></Carousel>
               </Item>
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={3}>
               <Item elevation={0}>
                 <ul
                   style={{
+                    display: "relative",
                     fontSize: "large",
                     listStyle: "none",
-                    paddingLeft: "0px",
                     textAlign: "left",
                   }}
                 >
-                  <li>
+                  <li style={{ marginBottom: "10px" }}>
                     <span
                       style={{
                         background: "#66cc66",
@@ -327,7 +336,7 @@ function PerfDetail() {
                     >
                       {category}
                     </span>
-                    <div style={{ marginTop: "19px" }}>
+                    <Grid style={{ marginTop: "19px" }}>
                       {/* <a
                         style={{
                           textDecoration: "none",
@@ -356,7 +365,7 @@ function PerfDetail() {
                           {memberInfo.nickname}
                         </span>
                       </a> */}
-                      <Grid container item xs={9}>
+                      <Grid container item xs={9} mb={6} mt={7}>
                         <Grid>
                           <a
                             style={{ textDecoration: "none" }}
@@ -381,112 +390,60 @@ function PerfDetail() {
                           {memberInfo.nickname}
                         </Grid>
                       </Grid>
-                    </div>
+                    </Grid>
                   </li>
-                  <li>
-                    {" "}
-                    <TextField
-                      label="공연 제목"
-                      value={title}
-                      style={{
-                        width: "500px",
-                        marginTop: "10px",
-                      }}
-                    />
-                  </li>
+                  <li>공연제목 : {title}</li>
                   <br></br>
                   <li>
-                    <TextField
-                      label="시작 날짜"
-                      value={convertTime(startDate)}
-                      style={{
-                        width: "200px",
-                        marginTop: "10px",
-                        marginRight: "10px",
-                      }}
-                    />
-                    <TextField
-                      label="종료 날짜"
-                      value={convertTime(endDate)}
-                      style={{ width: "200px", marginTop: "10px" }}
-                    />
-                    {/* 기간: {convertTime(startDate)} ~ {convertTime(endDate)} */}
+                    기간 : {convertTime(startDate)}~{convertTime(endDate)}
                   </li>
                   <br></br>
-                  <li>
-                    <TextField
-                      label="공연 시간"
-                      value={runtime}
-                      style={{ width: "200px", marginTop: "10px" }}
-                    />
-                  </li>
+                  <li>공연 시간 : {runtime}</li>
                   <br></br>
-                  <li>
-                    {" "}
-                    <TextField
-                      label="장소"
-                      value={location}
-                      style={{ width: "200px", marginTop: "10px" }}
-                    />
-                  </li>
+                  <li>장소 : {location}</li>
                   <br></br>
                   {price.map((item, i) =>
                     i === 0 ? (
                       <li id={i}>
-                        <TextField
-                          label="좌석"
-                          value={item.seat}
-                          style={{
-                            width: "200px",
-                            marginTop: "10px",
-                            marginRight: " 10px",
-                          }}
-                        />
-                        <TextField
-                          label="가격"
-                          value={item.price}
-                          style={{ width: "200px", marginTop: "10px" }}
-                        />
+                        좌석 : {item.seat + "       "}
+                        가격 : {item.price}
                       </li>
                     ) : (
                       <li id={i}>
                         {item.seat} {item.price}
                       </li>
-                    )
+                    ),
                   )}
                   <br />
-                  <li>
-                    {" "}
-                    <TextField
-                      multiline
-                      label="상세설명"
-                      value={description}
-                      rows={6}
-                      style={{ marginTop: "10px", width: "600px" }}
-                    />
-                  </li>
+                  <li>상세 설명 : {description}</li>
                   <br />
                 </ul>
               </Item>
-              <Item elevation={0}>{description}</Item>
             </Grid>
+            <Grid item xs={2}></Grid>
           </Grid>
-          <div style={{ margin: "12px" }}>
+          <div
+            style={{
+              margin: "12px",
+              paddingBottom: "100px",
+              paddingTop: "20px",
+            }}
+          >
             <Grid container spacing={1}>
-              <Grid item xs={12}>
-                <Item>
-                  <CommentList
-                    kind={"performance"}
-                    refreshFunction={refreshFunction}
-                    commentList={commentList}
-                    performanceNo={performanceNo}
-                  />
-                </Item>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={8}>
+                <CommentList
+                  kind={"performance"}
+                  refreshFunction={refreshFunction}
+                  commentList={commentList}
+                  performanceNo={performanceNo}
+                />
+                <Grid item xs={2}></Grid>
               </Grid>
             </Grid>
           </div>
         </div>
-      </div>
+      </Grid>
     </ThemeProvider>
   );
 }

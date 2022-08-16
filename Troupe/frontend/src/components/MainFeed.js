@@ -18,6 +18,11 @@ import FeedListSave from "./FeedListSave";
 import FeedListSearch from "./FeedListSearch";
 import Theme from "./Theme";
 import SearchIcon from "@mui/icons-material/Search";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 function Copyright() {
   return (
     <Typography color="text.secondary" align="center" component="span">
@@ -41,6 +46,10 @@ export default function MainFeed() {
   const [showSearch, setShowSearch] = React.useState(false);
   const [hide, setHide] = React.useState(true);
   const [howManySearch, setHowManySearch] = React.useState(0);
+  const [nowState, setNowState] = React.useState("");
+  const handleChange = (e) => {
+    setNowState(e.target.value);
+  };
 
   const handleShowAll = () => {
     setShowAll(true);
@@ -51,6 +60,7 @@ export default function MainFeed() {
 
   const handleShowFollow = () => {
     if (!sessionStorage.getItem("loginCheck")) {
+      sessionStorage.setItem("currentHref", window.location.href);
       window.location.href = "/login";
     }
     setShowAll(false);
@@ -61,6 +71,7 @@ export default function MainFeed() {
 
   const handleShowSave = () => {
     if (!sessionStorage.getItem("loginCheck")) {
+      sessionStorage.setItem("currentHref", window.location.href);
       window.location.href = "/login";
     }
     setShowAll(false);
@@ -119,6 +130,7 @@ export default function MainFeed() {
           setTagList((tags) => [...tags, tag]);
           setTag("");
           console.log(tags);
+          handleShowSearch();
         }
       }
     },
@@ -160,6 +172,18 @@ export default function MainFeed() {
                     onClick={() => deleteTag(item)}
                   >
                     # {item}
+                    <span
+                      style={{
+                        display: "inline-block",
+                        paddingLeft: "10px",
+                        paddingTop: "3.7px",
+                      }}
+                    >
+                      <HighlightOffIcon
+                        fontSize="small"
+                        color="error"
+                      ></HighlightOffIcon>
+                    </span>
                   </div>
                 ))
               ) : (
@@ -169,20 +193,16 @@ export default function MainFeed() {
           </div>
         </Grid>
         <Grid item xs={4} mt={6}>
-          <Button
-            onClick={tags.length === 0 ? ()=>{window.alert('태그를 입력하세요.')} : handleShowSearch}
-            variant="contained"
-            color="neutral"
-            className={stylesButton.btn2}
+          {/* <Button
+            onClick={handleShowSearch}
+            className={stylesButton.btn4}
             style={{
-              backgroundColor: "#fda085",
-              color: "black",
               width: "50px",
               marginLeft: "10px",
             }}
           >
-            <SearchIcon color="white"></SearchIcon>
-          </Button>
+            <SearchIcon color="neutral"></SearchIcon>
+          </Button> */}
         </Grid>
       </Grid>
       <Grid
@@ -195,80 +215,55 @@ export default function MainFeed() {
           fontFamily: "SBAggroB",
           marginBottom: "30px",
         }}
-      >
-        {!hide ? <span>태그를 누르면 삭제됩니다</span> : <span></span>}
-      </Grid>
+      ></Grid>
       <Grid
         container
         style={{
-          display: "flex",
           justifyContent: "center",
           textAlign: " center",
         }}
         spacing={2}
       >
-        <Grid item xs={2}>
-          <Button
-            onClick={handleShowAll}
-            variant="contained"
-            color="neutral"
-            style={{
-              fontFamily: "Cafe24SsurroundAir",
-              fontWeight: "bold",
-              width: "150px",
-              height: "30px",
-            }}
-          >
-            최신순 피드
-          </Button>
+        <Grid item xs={1} style={{ fontFamily: "SBAggroB" }}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">정렬</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="정렬"
+              value={nowState}
+              onChange={handleChange}
+              sx={{
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#66cc66",
+                },
+              }}
+            >
+              <MenuItem
+                value="최신순 피드"
+                onClick={handleShowAll}
+                style={{ fontFamily: "SBAggroB" }}
+              >
+                최신순 피드
+              </MenuItem>
+              <MenuItem
+                value="북마크 피드"
+                onClick={handleShowSave}
+                style={{ fontFamily: "SBAggroB" }}
+              >
+                북마크 피드
+              </MenuItem>
+              <MenuItem
+                value="팔로우 피드"
+                onClick={handleShowFollow}
+                style={{ fontFamily: "SBAggroB" }}
+              >
+                팔로우 피드
+              </MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
-        <Grid item xs={2}>
-          <Button
-            onClick={handleShowSave}
-            variant="contained"
-            color="neutral"
-            style={{
-              fontFamily: "Cafe24SsurroundAir",
-              fontWeight: "bold",
-              width: "150px",
-              height: "30px",
-            }}
-          >
-            북마크 피드
-          </Button>
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            onClick={handleShowFollow}
-            variant="contained"
-            color="neutral"
-            style={{
-              fontFamily: "Cafe24SsurroundAir",
-              fontWeight: "bold",
-              width: "150px",
-              height: "30px",
-            }}
-          >
-            팔로우 피드
-          </Button>
-        </Grid>
-        {/* <Grid item xs={2}>
-          <Button
-            href="/feed/register"
-            variant="contained"
-            color="neutral"
-            style={{
-              fontFamily: "Cafe24SsurroundAir",
-              fontWeight: "bold",
-              width: "150px",
-              height: "30px",
-            }}
-          >
-            피드 등록
-          </Button>
-        </Grid> */}
       </Grid>
-
       <div>
         <Container sx={{ py: 10 }} maxWidth="md">
           {showFollow ? (

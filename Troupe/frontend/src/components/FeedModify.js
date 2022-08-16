@@ -8,7 +8,7 @@ import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Theme from "./Theme";
-
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 export default function FeedModify() {
   const { feedNo } = useParams();
   // 추가된 이미지 url
@@ -116,12 +116,6 @@ export default function FeedModify() {
             newNotice.className = stylesTag.alert;
             notice.appendChild(newNotice);
             return;
-          } else {
-            if (document.querySelector("#notice div") !== null) {
-              const notice = document.querySelector("#notice");
-              const div = document.querySelector("#notice div");
-              notice.removeChild(div);
-            }
           }
           setTagList((tags) => [...tags, tag]);
           setTag("");
@@ -228,9 +222,17 @@ export default function FeedModify() {
           </Grid>
           <Grid container>
             <Grid item xs={12}>
-              <Grid item style={{ marginTop: "10px" }} id="notice">
-                태그를 누르면 삭제됩니다
-              </Grid>
+              <input
+                className={stylesTag.HashInput}
+                label="태그"
+                value={tag}
+                onChange={changeTag}
+                onKeyUp={addTagFunc}
+                placeholder="이곳에 태그입력 후 엔터를 치세요"
+                maxLength={20}
+                style={{ textAlign: "center" }}
+              />
+
               <div className={stylesTag.HashWrap}>
                 <div className={stylesTag.HashWrapOuter}>
                   {tags ? (
@@ -241,6 +243,18 @@ export default function FeedModify() {
                         onClick={() => deleteTag(item)}
                       >
                         # {item}
+                        <span
+                          style={{
+                            display: "inline-block",
+                            paddingLeft: "10px",
+                            paddingTop: "3.7px",
+                          }}
+                        >
+                          <HighlightOffIcon
+                            fontSize="small"
+                            color="error"
+                          ></HighlightOffIcon>
+                        </span>
                       </div>
                     ))
                   ) : (
@@ -248,15 +262,13 @@ export default function FeedModify() {
                   )}
                 </div>
               </div>
-              <input
-                className={stylesTag.HashInput}
-                label="태그"
-                value={tag}
-                onChange={changeTag}
-                onKeyUp={addTagFunc}
-                placeholder="태그입력 후 엔터를 치세요"
-                maxLength={20}
-              />
+              <Grid
+                id="notice"
+                style={{
+                  marginTop: "20px",
+                  marginBottom: "10px",
+                }}
+              ></Grid>
             </Grid>
           </Grid>
 
@@ -277,6 +289,13 @@ export default function FeedModify() {
                   maxLength: 2000,
                 }}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             </Grid>
           </Grid>

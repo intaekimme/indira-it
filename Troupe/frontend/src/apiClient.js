@@ -8,6 +8,7 @@ import instance from "axios";
 const apiClient = {
   //accessToken Refresh
   refreshAccessToken: () => {
+    console.log(window.sessionStorage.getItem("refreshToken"));
     console.log("refreshAccessToken");
     const memberNo = window.sessionStorage.getItem("loginMember");
     const refreshToken = window.sessionStorage.getItem("refreshToken");
@@ -42,7 +43,7 @@ const apiClient = {
         window.sessionStorage.setItem("accessToken", response.data.accessToken);
         window.sessionStorage.setItem(
           "refreshToken",
-          response.data.refreshToken
+          response.data.refreshToken,
         );
         console.log("로그인 되었습니다.");
         // alert("로그인 되었습니다.");
@@ -152,7 +153,7 @@ const apiClient = {
   //request pw
   requestPassword: (email) => {
     console.log(
-      "비밀번호 초기화를 위해 이메일을 전송중입니다 잠시만 기다려주세요"
+      "비밀번호 초기화를 위해 이메일을 전송중입니다 잠시만 기다려주세요",
     );
     // alert("비밀번호 초기화를 위해 이메일을 전송중입니다 잠시만 기다려주세요");
     return instance
@@ -267,9 +268,6 @@ const apiClient = {
       });
   },
 
-
-
-
   //방명록 불러오기
   getGuestBookList: (memberNo) => {
     return instance
@@ -346,9 +344,6 @@ const apiClient = {
         return false;
       });
   },
-
-
-
 
   //팔로워 수 확인
   getFollowerCount: (profileMemberNo) => {
@@ -432,7 +427,7 @@ const apiClient = {
               headers: {
                 accessToken: sessionStorage.getItem("accessToken"),
               },
-            }
+            },
           )
           .then((response) => {
             console.log(response.data);
@@ -453,9 +448,6 @@ const apiClient = {
             return false;
           });
   },
-
-
-
 
   //내정보 불러오기
   getMyinfo: () => {
@@ -660,9 +652,6 @@ const apiClient = {
       });
   },
 
-
-
-
   //피드 목록 테스트용(후에 삭제)
   getFeedTest: () => {
     // const change = data.change;
@@ -775,20 +764,22 @@ const apiClient = {
       });
   },
   //태그검색 피드 목록 불러오기
-  feedTagSearch: async (queryKey, pageParam=0) => {
-    console.log(pageParam)
-    console.log(queryKey)
-    console.log(queryKey.queryKey[1])
-    for (let i = 0; i < queryKey.queryKey[1].length; i++) {
-      var url = `/feed/search?pageNumber=${pageParam}` + `&tags=${queryKey.queryKey[1][i]}`;
+  feedTagSearch: (tags, pageNumber) => {
+    if(tags.length === 0) {
+      var url = `/feed/search?pageNumber=${pageNumber}`
     }
-    return await instance
+    else {
+      for (let i = 0; i < tags.length; i++) {
+        var url = `/feed/search?pageNumber=${pageNumber}` + `&tags=${tags[i]}`;
+      }
+    }
+    return instance
       .get(url)
       .then((response) => {
         console.log(response.data);
         console.log(url);
         console.log("Feed Search 성공");
-        return {items: response.data, pageParam};
+        return response.data;
       })
       .catch((error) => {
         console.log(error);
@@ -1151,7 +1142,7 @@ const apiClient = {
     feedNo,
     parentCommentNo,
     data,
-    refreshChildFunction
+    refreshChildFunction,
   ) => {
     instance
       .post(`/feed/${feedNo}/comment`, data, {
@@ -1187,9 +1178,6 @@ const apiClient = {
         // alert("대댓글 등록 실패 : " + error);
       });
   },
-
-
-
 
   //공연 목록 불러오기
   getPerfList: async ({ pageParam = 0 }) => {
@@ -1427,10 +1415,10 @@ const apiClient = {
     performanceNo,
     parentCommentNo,
     data,
-    refreshChildFunction
+    refreshChildFunction,
   ) => {
     instance
-      .post(`/perf/${performanceNo}/review`, data, {
+      .post(`/perf/${parseInt(performanceNo)}/review`, data, {
         params: {
           parentCommentNo: parentCommentNo,
         },

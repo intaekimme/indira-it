@@ -18,7 +18,6 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SendIcon from "@mui/icons-material/Send";
 
 export default function Comment(props) {
-
   const [user, setUser] = useState(0);
   // 대댓글 목록
   const [childComments, setChildComments] = useState([]);
@@ -34,7 +33,7 @@ export default function Comment(props) {
   const [cancel, setCancel] = useState(false);
 
   useEffect(() => {
-    setContent(props.comment)
+    setContent(props.comment);
     // if(!props.parentCommentNo)
     //   setContent(props.comment);
     // else {
@@ -42,9 +41,9 @@ export default function Comment(props) {
     // }
     if (sessionStorage.getItem("loginCheck"))
       setUser(parseInt(sessionStorage.getItem("loginMember")));
-    
+
     // setChildComments(props.childComments);
-    
+
     if (props.kind === "performance") {
       //  공연 후기 대댓글 목록 불러오기
       apiClient
@@ -65,7 +64,7 @@ export default function Comment(props) {
           });
           setChildComments(json);
         });
-    } else if(props.kind === "feed") {
+    } else if (props.kind === "feed") {
       //  피드 댓글의 대댓글 목록 불러오기
       apiClient
         .getFeedChildReviewList(props.feedNo, props.reviewNo)
@@ -97,7 +96,8 @@ export default function Comment(props) {
     setIsChild(true);
     if (!sessionStorage.getItem("loginCheck")) {
       if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
-        window.location.href = `/login`;
+        sessionStorage.setItem("currentHref", window.location.href);
+      window.location.href = `/login`;
     } else {
       setIsChildReviewRegister(true);
     }
@@ -174,7 +174,6 @@ export default function Comment(props) {
     setIsChildReviewRegister(!isChildReviewRegister);
   };
 
-
   // console.log(props);
   return (
     <Card sx={{ maxWidth: "100%", m: 2 }}>
@@ -231,8 +230,8 @@ export default function Comment(props) {
                 <Button
                   size="small"
                   aria-label="modify"
-                    onClick={() => modifyComment()}
-                    style={{marginBottom: "20px"}}
+                  onClick={() => modifyComment()}
+                  style={{ marginBottom: "20px" }}
                 >
                   <ModeEditIcon color="action"></ModeEditIcon>
                 </Button>
@@ -245,7 +244,7 @@ export default function Comment(props) {
                 size="small"
                 aria-label="delete"
                 onClick={() => deleteComment()}
-                style={{marginBottom: "20px"}}
+                style={{ marginBottom: "20px" }}
               >
                 <DeleteIcon color="action"></DeleteIcon>
               </Button>
@@ -257,7 +256,7 @@ export default function Comment(props) {
                 size="small"
                 aria-label="child-comment"
                 onClick={childCommentList}
-                style={{ color: "black", marginBottom: "20px"}}
+                style={{ color: "black", marginBottom: "20px" }}
                 // color="black"
                 fontFamily="116watermelon"
               >
@@ -275,8 +274,8 @@ export default function Comment(props) {
               <Button
                 size="small"
                 arial-lebel="child-comment-register"
-                  onClick={childCommentRegister}
-                  style={{marginBottom: "20px"}}
+                onClick={childCommentRegister}
+                style={{ marginBottom: "20px" }}
               >
                 <ReplyIcon color="action"></ReplyIcon>
               </Button>

@@ -185,7 +185,6 @@ export default function PerfNew() {
       return;
     }
   };
-
   return (
     <ThemeProvider theme={Theme}>
       <Container maxWidth="md">
@@ -213,8 +212,8 @@ export default function PerfNew() {
                           src={item.url}
                           alt=""
                           style={{
-                            height: "450px",
-                            width: "300px",
+                            height: "300px",
+                            width: "200px",
                             border: "3px white solid",
                             boxShadow:
                               "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.2)",
@@ -224,7 +223,7 @@ export default function PerfNew() {
                           color="error"
                           onClick={() => deleteImage(item.file)}
                           className={stylesTag.btn1}
-                          style={{ top: "-420px" }}
+                          style={{ top: "-275px" }}
                         ></RemoveCircleOutlineIcon>
                       </span>
                     );
@@ -237,7 +236,11 @@ export default function PerfNew() {
                 variant="contained"
                 component="label"
                 color="green"
-                style={{ fontFamily: "SBAggroB", marginTop: "10px" }}
+                style={{
+                  fontFamily: "SBAggroB",
+                  marginTop: "10px",
+                  marginBottom: "40px",
+                }}
               >
                 + 포스터 추가
                 <input type="file" multiple hidden onChange={changeImage} />
@@ -246,6 +249,7 @@ export default function PerfNew() {
             <Grid item xs={12}>
               <TextField
                 name="title"
+                variant="outlined"
                 fullWidth
                 required
                 id="title"
@@ -256,58 +260,77 @@ export default function PerfNew() {
                   maxLength: 50,
                 }}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               {seatPrice.map((x, i) => {
                 return (
-                  <Grid>
-                    <TextField
-                      id="seat"
-                      name="seat"
-                      label="좌석명"
-                      value={x.seat}
-                      onChange={(e) => handleSeatPrice(e, i)}
-                      style={{
-                        margin: "5px",
-                        marginTop: "10px",
-                        backgroundColor: "white",
-                      }}
-                      inputProps={{
-                        maxLength: 10,
-                      }}
-                    />
-                    <TextField
-                      id="price"
-                      className="ml10"
-                      name="price"
-                      label="가격"
-                      onChange={(e) => handleSeatPrice(e, i)}
-                      style={{
-                        margin: "5px",
-                        marginTop: "10px",
-                        backgroundColor: "white",
-                      }}
-                      type="number"
-                    />
-
-                    {seatPrice.length !== 1 && (
-                      <Button
-                        className="mr10"
-                        onClick={() => deleteSeatPrice(i)}
-                        style={{ marginTop: "10px" }}
-                      >
-                        <RemoveCircleOutlineIcon color="error"></RemoveCircleOutlineIcon>
-                      </Button>
-                    )}
-                    {seatPrice.length - 1 === i && (
-                      <Button
-                        onClick={addSeatPrice}
-                        style={{ marginTop: "10px" }}
-                      >
-                        <AddCircleIcon color="success"></AddCircleIcon>
-                      </Button>
-                    )}
+                  <Grid container>
+                    <Grid item xs={2}></Grid>
+                    <Grid item xs={8}>
+                      <TextField
+                        id="seat"
+                        name="seat"
+                        label="좌석명"
+                        value={x.seat}
+                        onChange={(e) => handleSeatPrice(e, i)}
+                        style={{
+                          margin: "5px",
+                          marginTop: "10px",
+                          backgroundColor: "white",
+                        }}
+                        inputProps={{
+                          maxLength: 10,
+                        }}
+                        sx={{
+                          "& .MuiOutlinedInput-root.Mui-focused": {
+                            "& > fieldset": {
+                              borderColor: "#66cc66",
+                            },
+                          },
+                        }}
+                      />
+                      <TextField
+                        id="price"
+                        name="price"
+                        label="가격"
+                        onChange={(e) => handleSeatPrice(e, i)}
+                        style={{
+                          marginTop: "10px",
+                          backgroundColor: "white",
+                        }}
+                        type="number"
+                        sx={{
+                          "& .MuiOutlinedInput-root.Mui-focused": {
+                            "& > fieldset": {
+                              borderColor: "#66cc66",
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={1} marginTop="20px">
+                      {seatPrice.length !== 1 && (
+                        <RemoveCircleOutlineIcon
+                          color="error"
+                          onClick={() => deleteSeatPrice(i)}
+                        ></RemoveCircleOutlineIcon>
+                      )}
+                      {seatPrice.length - 1 === i && (
+                        <AddCircleIcon
+                          color="success"
+                          onClick={addSeatPrice}
+                        ></AddCircleIcon>
+                      )}
+                    </Grid>
+                    <Grid item xs={1}></Grid>
                   </Grid>
                 );
               })}
@@ -325,7 +348,18 @@ export default function PerfNew() {
                   onChange={(newValue) => {
                     setPerfStartDate(newValue);
                   }}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused": {
+                          "& > fieldset": {
+                            borderColor: "#66cc66",
+                          },
+                        },
+                      }}
+                    />
+                  )}
                 />
               </LocalizationProvider>
               {/* <input
@@ -358,7 +392,18 @@ export default function PerfNew() {
                   onChange={(newValue) => {
                     setPerfEndDate(newValue);
                   }}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{
+                        "& .MuiOutlinedInput-root.Mui-focused": {
+                          "& > fieldset": {
+                            borderColor: "#66cc66",
+                          },
+                        },
+                      }}
+                    />
+                  )}
                 />
               </LocalizationProvider>
               {/* <input
@@ -384,14 +429,33 @@ export default function PerfNew() {
                   label="카테고리"
                   onChange={changeCategory}
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#66cc66",
+                    },
+                  }}
                 >
-                  <MenuItem value={"연극"}>연극</MenuItem>
-                  <MenuItem value={"뮤지컬"}>뮤지컬</MenuItem>
-                  <MenuItem value={"무용"}>무용</MenuItem>
-                  <MenuItem value={"클래식"}>클래식</MenuItem>
-                  <MenuItem value={"오페라"}>오페라</MenuItem>
-                  <MenuItem value={"국악"}>국악</MenuItem>
-                  <MenuItem value={"복합"}>복합</MenuItem>
+                  <MenuItem value={"연극"} style={{ fontFamily: "SBAggroB" }}>
+                    연극
+                  </MenuItem>
+                  <MenuItem value={"뮤지컬"} style={{ fontFamily: "SBAggroB" }}>
+                    뮤지컬
+                  </MenuItem>
+                  <MenuItem value={"무용"} style={{ fontFamily: "SBAggroB" }}>
+                    무용
+                  </MenuItem>
+                  <MenuItem value={"클래식"} style={{ fontFamily: "SBAggroB" }}>
+                    클래식
+                  </MenuItem>
+                  <MenuItem value={"오페라"} style={{ fontFamily: "SBAggroB" }}>
+                    오페라
+                  </MenuItem>
+                  <MenuItem value={"국악"} style={{ fontFamily: "SBAggroB" }}>
+                    국악
+                  </MenuItem>
+                  <MenuItem value={"복합"} style={{ fontFamily: "SBAggroB" }}>
+                    복합
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -405,6 +469,13 @@ export default function PerfNew() {
                 id="runtime"
                 onChange={changeRuntime}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             </Grid>
 
@@ -417,6 +488,13 @@ export default function PerfNew() {
                 id="location"
                 onChange={changeLocation}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             </Grid>
 
@@ -433,6 +511,13 @@ export default function PerfNew() {
                   maxLength: 2000,
                 }}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
               <div
                 style={{
