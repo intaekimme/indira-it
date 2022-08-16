@@ -130,6 +130,8 @@ export default function FeedDetail(props) {
                           height: "50px",
                           width: "50px",
                           marginRight: "10px",
+                          boxShadow:
+                            "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                         }}
                       ></img>
                     </a>
@@ -174,17 +176,17 @@ export default function FeedDetail(props) {
                       //   style={{ textDecoration: "none" }}
                       // >
                       //   </Link>
-                        <div
-                          className={stylesTag.HashWrapInner}
-                          key={id}
-                          // onClick={() => searchTag(item.trim())}
+                      <div
+                        className={stylesTag.HashWrapInner}
+                        key={id}
+                        // onClick={() => searchTag(item.trim())}
                         onClick={() => {
-                          searchTag(item.trim())
-                          props.handleClose()
+                          searchTag(item.trim());
+                          props.handleClose();
                         }}
-                        >
-                          # {item}
-                        </div>
+                      >
+                        # {item}
+                      </div>
                     ))
                   ) : (
                     <div></div>

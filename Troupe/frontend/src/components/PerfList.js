@@ -65,26 +65,30 @@ export default function PerfListCard() {
                   </Typography> */}
                 <Box
                   style={{
-                    background: "pink",
+                    background: "#66cc66",
                     borderRadius: "10%",
                     position: "absolute",
                     top: "10px",
                     right: "5px",
                     i: "3",
                     padding: "2px",
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   {datum.status}
                 </Box>
                 <Box
                   style={{
-                    background: "skyblue",
+                    background: "#ffd400",
                     borderRadius: "10%",
                     position: "absolute",
                     top: "10px",
                     left: "5px",
                     i: "3",
                     padding: "2px",
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   {datum.category}
