@@ -85,18 +85,21 @@ public class PerformanceConverter {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        Category category = categoryRepository.findById(performanceModifyForm.getCategoryNo()).get();
+        Category category = categoryRepository.findBySmallCategory(performanceModifyForm.getCategory()).get();
 
         return Performance.builder()
+                .id(performance.getId())
                 .member(member)
                 .title(performanceModifyForm.getTitle())
                 .location(performanceModifyForm.getLocation())
-                .runtime(performanceModifyForm.getRuntime())
+                .runtime(Integer.parseInt(performanceModifyForm.getRuntime()))
                 .createdTime(performance.getCreatedTime())
                 .updatedTime(now)
                 .category(category)
                 .detailTime(performanceModifyForm.getDetailTime())
                 .description(performanceModifyForm.getDescription())
+                .startDate(performanceModifyForm.getStartDate())
+                .endDate(performanceModifyForm.getEndDate())
                 .build();
     }
 
@@ -155,7 +158,27 @@ public class PerformanceConverter {
      */
     public List<PerformancePrice> toPerformancePriceEntityWhenUpdate(PerformanceModifyForm performanceModifyForm,
             Performance performance) {
-        List<Seat> seatList = performanceModifyForm.getPrice();
+        String beforeParse = performanceModifyForm.getSeatPrice();
+
+        // log.info(beforeParse);
+        JsonParser jsonParser = JsonParserFactory.getJsonParser();
+        List<Object> list = jsonParser.parseList(beforeParse);
+        // log.info(list.toString());
+
+        List<Seat> seatList = new ArrayList<>();
+        for (Object o : list) {
+            if (o instanceof Map) {
+                Map<String, Object> map = (Map<String, Object>) o;
+                // log.info(map.toString());
+                Seat result = Seat.builder()
+                        .name(map.get("seat").toString())
+                        .price(Integer.parseInt(map.get("price").toString()))
+                        .build();
+                // log.info(result.toString());
+                seatList.add(result);
+            }
+        }
+
         List<PerformancePrice> entities = new ArrayList<PerformancePrice>();
         for (Seat seat : seatList) {
             PerformancePrice p = PerformancePrice.builder()

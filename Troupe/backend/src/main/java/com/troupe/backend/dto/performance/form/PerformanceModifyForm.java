@@ -19,11 +19,11 @@ public class PerformanceModifyForm {
 
     private String title;
     private String location;
-    private int runtime;
+    private String runtime;
     private String description;
-    private int categoryNo;
+    private String category;
     private String detailTime;
-    private List<Seat> price;
+    private String seatPrice;
     private Date startDate;
     private Date endDate;
     private List<MultipartFile> newImages;
