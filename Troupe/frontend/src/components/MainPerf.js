@@ -67,6 +67,12 @@ export default function MainPerf() {
     setHowManySearch(howManySearch + 1);
   };
 
+  function Search(event) {
+    if (event.key === "Enter" && event.target.value.trim() !== "") {
+      event.preventDefault();
+      handleShowSearch();
+    }
+  }
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
@@ -88,10 +94,10 @@ export default function MainPerf() {
               xs={12}
               container
               style={{ justifyContent: "center" }}
-              spacing={1}
-              marginTop="65px"
+              spacing={2}
+              marginTop="45px"
             >
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 <Select
                   onChange={handleSearchCategory}
                   value={searchCategory}
@@ -108,37 +114,25 @@ export default function MainPerf() {
                   </MenuItem>
                 </Select>
               </Grid>
+              <Grid item xs={1}></Grid>
               <Grid item xs={7}>
                 <TextField
                   onChange={handleSearchWord}
                   label="키워드 검색"
-                  placeholder="검색어를 입력해주세요."
+                  placeholder="검색어 입력후 엔터를 쳐주세요"
                   style={{ textAlign: "center", backgroundColor: "white" }}
+                  onKeyUp={Search}
+                  fullWidth
                 ></TextField>
               </Grid>
-              <Grid item xs={2}>
-                <Button
-                  variant="contained"
-                  color="neutral"
-                  onClick={handleShowSearch}
-                  className={stylesButton.btn2}
-                  style={{ backgroundColor: "#fda085" }}
-                >
-                  <SearchIcon color="white"></SearchIcon>
+              <Grid item xs={2} style={{ marginTop: "11px" }}>
+                <Button onClick={handleShowSearch}>
+                  <SearchIcon color="action"></SearchIcon>
                 </Button>
               </Grid>
             </Grid>
           </FormControl>
         </Grid>
-        {/* <Grid item xs={12} style={{ justifyContent: "right" }}>
-          <Button
-            href="/perf/register"
-            variant="contained"
-            className={stylesButton.btn2}
-          >
-            +
-          </Button>
-        </Grid> */}
       </Grid>
       <div>
         <Container sx={{ py: 10 }} maxWidth="md">

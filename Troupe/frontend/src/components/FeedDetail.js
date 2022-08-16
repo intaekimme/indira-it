@@ -126,8 +126,6 @@ export default function FeedDetail(props) {
                           height: "50px",
                           width: "50px",
                           marginRight: "10px",
-                          boxShadow:
-                            "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                         }}
                       ></img>
                     </a>

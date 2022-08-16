@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({
+const Theme = createTheme({
   palette: {
     neutral: {
       main: "#fda085",
@@ -17,8 +17,8 @@ const theme = createTheme({
       main: "#000000",
     },
     white: {
-      main: "#FFFFFF"
-    }
+      main: "#FFFFFF",
+    },
   },
   typography: {
     fontFamily: [
@@ -32,6 +32,18 @@ const theme = createTheme({
       "Atomy-Bold",
     ].join(","),
   },
+  select: {
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#66cc66",
+    },
+  },
+  textField: {
+    "& .MuiOutlinedInput-root.Mui-focused": {
+      "& > fieldset": {
+        borderColor: "#66cc66",
+      },
+    },
+  },
 });
 
-export default theme;
+export default Theme;
