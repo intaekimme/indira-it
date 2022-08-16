@@ -51,6 +51,7 @@ export default function MainFeed() {
 
   const handleShowFollow = () => {
     if (!sessionStorage.getItem("loginCheck")) {
+      sessionStorage.setItem("currentHref", window.location.href);
       window.location.href = "/login";
     }
     setShowAll(false);
@@ -61,6 +62,7 @@ export default function MainFeed() {
 
   const handleShowSave = () => {
     if (!sessionStorage.getItem("loginCheck")) {
+      sessionStorage.setItem("currentHref", window.location.href);
       window.location.href = "/login";
     }
     setShowAll(false);
