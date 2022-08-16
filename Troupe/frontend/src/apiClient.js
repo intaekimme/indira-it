@@ -718,7 +718,7 @@ const apiClient = {
       })
       .catch((error) => {
         console.log(error);
-        alert("전체 피드 불러오기 실패");
+        console.log("전체 피드 불러오기 실패");
         // alert("전체 피드 불러오기 실패" + error);
       });
   },
