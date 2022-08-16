@@ -22,6 +22,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 function Copyright() {
   return (
     <Typography color="text.secondary" align="center" component="span">
@@ -171,6 +172,18 @@ export default function MainFeed() {
                     onClick={() => deleteTag(item)}
                   >
                     # {item}
+                    <span
+                      style={{
+                        display: "inline-block",
+                        paddingLeft: "10px",
+                        paddingTop: "3.7px",
+                      }}
+                    >
+                      <HighlightOffIcon
+                        fontSize="small"
+                        color="error"
+                      ></HighlightOffIcon>
+                    </span>
                   </div>
                 ))
               ) : (
@@ -202,9 +215,7 @@ export default function MainFeed() {
           fontFamily: "SBAggroB",
           marginBottom: "30px",
         }}
-      >
-        {!hide ? <span>태그를 누르면 삭제됩니다</span> : <span></span>}
-      </Grid>
+      ></Grid>
       <Grid
         container
         style={{
