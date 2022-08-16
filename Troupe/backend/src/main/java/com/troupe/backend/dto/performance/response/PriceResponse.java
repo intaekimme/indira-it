@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PriceResponse {
     int id;
-    String name;
+    String seat;
     int price;
 }

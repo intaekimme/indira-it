@@ -44,4 +44,5 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
             "order by created_time ")
     List<Performance> findAllByTitleAndDescription(String keyword);
 
+    Optional<Slice<Performance>> findAllByIsRemovedOrderByCreatedTimeDesc(boolean isRemoved, Pageable pageable);
 }

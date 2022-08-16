@@ -2,7 +2,7 @@ import * as React from "react";
 import apiClient from "../apiClient";
 import Button from "@mui/material/Button";
 import { Grid } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
 import Theme from "./Theme";

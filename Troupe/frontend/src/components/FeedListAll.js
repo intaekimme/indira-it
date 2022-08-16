@@ -1,18 +1,10 @@
 import React from "react";
-import { Button } from "@mui/material";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import apiClient from "../apiClient";
-import { useParams } from "react-router-dom";
 import FeedSaveButton from "./FeedSaveButton";
 import FeedLikeButton from "./FeedLikeButton";
 import { Typography } from "@mui/material";
@@ -21,18 +13,17 @@ import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import FeedDetail from "./FeedDetail";
 import PlusButton from "./PlusButton";
+import stylesTag from '../css/tag.module.css'
 
-export default function FeedListAll() {
+export default function FeedListAll(props) {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
-  let [cards, setCard] = React.useState([
-    {
-      feedNo: 0,
-      nickname: "",
-      profileImageUrl: "",
-    },
-  ]);
+  const [isHover, setIsHover] = React.useState(-1);
+
   const [change, setChange] = React.useState(false);
+
+  
+
   function handleOpen(no) {
     setOpen(true);
     setFeedNo(no);
@@ -42,20 +33,6 @@ export default function FeedListAll() {
     setOpen(false);
     setChange(true);
   }
-
-  const changeFunction = (check) => {
-    setChange(check);
-  };
-  React.useEffect(() => {
-    // const data = {
-    //   change: "all",
-    //   pageNumber: 0,
-    // };
-    apiClient.getFeedTest().then((data) => {
-      // console.log(data);
-      setCard(data);
-    });
-  }, []);
 
   let FeedListAllQuery = useInfiniteQuery(
     "AllFeeds",
@@ -130,11 +107,26 @@ export default function FeedListAll() {
                       objectFit: "cover",
                       width: "300px",
                       height: "300px",
+                      opacity: isHover === datum.feedNo ? 0.5 : null,
+                      transform: isHover === datum.feedNo ? "scale(1.1)" : null,
+                      transition: "0.5s",
                     }}
                     image={Object.values(datum.images)[0]}
                     alt=""
                     onClick={() => handleOpen(datum.feedNo)}
+                    onMouseEnter={() => setIsHover(datum.feedNo)}
+                    onMouseLeave={() => setIsHover(-1)}
                   ></CardMedia>
+                  {isHover=== datum.feedNo ? 
+                    <div 
+                    style={{marginLeft:'0.5em', display:'inline', position:'absolute', height:'300px', width:'265px', color:'black', top:'150px'}} 
+                    onMouseEnter={()=>setIsHover(datum.feedNo)}                     
+                    onMouseLeave={()=>setIsHover(-1)}
+                    onClick={() => handleOpen(datum.feedNo)}
+                    >
+                      {datum.tags.map((tag) => (<div style={{marginLeft:'0.5em', display:'inline',width:'120px',wordBreak:'break-all', wordBreak:'break-all',padding:'0.2em'}} className={stylesTag.HashWrapInner}>#{tag}</div>))}
+                    </div> 
+                  : null}
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
@@ -162,12 +154,15 @@ export default function FeedListAll() {
                   aria-labelledby="simple-modal-title"
                   aria-describedby="simple-modal-description"
                   className={stylesModal.outer}
-                  animationType={"fade"}
                 >
                   <FeedDetail
                     setChange={setChange}
                     feedNo={feedNo}
                     open={open}
+                    handleClose={handleClose}
+                    showSearch={props.showSearch}
+                    handleShowSearch={props.handleShowSearch}
+                    setTagList={props.setTagList}
                   ></FeedDetail>
                 </Modal>
               </Grid>

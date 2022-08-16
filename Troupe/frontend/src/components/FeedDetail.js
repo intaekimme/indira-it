@@ -3,11 +3,9 @@ import { styled } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import apiClient from "../apiClient";
-import { useParams } from "react-router-dom";
 import stylesTag from "../css/tag.module.css";
 import FollowButton from "./FollowButton";
 import ModifyDeleteButton from "./ModifyDeleteButton";
-import Carousel from "./Carousel";
 import Box from "@mui/material/Box";
 import stylesModal from "../css/modal.module.css";
 import MUICarousel from "react-material-ui-carousel";
@@ -17,6 +15,7 @@ import FeedSaveButton from "./FeedSaveButton";
 import CommentList from "./CommentList";
 import Theme from "./Theme";
 import { ThemeProvider } from "@mui/material/styles";
+import Link from "@mui/material/Link";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#FFF",
   ...theme.typography.body2,
@@ -43,13 +42,11 @@ export default function FeedDetail(props) {
   const [img, setImg] = React.useState(new Map());
   const [user, setUser] = React.useState(0);
   const [commentList, setCommentList] = React.useState([]);
-  const [search, setSearch] = React.useState(false);
+
   function searchTag(tagName) {
     if (tagName !== "") {
-      // apiClient.getFeedSearchTest(tagName).then((data) => {});
-      setSearch(!search);
-      window.location.href='/feed/list/search'
-      apiClient.feedTagSearch({ pageParam: 0, tags: tagName })
+      props.setTagList([tagName]);
+      props.handleShowSearch(!props.showSearch);
     }
   }
   const refreshFunction = (newComment) => {
@@ -129,6 +126,8 @@ export default function FeedDetail(props) {
                           height: "50px",
                           width: "50px",
                           marginRight: "10px",
+                          boxShadow:
+                            "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
                         }}
                       ></img>
                     </a>
@@ -164,10 +163,23 @@ export default function FeedDetail(props) {
                 >
                   {feedInfo.tags ? (
                     feedInfo.tags.map((item, id) => (
+                      // <Link
+                      //   to={{
+                      //     pathname: `/feed/list/search`,
+                      //     state: {
+                      //     tags: item
+                      //   }}}
+                      //   style={{ textDecoration: "none" }}
+                      // >
+                      //   </Link>
                       <div
                         className={stylesTag.HashWrapInner}
                         key={id}
-                        onClick={() => searchTag(item.trim())}
+                        // onClick={() => searchTag(item.trim())}
+                        onClick={() => {
+                          props.handleClose();
+                          searchTag(item.trim());
+                        }}
                       >
                         # {item}
                       </div>
@@ -201,6 +213,6 @@ export default function FeedDetail(props) {
       </Box>
     </ThemeProvider>
   ) : (
-    <div></div>
+    <Link to="/perf/list"></Link>
   );
 }

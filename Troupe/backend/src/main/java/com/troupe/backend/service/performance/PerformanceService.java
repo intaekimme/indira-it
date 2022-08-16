@@ -162,7 +162,8 @@ public class PerformanceService {
      */
     @Transactional(readOnly = true)
     public List<PerformanceResponse> findAll(Pageable sortedByCreatedTime){
-        Slice<Performance> performanceList = performanceRepository.findAll(sortedByCreatedTime);
+        Slice<Performance> performanceList =
+                performanceRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false, sortedByCreatedTime).get();
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
@@ -190,6 +191,9 @@ public class PerformanceService {
                             .detailTime(p.getDetailTime())
                             .category(p.getCategory().getSmallCategory())
                             .status(sb.toString())
+                            .runtime(p.getRuntime())
+                            .startDate(p.getStartDate().toString())
+                            .endDate(p.getEndDate().toString())
                             .build()
             );
         }
@@ -273,7 +277,7 @@ public class PerformanceService {
         for(PerformancePrice price : priceList){
             priceResponseList.add(PriceResponse.builder()
                     .id(price.getId())
-                    .name(price.getSeat())
+                    .seat(price.getSeat())
                     .price(price.getPrice())
                     .build());
         }
@@ -295,7 +299,7 @@ public class PerformanceService {
                 .imageUrl(urlList)
                 .price(priceResponseList)
                 .memberNo(performance.getMember().getMemberNo())
-                .profileImg(performance.getMember().getProfileImageUrl())
+                .profileImg(MyConstant.FILE_SERVER_URL + performance.getMember().getProfileImageUrl())
                 .nickname(performance.getMember().getNickname())
                 .title(performance.getTitle())
                 .location(performance.getLocation())

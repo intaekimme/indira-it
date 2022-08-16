@@ -24,13 +24,17 @@ export default function PerfSearchList(props) {
   console.log(performanceSearchListQuery.isLoading);
 
   const [change, setChange] = React.useState(false);
+  const [isHover, setIsHover] = React.useState(-1);
+
+
 
   const changeFunction = (check) => {
     setChange(check);
   };
 
-  if (props.howManySearch > 1) {
-    performanceSearchListQuery.refetch()
+  if (props.howManySearch > 0) {
+    performanceSearchListQuery.refetch();
+    props.setHowManySearch(0)
   }
 
   if (!performanceSearchListQuery.isLoading && performanceSearchListQuery.data) {
@@ -47,9 +51,6 @@ export default function PerfSearchList(props) {
                 }}
                 elevation={0}
               >
-                {/* <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
-                    <img src={data.image} alt='' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
-                  </Typography> */}
                 <Box
                   style={{
                     fontFamily: "IBM Plex Sans KR",
@@ -84,10 +85,27 @@ export default function PerfSearchList(props) {
                       objectFit: "cover",
                       width: "300px",
                       height: "300px",
+                      opacity: isHover===datum.pfNo? 0.5 : null,
+                      transform: isHover===datum.pfNo? 'scale(1.1)' : null,
+                      transition: '0.5s',
                     }}
                     image={Object.values(datum.image)[0]}
                     alt=""
+                    onMouseEnter={()=>setIsHover(datum.pfNo)}
+                    onMouseLeave={()=>setIsHover(-1)}
                   ></CardMedia>
+                  {isHover === datum.pfNo ? 
+                    <div 
+                    style={{lineHeight:'300px', position:'absolute', height:'300px', width:'265px', color:'black', top:0}} 
+                    onMouseEnter={()=>setIsHover(datum.pfNo)}                     
+                    onMouseLeave={()=>setIsHover(-1)}
+                    >
+                      <ul style={{listStyleType:'none', listStylePosition:'none'}}>
+                        <li># 공연장소:{datum.location}</li>
+                        <li># 공연기간:{datum.detailTime}</li>
+                      </ul>
+                      </div> 
+                  : null}
                 </Link>
                 <CardActions
                   sx={{
