@@ -178,7 +178,7 @@ export default function FeedRegister() {
           </Grid>
           <Grid container>
             <Grid item xs={12}>
-            <input
+              <input
                 className={stylesTag.HashInput}
                 label="태그"
                 value={tag}
@@ -186,9 +186,9 @@ export default function FeedRegister() {
                 onKeyUp={addTagFunc}
                 placeholder="이곳에 태그입력 후 엔터를 치세요"
                 maxLength={20}
-                style={{textAlign: "center"}}
+                style={{ textAlign: "center" }}
               />
-             
+
               <div className={stylesTag.HashWrap}>
                 <div className={stylesTag.HashWrapOuter}>
                   {tags ? (
@@ -206,8 +206,12 @@ export default function FeedRegister() {
                   )}
                 </div>
               </div>
-              <Grid item style={{ marginTop: "10px", marginBottom: "20px" }} id="notice">
-              {!hide ?( <span>태그를 누르면 삭제됩니다</span>):(<span></span>)}
+              <Grid
+                item
+                style={{ marginTop: "10px", marginBottom: "20px" }}
+                id="notice"
+              >
+                {!hide ? <span>태그를 누르면 삭제됩니다</span> : <span></span>}
               </Grid>
             </Grid>
           </Grid>
@@ -227,6 +231,13 @@ export default function FeedRegister() {
                   maxLength: 2000,
                 }}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             </Grid>
           </Grid>

@@ -31,7 +31,7 @@ public class RefreshController {
     public ResponseEntity refresh(@RequestBody RefreshForm refreshForm) {
         int memberNo = refreshForm.getMemberNo();
         String refreshToken = refreshForm.getRefreshToken();
-
+        System.out.println(refreshToken);
         // 리프레시 토큰이 유효하지 않은 경우 재로그인 해야 함
         if (!jwtTokenProvider.validateRefreshToken(memberNo, refreshToken)) {
             Map<String, Object> resultMap = new HashMap<>();

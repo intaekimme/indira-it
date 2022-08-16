@@ -199,7 +199,7 @@ export default function ProfileForm() {
             style={{ textAlign: "center" }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={9}>
+              <Grid item xs={12}>
                 {imgUrl === "" ? (
                   <AccountCircleIcon
                     fontSize="large"
@@ -221,16 +221,13 @@ export default function ProfileForm() {
                   ></img>
                 )}
               </Grid>
-              <Grid item xs={3} style={{ position: "relative" }}>
+              <Grid item xs={12} style={{ position: "relative" }}>
                 <Button
                   style={{
-                    position: "absolute",
                     width: "100px",
                     height: "30px",
-                    bottom: "40px",
-                    right: "0px",
                   }}
-                  className={styledButton.btn2}
+                  className={styledButton.btn4}
                 >
                   찾아보기
                   <input
@@ -261,6 +258,13 @@ export default function ProfileForm() {
                   value={memberType}
                   style={{ backgroundColor: "white" }}
                   disabled
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
 
@@ -279,7 +283,7 @@ export default function ProfileForm() {
                       bottom: "0px",
                       right: "0px",
                     }}
-                    className={styledButton.btn2}
+                    className={styledButton.btn4}
                     // onClick={() => 본인인증()}
                   >
                     본인인증
@@ -300,6 +304,13 @@ export default function ProfileForm() {
                   value={email}
                   style={{ backgroundColor: "white" }}
                   disabled
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={9}>
@@ -314,6 +325,13 @@ export default function ProfileForm() {
                     defaultValue={defaultNickname}
                     onChange={changeNickname}
                     style={{ backgroundColor: "white" }}
+                    sx={{
+                      "& .MuiOutlinedInput-root.Mui-focused": {
+                        "& > fieldset": {
+                          borderColor: "#66cc66",
+                        },
+                      },
+                    }}
                   />
                 ) : (
                   <div></div>
@@ -328,7 +346,7 @@ export default function ProfileForm() {
                     bottom: "13px",
                     right: "0px",
                   }}
-                  className={styledButton.btn2}
+                  className={styledButton.btn4}
                   onClick={() => sameCheck("nickname")}
                 >
                   중복확인
@@ -336,11 +354,27 @@ export default function ProfileForm() {
               </Grid>
               {nicknameCheck ? (
                 <Grid item xs={12}>
-                  <div style={{ color: "green" }}>nickname 중복확인 완료</div>
+                  <div
+                    style={{
+                      color: "green",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    nickname 중복확인 완료
+                  </div>
                 </Grid>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     nickname 중복확인이 필요합니다.
                   </div>
                 </Grid>
@@ -349,7 +383,14 @@ export default function ProfileForm() {
                 <div></div>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     닉네임은 2~20자의 길이로 설정해주세요.
                   </div>
                 </Grid>
@@ -364,13 +405,27 @@ export default function ProfileForm() {
                   id="currentpassword"
                   autoFocus
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               {pwCurrent ? (
                 <div></div>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     비밀번호가 일치하지 않습니다.
                   </div>
                 </Grid>
@@ -384,13 +439,27 @@ export default function ProfileForm() {
                   id="password"
                   autoComplete="new-password"
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               {pwLength ? (
                 <div></div>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     비밀번호는 8~20자의 길이로 설정해주세요.
                   </div>
                 </Grid>
@@ -404,13 +473,27 @@ export default function ProfileForm() {
                   id="passwordCheck"
                   autoComplete="new-password"
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               {pwSame ? (
                 <div></div>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     비밀번호가 일치하지 않습니다.
                   </div>
                 </Grid>
@@ -425,6 +508,13 @@ export default function ProfileForm() {
                     defaultValue={description}
                     name="description"
                     style={{ backgroundColor: "white" }}
+                    sx={{
+                      "& .MuiOutlinedInput-root.Mui-focused": {
+                        "& > fieldset": {
+                          borderColor: "#66cc66",
+                        },
+                      },
+                    }}
                   />
                 ) : (
                   <div></div>

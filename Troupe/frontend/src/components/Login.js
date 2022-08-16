@@ -64,7 +64,7 @@ export default function Login() {
               paddingBottom: "300px",
             }}
           >
-            <Avatar sx={{ m: 4, bgcolor: "primary.main" }}>
+            <Avatar sx={{ m: 4, bgcolor: "#66cc66" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -87,6 +87,13 @@ export default function Login() {
                 autoComplete="email"
                 autoFocus
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
               <TextField
                 margin="normal"
@@ -98,9 +105,16 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={<Checkbox value="remember" color="success" />}
                 label="로그인 유지"
               />
               <Button
@@ -108,10 +122,19 @@ export default function Login() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 2, mb: 1 }}
-                color="yellow"
+                color="green"
                 style={{ fontFamily: "SBAggroB" }}
               >
                 로그인
+              </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 0, mb: 1 }}
+                style={{ backgroundColor: "#ffd400", fontFamily: "SBAggroB" }}
+                onClick={instagramLogin}
+              >
+                Instagram 로그인
               </Button>
               <SNSLoginFacebook />
               {/* <Button
@@ -123,15 +146,7 @@ export default function Login() {
             >
               FaceBook 로그인
             </Button> */}
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 0, mb: 1 }}
-                style={{ backgroundColor: "purple", fontFamily: "SBAggroB" }}
-                onClick={instagramLogin}
-              >
-                Instagram 로그인
-              </Button>
+
               <Grid container justifyContent="space-between">
                 <Grid>
                   <Link href="/resetpw" variant="body2">

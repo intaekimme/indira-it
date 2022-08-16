@@ -145,8 +145,8 @@ export default function Signup() {
             encType="multipart/form-data"
             style={{ textAlign: "center" }}
           >
-            <Grid container spacing={4}>
-              <Grid item xs={9}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
                 {imgUrl === "" ? (
                   <AccountCircleIcon
                     fontSize="large"
@@ -168,18 +168,13 @@ export default function Signup() {
                   ></img>
                 )}
               </Grid>
-              <Grid item xs={3} style={{ position: "relative" }}>
+              <Grid item xs={12} style={{ position: "relative" }}>
                 <Button
                   style={{
-                    position: "absolute",
-                    width: "90px",
+                    width: "100px",
                     height: "30px",
-                    bottom: "45px",
-                    right: "0px",
                   }}
-                  variant="contained"
-                  color="green"
-                  className={styledButton.btn2}
+                  className={styledButton.btn4}
                 >
                   찾아보기
                   <input
@@ -211,6 +206,13 @@ export default function Signup() {
                   label="닉네임"
                   onChange={changeNickname}
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={3} style={{ position: "relative" }}>
@@ -222,9 +224,7 @@ export default function Signup() {
                     bottom: "13px",
                     right: "0px",
                   }}
-                  variant="contained"
-                  color="green"
-                  className={styledButton.btn2}
+                  className={styledButton.btn4}
                   onClick={() => sameCheck("nickname")}
                 >
                   중복확인
@@ -232,11 +232,27 @@ export default function Signup() {
               </Grid>
               {nicknameCheck ? (
                 <Grid item xs={12}>
-                  <div style={{ color: "green" }}>nickname 중복확인 완료</div>
+                  <div
+                    style={{
+                      color: "green",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    nickname 중복확인 완료
+                  </div>
                 </Grid>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     nickname 중복확인이 필요합니다.
                   </div>
                 </Grid>
@@ -245,7 +261,14 @@ export default function Signup() {
                 <div></div>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     닉네임은 2~20자의 길이로 설정해주세요.
                   </div>
                 </Grid>
@@ -260,6 +283,13 @@ export default function Signup() {
                   autoComplete="email"
                   onChange={changeEmail}
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={3} style={{ position: "relative" }}>
@@ -271,9 +301,7 @@ export default function Signup() {
                     bottom: "13px",
                     right: "0px",
                   }}
-                  variant="contained"
-                  color="green"
-                  className={styledButton.btn2}
+                  className={styledButton.btn4}
                   onClick={() => sameCheck("email")}
                 >
                   중복확인
@@ -281,11 +309,27 @@ export default function Signup() {
               </Grid>
               {emailCheck ? (
                 <Grid item xs={12}>
-                  <div style={{ color: "green" }}>email 중복확인 완료</div>
+                  <div
+                    style={{
+                      color: "green",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    email 중복확인 완료
+                  </div>
                 </Grid>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     email 중복확인이 필요합니다.
                   </div>
                 </Grid>
@@ -301,13 +345,27 @@ export default function Signup() {
                   autoComplete="new-password"
                   autoFocus
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               {pwLength ? (
                 <div></div>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     비밀번호는 8~20자의 길이로 설정해주세요.
                   </div>
                 </Grid>
@@ -322,13 +380,27 @@ export default function Signup() {
                   id="passwordCheck"
                   autoComplete="new-password"
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               {pwSame ? (
                 <div></div>
               ) : (
                 <Grid item xs={12}>
-                  <div style={{ color: "red" }}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "13px",
+                      fontFamily: "Cafe24SsurroundAir",
+                      fontWeight: "bold",
+                    }}
+                  >
                     비밀번호가 일치하지 않습니다.
                   </div>
                 </Grid>
@@ -341,6 +413,13 @@ export default function Signup() {
                   label="소개글 입력"
                   name="description"
                   style={{ backgroundColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
