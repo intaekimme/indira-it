@@ -1332,19 +1332,22 @@ const apiClient = {
       });
   },
   //공연 삭제하기
-  perfRemove: (data) => {
+  perfRemove: (performanceNo) => {
     if (window.confirm("삭제하시겠습니까?")) {
       instance
-        .delete(`/perf/${data.pfNo}/del`)
+        .patch(`/perf/${performanceNo}/del`, null, {
+          headers: {
+            accessToken: sessionStorage.getItem("accessToken"),
+          },
+        })
         .then((response) => {
           console.log(response);
-          console.log(data);
           console.log("공연이 삭제되었습니다");
+          window.location.href = "/perf/list/0";
           // alert("공연이 삭제되었습니다" + response);
         })
         .catch((error) => {
           console.log(error);
-          console.log(data);
           console.log("공연삭제 실패");
           // alert(data + "공연삭제 실패 :" + error);
         });
