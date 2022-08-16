@@ -9,5 +9,5 @@ root.render(
   <App />,
   // </React.StrictMode>
 );
-// axios.defaults.baseURL = "https://i7a804.p.ssafy.io:8081";
-axios.defaults.baseURL = "http://localhost:8081";
+axios.defaults.baseURL = "https://i7a804.p.ssafy.io:8443";
+// axios.defaults.baseURL = "http://localhost:8443";
