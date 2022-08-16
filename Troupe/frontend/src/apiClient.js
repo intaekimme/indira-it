@@ -775,20 +775,22 @@ const apiClient = {
       });
   },
   //태그검색 피드 목록 불러오기
-  feedTagSearch: async (queryKey, pageParam=0) => {
-    console.log(pageParam)
-    console.log(queryKey)
-    console.log(queryKey.queryKey[1])
-    for (let i = 0; i < queryKey.queryKey[1].length; i++) {
-      var url = `/feed/search?pageNumber=${pageParam}` + `&tags=${queryKey.queryKey[1][i]}`;
+  feedTagSearch: (tags, pageNumber) => {
+    if(tags.length === 0) {
+      var url = `/feed/search?pageNumber=${pageNumber}`
     }
-    return await instance
+    else {
+      for (let i = 0; i < tags.length; i++) {
+        var url = `/feed/search?pageNumber=${pageNumber}` + `&tags=${tags[i]}`;
+      }
+    }
+    return instance
       .get(url)
       .then((response) => {
         console.log(response.data);
         console.log(url);
         console.log("Feed Search 성공");
-        return {items: response.data, pageParam};
+        return response.data;
       })
       .catch((error) => {
         console.log(error);
