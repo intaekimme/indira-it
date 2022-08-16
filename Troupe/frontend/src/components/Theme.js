@@ -21,16 +21,7 @@ const Theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [
-      "yang",
-      "116angmuburi",
-      "116watermelon",
-      "SBAggroB",
-      "Cafe24SsurroundAir",
-      "NEXON Lv1 Gothic OTF",
-      "Bareun_hipi",
-      "Atomy-Bold",
-    ].join(","),
+    fontFamily: ["SBAggroB", "Cafe24SsurroundAir"].join(","),
   },
   select: {
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
