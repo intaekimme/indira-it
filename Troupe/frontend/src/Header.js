@@ -44,17 +44,17 @@ export default function Header() {
     "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/profile/defalut.png",
   );
   React.useEffect(() => {
-    if (login) {
-      apiClient.getMyinfo().then((data) => {
-        if (
-          data.profileImageUrl &&
-          data.profileImageUrl !== "" &&
-          data.profileImageUrl !== null
-        ) {
-          setProfileImageUrl(data.profileImageUrl);
-        }
-      });
-    }
+    // if (login) {
+    //   apiClient.getMyinfo().then((data) => {
+    //     if (
+    //       data.profileImageUrl &&
+    //       data.profileImageUrl !== "" &&
+    //       data.profileImageUrl !== null
+    //     ) {
+    //       setProfileImageUrl(data.profileImageUrl);
+    //     }
+    //   });
+    // }
   }, []);
   const logout = () => {
     window.sessionStorage.removeItem("loginCheck");
@@ -221,7 +221,7 @@ export default function Header() {
                 open={drawer["right"]}
                 onClose={toggleDrawer("right", false)}
               >
-                {list("right", <AccountCircleIcon fontSize="large" />, [
+                {list("right", <div></div>, [
                   {
                     text: "마이페이지",
                     element: (
@@ -234,7 +234,21 @@ export default function Header() {
                         마이페이지
                       </Link>
                     ),
-                    icon: <AccountCircleIcon fontSize="large" />,
+                    icon: (
+                      <img
+                        src={profileImageUrl}
+                        alt="random"
+                        style={{
+                          borderRadius: "70%",
+                          objectFit: "cover",
+                          height: "36px",
+                          width: "36px",
+                          border: "3px white solid",
+                          boxShadow:
+                            "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.2)",
+                        }}
+                      ></img>
+                    ),
                   },
 
                   {

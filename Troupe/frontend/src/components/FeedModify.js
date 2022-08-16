@@ -277,6 +277,13 @@ export default function FeedModify() {
                   maxLength: 2000,
                 }}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             </Grid>
           </Grid>
