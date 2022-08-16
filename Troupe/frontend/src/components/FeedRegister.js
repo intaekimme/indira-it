@@ -7,19 +7,13 @@ import stylesTag from "../css/tag.module.css";
 import apiClient from "../apiClient";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Theme from "./Theme";
-
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 export default function FeedRegister() {
   const [imgUrl, setImgUrl] = React.useState([]);
   const [images, setImages] = React.useState([]);
   const [tags, setTagList] = React.useState([]);
   const [tag, setTag] = React.useState("");
   const [content, setContent] = React.useState("");
-  const [hide, setHide] = React.useState(true);
-  // const [isReady, setIsReady] = React.useState(false);
-
-  // React.useState(() => {
-  //   if (images.length !== 0 && content.length !== 0) setIsReady(true);
-  // }, [isReady]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -60,8 +54,6 @@ export default function FeedRegister() {
     }
     setImgUrl(imageUrlLists);
     setImages(imageList);
-    // console.log(imageUrlLists);
-    // setIsReady(false);
   };
   const changeTag = (event) => {
     setTag(event.target.value);
@@ -85,7 +77,6 @@ export default function FeedRegister() {
           event.preventDefault();
           // HashWrapInner.innerHTML = "# " + event.target.value;
           // HashWrapOuter.appendChild(HashWrapInner);
-          setHide(false);
           if (tags.length >= 5) {
             // alert("최대 5개까지 등록할 수 있습니다");
             const notice = document.querySelector("#notice");
@@ -95,16 +86,10 @@ export default function FeedRegister() {
             newNotice.className = stylesTag.alert;
             notice.appendChild(newNotice);
             return;
-          } else {
-            if (document.querySelector("#notice div") !== null) {
-              const notice = document.querySelector("#notice");
-              const div = document.querySelector("#notice div");
-              notice.removeChild(div);
-            }
           }
           setTagList((tags) => [...tags, tag]);
           setTag("");
-          console.log(tags);
+          // console.log(tags);
         }
       }
     },
@@ -178,7 +163,7 @@ export default function FeedRegister() {
           </Grid>
           <Grid container>
             <Grid item xs={12}>
-            <input
+              <input
                 className={stylesTag.HashInput}
                 label="태그"
                 value={tag}
@@ -186,9 +171,9 @@ export default function FeedRegister() {
                 onKeyUp={addTagFunc}
                 placeholder="이곳에 태그입력 후 엔터를 치세요"
                 maxLength={20}
-                style={{textAlign: "center"}}
+                style={{ textAlign: "center" }}
               />
-             
+
               <div className={stylesTag.HashWrap}>
                 <div className={stylesTag.HashWrapOuter}>
                   {tags ? (
@@ -199,6 +184,18 @@ export default function FeedRegister() {
                         onClick={() => deleteTag(item)}
                       >
                         # {item}
+                        <span
+                          style={{
+                            display: "inline-block",
+                            paddingLeft: "10px",
+                            paddingTop: "3.7px",
+                          }}
+                        >
+                          <HighlightOffIcon
+                            fontSize="small"
+                            color="error"
+                          ></HighlightOffIcon>
+                        </span>
                       </div>
                     ))
                   ) : (
@@ -206,13 +203,17 @@ export default function FeedRegister() {
                   )}
                 </div>
               </div>
-              <Grid item style={{ marginTop: "10px", marginBottom: "20px" }} id="notice">
-              {!hide ?( <span>태그를 누르면 삭제됩니다</span>):(<span></span>)}
-              </Grid>
+              <Grid
+                id="notice"
+                style={{
+                  marginTop: "20px",
+                  marginBottom: "10px",
+                }}
+              ></Grid>
             </Grid>
           </Grid>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ marginTop: "50px" }}>
               <TextField
                 multiline
                 rows={8}
@@ -227,6 +228,13 @@ export default function FeedRegister() {
                   maxLength: 2000,
                 }}
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             </Grid>
           </Grid>

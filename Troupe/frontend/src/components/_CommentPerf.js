@@ -16,6 +16,7 @@ export default function CommentPerf(props) {
       data={props}
       modifyCommentFunc={modifyCommentFunc}
       deleteCommentFunc={deleteCommentFunc}
+      somethingNo={props.comment.pfNo}
     ></CommentTest>
   );
 }

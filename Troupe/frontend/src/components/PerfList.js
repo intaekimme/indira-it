@@ -29,11 +29,10 @@ export default function PerfListCard() {
   const [change, setChange] = React.useState(false);
   const [isHover, setIsHover] = React.useState(-1);
 
-  const changeFunction = (check) => {
-    setChange(check);
-  };
-
-  if (!performanceListQuery.isLoading && typeof performanceListQuery.data.pages[0]) {
+  if (
+    !performanceListQuery.isLoading &&
+    typeof performanceListQuery.data.pages[0]
+  ) {
     return (
       <Grid container spacing={4}>
         {performanceListQuery.data.pages.map((page) =>
@@ -122,7 +121,7 @@ export default function PerfListCard() {
                       onMouseEnter={() => setIsHover(datum.pfNo)}
                       onMouseLeave={() => setIsHover(-1)}
                     >
-                      <ul style={{listStyleType:'none'}}>
+                      <ul style={{ listStyleType: "none" }}>
                         <li># 공연제목:{datum.title}</li>
                         <li># 공연장소:{datum.location}</li>
                         <li># 공연기간:{datum.detailTime}</li>

@@ -21,12 +21,14 @@ export default function CommentForm(props) {
   const reviewRegister = () => {
     if (!sessionStorage.getItem("loginCheck")) {
       if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
-        window.location.href = `/login`;
+        sessionStorage.setItem("currentHref", window.location.href);
+      window.location.href = `/login`;
     } else {
       let data = {
         content: review,
       };
-      if (!props.feedNo) {
+      console.log(props.kind);
+      if (props.kind === "performance") {
         data = {
           content: review,
           parentCommentNo: 0,
@@ -34,9 +36,9 @@ export default function CommentForm(props) {
         apiClient.perfReviewNew(
           props.performanceNo,
           data,
-          props.refreshFunction
+          props.refreshFunction,
         );
-      } else {
+      } else if (props.kind === "feed") {
         apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
       }
       reset();
@@ -53,14 +55,14 @@ export default function CommentForm(props) {
         props.performanceNo,
         props.parentCommentNo,
         data,
-        props.refreshChildFunction
+        props.refreshChildFunction,
       );
     } else {
       apiClient.feedChildCommentNew(
         props.feedNo,
         props.parentCommentNo,
         data,
-        props.refreshChildFunction
+        props.refreshChildFunction,
       );
     }
     reset();
@@ -83,6 +85,14 @@ export default function CommentForm(props) {
         maxLength="500"
         onChange={onChange}
         InputProps={{ endAdornment: <WriteButton /> }}
+        sx={{
+          "& .MuiOutlinedInput-root.Mui-focused": {
+            "& > fieldset": {
+              borderColor: "#66cc66",
+            },
+          },
+          background: "white",
+        }}
       />
       <form>
         <input type="hidden" value={review}></input>

@@ -52,6 +52,8 @@ public final class MyConstant {
     public static final String FILE_SERVER_URL = "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/";
     public static final String EMAIL_SENDER_ADDRESS = "troupetest0001@gmail.com";
 
+    public static final String WEB_SITE_URL = "https://i7a804.p.ssafy.io";
+
     // 공연 관련
     public static final String PREV = "공연예정";
     public static final String ING = "공연중";

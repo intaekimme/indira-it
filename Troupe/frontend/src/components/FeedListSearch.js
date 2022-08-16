@@ -160,8 +160,7 @@ export default function FeedListSearch(props) {
         <PlusButton handleCard={fetchMore}></PlusButton>
       </Fragment>
     );
-  }
-  else {
-    return (<div></div>)
+  } else {
+    return <div></div>;
   }
 }

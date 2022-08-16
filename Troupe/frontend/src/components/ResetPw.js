@@ -84,6 +84,13 @@ export default function ResetPw() {
                   autoComplete="new-password"
                   autoFocus
                   style={{ backgroudColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
                 {pwLength ? (
                   <div></div>
@@ -104,6 +111,13 @@ export default function ResetPw() {
                   id="passwordCheck"
                   autoComplete="new-password"
                   style={{ backgroudColor: "white" }}
+                  sx={{
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                      "& > fieldset": {
+                        borderColor: "#66cc66",
+                      },
+                    },
+                  }}
                 />
                 {pwSame ? (
                   <div></div>
@@ -126,6 +140,13 @@ export default function ResetPw() {
                 autoComplete="email"
                 autoFocus
                 style={{ backgroundColor: "white" }}
+                sx={{
+                  "& .MuiOutlinedInput-root.Mui-focused": {
+                    "& > fieldset": {
+                      borderColor: "#66cc66",
+                    },
+                  },
+                }}
               />
             )}
             <Button
