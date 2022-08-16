@@ -12,7 +12,6 @@ import { useParams } from "react-router-dom";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 import CommentCount from "./CommentCount";
-import CommentPerf from "./CommentPerf";
 import Theme from "./Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
@@ -33,7 +32,7 @@ const Item = styled(Paper)(({ theme }) => ({
 function Carousel(props) {
   function CarouselItem(props) {
     const [open, setOpen] = React.useState(false);
-    console.log(props);
+    // console.log(props);
     function handleOpen() {
       setOpen(true);
     }
@@ -217,8 +216,9 @@ function PerfDetail() {
   useEffect(() => {
     setPerformanceNo(pfNo);
 
+    //  공연 기본 정보 로드
     apiClient.getPerfDetail(pfNo).then((data) => {
-      console.log(data);
+      // console.log(data);
       setCategory(data.category);
       setCreatedTime(data.createdTime);
       setDescription(data.description);
@@ -239,7 +239,7 @@ function PerfDetail() {
       setTitle(data.title);
       setUpdatedTime(data.updatedTime);
     });
-
+    //  공연 댓글 정보 로드
     apiClient.getPerfReviewList(pfNo).then((data) => {
       // console.log("return data 2 ", data);
       const json = [];
@@ -261,10 +261,6 @@ function PerfDetail() {
     });
   }, [pfNo]);
 
-  // console.log(price);
-  // console.log(`pfNo: ${pfNo}`);
-  // console.log(`performanceNo: ${performanceNo}`);
-  console.log(imgUrl);
   return (
     <ThemeProvider theme={Theme}>
       <div style={{ background: "#EEE3D0", fontFamily: "SBAggroB" }}>
@@ -466,7 +462,7 @@ function PerfDetail() {
                       label="상세설명"
                       value={description}
                       rows={6}
-                      style={{ marginTop: "10px", width: "600px" }}
+                      style={{ marginTop: "10px", width: "600px", textAlign:"left"}}
                     />
                   </li>
                   <br />
@@ -478,22 +474,9 @@ function PerfDetail() {
           <div style={{ margin: "12px" }}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <Item style={{ background: "#FFFF" }}>
-                  <CommentCount listSize={commentList.length} />
-                  {commentList.map((comment, index) => {
-                    return (
-                      <CommentPerf
-                        key={index}
-                        refreshFunction={refreshFunction}
-                        comment={comment}
-                      />
-                    );
-                  })}
-                  <CommentForm
-                    refreshFunction={refreshFunction}
-                    performanceNo={performanceNo}
-                  />
+                <Item>
                   <CommentList
+                    kind={"performance"}
                     refreshFunction={refreshFunction}
                     commentList={commentList}
                     performanceNo={performanceNo}

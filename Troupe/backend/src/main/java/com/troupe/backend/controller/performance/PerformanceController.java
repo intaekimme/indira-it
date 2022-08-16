@@ -203,9 +203,13 @@ public class PerformanceController {
     public ResponseEntity deleteReview(Principal principal,
                                        @PathVariable int pfNo,
                                        @PathVariable int reviewNo){
-        int memberNo = Integer.parseInt(principal.getName());
-        performanceReviewService.delete(pfNo, reviewNo);
-        return ResponseEntity.ok().build();
+        try{
+            int memberNo = Integer.parseInt(principal.getName());
+            performanceReviewService.delete(pfNo, reviewNo);
+            return ResponseEntity.ok().build();
+        }catch(NullPointerException e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     /**

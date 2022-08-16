@@ -16,14 +16,15 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SendIcon from "@mui/icons-material/Send";
+import CommentChild from "./CommentChild";
 
 export default function CommentTest(props) {
-  console.log(props);
   const [user, setUser] = useState(0);
   // 대댓글 목록
   const [childComments, setchildComments] = useState([]);
+  // const [isChild, setIsChild] = useState(false);
   // 대댓글 목록 가시 여부
-  const [isChild, setIsChild] = useState(false);
+  const [isChildReviewShow, setIsChildReviewShow] = useState(false);
   // 대댓글 등록 여부
   const [isChildReviewRegister, setIsChildReviewRegister] = useState(false);
 
@@ -38,47 +39,7 @@ export default function CommentTest(props) {
     setchildComments(props.data.comment.childComments);
     if (sessionStorage.getItem("loginCheck"))
       setUser(parseInt(sessionStorage.getItem("loginMember")));
-    // if (!props.feedNo) {
-    //   //  공연 후기 대댓글 목록 불러오기
-    //   apiClient
-    //     .getPerfChildReviewList(props.performanceNo, props.reviewNo)
-    //     .then((data) => {
-    //       const json = [];
-
-    //       data.forEach((item) => {
-    //         json.push({
-    //           memberNo: item.memberNo,
-    //           reviewNo: item.reviewNo,
-    //           profileImageUrl: item.profileImageUrl,
-    //           comment: item.comment,
-    //           nickname: item.nickname,
-    //           isRemoved: item.removed,
-    //           pfNo: item.pfNo,
-    //         });
-    //       });
-    //       setchildComments(json);
-    //     });
-    // } else {
-    //   //  피드 댓글의 대댓글 목록 불러오기
-    //   apiClient
-    //     .getFeedChildReviewList(props.feedNo, props.reviewNo)
-    //     .then((data) => {
-    //       console.log(data);
-    //       const json = [];
-
-    //       data.forEach((item) => {
-    //         json.push({
-    //           memberNo: item.memberNo,
-    //           reviewNo: item.commentNo,
-    //           profileImageUrl: item.profileImageUrl,
-    //           comment: item.content,
-    //           nickname: item.nickname,
-    //           isRemoved: item.removed,
-    //         });
-    //       });
-    //       setchildComments(json);
-    //     });
-    // }
+    
   }, []);
 
   function onChangeContent(event) {
@@ -87,7 +48,7 @@ export default function CommentTest(props) {
   //  답글 작성 클릭
   const childCommentRegister = (event) => {
     setCancel(!cancel);
-    setIsChild(true);
+    setIsChildReviewShow(true);
     if (!sessionStorage.getItem("loginCheck")) {
       if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
         window.location.href = `/login`;
@@ -101,7 +62,7 @@ export default function CommentTest(props) {
   };
   // 대댓글 리스트 가시 여부
   const childCommentList = () => {
-    setIsChild(!isChild);
+    setIsChildReviewShow(!isChildReviewShow);
   };
 
   //  댓글 수정
@@ -111,24 +72,8 @@ export default function CommentTest(props) {
       const data = {
         content: content,
       };
-      props
-        .modifyCommentFunc(props.somethingNo, props.reviewNo, data)
-        .then(() => {
-          setModify(!modify);
-        });
-      // if (!props.feedNo) {
-      //   apiClient
-      //     .perfReviewModify(props.performanceNo, props.reviewNo, data)
-      //     .then(() => {
-      //       setModify(!modify);
-      //     });
-      // } else {
-      //   apiClient
-      //     .feedCommentModify(props.feedNo, props.reviewNo, data)
-      //     .then(() => {
-      //       setModify(!modify);
-      //     });
-      // }
+      props.modifyCommentFunc(props.somethingNo, props.data.comment.reviewNo, data);
+      setModify(!modify);
     }
   };
 
@@ -141,23 +86,9 @@ export default function CommentTest(props) {
   //  댓글 삭제
   const deleteComment = () => {
     if (window.confirm("삭제하시겠습니까?")) {
-      props.deleteCommentFunc(props.somethingNo, props.reviewNo).then(() => {
-        setContent("삭제된 댓글입니다.");
-        setDeleted(true);
-      });
-      // if (!props.feedNo) {
-      //   apiClient
-      //     .perfReviewDelete(props.performanceNo, props.reviewNo)
-      //     .then(() => {
-      //       setContent("삭제된 댓글입니다.");
-      //       setDeleted(true);
-      //     });
-      // } else {
-      //   apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
-      //     setContent("삭제된 댓글입니다.");
-      //     setDeleted(true);
-      //   });
-      // }
+      props.deleteCommentFunc(props.somethingNo, props.data.comment.reviewNo);
+      setContent("삭제된 댓글입니다.");
+      setDeleted(true);
     }
   };
 
@@ -179,18 +110,22 @@ export default function CommentTest(props) {
   // isChildReviewRegister : ${isChildReviewRegister}
   // isChild : ${isChild}
   // `);
-  console.log(content);
-  console.log(childComments);
+  // console.log(content);
+  // console.log(childComments);
+  
   return (
     <Card sx={{ maxWidth: "100%", m: 2 }}>
       <CardHeader
         avatar={
           <Avatar
-            alt={props.data.comment.nickname}
-            src={props.data.comment.profileImageUrl}
+            alt={props.isChildComment ?
+              props.childComment.data.comment.nickmane : props.data.comment.nickname}
+            src={props.isChildComment ?
+              props.childComment.data.comment.profileImageUrl : props.data.comment.profileImageUrl}
           />
         }
-        subheader={props.data.comment.nickname}
+        subheader={props.isChildComment ?
+          props.childComment.data.comment.nickmane : props.data.comment.nickname}
         style={{ textAlign: "left" }}
       />
       <CardContent style={{ textAlign: "left" }}>
@@ -312,19 +247,21 @@ export default function CommentTest(props) {
             <CommentForm
               refreshChildFunction={refreshChildFunction}
               isChild={isChildReviewRegister}
-              performanceNo={props.performanceNo}
+              performanceNo={props.data.comment.pfNo}
               feedNo={props.feedNo}
-              parentCommentNo={props.reviewNo}
+              parentCommentNo={props.data.comment.reviewNo}
             />
           </Grid>
         )}
-        {/* {isChild && (childComments.map((comment, index) => {
-            <CommentTest
+        {isChildReviewShow && (childComments.map((item, index) => {
+          console.log(item);  
+          return (
+            <CommentChild
               refreshChildFunction={refreshChildFunction}
-              comment={comment}
-            />
+              childComment={item}
+            />)
         }))
-        } */}
+        }
       </Grid>
     </Card>
   );

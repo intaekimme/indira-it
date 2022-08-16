@@ -26,7 +26,8 @@ export default function CommentForm(props) {
       let data = {
         content: review,
       };
-      if (!props.feedNo) {
+      console.log(props.kind);
+      if (props.kind === "performance") {
         data = {
           content: review,
           parentCommentNo: 0,
@@ -36,7 +37,7 @@ export default function CommentForm(props) {
           data,
           props.refreshFunction
         );
-      } else {
+      } else if(props.kind === "feed"){
         apiClient.feedCommentNew(props.feedNo, data, props.refreshFunction);
       }
       reset();
@@ -83,6 +84,14 @@ export default function CommentForm(props) {
         maxLength="500"
         onChange={onChange}
         InputProps={{ endAdornment: <WriteButton /> }}
+        sx={{
+          "& .MuiOutlinedInput-root.Mui-focused": {
+            "& > fieldset": {
+              borderColor: "#66cc66",
+            },
+          },
+          background: "white"
+        }}
       />
       <form>
         <input type="hidden" value={review}></input>

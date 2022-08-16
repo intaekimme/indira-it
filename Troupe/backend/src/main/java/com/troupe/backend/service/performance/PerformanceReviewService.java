@@ -141,7 +141,7 @@ public class PerformanceReviewService {
                             .pfNo(performance.getId())
                             .memberNo(toMember.getMemberNo())
                             .nickname(toMember.getNickname())
-                            .profileImageUrl(MyConstant.PROFILE_IMAGE_URL + toMember.getProfileImageUrl())
+                            .profileImageUrl(MyConstant.FILE_SERVER_URL + toMember.getProfileImageUrl())
                             .comment(children.getContent())
                             .isRemoved(children.getRemoved())
                             .isModified(children.isModified())
