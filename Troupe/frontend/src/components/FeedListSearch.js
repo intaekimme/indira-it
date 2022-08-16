@@ -166,15 +166,7 @@ export default function FeedListSearch(props) {
             )),
           )}
         </Grid>
-
-<<<<<<< HEAD
-        <PlusButton
-          handleCard={FeedListSearchQuery.fetchNextPage}
-          disabled={!FeedListSearchQuery.hasNextPage}
-        ></PlusButton>
-=======
         <PlusButton handleCard={() => FeedListSearchQuery.fetchNextPage()}></PlusButton>
->>>>>>> jaehyun
       </Fragment>
     );
   }
