@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 application.yml
 aws.yml
+*.pem
+*.p12
 
 ### STS ###
 .apt_generated
