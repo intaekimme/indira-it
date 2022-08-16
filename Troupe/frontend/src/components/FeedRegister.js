@@ -86,6 +86,12 @@ export default function FeedRegister() {
             newNotice.className = stylesTag.alert;
             notice.appendChild(newNotice);
             return;
+          } else {
+            if (document.querySelector("#notice div") !== null) {
+              const notice = document.querySelector("#notice");
+              const div = document.querySelector("#notice div");
+              notice.removeChild(div);
+            }
           }
           setTagList((tags) => [...tags, tag]);
           setTag("");

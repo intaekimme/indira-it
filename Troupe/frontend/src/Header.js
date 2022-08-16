@@ -44,17 +44,17 @@ export default function Header() {
     "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/profile/defalut.png",
   );
   React.useEffect(() => {
-    if (login) {
-      apiClient.getMyinfo().then((data) => {
-        if (
-          data.profileImageUrl &&
-          data.profileImageUrl !== "" &&
-          data.profileImageUrl !== null
-        ) {
-          setProfileImageUrl(data.profileImageUrl);
-        }
-      });
-    }
+    // if (login) {
+    //   apiClient.getMyinfo().then((data) => {
+    //     if (
+    //       data.profileImageUrl &&
+    //       data.profileImageUrl !== "" &&
+    //       data.profileImageUrl !== null
+    //     ) {
+    //       setProfileImageUrl(data.profileImageUrl);
+    //     }
+    //   });
+    // }
   }, []);
   const logout = () => {
     window.sessionStorage.removeItem("loginCheck");

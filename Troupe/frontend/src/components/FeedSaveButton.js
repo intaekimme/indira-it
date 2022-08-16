@@ -28,10 +28,12 @@ export default function FeedSaveButton(props) {
       window.location.href = "/login";
     } else {
       const currentSave = save;
-      setSave(!save);
+      // setSave(!save);
       apiClient
         .feedSave(feedNo)
-        .then((data) => {})
+        .then((data) => {
+          setSave(data);
+        })
         .catch(() => {
           setSave(currentSave);
         });
