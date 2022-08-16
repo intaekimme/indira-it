@@ -70,10 +70,10 @@ export default function MainFeed() {
   };
 
   const handleShowSearch = () => {
-    if (tags.length === 0) {
-      alert("검색어를 입력해주세요.");
-      return;
-    }
+    // if (tags.length === 0) {
+    //   alert("검색어를 입력해주세요.");
+    //   return;
+    // }
     setShowAll(false);
     setShowSave(false);
     setShowFollow(false);
@@ -271,14 +271,35 @@ export default function MainFeed() {
 
       <div>
         <Container sx={{ py: 10 }} maxWidth="md">
-          {showFollow ? <FeedListFollow></FeedListFollow> : null}
-          {showSave ? <FeedListSave></FeedListSave> : null}
-          {showAll ? <FeedListAll></FeedListAll> : null}
+          {showFollow ? (
+            <FeedListFollow
+              showSearch={showSearch}
+              handleShowSearch={handleShowSearch}
+              setTagList={setTagList}
+            ></FeedListFollow>
+          ) : null}
+          {showSave ? (
+            <FeedListSave
+              showSearch={showSearch}
+              handleShowSearch={handleShowSearch}
+              setTagList={setTagList}
+            ></FeedListSave>
+          ) : null}
+          {showAll ? (
+            <FeedListAll
+              showSearch={showSearch}
+              handleShowSearch={handleShowSearch}
+              setTagList={setTagList}
+            ></FeedListAll>
+          ) : null}
           {showSearch ? (
             <FeedListSearch
               tags={tags}
               howManySearch={howManySearch}
               setHowManySearch={setHowManySearch}
+              showSearch={showSearch}
+              handleShowSearch={handleShowSearch}
+              setTagList={setTagList}
             ></FeedListSearch>
           ) : null}
         </Container>

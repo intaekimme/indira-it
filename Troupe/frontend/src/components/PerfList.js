@@ -1,16 +1,11 @@
 import React from "react";
-import { Button, stepClasses } from "@mui/material";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import Favorite from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import apiClient from "../apiClient";
 import { useParams } from "react-router-dom";
 import PlusButton from "./PlusButton";
@@ -65,26 +60,34 @@ export default function PerfListCard() {
                   </Typography> */}
                 <Box
                   style={{
-                    background: "pink",
+                    background: "#66cc66",
                     borderRadius: "10%",
                     position: "absolute",
                     top: "10px",
                     right: "5px",
+                    border: "2px solid white",
                     i: "3",
                     padding: "2px",
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                    color: "white",
                   }}
                 >
                   {datum.status}
                 </Box>
                 <Box
                   style={{
-                    background: "skyblue",
+                    background: "#ffd400",
                     borderRadius: "10%",
                     position: "absolute",
+                    border: "2px solid white",
                     top: "10px",
-                    right: "60px",
+                    left: "5px",
                     i: "3",
                     padding: "2px",
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                    color: "white",
                   }}
                 >
                   {datum.category}
@@ -97,27 +100,35 @@ export default function PerfListCard() {
                       objectFit: "cover",
                       width: "300px",
                       height: "300px",
-                      opacity: isHover===datum.pfNo? 0.5 : null,
-                      transform: isHover===datum.pfNo? 'scale(1.1)' : null,
-                      transition: '0.5s',
+                      opacity: isHover === datum.pfNo ? 0.5 : null,
+                      transform: isHover === datum.pfNo ? "scale(1.1)" : null,
+                      transition: "0.5s",
                     }}
                     image={Object.values(datum.image)[0]}
                     alt=""
-                    onMouseEnter={()=>setIsHover(datum.pfNo)}
-                    onMouseLeave={()=>setIsHover(-1)}
+                    onMouseEnter={() => setIsHover(datum.pfNo)}
+                    onMouseLeave={() => setIsHover(-1)}
                   ></CardMedia>
-                  {isHover === datum.pfNo ? 
-                    <div 
-                    style={{lineHeight:'300px', position:'absolute', height:'300px', width:'265px', color:'black', top:0}} 
-                    onMouseEnter={()=>setIsHover(datum.pfNo)}                     
-                    onMouseLeave={()=>setIsHover(-1)}
+                  {isHover === datum.pfNo ? (
+                    <div
+                      style={{
+                        lineHeight: "300px",
+                        position: "absolute",
+                        height: "300px",
+                        width: "265px",
+                        color: "black",
+                        top: 0,
+                      }}
+                      onMouseEnter={() => setIsHover(datum.pfNo)}
+                      onMouseLeave={() => setIsHover(-1)}
                     >
-                      <ul style={{listStyleType:'none', listStylePosition:'none'}}>
+                      <ul style={{listStyleType:'none'}}>
+                        <li># 공연제목:{datum.title}</li>
                         <li># 공연장소:{datum.location}</li>
                         <li># 공연기간:{datum.detailTime}</li>
                       </ul>
-                      </div> 
-                  : null}
+                    </div>
+                  ) : null}
                 </Link>
                 <CardActions
                   sx={{
