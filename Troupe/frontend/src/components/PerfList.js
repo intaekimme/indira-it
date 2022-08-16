@@ -112,7 +112,8 @@ export default function PerfListCard() {
                     onMouseEnter={()=>setIsHover(datum.pfNo)}                     
                     onMouseLeave={()=>setIsHover(-1)}
                     >
-                      <ul style={{listStyleType:'none', listStylePosition:'none'}}>
+                      <ul style={{listStyleType:'none'}}>
+                        <li># 공연제목:{datum.title}</li>
                         <li># 공연장소:{datum.location}</li>
                         <li># 공연기간:{datum.detailTime}</li>
                       </ul>

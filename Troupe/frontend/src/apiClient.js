@@ -453,10 +453,12 @@ const apiClient = {
 
   //전체 피드 목록 불러오기
   getAllFeedList: async ({ pageParam = 0 }) => {
+    const url = `/feed/list/all?pageNumber=${pageParam}`
     return await instance
-      .get(`/feed/list/all?pageNumber=${pageParam}`)
+      .get(url)
       .then((response) => {
         // console.log(response.data);
+        console.log(url)
         return response.data;
       })
       .catch((error) => {
@@ -495,19 +497,20 @@ const apiClient = {
       });
   },
 
-  feedTagSearch: async ({ pageParam = 0, tags = [] }) => {
-    let url = `/feed/search?pageNumber=${pageParam}`;
+  feedTagSearch: async (pageParam=0, tags) => {
+    let url = `/feed/search?pageNumber=` + pageParam;
     for (let i = 0; i < tags.length; i++) {
       url = url + `&tags=${tags[i]}`;
     }
     return await instance
       .get(url)
       .then((response) => {
+        console.log(url)
         console.log(response.data);
         return response.data;
       })
       .catch((error) => {
-        alert("검색 피드 불러오기 실패" + error);
+        alert("Feed Search Failed" + error);
       });
   },
 

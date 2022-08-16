@@ -167,7 +167,7 @@ export default function FeedDetail(props) {
                       <div
                         className={stylesTag.HashWrapInner}
                         key={id}
-                        onClick={() => searchTag(item.trim())}
+                        onClick={(item) => feedClickSearch(item)}
                       >
                         # {item}
                       </div>
