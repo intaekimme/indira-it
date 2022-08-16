@@ -204,6 +204,7 @@ export default function FeedDetail(props) {
                     refreshFunction={refreshFunction}
                     commentList={commentList}
                     feedNo={feedNo}
+                    kind={"feed"}
                   />
                 </Item>
               </Grid>
