@@ -28,6 +28,7 @@ export default function _MinhoCommentCard(props) {
   const [expanded, setExpanded] = React.useState(false);
   const [modify, setModify] = React.useState(false);
   const [no, setNo] = React.useState(0);
+  const [createTime, setCreateTime] = React.useState("");
 
   React.useEffect(() => {
     if (props.no && props.no != 0) {
@@ -36,6 +37,19 @@ export default function _MinhoCommentCard(props) {
       console.log(props.isRemoved);
     }
   }, [props.no]);
+
+  React.useEffect(() => {
+    console.log(props.createdTime);
+    if (props.createdTime) {
+      const date = new Date(props.createdTime);
+      const string = date.getFullYear() +
+        "/" + (date.getMonth() + 1) +
+        "/" + date.getDate() +
+        " " + date.getHours() +
+        ":" + date.getMinutes();
+      setCreateTime(string);
+    }
+  }, [props.createdTime]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -78,7 +92,7 @@ export default function _MinhoCommentCard(props) {
         //   </IconButton>
         // }
         title={props.memberInfo.nickname}
-        // subheader="September 14, 2016"
+        subheader={createTime}
       />
       {/* <CardMedia image="/static/images/cards/paella.jpg" title="Paella dish" /> */}
       <CardContent>

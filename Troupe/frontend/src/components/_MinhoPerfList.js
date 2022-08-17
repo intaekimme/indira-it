@@ -42,8 +42,9 @@ export default function _MinhoPerfList(props) {
           : <div></div>
         }
         {performanceListQuery.data.pages.map((page) =>
-          page.map((datum, index) => (
-            <Grid item key={`${datum.pfNo}${index}`} xs={12} sm={6} md={4}>
+          page.map((datum, index) => {
+            console.log(datum);
+            return (<Grid item key={`${datum.pfNo}${index}`} xs={12} sm={6} md={4}>
               <Card
                 sx={{
                   position: "relative",
@@ -97,24 +98,24 @@ export default function _MinhoPerfList(props) {
                 >
                   {datum.category}
                 </Box>
-								<Link href={`/perf/detail/${datum.pfNo}`}>
-									{datum.image ?
-										<CardMedia
-											component="img"
-											style={{
-												pb: 1,
-												objectFit: "cover",
-												width: "300px",
-												height: "300px",
-												opacity: isHover === datum.pfNo ? 0.5 : null,
-												transform: isHover === datum.pfNo ? "scale(1.1)" : null,
-												transition: "0.5s",
-											}}
-											image={Object.values(datum.image)[0]}
-											alt=""
-											onMouseEnter={() => setIsHover(datum.pfNo)}
-											onMouseLeave={() => setIsHover(-1)}
-										></CardMedia> : <div></div>}
+                <Link href={`/perf/detail/${datum.pfNo}`}>
+                  {datum.images ?
+                    <CardMedia
+                      component="img"
+                      style={{
+                        pb: 1,
+                        objectFit: "cover",
+                        width: "300px",
+                        height: "300px",
+                        opacity: isHover === datum.pfNo ? 0.5 : null,
+                        transform: isHover === datum.pfNo ? "scale(1.1)" : null,
+                        transition: "0.5s",
+                      }}
+                      image={Object.values(datum.images)[0]}
+                      alt=""
+                      onMouseEnter={() => setIsHover(datum.pfNo)}
+                      onMouseLeave={() => setIsHover(-1)}
+                    ></CardMedia> : <div></div>}
                   {isHover === datum.pfNo ? (
                     <div
                       style={{
@@ -128,7 +129,7 @@ export default function _MinhoPerfList(props) {
                       onMouseEnter={() => setIsHover(datum.pfNo)}
                       onMouseLeave={() => setIsHover(-1)}
                     >
-                      <ul style={{listStyleType:'none'}}>
+                      <ul style={{ listStyleType: 'none' }}>
                         <li># 공연제목:{datum.title}</li>
                         <li># 공연장소:{datum.location}</li>
                         <li># 공연기간:{datum.detailTime}</li>
@@ -152,8 +153,8 @@ export default function _MinhoPerfList(props) {
                   </Grid>
                 </CardActions>
               </Card>
-            </Grid>
-          )),
+            </Grid>);
+          }),
         )}
         <PlusButton
           handleCard={performanceListQuery.fetchNextPage}

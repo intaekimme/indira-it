@@ -26,17 +26,7 @@ export default function ProfileStage() {
       return;
     }
     apiClient.getPerformerTop100({ profileMemberNo: memberNo }).then((data) => {
-      let top100Fans = [...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, ...data.top100Fans,
-        ...data.top100Fans, ...data.top100Fans, data.top100Fans[0], data.top100Fans[0], data.top100Fans[0]];
+      let top100Fans = [...data.top100Fans];
       // const top100Fans = [...data.top100Fans];
       top100Fans = top100Fans.splice(0, 98);
       const length = top100Fans.length;
@@ -48,16 +38,15 @@ export default function ProfileStage() {
         top100Fans.splice(0, 3);
         if (length < 99) {
           let tempFans = [];
-          for (let i = 0; i < 99 - length;i++){
+          for (let i = 0; i < 99; i++){
+          // for (let i = 0; i < 99 - length;i++){
             tempFans.push(true);
           }
-          tempFans.push(...top100Fans.reverse());
+          // tempFans.push(...top100Fans.reverse());
           setPerformerTop100(tempFans);
         }
       }
       setPerformerTop3(top3Fans);
-      
-      // setPerformerTop100([true, ...top100Fans, ...top100Fans, ...top100Fans, ...top100Fans]);
     });
   }, [memberNo]);
   return (

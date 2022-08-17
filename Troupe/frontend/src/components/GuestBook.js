@@ -47,7 +47,6 @@ export default function GuestBook(props) {
     }
     apiClient.getGuestBookList(props.memberNo).then((data)=>{
       console.log(data);
-      alert(data);
       setGuestBookList(data);
     });
   }, [props.memberNo]);
@@ -62,7 +61,8 @@ export default function GuestBook(props) {
     apiClient.getMyGuestBook(props.memberNo).then((data) => {
       console.log(data);
       if(!data || data==="" || data.length==0){
-        return;
+        setExistMyGuestBook(false);
+        setMyGuestBookContent(data);
       }
       else {
         console.log(data);
@@ -84,18 +84,69 @@ export default function GuestBook(props) {
     if (!content || content==='') {
       return;
     }
-    apiClient.registGuestBook(props.memberNo, {content: content});
+    apiClient.registGuestBook(props.memberNo, {content: content}).then(() => {
+      apiClient.getGuestBookList(props.memberNo).then((data) => {
+        console.log(data);
+        setGuestBookList(data);
+      });
+      apiClient.getMyGuestBook(props.memberNo).then((data) => {
+        console.log(data);
+        if(!data || data==="" || data.length==0){
+          setExistMyGuestBook(false);
+          setMyGuestBookContent(data);
+        }
+        else {
+          console.log(data);
+          setExistMyGuestBook(true);
+          setMyGuestBookContent(data);
+        }
+      });
+    });
   };
   
   //방명록수정
   const modifyButton = (hostMemberNo, comment) => {
     console.log(hostMemberNo);
-    apiClient.modifyGuestBook(hostMemberNo, comment);
+    apiClient.modifyGuestBook(hostMemberNo, comment).then(() => {
+      apiClient.getGuestBookList(props.memberNo).then((data) => {
+        console.log(data);
+        setGuestBookList(data);
+      });
+      apiClient.getMyGuestBook(props.memberNo).then((data) => {
+        console.log(data);
+        if(!data || data==="" || data.length==0){
+          setExistMyGuestBook(false);
+          setMyGuestBookContent(data);
+        }
+        else {
+          console.log(data);
+          setExistMyGuestBook(true);
+          setMyGuestBookContent(data);
+        }
+      });
+    });
   };
   //방명록삭제
   const deleteButton = (hostMemberNo) => {
     console.log(hostMemberNo);
-    apiClient.deleteGuestBook(hostMemberNo);
+    apiClient.deleteGuestBook(hostMemberNo).then(() => {
+      apiClient.getGuestBookList(props.memberNo).then((data) => {
+        console.log(data);
+        setGuestBookList(data);
+      });
+      apiClient.getMyGuestBook(props.memberNo).then((data) => {
+        console.log(data);
+        if(!data || data==="" || data.length==0){
+          setExistMyGuestBook(false);
+          setMyGuestBookContent(data);
+        }
+        else {
+          console.log(data);
+          setExistMyGuestBook(true);
+          setMyGuestBookContent(data);
+        }
+      });
+    });
   };
   return (
     <div>
@@ -149,10 +200,11 @@ export default function GuestBook(props) {
                       kind="guestbook"
                       modifyButton={modifyButton}
                       deleteButton={deleteButton}
-                      isRemoved={ myGuestBookContent.removed }
+                      isRemoved={myGuestBookContent.removed}
                       comment={myGuestBookContent.content}
                       memberInfo={myGuestBookContent.visitorMemberInfoResponse}
                       no={myGuestBookContent.hostMemberInfoResponse.memberNo}
+                      createdTime={myGuestBookContent.createdTime}
                     />
                   </Grid>
                 </Grid>
@@ -238,6 +290,7 @@ export default function GuestBook(props) {
                     comment={guestBook.content}
                     memberInfo={guestBook.visitorMemberInfoResponse}
                     no={guestBook.hostMemberInfoResponse.memberNo}
+                    createdTime={guestBook.createdTime}
                   />
                 </Grid>
               ))}

@@ -19,7 +19,7 @@ const apiClient = {
       })
       .then((response) => {
         console.log(response.data);
-        alert("토큰 새로고침 성공 : " + response.data);
+        // alert("토큰 새로고침 성공 : " + response.data);
         if (!response.data || response.data === "") {
           return false;
         } else {
@@ -29,7 +29,7 @@ const apiClient = {
       })
       .catch((error) => {
         console.log(error);
-        alert("토큰 새로고침 실패하였습니다");
+        // alert("토큰 새로고침 실패하였습니다");
         return false;
       });
   },

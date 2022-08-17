@@ -5,9 +5,29 @@ import Grid from "@mui/material/Grid";
 import Stage from "../img/stage.jpg";
 import Avatar from "./Avatar";
 export default function LikeabilityBar(props) {
-  const likeabilityData = props.likeabilityData;
-  // 호감도 경험치
-  const exp = likeabilityData.exp;
+  //호감도 데이터
+  const [likeabilityData, setLikeabilityData] = React.useState({});
+  //호감도 경험치
+  const [exp, setExp] = React.useState(0);
+  //닉네임 경험치
+  const [nickname, setNickname] = React.useState("");
+  React.useEffect(() => {
+    console.log(props.likeabilityData);
+    console.log(props.likeabilityData.avatarResponse);
+    console.log(props.likeabilityData.memberInfoResponse);
+    
+    console.log(props.likeabilityData.likabilityResponse.exp);
+    console.log(props.likeabilityData.memberInfoResponse.nickname);
+    if (props.likeabilityData) {
+      setLikeabilityData(props.likeabilityData);
+      setExp(props.likeabilityData.likabilityResponse.exp);
+      setNickname(props.likeabilityData.memberInfoResponse.nickname);
+    }
+  }, [props.likeabilityData]);
+  // const likeabilityData = props.likeabilityData;
+  // // 호감도 경험치
+  // const exp = likeabilityData.exp;
+  
   // 아바타 url
   // const [avatarUrl, setAvatarUrl] = React.useState([]);
   // React.useEffect(() => {
@@ -72,6 +92,15 @@ export default function LikeabilityBar(props) {
               height: `${barHeight}px`,
             }}
           ></Box>
+          <div
+          style={{
+            position: "absolute",
+            top: `${barHeight*2}px`,
+            width: "90%",
+            height: `${barHeight}px`,
+            }}>
+            {nickname} 님
+          </div>
         </Grid>
         <Grid item xs={2}>
           <div>

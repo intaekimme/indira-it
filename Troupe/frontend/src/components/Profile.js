@@ -35,10 +35,12 @@ function Profile(props) {
   const [memberInfo, setMemberInfo] = React.useState("");
   //memberInfo 화면분할 update 시 불러오기
   React.useEffect(() => {
-    apiClient.getMemberInfo(memberNo).then((data) => {
-      setMemberInfo(data);
-      console.log(data);
-    });
+    if (memberNo) {
+      apiClient.getMemberInfo(memberNo).then((data) => {
+        setMemberInfo(data);
+        console.log(data);
+      });
+    }
   }, [memberNo]);
 
   //공연자/일반 판단 초기화
@@ -121,7 +123,7 @@ function Profile(props) {
             }}
           >
             {/* Stage start */}
-            <ProfileStage />
+            <ProfileStage memberNickname={ memberInfo.nickname } memberNo={memberNo}/>
             <Button
               onClick={modifyAvatar}
               style={{

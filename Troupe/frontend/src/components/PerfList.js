@@ -36,116 +36,118 @@ export default function PerfListCard() {
     return (
       <Grid container spacing={4}>
         {performanceListQuery.data.pages.map((page) =>
-          page.map((datum) => (
-            <Grid item key={datum.pfNo} xs={12} sm={6} md={4}>
-              <Card
-                sx={{
-                  position: "relative",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-                elevation={0}
-                style={{
-                  fontSize: "16px",
-                  fontFamily: "SBAggroB",
-                  color: "black",
-                  boxShadow:
-                    "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.5)",
-                }}
-              >
-                {/* <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
+          page.map((datum) => {
+            console.log(datum);
+            return (
+              <Grid item key={datum.pfNo} xs={12} sm={6} md={4}>
+                <Card
+                  sx={{
+                    position: "relative",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                  elevation={0}
+                  style={{
+                    fontSize: "16px",
+                    fontFamily: "SBAggroB",
+                    color: "black",
+                    boxShadow:
+                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.5)",
+                  }}
+                >
+                  {/* <Typography gutterBottom style={{fontSize:'20px', fontFamily:'IBM Plex Sans KR'}} component="span">
                     <img src={data.image} alt='' style={{borderRadius:'70%', objectFit:'cover', height:'20px', width:'20px'}}></img>
                   </Typography> */}
-                <Box
-                  style={{
-                    background: "#66cc66",
-                    borderRadius: "10%",
-                    position: "absolute",
-                    top: "10px",
-                    right: "5px",
-                    border: "2px solid white",
-                    i: "3",
-                    padding: "2px",
-                    boxShadow:
-                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
-                    color: "white",
-                  }}
-                >
-                  {datum.status}
-                </Box>
-                <Box
-                  style={{
-                    background: "#ffd400",
-                    borderRadius: "10%",
-                    position: "absolute",
-                    border: "2px solid white",
-                    top: "10px",
-                    left: "5px",
-                    i: "3",
-                    padding: "2px",
-                    boxShadow:
-                      "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
-                    color: "white",
-                  }}
-                >
-                  {datum.category}
-                </Box>
-                <Link href={`/perf/detail/${datum.pfNo}`}>
-                  <CardMedia
-                    component="img"
+                  <Box
                     style={{
-                      pb: 1,
-                      objectFit: "cover",
-                      width: "340px",
-                      height: "300px",
-                      opacity: isHover === datum.pfNo ? 0.5 : null,
-                      transform: isHover === datum.pfNo ? "scale(1.1)" : null,
-                      transition: "0.5s",
+                      background: "#66cc66",
+                      borderRadius: "10%",
+                      position: "absolute",
+                      top: "10px",
+                      right: "5px",
+                      border: "2px solid white",
+                      i: "3",
+                      padding: "2px",
+                      boxShadow:
+                        "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                      color: "white",
                     }}
-                    image={Object.values(datum.image)[0]}
-                    alt=""
-                    onMouseEnter={() => setIsHover(datum.pfNo)}
-                    onMouseLeave={() => setIsHover(-1)}
-                  ></CardMedia>
-                  {isHover === datum.pfNo ? (
-                    <div
+                  >
+                    {datum.status}
+                  </Box>
+                  <Box
+                    style={{
+                      background: "#ffd400",
+                      borderRadius: "10%",
+                      position: "absolute",
+                      border: "2px solid white",
+                      top: "10px",
+                      left: "5px",
+                      i: "3",
+                      padding: "2px",
+                      boxShadow:
+                        "0 10px 35px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1)",
+                      color: "white",
+                    }}
+                  >
+                    {datum.category}
+                  </Box>
+                  <Link href={`/perf/detail/${datum.pfNo}`}>
+                    <CardMedia
+                      component="img"
                       style={{
-                        position: "absolute",
+                        pb: 1,
+                        objectFit: "cover",
+                        width: "340px",
                         height: "300px",
-                        width: "265px",
-                        color: "black",
-                        top: '100px',
+                        opacity: isHover === datum.pfNo ? 0.5 : null,
+                        transform: isHover === datum.pfNo ? "scale(1.1)" : null,
+                        transition: "0.5s",
                       }}
+                      image={Object.values(datum.image)[0]}
+                      alt=""
                       onMouseEnter={() => setIsHover(datum.pfNo)}
                       onMouseLeave={() => setIsHover(-1)}
-                    >
-                      <ul style={{ listStyleType: "none" }}>
-                        <li># 공연제목:{datum.title}</li>
-                        <li># 공연장소:{datum.location}</li>
-                        <li># 공연기간:{datum.detailTime}</li>
-                      </ul>
-                    </div>
-                  ) : null}
-                </Link>
-                <CardActions
-                  sx={{
-                    justifyContent: "space-between",
-                    margin: "5px",
-                    padding: "0px",
-                  }}
-                >
-                  <Grid></Grid>
-                  <Grid mr={-3}>
-                    <PerfSaveButton
-                      change={change}
-                      pfNo={datum.pfNo}
-                    ></PerfSaveButton>
-                  </Grid>
-                </CardActions>
-              </Card>
-            </Grid>
-          )),
+                    ></CardMedia>
+                    {isHover === datum.pfNo ? (
+                      <div
+                        style={{
+                          position: "absolute",
+                          height: "300px",
+                          width: "265px",
+                          color: "black",
+                          top: '100px',
+                        }}
+                        onMouseEnter={() => setIsHover(datum.pfNo)}
+                        onMouseLeave={() => setIsHover(-1)}
+                      >
+                        <ul style={{ listStyleType: "none" }}>
+                          <li># 공연제목:{datum.title}</li>
+                          <li># 공연장소:{datum.location}</li>
+                          <li># 공연기간:{datum.detailTime}</li>
+                        </ul>
+                      </div>
+                    ) : null}
+                  </Link>
+                  <CardActions
+                    sx={{
+                      justifyContent: "space-between",
+                      margin: "5px",
+                      padding: "0px",
+                    }}
+                  >
+                    <Grid></Grid>
+                    <Grid mr={-3}>
+                      <PerfSaveButton
+                        change={change}
+                        pfNo={datum.pfNo}
+                      ></PerfSaveButton>
+                    </Grid>
+                  </CardActions>
+                </Card>
+              </Grid>);
+          }),
         )}
         <PlusButton
           handleCard={performanceListQuery.fetchNextPage}
