@@ -146,12 +146,25 @@ public class MemberService implements UserDetailsService {
         }
 
         // 멤버 객체 수정 및 DB 반영
-        foundMember.setEmail(memberModifyForm.getEmail());
-        foundMember.setPassword(memberModifyForm.getPassword());
-        foundMember.setNickname(memberModifyForm.getNickname());
-        foundMember.setDescription(memberModifyForm.getDescription());
-        foundMember.setMemberType(memberModifyForm.getMemberType());
-        foundMember.setProfileImageUrl(imageUrl);
+        if (memberModifyForm.getEmail() != null && !memberModifyForm.getEmail().isEmpty()) {
+            foundMember.setEmail(memberModifyForm.getEmail());
+        }
+        if (memberModifyForm.getPassword() != null && !memberModifyForm.getPassword().isEmpty()) {
+            foundMember.setPassword(memberModifyForm.getPassword());
+        }
+        if (memberModifyForm.getNickname() != null && !memberModifyForm.getNickname().isEmpty()) {
+            foundMember.setNickname(memberModifyForm.getNickname());
+        }
+        if (memberModifyForm.getDescription() != null && !memberModifyForm.getDescription().isEmpty()) {
+            foundMember.setDescription(memberModifyForm.getDescription());
+        }
+        if (memberModifyForm.getMemberType() != null) {
+            foundMember.setMemberType(memberModifyForm.getMemberType());
+        }
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            foundMember.setProfileImageUrl(imageUrl);
+        }
+
         memberRepository.save(foundMember);
 
         return foundMember;
