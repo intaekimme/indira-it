@@ -111,12 +111,11 @@ export default function PerfListCard() {
                   {isHover === datum.pfNo ? (
                     <div
                       style={{
-                        lineHeight: "300px",
                         position: "absolute",
                         height: "300px",
                         width: "265px",
                         color: "black",
-                        top: 0,
+                        top: '100px',
                       }}
                       onMouseEnter={() => setIsHover(datum.pfNo)}
                       onMouseLeave={() => setIsHover(-1)}
