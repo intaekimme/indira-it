@@ -152,6 +152,7 @@ public class MemberService implements UserDetailsService {
         foundMember.setDescription(memberModifyForm.getDescription());
         foundMember.setMemberType(memberModifyForm.getMemberType());
         foundMember.setProfileImageUrl(imageUrl);
+        memberRepository.save(foundMember);
 
         return foundMember;
     }
