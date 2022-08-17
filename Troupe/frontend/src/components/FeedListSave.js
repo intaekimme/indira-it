@@ -13,10 +13,14 @@ import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import FeedDetail from "./FeedDetail";
 import PlusButton from "./PlusButton";
+import stylesTag from "../css/tag.module.css";
+
 export default function FeedListSave(props) {
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   const [change, setChange] = React.useState(false);
+  const [isHover, setIsHover] = React.useState(-1);
+
   function handleOpen(no) {
     setOpen(true);
     setFeedNo(no);
@@ -98,13 +102,41 @@ export default function FeedListSave(props) {
                     sx={{
                       pb: 1,
                       objectFit: "cover",
-                      width: "300px",
+                      width: "340px",
                       height: "300px",
+                      opacity: isHover === datum.feedNo ? 0.5 : null,
+                      transform: isHover === datum.feedNo ? "scale(1.1)" : null,
+                      transition: "0.5s",
                     }}
                     image={Object.values(datum.images)[0]}
                     alt=""
                     onClick={() => handleOpen(datum.feedNo)}
+                    onMouseEnter={() => setIsHover(datum.feedNo)}
+                    onMouseLeave={() => setIsHover(-1)}
                   ></CardMedia>
+                  {isHover === datum.feedNo ? (
+                    <div
+                      style={{
+                        marginLeft: "0.5em",
+                        display: "inline",
+                        position: "absolute",
+                        height: "300px",
+                        width: "265px",
+                        color: "black",
+                        top: "150px",
+                      }}
+                      onMouseEnter={() => setIsHover(datum.feedNo)}
+                      onMouseLeave={() => setIsHover(-1)}
+                      onClick={() => handleOpen(datum.feedNo)}
+                    >
+                      {" "}
+                      <div className={stylesTag.HashWrapOuter}>
+                        {datum.tags.map((tag) => (
+                          <div className={stylesTag.HashWrapInner}>#{tag}</div>
+                        ))}{" "}
+                      </div>
+                    </div>
+                  ) : null}
                   <CardActions
                     sx={{
                       justifyContent: "space-between",

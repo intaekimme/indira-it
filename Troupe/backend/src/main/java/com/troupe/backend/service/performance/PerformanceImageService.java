@@ -67,8 +67,8 @@ public class PerformanceImageService {
     public void updatePerformanceImage(PerformanceModifyForm performanceModifyForm, Performance performance)
     throws IOException {
         //  삭제할 목록이 존재하면
-        if(performanceModifyForm.getRemovedImages() != null){
-            List<Integer> removedImages = performanceModifyForm.getRemovedImages();
+        if(performanceModifyForm.getImageNo() != null){
+            List<Integer> removedImages = performanceModifyForm.getImageNo();
             for(Integer imageNo : removedImages){
                 //  S3에서 해당 이미지들 삭제하고
                 PerformanceImage deleteImage = performanceImageRepository.findById(imageNo).get();
@@ -78,8 +78,8 @@ public class PerformanceImageService {
             }
         }
         //  추가할 이미지들이 존재하면
-        if(performanceModifyForm.getNewImages() != null){
-            List<MultipartFile> newImages = performanceModifyForm.getNewImages();
+        if(performanceModifyForm.getImages() != null){
+            List<MultipartFile> newImages = performanceModifyForm.getImages();
             //  url을 생성 후
             List<String> urlList = s3FileUploadService.upload(newImages, "performance");
             //  엔티티 변환 후 저장

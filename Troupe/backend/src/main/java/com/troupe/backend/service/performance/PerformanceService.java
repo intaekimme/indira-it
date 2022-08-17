@@ -320,6 +320,12 @@ public class PerformanceService {
 //  profile service
 //  =================================================================================
 
+    /**
+     * 프로필 유저가 등록한 공연 목록 불러오기
+     * @param memberNo
+     * @param pageable
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<ProfilePfResponse> findRegisteredList(int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
@@ -340,13 +346,21 @@ public class PerformanceService {
             else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
             else if(now.after(p.getEndDate())) sb.append(MyConstant.END);
 
+            Map<Integer, String> images = performanceImageService.findPerformanceImagesByPerformance(p);
+
             profilePfResponseList.add(ProfilePfResponse.builder()
-                    .perfPoster(p.getPosterUrl())
-                    .perfName(p.getTitle())
-                    .perfCategory(p.getCategory().getSmallCategory())
-                    .perfStatus(sb.toString())
-                    .perfStartDate(p.getStartDate())
-                    .perfEndDate(p.getEndDate())
+                    .pfNo(p.getId())
+                    .memberNo(member.getMemberNo())
+                    .nickname(member.getNickname())
+                    .title(p.getTitle())
+                    .description(p.getDescription())
+                    .images(images)
+                    .poster(p.getPosterUrl())
+                    .category(p.getCategory().getSmallCategory())
+                    .status(sb.toString())
+                    .runtime(p.getRuntime())
+                    .startDate(p.getStartDate())
+                    .endDate(p.getEndDate())
                     .build()
             );
         }

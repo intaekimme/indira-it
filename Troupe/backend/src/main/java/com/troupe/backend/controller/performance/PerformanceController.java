@@ -55,7 +55,7 @@ public class PerformanceController {
         log.info(performanceform.toString());
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.register(memberNo, performanceform);
-        return ResponseEntity.created(URI.create(MyConstant.REDIRECT+"/perf/list")).build();
+        return ResponseEntity.created(URI.create(MyConstant.WEB_SITE_URL+"/perf/list")).build();
     }
 
 
@@ -72,6 +72,8 @@ public class PerformanceController {
                                  @PathVariable int pfNo,
                                  @ModelAttribute @Valid PerformanceModifyForm performanceModifyForm)
             throws Exception {
+
+        log.info(performanceModifyForm.toString());
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.modify(memberNo, pfNo, performanceModifyForm);
         return ResponseEntity.ok().build();
@@ -269,13 +271,13 @@ public class PerformanceController {
      */
     @Operation(summary = "프로필, 유저의 공연 북마크 목록", description = "파라미터: 유저 프로필 번호")
     @GetMapping("/{profileMemberNo}/saveperf/list")
-    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(Principal principal,
+    public ResponseEntity<List<ProfilePfResponse>> profilePfSaveList(Principal principal,
                                                                          @PathVariable int profileMemberNo,
                                                                          int pageNumber){
         //  profile service
         PageRequest pageRequest = PageRequest.of(pageNumber,6);
-        List<ProfilePfSaveResponse> profileSaveResponseList = performanceSaveService.findSavedList(profileMemberNo, pageRequest);
-        return ResponseEntity.ok().body(profileSaveResponseList);
+        List<ProfilePfResponse> profileResponseList = performanceSaveService.findSavedList(profileMemberNo, pageRequest);
+        return ResponseEntity.ok().body(profileResponseList);
     }
 
     /**

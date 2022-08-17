@@ -1387,7 +1387,7 @@ const apiClient = {
     return instance
       .get(`/perf/${performanceNo}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         console.log("공연상세 불러 오기 성공");
         return response.data;
       })
@@ -1453,7 +1453,7 @@ const apiClient = {
     return instance
       .get(`/perf/${performanceNo}/review/list`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         console.log("불러오기 성공");
         // alert("불러오기 성공");
         return response.data;
@@ -1470,7 +1470,7 @@ const apiClient = {
     return instance
       .get(`/perf/${performanceNo}/review/${reviewNo}/list`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         console.log("대댓글 불러오기 성공");
         return response.data;
       })

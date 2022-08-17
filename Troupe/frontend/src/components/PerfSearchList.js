@@ -105,7 +105,7 @@ export default function PerfSearchList(props) {
                   style={{
                     pb: 1,
                     objectFit: "cover",
-                    width: "300px",
+                    width: "340px",
                     height: "300px",
                     opacity: isHover === datum.pfNo ? 0.5 : null,
                     transform: isHover === datum.pfNo ? "scale(1.1)" : null,
@@ -119,12 +119,11 @@ export default function PerfSearchList(props) {
                 {isHover === datum.pfNo ? (
                   <div
                     style={{
-                      lineHeight: "300px",
                       position: "absolute",
                       height: "300px",
                       width: "265px",
                       color: "black",
-                      top: 0,
+                      top: '100px',
                     }}
                     onMouseEnter={() => setIsHover(datum.pfNo)}
                     onMouseLeave={() => setIsHover(-1)}
