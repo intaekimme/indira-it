@@ -344,6 +344,60 @@ const apiClient = {
         return false;
       });
   },
+  //방명록 수정
+  modifyGuestBook: (hostMemberNo, comment) => {
+    return instance
+      .patch(`/guestbook/${parseInt(hostMemberNo)}`, {content: comment}, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        console.log("방명록이 수정되었습니다");
+        // alert("방명록이 수정되었습니다" + response);
+        return true;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        console.log(error);
+        console.log(hostMemberNo + " 방명록 수정 실패");
+        // alert("방명록 수정 실패 :" + error + hostMemberNo);
+        return false;
+      });
+  },
+  //방명록 삭제
+  deleteGuestBook: (hostMemberNo) => {
+    return instance
+      .patch(`/guestbook/${parseInt(hostMemberNo)}/del`, {} ,{
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        console.log("방명록이 삭제되었습니다");
+        // alert("방명록이 삭제되었습니다" + response.data);
+        return true;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        console.log(error);
+        console.log("방명록 삭제 실패");
+        // alert("방명록 삭제 실패 + error);
+        return false;
+      });
+  },
 
   //팔로워 수 확인
   getFollowerCount: (profileMemberNo) => {

@@ -50,8 +50,11 @@ export default function _MinhoFeedList(props) {
   if (!FeedListAllQuery.isLoading && typeof FeedListAllQuery.data.pages[0]) {
     return (
       <Fragment>
-				<Grid container spacing={4}>
-					{ FeedListAllQuery.data.pages.length==0 ? <div>리스트가 없습니다</div> : <div></div>}
+        <Grid container spacing={4}>
+          {FeedListAllQuery.data.pages.length == 0 || !FeedListAllQuery.data.pages[0] || FeedListAllQuery.data.pages[0].length == 0 ?
+            <Grid item xs={12} style={{position:"relative", height:"100px"}}><div style={{position:"relative", top:"50%"}}>리스트가 없습니다</div></Grid>
+            : <div></div>
+          }
           {FeedListAllQuery.data.pages[0] ? FeedListAllQuery.data.pages.map((page) =>
             page.map((datum) => (
               <Grid item key={datum.feedNo} xs={12} sm={6} md={4}>

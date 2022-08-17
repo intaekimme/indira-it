@@ -35,5 +35,5 @@ select * from tb_tag;
 select * from tb_member;
 select * from tb_user_character;
 select * from tb_user_guestbook;
-
+delete from tb_member where email="tkdfhralsgh@naver.com";
 desc tb_user;

@@ -1,5 +1,6 @@
 import React from "react";
 import apiClient from "../apiClient";
+import _MinhoCommentCard from "./_MinhoCommentCard";
 
 import Modal from '@mui/material/Modal';
 import Card from '@mui/material/Card';
@@ -33,6 +34,7 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
+  overflow:'scroll',
 };
 
 export default function GuestBook(props) {
@@ -63,6 +65,7 @@ export default function GuestBook(props) {
         return;
       }
       else {
+        console.log(data);
         setExistMyGuestBook(true);
         setMyGuestBookContent(data);
       }
@@ -84,6 +87,16 @@ export default function GuestBook(props) {
     apiClient.registGuestBook(props.memberNo, {content: content});
   };
   
+  //방명록수정
+  const modifyButton = (hostMemberNo, comment) => {
+    console.log(hostMemberNo);
+    apiClient.modifyGuestBook(hostMemberNo, comment);
+  };
+  //방명록삭제
+  const deleteButton = (hostMemberNo) => {
+    console.log(hostMemberNo);
+    apiClient.deleteGuestBook(hostMemberNo);
+  };
   return (
     <div>
       <Button
@@ -114,14 +127,35 @@ export default function GuestBook(props) {
         aria-describedby="modal-modal-description"
         style={{ width: "100%", height: "100%" }}
       >
-        <Box sx={style}>
+        <Box
+          sx={style}
+          className={style}
+          style={{ padding: 20, width: "75%", height: "80%" }}
+        >
           <Typography id="modal-modal-title" component="span">
             {sessionStorage.getItem("loginCheck") === "true" ? (
               existMyGuestBook ? (
-                <div>
-                  <br />
-                  {myGuestBookContent.content}
-                </div>
+                <Grid
+                  container
+                  item
+                  xs={12}
+                  style={{ padding: 10, marginBottom: 20 }}
+                >
+                  <Grid item xs={12}>
+                    내가 쓴 방명록
+                  </Grid>
+                  <Grid item xs={12}>
+                    <_MinhoCommentCard
+                      kind="guestbook"
+                      modifyButton={modifyButton}
+                      deleteButton={deleteButton}
+                      isRemoved={ myGuestBookContent.isRemoved }
+                      comment={myGuestBookContent.content}
+                      memberInfo={myGuestBookContent.visitorMemberInfoResponse}
+                      no={myGuestBookContent.hostMemberInfoResponse.memberNo}
+                    />
+                  </Grid>
+                </Grid>
               ) : (
                 <form
                   onSubmit={registGuestBook}
@@ -168,7 +202,14 @@ export default function GuestBook(props) {
                 </form>
               )
             ) : (
-              <div></div>
+              <Button
+                onClick={() => {
+                  sessionStorage.setItem("currentHref", window.location.href);
+                  window.location.href = "/login";
+                }}
+              >
+                로그인 후 방명록 작성
+              </Button>
             )}
           </Typography>
           <Typography
@@ -182,15 +223,25 @@ export default function GuestBook(props) {
               xs={12}
               style={{ padding: 10, textAlign: "right" }}
             > */}
+            <Grid container item xs={12} style={{ padding: 10 }}>
+              <Grid item xs={12}>
+                {props.memberNickname} 님의 방명록
+              </Grid>
               {guestBookList.map((guestBook, index) => (
-                <div key={`guestBook${index}`}>
-                  {guestBook.visitorMemberInfoResponse.memberNo} {guestBook.visitorMemberInfoResponse.nickname}
-                  <br />
-                  {guestBook.content}
-                  <br />
-                  {guestBook.visitorMemberInfoResponse.profileImageUrl}
-                </div>
+                <Grid item xs={12} style={{ margin: 10 }}>
+                  <_MinhoCommentCard
+                    key={`guestBook${index}`}
+                    kind="guestbook"
+                    modifyButton={modifyButton}
+                    deleteButton ={deleteButton}
+                    isRemoved={ guestBook.isremoved }
+                    comment={guestBook.content}
+                    memberInfo={guestBook.visitorMemberInfoResponse}
+                    no={guestBook.hostMemberInfoResponse.memberNo}
+                  />
+                </Grid>
               ))}
+            </Grid>
             {/* </Grid> */}
             {/* <Card>
               <CardHeader
