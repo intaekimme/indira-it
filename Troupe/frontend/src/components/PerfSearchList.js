@@ -105,7 +105,7 @@ export default function PerfSearchList(props) {
                   style={{
                     pb: 1,
                     objectFit: "cover",
-                    width: "300px",
+                    width: "340px",
                     height: "300px",
                     opacity: isHover === datum.pfNo ? 0.5 : null,
                     transform: isHover === datum.pfNo ? "scale(1.1)" : null,

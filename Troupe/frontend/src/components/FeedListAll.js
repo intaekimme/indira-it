@@ -105,7 +105,7 @@ export default function FeedListAll(props) {
                     sx={{
                       pb: 1,
                       objectFit: "cover",
-                      width: "300px",
+                      width: "340px",
                       height: "300px",
                       opacity: isHover === datum.feedNo ? 0.5 : null,
                       transform: isHover === datum.feedNo ? "scale(1.1)" : null,
