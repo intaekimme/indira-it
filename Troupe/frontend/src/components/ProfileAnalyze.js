@@ -58,14 +58,17 @@ export default function ProfileAnalyze(props) {
     //이 member의 관심카테고리
     apiClient.getInterestCategory(memberNo).then((data) => {
       console.log(data);
-      if (data[0]) {
+      if (data.interestCategoryList && data.interestCategoryList[0]) {
         let counts = [];
         let totalCount = 0;
-        data.map((object) => {
+        data.interestCategoryList.map((object) => {
           counts.push(object.count);
           totalCount += object.count;
         });
-        for (let i = 0; i < counts.length; i++){
+        for (let i = counts.length; i < 8; i++) {
+          counts.push(0);
+        }
+        for (let i = 0; i < counts.length; i++) {
           counts[i] = counts[i] * 100 / totalCount;
         }
         console.log(counts);
@@ -79,7 +82,7 @@ export default function ProfileAnalyze(props) {
       //   count : int
       // }
       // setInterestCategory(data);
-    })
+    });
     //이 member의 호감도 data
     apiClient
       .getMyLikeabilityData({ profileMemberNo: memberNo })

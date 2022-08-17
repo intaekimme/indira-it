@@ -38,8 +38,8 @@ export default function _MinhoPerfList(props) {
     return (
 			<Grid container spacing={4}>
         {performanceListQuery.data.pages.length == 0 || !performanceListQuery.data.pages[0] || performanceListQuery.data.pages[0].length == 0 ?
-          <Grid item xs={12} style={{position:"relative", height:"100px"}}><div style={{position:"relative", top:"50%"}}>리스트가 없습니다</div></Grid>
-          : <div></div>
+          () => { console.log(performanceListQuery.data.pages); return <Grid item xs={12} style={{ position: "relative", height: "100px" }}><div style={{ position: "relative", top: "50%" }}>리스트가 없습니다</div></Grid> }
+          : () => { console.log(performanceListQuery.data.pages); return <div></div> }
         }
         {performanceListQuery.data.pages.map((page) =>
           page.map((datum, index) => {

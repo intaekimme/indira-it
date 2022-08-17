@@ -160,6 +160,8 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         console.log("비밀번호 초기화를 위해 이메일을 전송하였습니다.");
+        sessionStorage.setItem("currentHref", "/");
+        window.location.href = "/email";
         // alert("비밀번호 초기화를 위해 이메일을 전송하였습니다." + response.data);
         return true;
       })
@@ -178,6 +180,7 @@ const apiClient = {
         console.log(response);
         console.log("비밀번호가 초기화 되었습니다.");
         // alert("비밀번호가 초기화되었습니다." + response.data);
+        sessionStorage.setItem("currentHref", "/");
         window.location.href = "/login";
         return true;
       })
@@ -580,7 +583,7 @@ const apiClient = {
   //관심카테고리 불러오기
   getInterestCategory: (memberNo) => {
     return instance
-      .get(`/profile/${memberNo}/interest/category`)
+      .get(`/profile/${parseInt(memberNo)}/interest/category`)
       .then((response) => {
         console.log(response.data);
         console.log("관심 category 불러오기 성공");
