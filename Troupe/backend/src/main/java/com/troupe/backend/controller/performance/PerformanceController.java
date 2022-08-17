@@ -55,7 +55,7 @@ public class PerformanceController {
         log.info(performanceform.toString());
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.register(memberNo, performanceform);
-        return ResponseEntity.created(URI.create(MyConstant.REDIRECT+"/perf/list")).build();
+        return ResponseEntity.created(URI.create(MyConstant.WEB_SITE_URL+"/perf/list")).build();
     }
 
 

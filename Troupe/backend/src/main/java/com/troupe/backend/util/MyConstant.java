@@ -59,8 +59,6 @@ public final class MyConstant {
     public static final String ING = "공연중";
     public static final String END = "공연종료";
 
-    // 리다이렉트 주소
-    public static final String REDIRECT = "http://localhost:3000";
     // 아바타 관련
     public static final String CLOTHES_LIST = "clothesList";
     public static final String EYE_LIST = "eyeList";
