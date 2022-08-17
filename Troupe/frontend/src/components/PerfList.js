@@ -19,7 +19,7 @@ export default function PerfListCard() {
     apiClient.getPerfList,
     {
       getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
+        return pages.length;
       },
     },
   );
