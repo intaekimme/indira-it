@@ -508,14 +508,17 @@ export default function PerfModify() {
                   <MenuItem value={"클래식"} style={{ fontFamily: "SBAggroB" }}>
                     클래식
                   </MenuItem>
-                  <MenuItem value={"오페라"} style={{ fontFamily: "SBAggroB" }}>
-                    오페라
-                  </MenuItem>
                   <MenuItem value={"국악"} style={{ fontFamily: "SBAggroB" }}>
                     국악
                   </MenuItem>
-                  <MenuItem value={"복합"} style={{ fontFamily: "SBAggroB" }}>
-                    복합
+                  <MenuItem value={"가요"} style={{ fontFamily: "SBAggroB" }}>
+                    가요
+                  </MenuItem>
+                  <MenuItem value={"전시"} style={{ fontFamily: "SBAggroB" }}>
+                    전시
+                  </MenuItem>
+                  <MenuItem value={"기타"} style={{ fontFamily: "SBAggroB" }}>
+                    기타
                   </MenuItem>
                 </Select>
               </FormControl>
