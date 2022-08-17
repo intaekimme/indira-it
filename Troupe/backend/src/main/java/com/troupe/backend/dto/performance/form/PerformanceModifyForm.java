@@ -1,6 +1,5 @@
 package com.troupe.backend.dto.performance.form;
 
-import com.troupe.backend.dto.performance.Seat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +25,8 @@ public class PerformanceModifyForm {
     private String seatPrice;
     private Date startDate;
     private Date endDate;
-    private List<MultipartFile> newImages;
-    private List<Integer> removedImages;
+    private List<MultipartFile> images;
+    private List<Integer> imageNo;
 
 
 }

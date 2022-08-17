@@ -72,6 +72,8 @@ public class PerformanceController {
                                  @PathVariable int pfNo,
                                  @ModelAttribute @Valid PerformanceModifyForm performanceModifyForm)
             throws Exception {
+
+        log.info(performanceModifyForm.toString());
         int memberNo = Integer.parseInt(principal.getName());
         performanceService.modify(memberNo, pfNo, performanceModifyForm);
         return ResponseEntity.ok().build();
