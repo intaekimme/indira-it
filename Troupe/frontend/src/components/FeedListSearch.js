@@ -13,6 +13,7 @@ import stylesModal from "../css/modal.module.css";
 import { Fragment } from "react";
 import PlusButton from "./PlusButton";
 import FeedDetail from "./FeedDetail";
+import stylesTag from "../css/tag.module.css";
 
 export default function FeedListSearch(props) {
   const [change, setChange] = React.useState(false);
@@ -20,6 +21,8 @@ export default function FeedListSearch(props) {
   const [feedNo, setFeedNo] = React.useState(0);
   const [cards, setCards] = React.useState([]);
   const [pageNumber, setPageNumber] = React.useState(1);
+  const [isHover, setIsHover] = React.useState(-1);
+
 
   React.useEffect( () =>{
       apiClient.feedTagSearch(props.tags, 0).then((data)=>{
@@ -108,13 +111,41 @@ export default function FeedListSearch(props) {
                     sx={{
                       pb: 1,
                       objectFit: "cover",
-                      width: "300px",
+                      width: "340px",
                       height: "300px",
+                      opacity: isHover === card.feedNo ? 0.5 : null,
+                      transform: isHover === card.feedNo ? "scale(1.1)" : null,
+                      transition: "0.5s",
                     }}
                     image={Object.values(card.images)[0]}
                     alt=""
                     onClick={() => handleOpen(card.feedNo)}
+                    onMouseEnter={() => setIsHover(card.feedNo)}
+                    onMouseLeave={() => setIsHover(-1)}
                   ></CardMedia>
+                  {isHover === card.feedNo ? (
+                    <div
+                      style={{
+                        marginLeft: "0.5em",
+                        display: "inline",
+                        position: "absolute",
+                        height: "300px",
+                        width: "265px",
+                        color: "black",
+                        top: "150px",
+                      }}
+                      onMouseEnter={() => setIsHover(card.feedNo)}
+                      onMouseLeave={() => setIsHover(-1)}
+                      onClick={() => handleOpen(card.feedNo)}
+                    >
+                      {" "}
+                      <div className={stylesTag.HashWrapOuter}>
+                        {card.tags.map((tag) => (
+                          <div className={stylesTag.HashWrapInner}>#{tag}</div>
+                        ))}{" "}
+                      </div>
+                    </div>
+                  ) : null}
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
