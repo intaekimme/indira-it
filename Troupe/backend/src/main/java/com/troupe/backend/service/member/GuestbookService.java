@@ -33,7 +33,7 @@ public class GuestbookService {
         Member visitorMember = memberRepository.findById(guestbookForm.getVisitorMemberNo()).get();
 
         // 한 게스트가 한 호스트에게 하나의 게시글만 작성하도록 한다
-        if (guestbookRepository.findByHostMemberAndVisitorMember(hostMember, visitorMember).isPresent()) {
+        if (guestbookRepository.findByHostMemberAndVisitorMemberAndIsRemovedFalse(hostMember, visitorMember).isPresent()) {
             throw new DuplicatedGuestbookException();
         }
 
@@ -74,7 +74,7 @@ public class GuestbookService {
      */
     public List<Guestbook> findGuestbookListOfHost(int hostMemberNo) {
         Member hostMember = memberRepository.findById(hostMemberNo).get();
-        return guestbookRepository.findAllByHostMemberOrderByCreatedTimeDesc(hostMember);
+        return guestbookRepository.findAllByHostMemberAndIsRemovedFalseOrderByCreatedTimeDesc(hostMember);
     }
 
     /**
@@ -83,7 +83,7 @@ public class GuestbookService {
     public Optional<Guestbook> findGuestBook(int hostMemberNo, int visitorMemberNo) {
         Member hostMember = memberRepository.findById(hostMemberNo).get();
         Member visitorMember = memberRepository.findById(visitorMemberNo).get();
-        return guestbookRepository.findByHostMemberAndVisitorMember(hostMember, visitorMember);
+        return guestbookRepository.findByHostMemberAndVisitorMemberAndIsRemovedFalse(hostMember, visitorMember);
     }
 
 }
