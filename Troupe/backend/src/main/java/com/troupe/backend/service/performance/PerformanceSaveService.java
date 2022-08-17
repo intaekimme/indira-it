@@ -6,6 +6,7 @@ import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceSave;
 import com.troupe.backend.dto.performance.response.ProfilePfResponse;
 import com.troupe.backend.dto.performance.response.ProfilePfSaveResponse;
+import com.troupe.backend.repository.category.CategoryRepository;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceSaveRepository;
@@ -33,6 +34,8 @@ public class PerformanceSaveService {
     private final PerformanceImageService performanceImageService;
 
     private final LikabilityService likabilityService;
+
+    private final CategoryRepository categoryRepository;
 
     /**
      * 공연 북마크
@@ -197,6 +200,13 @@ public class PerformanceSaveService {
 
         HashMap<Category, Integer> categoryCount = new HashMap<>();
 
+        // 모든 카테고리에 대해 0으로 초기화
+        List<Category> allCategories = categoryRepository.findAll();
+        for (Category cat : allCategories) {
+            categoryCount.put(cat, 0);
+        }
+
+        // 존재하는 카테고리 수만큼 카운트
         for (PerformanceSave performanceSave : performanceSaveList) {
             Category category = performanceSave.getPf().getCategory();
             categoryCount.put(category, 1 + categoryCount.getOrDefault(category, 0));

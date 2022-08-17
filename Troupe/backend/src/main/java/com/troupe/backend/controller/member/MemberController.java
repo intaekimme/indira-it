@@ -56,6 +56,23 @@ public class MemberController {
         return new ResponseEntity(tokenResponse, HttpStatus.OK);
     }
 
+    @Operation(summary = "기존 비밀번호 체크", description = "파라미터 : accessToekn (리퀘스트헤더), currentPassword (리퀘스트바디) ")
+    @PostMapping("/pw")
+    private ResponseEntity checkCurrentPassword(Principal principal, @RequestBody Map<String, Object> requestBody) {
+        int memberNo = Integer.parseInt(principal.getName());
+
+        String currentPassword = (String) requestBody.get("currentPassword");
+        Member member = memberService.findById(memberNo).get();
+
+        boolean isCurrent = false;
+        if (member.getPassword().equals(currentPassword)) {
+            isCurrent = true;
+        }
+
+        return new ResponseEntity(isCurrent, HttpStatus.OK);
+    }
+
+
     @Operation(summary = "회원 기본정보 수정", description = "파라미터 : accessToken (리퀘스트헤더), 멤버수정폼 (모델어트리뷰트) ")
     @PatchMapping("/myinfo")
     private ResponseEntity updateMember(Principal principal, @ModelAttribute @Valid MemberModifyForm memberModifyForm) throws IOException {
