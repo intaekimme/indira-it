@@ -280,7 +280,7 @@ export default function GuestBook(props) {
                 {props.memberNickname} 님의 방명록
               </Grid>
               {guestBookList.map((guestBook, index) => (
-                <Grid item xs={12} style={{ margin: 10 }}>
+                <Grid key={`guestBook${index}`} item xs={12} style={{ margin: 10 }}>
                   <_MinhoCommentCard
                     key={`guestBook${index}`}
                     kind="guestbook"
