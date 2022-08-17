@@ -133,7 +133,7 @@ export default function ProfileForm() {
           setNicknameLength(nicknameCheck);
           //password 8~20자
           const pwLength = data.password.length;
-          const pwCheck = pwLength >= 8 && pwLength <= 20;
+          const pwCheck = (pwLength >= 8 && pwLength <= 20) || pwLength==0;
           setPwLength(pwCheck);
           //paswword 일치확인
           const pwSame = data.password === data.passwordCheck;
