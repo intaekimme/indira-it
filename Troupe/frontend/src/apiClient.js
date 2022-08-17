@@ -1260,10 +1260,12 @@ const apiClient = {
   },
 
   //유저가 저장한 공연 목록 불러오기
-  getMemberPerfList: ({ pageParam = 0, memberNo=378, string="myperf"}) => {
+  getMemberPerfList: (pageNumber, memberNo, string) => {
+    console.log(memberNo)
     return instance
-      .get(`/perf/${memberNo}/${string}/list?pageNumber=${pageParam}`)
+      .get(`/perf/${memberNo}/${string}/list?pageNumber=${pageNumber}`)
       .then((response) => {
+        console.log(memberNo)
         console.log(response.data);
         console.log("공연 불러오기 성공");
         return response.data;
