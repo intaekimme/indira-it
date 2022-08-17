@@ -73,7 +73,7 @@ function App() {
             {/* <Route path="/feed/detail/:feedNo" element={<FeedDetail />}></Route> */}
           </Routes>
         </Router>
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
       </QueryClientProvider>
     </div>
   );

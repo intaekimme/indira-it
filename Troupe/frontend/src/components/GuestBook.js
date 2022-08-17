@@ -61,7 +61,7 @@ export default function GuestBook(props) {
     });
     apiClient.getMyGuestBook(props.memberNo).then((data) => {
       console.log(data);
-      if(!data || data===""){
+      if(!data || data==="" || data.length==0){
         return;
       }
       else {
@@ -149,7 +149,7 @@ export default function GuestBook(props) {
                       kind="guestbook"
                       modifyButton={modifyButton}
                       deleteButton={deleteButton}
-                      isRemoved={ myGuestBookContent.isRemoved }
+                      isRemoved={ myGuestBookContent.removed }
                       comment={myGuestBookContent.content}
                       memberInfo={myGuestBookContent.visitorMemberInfoResponse}
                       no={myGuestBookContent.hostMemberInfoResponse.memberNo}
@@ -234,7 +234,7 @@ export default function GuestBook(props) {
                     kind="guestbook"
                     modifyButton={modifyButton}
                     deleteButton ={deleteButton}
-                    isRemoved={ guestBook.isremoved }
+                    isRemoved={ guestBook.removed }
                     comment={guestBook.content}
                     memberInfo={guestBook.visitorMemberInfoResponse}
                     no={guestBook.hostMemberInfoResponse.memberNo}

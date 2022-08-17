@@ -30,9 +30,10 @@ export default function _MinhoCommentCard(props) {
   const [no, setNo] = React.useState(0);
 
   React.useEffect(() => {
-    if (props.no && props.no!=0) {
+    if (props.no && props.no != 0) {
       setNo(props.no);
       console.log(props.no);
+      console.log(props.isRemoved);
     }
   }, [props.no]);
 
@@ -81,7 +82,7 @@ export default function _MinhoCommentCard(props) {
       />
       {/* <CardMedia image="/static/images/cards/paella.jpg" title="Paella dish" /> */}
       <CardContent>
-        {props.isRemoved === "true" ? (
+        {props.isRemoved === true ? (
           <Typography variant="body2" color="textSecondary" component="span">
             삭제된 글입니다.
           </Typography>
@@ -102,24 +103,28 @@ export default function _MinhoCommentCard(props) {
         <div style={{ textAlign: "right" }}>
           {parseInt(sessionStorage.getItem("loginMember")) ===
           props.memberInfo.memberNo ? (
-            <div>
-              <IconButton
-                onClick={() => {
-                  setModify(true);
-                }}
-                aria-label="add to favorites"
-              >
-                <ModeEditIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  props.deleteButton(props.no);
-                }}
-                aria-label="share"
-              >
-                <DeleteIcon />
-              </IconButton>
-            </div>
+            props.isRemoved === true ? (
+              <div></div>
+            ) : (
+              <div>
+                <IconButton
+                  onClick={() => {
+                    setModify(true);
+                  }}
+                  aria-label="add to favorites"
+                >
+                  <ModeEditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    props.deleteButton(props.no);
+                  }}
+                  aria-label="share"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            )
           ) : (
             <div></div>
           )}

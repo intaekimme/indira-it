@@ -139,7 +139,6 @@ const apiClient = {
         console.log(response.data);
         console.log("이메일 인증 되었습니다.");
         // alert("이메일 인증 되었습니다." + response.data);
-        window.location.href = "/login";
         return true;
       })
       .catch((error) => {

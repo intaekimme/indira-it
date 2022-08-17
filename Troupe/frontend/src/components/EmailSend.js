@@ -10,9 +10,7 @@ import { Grid } from "@mui/material";
 export default function EmailSend() {
   const { token } = useParams();
   const login = () => {
-    if (token) {
-      apiClient.confirmEmail(token);
-    }
+    sessionStorage.setItem("currentHref", "/");
     window.location.href = "/login";
   };
 
