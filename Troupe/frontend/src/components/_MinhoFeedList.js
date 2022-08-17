@@ -188,4 +188,7 @@ export default function _MinhoFeedList(props) {
       </Fragment>
     );
   }
+  else {
+    return(<div></div>)
+  }
 }
