@@ -72,7 +72,7 @@ public class FeedController {
             List<FeedResponse> feedResponse = new ArrayList<>();
             if(change.equals("all")) feedResponse = feedService.selectAll(change, 0,pageRequest);
             else if(memberNo==null ) feedResponse = feedService.selectAll(change, Integer.parseInt(principal.getName()),pageRequest);
-            else feedResponse = feedService.selectAllByMember(memberNo,pageRequest);
+            else feedResponse = feedService.selectAllByMember(change,memberNo,pageRequest);
             return new ResponseEntity(feedResponse, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e);

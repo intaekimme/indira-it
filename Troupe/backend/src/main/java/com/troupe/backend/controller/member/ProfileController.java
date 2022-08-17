@@ -241,15 +241,15 @@ public class ProfileController {
         return ResponseEntity.ok().body(profileSaveResponseList);
     }
 
-    @Operation(summary = "프로필 주인의 피드 작성 목록", description = "파라미터: profileMemberNo(패스배리어블)")
-    @GetMapping("/{profileMemberNo}/myfeed/list")
-    public ResponseEntity getMyFeedList(Principal principal, @PathVariable int profileMemberNo, int pageNumber) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, 6);
-//            Slice<FeedResponse> feedResponses = null;
-        List<FeedResponse> feedResponse = feedService.selectAllByMember(profileMemberNo, pageRequest);
-
-        return new ResponseEntity(feedResponse, HttpStatus.OK);
-    }
+//    @Operation(summary = "프로필 주인의 피드 작성 목록", description = "파라미터: profileMemberNo(패스배리어블)")
+//    @GetMapping("/{profileMemberNo}/myfeed/list")
+//    public ResponseEntity getMyFeedList(Principal principal, @PathVariable int profileMemberNo, int pageNumber) {
+//        PageRequest pageRequest = PageRequest.of(pageNumber, 6);
+////            Slice<FeedResponse> feedResponses = null;
+//        List<FeedResponse> feedResponse = feedService.selectAllByMember(profileMemberNo, pageRequest);
+//
+//        return new ResponseEntity(feedResponse, HttpStatus.OK);
+//    }
 
     @Operation(summary = "프로필 주인의 피드 저장 목록", description = "파라미터: profileMemberNo(패스배리어블)")
     @GetMapping("/{profileMemberNo}/savefeed/list")
