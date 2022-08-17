@@ -711,8 +711,32 @@ const apiClient = {
         // alert("전체 피드 불러오기 실패" + error);
       });
   },
+  //유저가 등록한/저장한 피드 목록 불러오기
+  getMemberFeedList: async ({ pageParam = 0, memberNo = 378, string = "regist" }) => {
+    return await instance
+      .get(`/feed/list/${string}?pageNumber=${pageParam}&memberNo=${memberNo}`)
+      .then((response) => {
+        console.log(response.data);
+        console.log("피드 불러오기 성공");
+
+        console.log(string);
+        return response.data;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        console.log(error);
+        console.log("피드 불러오기 실패");
+        // alert("저장 피드 불러오기 실패" + error);
+        return null;
+      });
+  },
   //저장된 피드 목록 불러오기
-  getSavedFeedList: async ({ pageParam = 0 }) => {
+  getSavedFeedList: async ({ pageParam = 0}) => {
     return await instance
       .get(`/feed/list/save?pageNumber=${pageParam}`, {
         headers: {
@@ -1179,6 +1203,21 @@ const apiClient = {
       });
   },
 
+  //유저가 저장한 공연 목록 불러오기
+  getMemberPerfList: ({ pageParam = 0, memberNo=378, string="myperf"}) => {
+    return instance
+      .get(`/perf/${memberNo}/${string}/list?pageNumber=${pageParam}`)
+      .then((response) => {
+        console.log(response.data);
+        console.log("공연 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log("공연 불러오기 실패");
+        // alert("공연 불러오기 실패" + error);
+      });
+  },
   //공연 목록 불러오기
   getPerfList: async ({ pageParam = 0 }) => {
     return await instance
