@@ -121,9 +121,10 @@ export default function PerfSearchList(props) {
                     style={{
                       position: "absolute",
                       height: "300px",
-                      width: "265px",
+                      width: "280px",
                       color: "black",
                       top: '100px',
+                      right:'15px'
                     }}
                     onMouseEnter={() => setIsHover(datum.pfNo)}
                     onMouseLeave={() => setIsHover(-1)}
@@ -131,7 +132,8 @@ export default function PerfSearchList(props) {
                     <ul style={{ listStyleType: "none" }}>
                       <li># 공연제목:{datum.title}</li>
                       <li># 공연장소:{datum.location}</li>
-                      <li># 공연기간:{datum.detailTime}</li>
+                      <li># 공연기간:</li>
+                      <li>{datum.startDate.substr(0,10)}~{datum.endDate.substr(0,10)}</li>
                     </ul>
                   </div>
                 ) : null}
