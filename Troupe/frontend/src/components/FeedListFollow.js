@@ -36,7 +36,7 @@ export default function FeedListFollow(props) {
     apiClient.getFollowFeedList,
     {
       getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
+        return pages.length;
       },
     },
   );

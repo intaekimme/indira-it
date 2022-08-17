@@ -37,7 +37,7 @@ export default function _MinhoFeedList(props) {
 		()=> apiClient.getMemberFeedList({pageParam:0, memberNo:props.memberInfo.memberNo, string: props.string}),//쿼리 함수
     {
       getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
+        return pages.length;
 			},
 			getMemberNo: () => {
 				return sessionStorage.getItem("loginMember");

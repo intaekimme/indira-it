@@ -20,7 +20,7 @@ export default function _MinhoPerfList(props) {
 		()=> apiClient.getMemberPerfList({pageParam:0, memberNo:props.memberInfo.memberNo, string: props.string}),
     {
       getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
+        return pages.length;
       },
     },
   );
