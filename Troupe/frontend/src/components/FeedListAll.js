@@ -38,7 +38,7 @@ export default function FeedListAll(props) {
     {
       retry:true,
       getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
+        return pages.length;
       },
     },
   );

@@ -36,7 +36,7 @@ export default function FeedListSave(props) {
     apiClient.getSavedFeedList,
     {
       getNextPageParam: (lastPage, pages) => {
-        return pages.length + 1;
+        return pages.length;
       },
     },
   );
