@@ -31,15 +31,15 @@ public class PerformanceReviewTest {
     @Autowired
     PerformanceReviewRepository performanceReviewRepository;
 
-    @Test
-    @Transactional
-    @DisplayName("공연후기 작성")
-    public void saveTest() throws ParseException  {
-        Member member = memberRepository.getById(3);
-        Performance performance = performanceRepository.getById(1);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-
+//    @Test
+//    @Transactional
+//    @DisplayName("공연후기 작성")
+//    public void saveTest() throws ParseException  {
+//        Member member = memberRepository.getById(3);
+//        Performance performance = performanceRepository.getById(1);
+//
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+//
 //        for(int i=2; i<100; i++){
 //            PerformanceReview performanceReview = PerformanceReview.builder()
 //                    .member(member)
@@ -52,12 +52,12 @@ public class PerformanceReviewTest {
 //
 //            PerformanceReview savePerformanceReview = performanceReviewRepository.save(performanceReview);
 //        }
-
-
+//
+//
 //        Assertions.assertEquals("댓글 1", savePerformanceReview.getContent());
-
-    }
-
+//
+//    }
+//
 //    @Test
 //    @DisplayName("공연번호에 해당하는 후기 리스트 불러오기")
 //    public void findByPfNo(){
@@ -67,7 +67,7 @@ public class PerformanceReviewTest {
 //
 //        Assertions.assertEquals(6, performanceReviewList.size());
 //    }
-
+//
 //    @Test
 //    @Transactional
 //    @DisplayName("후기 번호로 댓글 찾기")
@@ -94,32 +94,32 @@ public class PerformanceReviewTest {
 //
 //        Assertions.assertEquals("댓글2", performanceReview.getContent());
 //    }
-
-
-    @Test
-    @Transactional
-    @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
-    void findByParentPerformanceReviewTest1(){
-        Performance performance = performanceRepository.findById(1).get();
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
-        for(PerformanceReview performanceReview : performanceReviewList){
-            List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
-            System.out.println(childrenPerformanceReview.size());
-        }
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
-    void findByParentPerformanceReviewTest2(){
-        Performance performance = performanceRepository.findById(1).get();
-        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
-        for(PerformanceReview performanceReview : performanceReviewList){
-            List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
-            System.out.println(childrenPerformanceReview.size());
-        }
-    }
-
+//
+//
+//    @Test
+//    @Transactional
+//    @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
+//    void findByParentPerformanceReviewTest1(){
+//        Performance performance = performanceRepository.findById(1).get();
+//        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
+//        for(PerformanceReview performanceReview : performanceReviewList){
+//            List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
+//            System.out.println(childrenPerformanceReview.size());
+//        }
+//    }
+//
+//    @Test
+//    @Transactional
+//    @DisplayName("공연 번호에 해당하는 대댓글들 불러오기")
+//    void findByParentPerformanceReviewTest2(){
+//        Performance performance = performanceRepository.findById(1).get();
+//        List<PerformanceReview> performanceReviewList = performanceReviewRepository.findByPf(performance);
+//        for(PerformanceReview performanceReview : performanceReviewList){
+//            List<PerformanceReview> childrenPerformanceReview = performanceReview.getChildrenPerformanceReview();
+//            System.out.println(childrenPerformanceReview.size());
+//        }
+//    }
+//
 //    @Test
 //    @Transactional
 //    @DisplayName("후기 번호에 해당하는 후기만 삭제, 대댓글은 삭제 안함")

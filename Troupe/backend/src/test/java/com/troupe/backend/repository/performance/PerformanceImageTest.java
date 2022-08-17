@@ -31,14 +31,14 @@ public class PerformanceImageTest {
 //        performanceImageRepository.delete(targetPerformanceImage);
 //
 //    }
-
-    @Test
-    @DisplayName("공연번호에 해당하는 이미지들 조회")
-    void 이미지조회(){
-        Performance performance = performanceRepository.findById(1).get();
-
-        List<PerformanceImage> list = performanceImageRepository.findByPf(performance);
-        Assertions.assertEquals(3, list.size());
-
-    }
+//
+//    @Test
+//    @DisplayName("공연번호에 해당하는 이미지들 조회")
+//    void 이미지조회(){
+//        Performance performance = performanceRepository.findById(1).get();
+//
+//        List<PerformanceImage> list = performanceImageRepository.findByPf(performance);
+//        Assertions.assertEquals(3, list.size());
+//
+//    }
 }

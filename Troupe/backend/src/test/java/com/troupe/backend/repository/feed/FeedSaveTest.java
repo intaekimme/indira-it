@@ -27,24 +27,24 @@ class FeedSaveTest {
     @Autowired
     FeedSaveRepository feedSaveRepository;
 
-    @Test
-    @DisplayName("피드 저장한적 없을때 저장 추가 및 있다면 저장 스위칭")
-    public void insert() {
-//        feedSaveRepository.save(FeedSave.builder().member(memberRepository.findById(3).get()).feed(feedRepository.findById(3).get()).build());
-        Optional<FeedSave> feedSave = feedSaveRepository.findByMemberAndFeed(memberRepository.findById(3).get(),feedRepository.findById(3).get());
-        FeedSave feedSave1 = null;
-        if(feedSave.isEmpty()){
-            feedSave1 = feedSaveRepository.save(FeedSave.builder().member(memberRepository.findById(3).get()).feed(feedRepository.findById(3).get()).build());
-        }else{
-            // 저장 스위칭
-            boolean check = feedSave.get().isDeleted();
-            feedSave1 = feedSaveRepository.save(FeedSave.builder().member(memberRepository.findById(3).get()).feed(feedRepository.findById(3).get()).isDeleted(!check).build());
-
-        }
-        // 최초 저장 시
-        Assertions.assertThat(feedSave1.isDeleted()).isEqualTo(false);
-        // 이미 저장했을 시 취소
-//        Assertions.assertThat(feedSave1.isDeleted()).isEqualTo(true);
-    }
+//    @Test
+//    @DisplayName("피드 저장한적 없을때 저장 추가 및 있다면 저장 스위칭")
+//    public void insert() {
+////        feedSaveRepository.save(FeedSave.builder().member(memberRepository.findById(3).get()).feed(feedRepository.findById(3).get()).build());
+//        Optional<FeedSave> feedSave = feedSaveRepository.findByMemberAndFeed(memberRepository.findById(3).get(),feedRepository.findById(3).get());
+//        FeedSave feedSave1 = null;
+//        if(feedSave.isEmpty()){
+//            feedSave1 = feedSaveRepository.save(FeedSave.builder().member(memberRepository.findById(3).get()).feed(feedRepository.findById(3).get()).build());
+//        }else{
+//            // 저장 스위칭
+//            boolean check = feedSave.get().isDeleted();
+//            feedSave1 = feedSaveRepository.save(FeedSave.builder().member(memberRepository.findById(3).get()).feed(feedRepository.findById(3).get()).isDeleted(!check).build());
+//
+//        }
+//        // 최초 저장 시
+//        Assertions.assertThat(feedSave1.isDeleted()).isEqualTo(false);
+//        // 이미 저장했을 시 취소
+////        Assertions.assertThat(feedSave1.isDeleted()).isEqualTo(true);
+//    }
 
 }
