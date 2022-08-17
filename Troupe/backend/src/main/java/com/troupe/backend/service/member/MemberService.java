@@ -62,7 +62,7 @@ public class MemberService implements UserDetailsService {
                 .password(memberRegisterForm.getPassword())
                 .nickname(memberRegisterForm.getNickname())
                 .description(memberRegisterForm.getDescription())
-                .memberType(MemberType.AUDIENCE)
+                .memberType(MemberType.PERFORMER)
                 .profileImageUrl(imageUrl)
                 .isRemoved(false)
                 .clothes(defaultAvatar.getAvatarClothes())
