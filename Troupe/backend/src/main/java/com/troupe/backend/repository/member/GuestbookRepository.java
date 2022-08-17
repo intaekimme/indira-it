@@ -11,10 +11,10 @@ public interface GuestbookRepository extends JpaRepository<Guestbook, Integer> {
     /**
      * 호스트와 방문자로 방명록 글 조회
      */
-    Optional<Guestbook> findByHostMemberAndVisitorMember(Member hostMember, Member visitorMember);
+    Optional<Guestbook> findByHostMemberAndVisitorMemberAndIsRemovedFalse(Member hostMember, Member visitorMember);
 
     /**
      * 호스트의 방명록에 있는 모든 글 조회
      */
-    List<Guestbook> findAllByHostMemberOrderByCreatedTimeDesc(Member hostMember);
+    List<Guestbook> findAllByHostMemberAndIsRemovedFalseOrderByCreatedTimeDesc(Member hostMember);
 }
