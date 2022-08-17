@@ -244,6 +244,9 @@ public class PerformanceService {
                             .detailTime(p.getDetailTime())
                             .category(p.getCategory().getSmallCategory())
                             .status(sb.toString())
+                            .runtime(p.getRuntime())
+                            .startDate(p.getStartDate().toString())
+                            .endDate(p.getEndDate().toString())
                             .build()
             );
         }
