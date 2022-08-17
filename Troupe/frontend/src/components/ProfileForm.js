@@ -159,7 +159,7 @@ export default function ProfileForm() {
       profileImage: formData.get("imgUpload"),
       nickname: formData.get("nickname"),
       email: formData.get("email"),
-      currentPassword: formData.get("currentpassword"),
+      currentPassword: formData.get("currentPassword"),
       password: formData.get("password"),
       passwordCheck: formData.get("passwordCheck"),
       profileMessage: formData.get("profileMessage"),
@@ -303,7 +303,7 @@ export default function ProfileForm() {
                   id="email"
                   value={email}
                   style={{ backgroundColor: "white" }}
-                  disabled
+                  readonly
                   sx={{
                     "& .MuiOutlinedInput-root.Mui-focused": {
                       "& > fieldset": {
@@ -399,10 +399,10 @@ export default function ProfileForm() {
                 <TextField
                   required
                   fullWidth
-                  name="currentpassword"
+                  name="currentPassword"
                   label="현재 비밀번호"
                   type="password"
-                  id="currentpassword"
+                  id="currentPassword"
                   autoFocus
                   style={{ backgroundColor: "white" }}
                   sx={{

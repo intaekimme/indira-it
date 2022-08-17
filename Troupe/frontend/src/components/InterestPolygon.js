@@ -45,6 +45,7 @@ export default function InterestPolygon(props) {
   //window size가 변할때마다 가로길이, 단위길이 update
   React.useEffect(() => {
     window.addEventListener("resize", changeWidth);
+    console.log(interest);
   }, [window.innerWidth]);
 
   //회전각
@@ -84,7 +85,7 @@ export default function InterestPolygon(props) {
         strokeDasharray="none"
         data-z-index={1}
         className={`highcharts-grid-line ${styledPoly.valueline}`}
-        transform={`rotate(${deg * i})`}
+        transform={`rotate(${-deg * i})`}
         transform-origin={`${width / 2} ${height / 2}`}
         d={`M ${width / 2} ${height / 2}
         L ${width / 2} ${height / 2 - interestUnit * 0.05 * interest[i]}`}
@@ -142,7 +143,7 @@ export default function InterestPolygon(props) {
             fontSize: "12px",
           }}
         >
-          오페라
+          국악
         </div>
         <div
           style={{
@@ -152,7 +153,7 @@ export default function InterestPolygon(props) {
             fontSize: "12px",
           }}
         >
-          국악
+          가요
         </div>
         <div
           style={{
@@ -162,7 +163,7 @@ export default function InterestPolygon(props) {
             fontSize: "12px",
           }}
         >
-          가요
+          전시
         </div>
         <div
           style={{
@@ -172,7 +173,7 @@ export default function InterestPolygon(props) {
             fontSize: "12px",
           }}
         >
-          전시
+          기타
         </div>
       </div>
       <svg

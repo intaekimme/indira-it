@@ -34,7 +34,7 @@ export default function _MinhoPerfList(props) {
     setChange(check);
   };
 
-  if (!performanceListQuery.isLoading && typeof performanceListQuery.data.pages[0] === undefined) {
+  if (!performanceListQuery.isLoading && typeof performanceListQuery.data.pages[0]) {
     return (
 			<Grid container spacing={4}>
         {performanceListQuery.data.pages.length == 0 || !performanceListQuery.data.pages[0] || performanceListQuery.data.pages[0].length == 0 ?
