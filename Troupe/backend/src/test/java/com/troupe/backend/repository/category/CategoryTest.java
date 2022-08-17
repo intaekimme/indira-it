@@ -17,21 +17,21 @@ public class CategoryTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @Test
-    public void saveTest() {
-        Category category = Category.builder()
-                .bigCategory("복합")
-                .smallCategory("복합")
-                .codeName("EEEA")
-                .build();
-
-        Category saveCategory = categoryRepository.save(category);
-
-//        Assertions.assertEquals("연극", saveCategory.getBigCategory());
-//        Assertions.assertEquals("AAAA", saveCategory.getCodeName());
-
-
-    }
+//    @Test
+//    public void saveTest() {
+//        Category category = Category.builder()
+//                .bigCategory("복합")
+//                .smallCategory("복합")
+//                .codeName("EEEA")
+//                .build();
+//
+//        Category saveCategory = categoryRepository.save(category);
+//
+////        Assertions.assertEquals("연극", saveCategory.getBigCategory());
+////        Assertions.assertEquals("AAAA", saveCategory.getCodeName());
+//
+//
+//    }
 
 
 }

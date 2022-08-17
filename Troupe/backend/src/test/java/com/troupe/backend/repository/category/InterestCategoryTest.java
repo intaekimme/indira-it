@@ -28,20 +28,20 @@ public class InterestCategoryTest {
     @Autowired
     InterestCategoryRepository interestCategoryRepository;
 
-    @Test
-    public void saveTest(){
-        Member member = memberRepository.getById(3);
-
-        List<Category> categoryList = categoryRepository.findByBigCategory("연극");
-
-        for(Category category : categoryList) {
-            InterestCategory interestCategory = InterestCategory.builder()
-                    .memberNo(member)
-                    .category(category)
-                    .build();
-
-            InterestCategory saveInterestCategory = interestCategoryRepository.save(interestCategory);
-        }
-
-    }
+//    @Test
+//    public void saveTest(){
+//        Member member = memberRepository.getById(3);
+//
+//        List<Category> categoryList = categoryRepository.findByBigCategory("연극");
+//
+//        for(Category category : categoryList) {
+//            InterestCategory interestCategory = InterestCategory.builder()
+//                    .memberNo(member)
+//                    .category(category)
+//                    .build();
+//
+//            InterestCategory saveInterestCategory = interestCategoryRepository.save(interestCategory);
+//        }
+//
+//    }
 }
