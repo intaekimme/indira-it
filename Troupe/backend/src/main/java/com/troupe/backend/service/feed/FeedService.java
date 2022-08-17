@@ -74,16 +74,20 @@ public class FeedService {
         return feedResponses;
     }
 
-    public List<FeedResponse> selectAllByMember(int memberNo, Pageable pageable) {
+    public List<FeedResponse> selectAllByMember(String change, int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
         List<FeedResponse> feedResponses = new ArrayList<>();
-        Slice<Feed> totalList = feedRepository.findAllByMemberAndIsRemovedOrderByCreatedTimeDesc(member, false, pageable);
-        for (Feed feed : totalList) {
-            feedResponses.add(select(feed.getFeedNo()));
+        if("save".equals(change)){
+            Slice<FeedSave> saveLIst = feedSaveService.selectAllByMemberWithPaging(memberRepository.findById(memberNo).get(), pageable);
+            for (FeedSave save : saveLIst) {
+                feedResponses.add(select(save.getFeed().getFeedNo()));
+            }
+        }else{
+            Slice<Feed> totalList = feedRepository.findAllByMemberAndIsRemovedOrderByCreatedTimeDesc(member, false, pageable);
+            for (Feed feed : totalList) {
+                feedResponses.add(select(feed.getFeedNo()));
+            }
         }
-//        Slice<FeedResponse> feedResponses =  totalList.map(m->
-//                select(m.getFeedNo())
-//        );
         return feedResponses;
     }
 

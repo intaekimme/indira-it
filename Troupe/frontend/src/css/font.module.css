@@ -14,3 +14,15 @@
     left: 6px;
     width: 330px;
 }
+
+.highlighter {
+    background: linear-gradient(to top, #ffd400 30%, #ffffff00 50%);
+  
+}
+.highlighter2 {
+    background: linear-gradient(to top, #66cc66 30%, #ffffff00 50%);
+}
+.highlighter3 {
+    background: linear-gradient(to top, #fda085 30%, #ffffff00 50%);
+   
+}

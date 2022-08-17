@@ -7,7 +7,7 @@
     display: flex;
     flex-wrap: wrap;
     letter-spacing: -0.6px;
-    color: #ff6e35;
+    /* color: #ff6e35; */
     border-bottom: 1.6px solid;
     padding: 2px 2px 8px 2px;
 }
@@ -43,11 +43,11 @@
   line-height: 3rem;
   margin-top: 80px;
   margin-bottom: 0.75rem;
-  min-width: 14rem;
+  min-width: 28rem;
   border: none;
   background-color: #ffffff;
   color: black;
-  font-family: "Cafe24SsurroundAir";
+  font-family: "SBAggroB";
   font-weight: bold;
   border-radius: 5px;
   box-shadow:

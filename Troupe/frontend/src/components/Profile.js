@@ -9,6 +9,9 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import MainPerf from "./MainPerf";
 import MainFeed from "./MainFeed";
+import PerfList from "./PerfList";
+import _MinhoPerfList from "./_MinhoPerfList";
+import _MinhoFeedList from "./_MinhoFeedList";
 import ProfileMemberInfo from "./ProfileMemberInfo";
 import ProfileAnalyze from "./ProfileAnalyze";
 import ProfileTabs from "./ProfileTabs";
@@ -34,6 +37,7 @@ function Profile(props) {
   React.useEffect(() => {
     apiClient.getMemberInfo(memberNo).then((data) => {
       setMemberInfo(data);
+      console.log(data);
     });
   }, [memberNo]);
 
@@ -78,14 +82,14 @@ function Profile(props) {
 
   const tabContent = performer
     ? [
-        <MainPerf memberInfo={memberInfo} />,
-        <MainFeed memberInfo={memberInfo} />,
-        <MainPerf memberInfo={memberInfo} save={true} />,
-        <MainFeed memberInfo={memberInfo} save={true} />,
+        <_MinhoPerfList memberInfo={memberInfo} string="myperf"/>,
+        <_MinhoFeedList memberInfo={memberInfo} string="register"/>,
+        <_MinhoPerfList memberInfo={memberInfo} save={true} string="saveperf"/>,
+        <_MinhoFeedList memberInfo={memberInfo} save={true} string="save" />,
       ]
     : [
-        <MainPerf memberInfo={memberInfo} save={true} />,
-        <MainFeed memberInfo={memberInfo} save={true} />,
+        <_MinhoPerfList memberInfo={memberInfo} save={true} string="saveperf"/>,
+        <_MinhoFeedList memberInfo={memberInfo} save={true} string="save"/>,
       ];
   const tabText = performer
     ? ["공연/전시 목록", "피드 목록", "공연/전시 북마크", "피드 북마크"]

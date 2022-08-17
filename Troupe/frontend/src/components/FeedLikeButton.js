@@ -32,12 +32,11 @@ export default function FeedLikeButton(props) {
       window.location.href = "/login";
     } else {
       const currentLike = isLike;
-      setIsLike(!isLike);
 
       apiClient
         .feedLike(feedNo)
-        .then((data) => {
-          setLikeCount(data);
+        .then((now) => {
+          setIsLike(now);
         })
         .catch(() => {
           setIsLike(currentLike);
@@ -54,7 +53,8 @@ export default function FeedLikeButton(props) {
         justifyContent: "flex-start",
         margin: "0px",
         padding: "0px",
-        fontFamily: "116watermelon",
+        fontFamily: "Cafe24SsurroundAir",
+        fontWeight: "bold",
       }}
     >
       {isLike ? (
