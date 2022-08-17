@@ -4,6 +4,7 @@ import com.troupe.backend.domain.category.Category;
 import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.performance.Performance;
 import com.troupe.backend.domain.performance.PerformanceSave;
+import com.troupe.backend.dto.performance.response.ProfilePfResponse;
 import com.troupe.backend.dto.performance.response.ProfilePfSaveResponse;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
@@ -29,6 +30,7 @@ public class PerformanceSaveService {
     private final MemberRepository memberRepository;
     private final PerformanceRepository performanceRepository;
     private final PerformanceSaveRepository performanceSaveRepository;
+    private final PerformanceImageService performanceImageService;
 
     private final LikabilityService likabilityService;
 
@@ -141,28 +143,45 @@ public class PerformanceSaveService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ProfilePfSaveResponse> findSavedList(int memberNo, Pageable pageable) {
+    public List<ProfilePfResponse> findSavedList(int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
         Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findByMemberAndRemovedFalse(member, pageable);
-//        Slice<PerformanceSave> performanceSaveList = performanceSaveRepository.findAllByMemberNoAndIsRemovedOrderByCreatedTimeDesc(member, false,pageable);
-        for (PerformanceSave p : performanceSaveList) {
-            log.info(p.toString());
-        }
 
-        List<ProfilePfSaveResponse> profileSaveResponseList = new ArrayList<>();
+        // 공연 상태 계산
+        // 1. LocalDateTime 객체 생성(현재 시간)
+        LocalDateTime localDateTime = LocalDateTime.now();
+        // 2. LocalDateTime -> Date 변환
+        Date now = java.sql.Timestamp.valueOf(localDateTime);
+
+        List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
         for (PerformanceSave performanceSave : performanceSaveList) {
-            Performance performance = performanceSave.getPf();
-            profileSaveResponseList.add(ProfilePfSaveResponse.builder()
-                    .memberNo(memberNo)
+            Performance p = performanceSave.getPf();
+
+            //  공연 상태 계산
+            StringBuilder sb = new StringBuilder();
+            if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
+            else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
+            else if(now.after(p.getEndDate())) sb.append(MyConstant.END);
+
+            Map<Integer, String> images = performanceImageService.findPerformanceImagesByPerformance(p);
+
+            profilePfResponseList.add(ProfilePfResponse.builder()
+                    .pfNo(p.getId())
+                    .memberNo(member.getMemberNo())
                     .nickname(member.getNickname())
-                    .perfPoster(performance.getPosterUrl())
-                    .perfName(performance.getTitle())
-                    .perfStartDate(performance.getStartDate())
-                    .perfEndDate(performance.getEndDate())
+                    .title(p.getTitle())
+                    .description(p.getDescription())
+                    .images(images)
+                    .poster(p.getPosterUrl())
+                    .category(p.getCategory().getSmallCategory())
+                    .status(sb.toString())
+                    .runtime(p.getRuntime())
+                    .startDate(p.getStartDate())
+                    .endDate(p.getEndDate())
                     .build()
             );
         }
-        return profileSaveResponseList;
+        return profilePfResponseList;
     }
 
     @Transactional(readOnly = true)

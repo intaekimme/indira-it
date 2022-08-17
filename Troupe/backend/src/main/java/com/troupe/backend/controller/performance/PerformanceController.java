@@ -269,13 +269,13 @@ public class PerformanceController {
      */
     @Operation(summary = "프로필, 유저의 공연 북마크 목록", description = "파라미터: 유저 프로필 번호")
     @GetMapping("/{profileMemberNo}/saveperf/list")
-    public ResponseEntity<List<ProfilePfSaveResponse>> profilePfSaveList(Principal principal,
+    public ResponseEntity<List<ProfilePfResponse>> profilePfSaveList(Principal principal,
                                                                          @PathVariable int profileMemberNo,
                                                                          int pageNumber){
         //  profile service
         PageRequest pageRequest = PageRequest.of(pageNumber,6);
-        List<ProfilePfSaveResponse> profileSaveResponseList = performanceSaveService.findSavedList(profileMemberNo, pageRequest);
-        return ResponseEntity.ok().body(profileSaveResponseList);
+        List<ProfilePfResponse> profileResponseList = performanceSaveService.findSavedList(profileMemberNo, pageRequest);
+        return ResponseEntity.ok().body(profileResponseList);
     }
 
     /**
