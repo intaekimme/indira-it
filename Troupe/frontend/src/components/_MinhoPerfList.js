@@ -13,38 +13,37 @@ import PerfSaveButton from "./PerfSaveButton";
 import { textAlign } from "@mui/system";
 
 export default function _MinhoPerfList(props) {
-  // let {isLoading, data} = useQuery('performanceList', async () => await apiClient.getPerfList(pageNumber));
-  // let pageNumber = useParams().pageNumber;
-  let performanceListQuery = useInfiniteQuery(
-		"performanceSaveList",
-		()=> apiClient.getMemberPerfList({pageParam:0, memberNo:props.memberInfo.memberNo, string: props.string}),
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return pages.length;
-      },
-    },
-  );
-  console.log(performanceListQuery.data);
-  console.log(performanceListQuery.isLoading);
 
+  const [cards, setCards] = React.useState([]);
+  const [pageNumber, setPageNumber] = React.useState(1);
   const [change, setChange] = React.useState(false);
   const [isHover, setIsHover] = React.useState(-1);
+
+  React.useEffect( () =>{
+    if (props.memberInfo) {
+    console.log(props.memberInfo.memberNo)
+    apiClient.getMemberPerfList(0, props.memberInfo.memberNo, props.string).then((data)=>{
+    setCards(data);
+  });}
+}, [props.memberInfo])
+
+async function fetchMore() {
+  setPageNumber(pageNumber + 1);
+  console.log(pageNumber)
+  apiClient.getMemberPerfList(pageNumber, props.memberInfo.memberNo, props.string).then((data)=>{
+    setCards([...cards, ...data])
+  })
+  console.log(cards)
+}
 
   const changeFunction = (check) => {
     setChange(check);
   };
 
-  if (!performanceListQuery.isLoading && typeof performanceListQuery.data.pages[0]) {
     return (
 			<Grid container spacing={4}>
-        {performanceListQuery.data.pages.length == 0 || !performanceListQuery.data.pages[0] || performanceListQuery.data.pages[0].length == 0 ?
-          () => { console.log(performanceListQuery.data.pages); return <Grid item xs={12} style={{ position: "relative", height: "100px" }}><div style={{ position: "relative", top: "50%" }}>리스트가 없습니다</div></Grid> }
-          : () => { console.log(performanceListQuery.data.pages); return <div></div> }
-        }
-        {performanceListQuery.data.pages.map((page) =>
-          page.map((datum, index) => {
-            console.log(datum);
-            return (<Grid item key={`${datum.pfNo}${index}`} xs={12} sm={6} md={4}>
+        {cards.map(card =>
+            <Grid item key={`${card.pfNo}`} xs={12} sm={6} md={4}>
               <Card
                 sx={{
                   position: "relative",
@@ -79,7 +78,7 @@ export default function _MinhoPerfList(props) {
                     color: "white",
                   }}
                 >
-                  {datum.status}
+                  {card.status}
                 </Box>
                 <Box
                   style={{
@@ -96,10 +95,10 @@ export default function _MinhoPerfList(props) {
                     color: "white",
                   }}
                 >
-                  {datum.category}
+                  {card.category}
                 </Box>
-                <Link href={`/perf/detail/${datum.pfNo}`}>
-                  {datum.images ?
+                <Link href={`/perf/detail/${card.pfNo}`}>
+                  {card.images ?
                     <CardMedia
                       component="img"
                       style={{
@@ -107,16 +106,16 @@ export default function _MinhoPerfList(props) {
                         objectFit: "cover",
                         width: "300px",
                         height: "300px",
-                        opacity: isHover === datum.pfNo ? 0.5 : null,
-                        transform: isHover === datum.pfNo ? "scale(1.1)" : null,
+                        opacity: isHover === card.pfNo ? 0.5 : null,
+                        transform: isHover === card.pfNo ? "scale(1.1)" : null,
                         transition: "0.5s",
                       }}
-                      image={Object.values(datum.images)[0]}
+                      image={Object.values(card.images)[0]}
                       alt=""
-                      onMouseEnter={() => setIsHover(datum.pfNo)}
+                      onMouseEnter={() => setIsHover(card.pfNo)}
                       onMouseLeave={() => setIsHover(-1)}
                     ></CardMedia> : <div></div>}
-                  {isHover === datum.pfNo ? (
+                  {isHover === card.pfNo ? (
                     <div
                       style={{
                         lineHeight: "300px",
@@ -126,13 +125,13 @@ export default function _MinhoPerfList(props) {
                         color: "black",
                         top: 0,
                       }}
-                      onMouseEnter={() => setIsHover(datum.pfNo)}
+                      onMouseEnter={() => setIsHover(card.pfNo)}
                       onMouseLeave={() => setIsHover(-1)}
                     >
                       <ul style={{ listStyleType: 'none' }}>
-                        <li># 공연제목:{datum.title}</li>
-                        <li># 공연장소:{datum.location}</li>
-                        <li># 공연기간:{datum.detailTime}</li>
+                        <li># 공연제목:{card.title}</li>
+                        <li># 공연장소:{card.location}</li>
+                        <li># 공연기간:{card.detailTime}</li>
                       </ul>
                     </div>
                   ) : null}
@@ -148,20 +147,16 @@ export default function _MinhoPerfList(props) {
                   <Grid mr={-3}>
                     <PerfSaveButton
                       change={change}
-                      pfNo={datum.pfNo}
+                      pfNo={card.pfNo}
                     ></PerfSaveButton>
                   </Grid>
                 </CardActions>
               </Card>
-            </Grid>);
-          }),
-        )}
+            </Grid>)
+          }
         <PlusButton
-          handleCard={performanceListQuery.fetchNextPage}
+          handleCard={fetchMore}
         ></PlusButton>
       </Grid>
     );
-  } else {
-    return (<div></div>)
-  }
 }
