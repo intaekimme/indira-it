@@ -121,9 +121,9 @@ export default function ProfileForm() {
   const checkValue = (data) => {
     //현재 비밀번호 일치 확인
     return apiClient
-      .pwCurrentCheck(data.currentPassword)
-      .then((data) => {
-        setPwCurrent(data);
+      .pwCurrentCheck({ currentPassword: data.currentPassword })
+      .then((check) => {
+        setPwCurrent(check);
         if (!pwCurrent) {
           return false;
         } else {
