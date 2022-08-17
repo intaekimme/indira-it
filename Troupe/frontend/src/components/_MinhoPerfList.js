@@ -10,6 +10,7 @@ import apiClient from "../apiClient";
 import { useParams } from "react-router-dom";
 import PlusButton from "./PlusButton";
 import PerfSaveButton from "./PerfSaveButton";
+import { textAlign } from "@mui/system";
 
 export default function _MinhoPerfList(props) {
   // let {isLoading, data} = useQuery('performanceList', async () => await apiClient.getPerfList(pageNumber));
@@ -36,7 +37,10 @@ export default function _MinhoPerfList(props) {
   if (!performanceListQuery.isLoading && typeof performanceListQuery.data.pages[0]) {
     return (
 			<Grid container spacing={4}>
-				{ performanceListQuery.data.pages.length==0 ? <div>리스트가 없습니다</div> : <div></div>}
+        {performanceListQuery.data.pages.length == 0 || !performanceListQuery.data.pages[0] || performanceListQuery.data.pages[0].length == 0 ?
+          <Grid item xs={12} style={{position:"relative", height:"100px"}}><div style={{position:"relative", top:"50%"}}>리스트가 없습니다</div></Grid>
+          : <div></div>
+        }
         {performanceListQuery.data.pages.map((page) =>
           page.map((datum, index) => (
             <Grid item key={`${datum.pfNo}${index}`} xs={12} sm={6} md={4}>

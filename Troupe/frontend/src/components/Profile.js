@@ -147,7 +147,7 @@ function Profile(props) {
             </Button>
             {/* Stage finish */}
             {/* 방명록 */}
-            <GuestBook memberNo={memberNo}/>
+            <GuestBook memberNickname={ memberInfo.nickname } memberNo={memberNo}/>
           </Grid>
           <Grid item xs={gridItemxs} style={{ padding: 0 }}>
             <Grid container spacing={3}>
