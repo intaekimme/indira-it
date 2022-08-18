@@ -2,6 +2,7 @@ package com.troupe.backend.advice;
 
 import com.troupe.backend.exception.DuplicatedException;
 import com.troupe.backend.exception.EmailUnauthenticatedException;
+import com.troupe.backend.exception.InvalidAccessTokenException;
 import com.troupe.backend.exception.UnauthorizedException;
 import com.troupe.backend.exception.member.WrongPasswordException;
 import com.troupe.backend.util.MyConstant;
@@ -57,6 +58,14 @@ public class GlobalExceptionAdvice {
         return new ResponseEntity(resultMap, HttpStatus.UNAUTHORIZED);
     }
 
+
+    @ExceptionHandler(InvalidAccessTokenException.class)
+    public ResponseEntity handleInvalidAccessTokenException(InvalidAccessTokenException e) {
+        e.printStackTrace();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(MyConstant.MESSAGE, e.getMessage());
+        return new ResponseEntity(resultMap, HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Exception e) {

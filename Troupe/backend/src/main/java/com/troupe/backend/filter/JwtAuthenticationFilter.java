@@ -1,5 +1,6 @@
 package com.troupe.backend.filter;
 
+import com.troupe.backend.exception.InvalidAccessTokenException;
 import com.troupe.backend.service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -25,9 +26,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);
 
         // 액세스 토큰이 유효하면 토큰으로부터 유저 정보를 받아오고, SecurityContext 에 저장한다.
-        if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (accessToken != null) {
+            if (jwtTokenProvider.validateAccessToken(accessToken)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            else {
+                throw new InvalidAccessTokenException();
+            }
         }
 
         chain.doFilter(request, response);
