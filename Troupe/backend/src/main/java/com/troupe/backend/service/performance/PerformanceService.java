@@ -19,6 +19,7 @@ import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -161,9 +162,27 @@ public class PerformanceService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PerformanceResponse> findAll(Pageable sortedByCreatedTime){
-        Slice<Performance> performanceList =
-                performanceRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false, sortedByCreatedTime).get();
+    public List<PerformanceResponse> findAll(Pageable pageable){
+        List<Performance> combinedList = new ArrayList<>();
+
+        //  진행중
+        Slice<Performance> performingList =
+                performanceRepository.findAllPerforming(false, pageable).get();
+        for(Performance p : performingList)
+            combinedList.add(p);
+
+        //  진행 예정
+        Slice<Performance> upcommingList =
+                performanceRepository.findAllUpcommingPerformance(false, pageable).get();
+        for (Performance p : upcommingList)
+            combinedList.add(p);
+
+        //  종료
+        Slice<Performance> endList =
+                performanceRepository.findAllPerformanceThatHaveEnded(false,pageable).get();
+        for (Performance p : endList)
+            combinedList.add(p);
+
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
@@ -172,7 +191,7 @@ public class PerformanceService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        for(Performance p : performanceList){
+        for(Performance p : combinedList){
             //  공연 상태 계산
             StringBuilder sb = new StringBuilder();
             if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
@@ -332,7 +351,7 @@ public class PerformanceService {
     @Transactional(readOnly = true)
     public List<ProfilePfResponse> findRegisteredList(int memberNo, Pageable pageable) {
         Member member = memberRepository.findById(memberNo).get();
-        Slice<Performance> performanceList = performanceRepository.findByMemberOrderByCreatedTimeDesc(member, pageable);
+        Slice<Performance> performanceList = performanceRepository.findByMemberIsRemovedOrderByCreatedTimeDesc(member, false, pageable);
 
         List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
 

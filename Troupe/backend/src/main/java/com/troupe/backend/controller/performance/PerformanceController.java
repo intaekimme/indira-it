@@ -98,11 +98,14 @@ public class PerformanceController {
      * 공연 목록 조회, 최근 생성 순
      * @return
      */
-    @Operation(summary = "공연 목록 조회, 최근 생성 순", description = "파라미터: 페이지 번호")
+    @Operation(summary = "공연 목록 조회, 1. 현재 진행중 종료일 오름차순" +
+            "2. 진행예정 시작일 오름차순" +
+            "3. 종료 종료일 내림차순" +
+            "순서로 표시", description = "파라미터: 페이지 번호")
     @GetMapping("/list")
     public ResponseEntity<List<PerformanceResponse>> performanceList(int pageNumber){
-        Pageable sortedByCreatedTime = PageRequest.of(pageNumber,6, Sort.by("createdTime").descending());
-        List<PerformanceResponse> performanceResponseList =  performanceService.findAll( sortedByCreatedTime);
+        PageRequest pageRequest = PageRequest.of(pageNumber, 6);
+        List<PerformanceResponse> performanceResponseList =  performanceService.findAll(pageRequest);
         return ResponseEntity.ok().
                 body(performanceResponseList);
     }
