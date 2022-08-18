@@ -11,6 +11,28 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PerformanceRepository extends JpaRepository<Performance, Integer> {
+    @Query(nativeQuery = true, value = "((select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
+            "from tb_performance as pf " +
+            "where member_no = :memberNo " +
+            "and is_removed = :isRemoved " +
+            "and date_add(current_timestamp(), interval 9 hour) between start_date and end_date " +
+            "order by end_date asc )" +
+            "union " +
+            "(select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
+            "from tb_performance as pf " +
+            "where member_no = :memberNo " +
+            "and is_removed = :isRemoved " +
+            "and date_add(current_timestamp(), interval 9 hour) <= start_date " +
+            "order by start_date asc))" +
+            "union " +
+            "(select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
+            "from tb_performance as pf " +
+            "where member_no = :memberNo " +
+            "and is_removed = :isRemoved " +
+            "and end_date <= date_add(current_timestamp(), interval 9 hour) " +
+            "order by end_date desc) ")
+    Optional<Slice<Performance>> findByMemberCombined(int memberNo, boolean isRemoved, Pageable pageable);
+
     /**
      * 유저가 등록한 공연 리스트
      * 삭제되지 않은 공연중인 공연, 종료일 오름차순
@@ -119,19 +141,22 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
     List<Performance> findAllByTitleAndDescriptionPerformanceThatHaveEnded(String keyword);
 
 
-    @Query(nativeQuery = true, value = "((select * from tb_performance as pf " +
+    @Query(nativeQuery = true, value = "((select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
+            "from tb_performance as pf " +
             "where is_removed = :isRemoved " +
-            "and current_timestamp() between start_date and end_date " +
+            "and date_add(current_timestamp(), interval 9 hour) between start_date and end_date " +
             "order by end_date asc )" +
             "union " +
-            "(select * from tb_performance as pf " +
+            "(select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
+            "from tb_performance as pf " +
             "where is_removed = :isRemoved " +
-            "and current_timestamp() <= start_date " +
+            "and date_add(current_timestamp(), interval 9 hour) <= start_date " +
             "order by start_date asc))" +
             "union " +
-            "(select * from tb_performance as pf " +
+            "(select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
+            "from tb_performance as pf " +
             "where is_removed = :isRemoved " +
-            "and end_date <= current_timestamp() " +
+            "and end_date <= date_add(current_timestamp(), interval 9 hour) " +
             "order by end_date desc) ")
     Optional<Slice<Performance>> findAllCombined(boolean isRemoved, Pageable pageable);
 
