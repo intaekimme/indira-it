@@ -160,15 +160,10 @@ export default function ProfileAvatarModify() {
       <Container
         component="main"
         maxWidth="1920px"
-        style={{ justifyContent: "center", alignItems: "center", fontFamily: "SBAggroB" }}
+        style={{ justifyContent: "center", alignItems: "center", fontFamily: "SBAggroB", width: "100%", height: "100%"}}
       >
         <Grid container spacing={2} style={{ textAlign: "center" }}>
-          <Grid
-            item
-            xs={gridItemxs}
-            container
-            justifyContent="center"
-            alignItems="flex-end"
+          <Grid container item xs={gridItemxs} justifyContent="center" alignItems="center"
             style={{
               backgroundColor: "#fda085",
               border: "5px solid white",
@@ -177,47 +172,62 @@ export default function ProfileAvatarModify() {
               position: "relative",
               boxShadow: "3px 3px 5px #000",
               borderRadius: "1%",
-              paddingBottom : "300px"
+              paddingBottom: "300px",
+              border:"5px solid white"
             }}
           >
-            
-            <Grid item xs={12} style={{color: "white", textShadow: "1px 1px 1px #000", fontSize: "40px"}}>내 모습을 꾸며보세요!</Grid>
-            <Avatar
-              avatarResponse={avatar}
-              imgWidth={75 * 4}
-              imgHeight={100 * 4}
-              divWidth={75 * 4}
-              divHeight={100 * 4}
-            />
-            <Grid  item xs={12}>
-            <Button
-                className={stylesButton.btn}
-                variant="contained"
-                color="neutral"
-                style={{border: "3px solid white", marginRight:"5px", color:"black"}}
-                onClick={()=>reset(memberNo)}
-                maxWidth
-              >
-                돌아가기
-              </Button>
-              <Button
-                className={stylesButton.btn2}
-                variant="contained"
-                color="neutral"
-                style={{border: "3px solid white", marginLeft:"5px", color:"black"}}
-                onClick={finish}
-                maxWidth
-              >
-                저장하기
-              </Button>
+            <Grid container direction="row" justifyContent="center" alignItems="center"
+             style={{ width:"100%", height: "100%" }}>
+            {/* style={{ width: "100%", height: "100%" }}> */}
+              <Grid item xs={12} style={{color: "white", textShadow: "1px 1px 1px #000", fontSize: "40px"}}>내 모습을 꾸며보세요!</Grid>
+              <Grid item xs={12} justifyContent="center" alignItems="center"
+                style={{ minHeight: "500px", width: "100%", height: "100%"}}>
+                <Avatar
+                  style={{
+                    padding: "10px",
+                    overflow: "auto",
+                    maxWidth: "100%",
+                    height: "100%",
+                    // height: "calc(100vh + 100px)",
+                    // width: "100%",
+                    width: "calc(100vh + 100px)",
+                    paddingBottom: "75%",
+                  }}
+                  avatarResponse={avatar}
+                  imgWidth={100}
+                  imgHeight={100}
+                  divWidth={100}
+                  divHeight={100}
+                  top={"0%"}
+                  left={"0%"}
+                  sizeString="%"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                    className={stylesButton.btn}
+                    variant="contained"
+                    color="neutral"
+                    style={{border: "3px solid white", marginRight:"5px", color:"black"}}
+                    onClick={()=>reset(memberNo)}
+                    maxWidth
+                  >
+                    돌아가기
+                </Button>
+                <Button
+                  className={stylesButton.btn2}
+                  variant="contained"
+                  color="neutral"
+                  style={{border: "3px solid white", marginLeft:"5px", color:"black"}}
+                  onClick={finish}
+                  maxWidth
+                >
+                  저장하기
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid
-            item
-            xs={gridItemxs}
-            container
-            justifyContent="center"
-            alignItems="center"
+          <Grid container item xs={gridItemxs} justifyContent="center" alignItems="center"
             style={{ padding: 0, }}
           >
           <Grid item xs={12}>
