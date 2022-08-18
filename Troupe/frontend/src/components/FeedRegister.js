@@ -8,6 +8,10 @@ import apiClient from "../apiClient";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Theme from "./Theme";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
+
 export default function FeedRegister() {
   const [imgUrl, setImgUrl] = React.useState([]);
   const [images, setImages] = React.useState([]);
@@ -18,10 +22,20 @@ export default function FeedRegister() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (images.length === 0) {
-      alert("사진을 업로드하세요");
+      MySwal.fire({
+        icon: 'warning',
+        title: '이미지를 업로드해주세요',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
       return;
     } else if (content.length === 0) {
-      alert("내용을 작성하세요");
+      MySwal.fire({
+        icon: 'warning',
+        title: '내용을 작성하세요',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
       return;
     }
     const data = new FormData(event.currentTarget);
@@ -50,7 +64,12 @@ export default function FeedRegister() {
     if (imageUrlLists.length > 10) {
       imageUrlLists = imageUrlLists.slice(0, 10);
       imageList = imageList.slice(0, 10);
-      alert("최대 10개 까지 업로드 할 수 있습니다");
+      MySwal.fire({
+        icon: 'warning',
+        title: '최대 10개 까지 업로드 할 수 있습니다',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
     }
     setImgUrl(imageUrlLists);
     setImages(imageList);

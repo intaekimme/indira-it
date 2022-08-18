@@ -5,7 +5,9 @@ import apiClient from "../apiClient";
 
 import Button from "@mui/material/Button";
 import FacebookIcon from "@mui/icons-material/Facebook";
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 export default function SNSLoginFacebook() {
   window.fbAsyncInit = function () {
     FB.init({
@@ -39,10 +41,15 @@ export default function SNSLoginFacebook() {
         //DB 회원가입 되있을 시 로그인
         //없으면 새롭게 생성 후 로그인
         //apiClient.login();
-        alert("로그인상태");
+        MySwal.fire({
+          icon: 'warning',
+          title: '로그인 상태입니다',
+          confirmButtonColor: '#66cc66',
+          confirmButtonBorder: '#66cc66',
+        })
       } else {
         const loginData = FB.login((response) => {
-          alert("로그인시도");
+          // alert("로그인시도");
           if (response.status === "connected") {
             //로그인상태
             //DB 회원가입 되있을 시 로그인

@@ -17,7 +17,6 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import SNSLoginFacebook from "./SNSLoginFacebook";
 import Theme from "./Theme";
-
 export default function Login() {
   //로그인버튼 클릭
   const handleSubmit = (event) => {
@@ -33,11 +32,11 @@ export default function Login() {
 
   //페이스북 로그인
   const facebookLogin = () => {
-    alert("facebook 로그인 창");
+    // alert("facebook 로그인 창");
   };
   //인스타 로그인
   const instagramLogin = () => {
-    alert("instagram 로그인 창");
+    // alert("instagram 로그인 창");
   };
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -127,7 +126,7 @@ export default function Login() {
               >
                 로그인
               </Button>
-              <Button
+              {/* <Button
                 fullWidth
                 variant="contained"
                 sx={{ mt: 0, mb: 1 }}
@@ -136,7 +135,7 @@ export default function Login() {
               >
                 Instagram 로그인
               </Button>
-              <SNSLoginFacebook />
+              <SNSLoginFacebook /> */}
               {/* <Button
               fullWidth
               variant="contained"
@@ -146,7 +145,7 @@ export default function Login() {
             >
               FaceBook 로그인
             </Button> */}
-
+            
               <Grid container justifyContent="space-between">
                 <Grid>
                   <Link href="/resetpw" variant="body2">

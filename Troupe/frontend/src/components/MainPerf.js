@@ -13,8 +13,10 @@ import PerfList from "./PerfList";
 import PerfSearchList from "./PerfSearchList";
 import Theme from "./Theme";
 import { FormControl, Select, MenuItem, TextField } from "@mui/material";
-import stylesButton from "../css/button.module.css";
 import SearchIcon from "@mui/icons-material/Search";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 function Copyright() {
   return (
     <Typography color="text.secondary" align="center" component="span">
@@ -59,7 +61,12 @@ export default function MainPerf() {
 
   const handleShowSearch = () => {
     if (searchWord.length === 0) {
-      alert("검색어를 입력해주세요.");
+      MySwal.fire({
+        icon: 'warning',
+        title: '검색어를 입력해주세요.',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
       return;
     }
     setShowList(false);

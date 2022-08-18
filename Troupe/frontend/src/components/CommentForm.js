@@ -20,8 +20,8 @@ export default function CommentForm(props) {
 
   const reviewRegister = () => {
     if (!sessionStorage.getItem("loginCheck")) {
-      if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
-        sessionStorage.setItem("currentHref", window.location.href);
+      sessionStorage.setItem("currentHref", window.location.href);
+      // if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
       window.location.href = `/login`;
     } else {
       let data = {

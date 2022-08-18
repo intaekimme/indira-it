@@ -9,6 +9,9 @@ import apiClient from "../apiClient";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Theme from "./Theme";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 export default function FeedModify() {
   const { feedNo } = useParams();
   // 추가된 이미지 url
@@ -29,7 +32,6 @@ export default function FeedModify() {
   React.useEffect(() => {
     apiClient.getFeedDetail(feedNo).then((data) => {
       if (parseInt(sessionStorage.getItem("loginMember")) !== data.memberNo) {
-        alert("권한이 없습니다");
         window.location.href = "/feed/list/all/0";
       }
       setImgKeys(data.images);
@@ -42,7 +44,12 @@ export default function FeedModify() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (images.length === 0 && oldImage.length === 0) {
-      alert("사진을 업로드하세요");
+      MySwal.fire({
+        icon: 'warning',
+        title: '사진을 업로드 하세요',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
       return;
     }
     const data = new FormData(event.currentTarget);
@@ -74,7 +81,12 @@ export default function FeedModify() {
     if (imageUrlLists.length > 10 - size) {
       imageUrlLists = imageUrlLists.slice(0, 10 - size);
       imageList = imageList.slice(0, 10 - size);
-      alert("최대 10개 까지 업로드 할 수 있습니다");
+      MySwal.fire({
+        icon: 'warning',
+        title: '최대 10개 까지 업로드 할 수 있습니다',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
     }
     setImgUrl(imageUrlLists);
     setImages(imageList);
@@ -89,11 +101,18 @@ export default function FeedModify() {
   };
 
   const cancelForm = () => {
-    if (window.confirm("수정을 취소하시겠습니까?")) {
-      window.location.href = "/feed/list/all/0";
-    } else {
-      return;
-    }
+    
+    Swal.fire({
+      title: '수정을 취소하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+      confirmButtonColor: '#66cc66',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/feed/list/all/0";
+      } 
+    })
   };
   const addTagFunc = useCallback(
     (event) => {
