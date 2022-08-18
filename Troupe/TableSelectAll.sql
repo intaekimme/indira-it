@@ -1,4 +1,12 @@
+use testdb;
 use troupe;
+select * from tb_avatar_clothes;
+select * from tb_avatar_eye;
+select * from tb_avatar_hair;
+select * from tb_avatar_mouth;
+select * from tb_avatar_nose;
+select * from tb_avatar_shape;
+
 select * from tb_category;
 select * from tb_character_eye;
 select * from tb_character_clothes;
@@ -25,6 +33,14 @@ select * from tb_pf_review;
 select * from tb_pf_save;
 select * from tb_report;
 select * from tb_tag;
-select * from tb_user;
+select * from tb_member;
+select * from tb_member_guestbook;
 select * from tb_user_character;
 select * from tb_user_guestbook;
+
+-- delete from tb_likability where fan_member_no=;
+-- delete from tb_refresh_token where member_no=;
+-- select * from tb_feed_like where member_no=;
+-- select * from tb_feed_save where member_no=;
+delete from tb_member where email="tkdfhrtnalsgh@hanmail.net";
+desc tb_user;

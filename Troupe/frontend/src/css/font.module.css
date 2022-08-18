@@ -1,0 +1,28 @@
+
+
+.border {
+    position: relative;
+    /* background-image: linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%); */
+    /* background-image: url("../img/frame.png"); */
+    /* background-image: linear-gradient(to top, #12f86a 0%, #1cb771 100%); */
+    background-repeat: no-repeat;
+    background-position:  32px 10px;
+}
+.borderImg {
+    position: absolute;
+    top:2px;
+    left: 6px;
+    width: 330px;
+}
+
+.highlighter {
+    background: linear-gradient(to top, #ffd400 30%, #ffffff00 50%);
+  
+}
+.highlighter2 {
+    background: linear-gradient(to top, #66cc66 30%, #ffffff00 50%);
+}
+.highlighter3 {
+    background: linear-gradient(to top, #fda085 30%, #ffffff00 50%);
+   
+}

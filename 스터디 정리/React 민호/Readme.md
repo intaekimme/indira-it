@@ -1,4 +1,5 @@
 # 목차
+  * [for](#for)
   * [배열](#배열)
     + [...](#점점점)
     + [map](#map)
@@ -11,9 +12,39 @@
     + [React useEffect](#react-useeffect)
   * [프로젝트 생성](#프로젝트-생성)
   * [Router](#router)
+    + [react-router-dom useParams](#useparams)
+  * [Axios](#axios)
+    + [Promise 반환](#promise)
   * [error](#error)
     + [is not a component All component children of must be a or](#is-not-a-component-all-component-children-of-must-be-a-or)
     + [ERESOLVE unable to resolve dependency tree](#eresolve-unable-to-resolve-dependency-tree)
+## for
+index 읽기, index 조절, break문 가능
+
+	for(int i=0;i<array.length; ++i
+		console.log('basic' + array[i]
+
+index 읽기, break문 가능
+
+	for(const i in array)
+		console.log('basic' + array[i]
+
+break문 가능
+
+	for(const v of array)
+		console.log('of' + v)
+
+break문 가능
+
+	array.som(v=> {
+		console.log('some' + v);
+		return (v==3);
+	})
+
+전부 조절 불가능
+
+	array.forEach(v=> console.log('each' + v));
+
 ## 배열
 
 	1. const food = ["tomato", "potato"];
@@ -144,6 +175,46 @@ Cleanup function	useEffect를 통해 오브젝트가 destroy될때도 코드실�
 
 	import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+### useParams
+: 를 통해 path에 params 설정 후 useParams()를 통해 params의 이름과 같은 변수에 data 저장
+
+route
+
+	import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+	<Route path="/profile/:memberNo" element={<PerfList />}></Route>
+
+element
+
+	import { useParams } from "react-router-dom";
+	const { memberNo } = useParams();
+
+## Axios
+### Promise
+axios 요청
+
+	getMemberInfo: (memberNo) => {
+		return instance
+		.get(`/member/${memberNo}`)
+		.then((response) => {
+			console.log(response.data);
+			return response.data;
+		})
+		.catch((error) => {
+			alert("Member 정보를 불러오는데 실패하였습니다 : " + error);
+			return null;
+		});
+	},
+
+외부에서 axios data받을 때 Promise 객체로 반환되므로 then을 통해 data 처리
+
+	const [memberInfo, setMemberInfo] = React.useState("");
+	React.useEffect(() => {
+		console.log(memberNo);
+		apiClient.getMemberInfo(memberNo).then((data) => {
+		setMemberInfo(data);
+		});
+	}, [memberNo]);
+
 ## Error
 
 ### is not a component All component children of must be a or
@@ -192,5 +263,4 @@ Routes의 자식으로 Route만 가능하게 바뀜
 npm ERR! ERESOLVE unable to resolve dependency tree
 npm ERR! this command with --force, or --legacy-peer-deps
 
-	npm install @mui/material @emotion/react @emotion/styled --legacy-peer-deps
-	npm install @material-ui/icons --legacy-peer-deps
+	npm install @mui/material @mui/icons-material @emotion/react @emotion/styled @material-ui/core @material-ui/icons --legacy-peer-deps
