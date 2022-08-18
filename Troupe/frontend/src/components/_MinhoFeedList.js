@@ -16,6 +16,19 @@ import PlusButton from "./PlusButton";
 import stylesTag from "../css/tag.module.css";
 
 export default function _MinhoFeedList(props) {
+  //카드이미지 width
+  const [cardWidth, setCardWidth] = React.useState(window.innerWidth/4+window.innerWidth/20);
+
+  //1000보다 큰경우 2화면분할
+  const handleCardWidth = () => {
+    const size = window.innerWidth/4+window.innerWidth/20;
+    setCardWidth(size);
+  };
+  //화면분할 update
+  React.useEffect(() => {
+    window.addEventListener("resize", handleCardWidth);
+  }, [window.innerWidth]);
+
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   const [isHover, setIsHover] = React.useState(-1);
@@ -53,7 +66,7 @@ async function fetchMore() {
     return (
         <Grid container spacing={4}>
           {cards.map(card => 
-              <Grid item key={`${card.feedNo}`} xs={12} sm={6} md={4}>
+              <Grid item key={`${card.feedNo}`} xs={4}>
                 <Card
                   sx={{
                     position: "relative",
@@ -106,8 +119,8 @@ async function fetchMore() {
                     sx={{
                       pb: 1,
                       objectFit: "cover",
-                      width: "300px",
-                      height: "300px",
+                      width: `${cardWidth}px`,
+                      height: `${cardWidth}px`,
                       opacity: isHover === card.feedNo ? 0.5 : null,
                       transform: isHover === card.feedNo ? "scale(1.1)" : null,
                       transition: "0.5s",
