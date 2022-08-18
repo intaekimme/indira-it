@@ -155,15 +155,14 @@ public class MemberService implements UserDetailsService {
         if (memberModifyForm.getNickname() != null && !memberModifyForm.getNickname().isEmpty()) {
             foundMember.setNickname(memberModifyForm.getNickname());
         }
-        if (memberModifyForm.getDescription() != null && !memberModifyForm.getDescription().isEmpty()) {
-            foundMember.setDescription(memberModifyForm.getDescription());
-        }
+
+        foundMember.setDescription(memberModifyForm.getDescription());
+
         if (memberModifyForm.getMemberType() != null) {
             foundMember.setMemberType(memberModifyForm.getMemberType());
         }
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            foundMember.setProfileImageUrl(imageUrl);
-        }
+
+        foundMember.setProfileImageUrl(imageUrl);
 
         memberRepository.save(foundMember);
 
