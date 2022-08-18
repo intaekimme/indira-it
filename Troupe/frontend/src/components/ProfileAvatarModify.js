@@ -117,14 +117,18 @@ export default function ProfileAvatarModify() {
 	}, []);
 
 	//화면 width에 따른 화면분할여부
+  const [divideWindow, setDivideWindow] = React.useState(window.innerWidth < 1000 ? false : true);
+	//화면 width에 따른 화면분할크기
 	const [gridItemxs, setGridItemxs] = React.useState(window.innerWidth < 1000 ? 12 : 6);
 	//1000보다 큰경우 2화면분할
   const handleGrid = () => {
     const size = window.innerWidth;
     if (size < 1000) {
       setGridItemxs(12);
+      setDivideWindow(false);
     } else {
       setGridItemxs(6);
+      setDivideWindow(true);
     }
   };
   //화면분할 update
@@ -164,6 +168,7 @@ export default function ProfileAvatarModify() {
       >
         <Grid container spacing={2} style={{ textAlign: "center" }}>
           <Grid container item xs={gridItemxs} justifyContent="center" alignItems="center"
+            id="AvatarGrid"
             style={{
               backgroundColor: "#fda085",
               border: "5px solid white",
@@ -181,8 +186,9 @@ export default function ProfileAvatarModify() {
             {/* style={{ width: "100%", height: "100%" }}> */}
               <Grid item xs={12} style={{color: "white", textShadow: "1px 1px 1px #000", fontSize: "40px"}}>내 모습을 꾸며보세요!</Grid>
               <Grid item xs={12} justifyContent="center" alignItems="center"
-                style={{ minHeight: "500px", width: "100%", height: "100%"}}>
-                <Avatar
+                style={{ minHeight: "300px", width: "100%", height: "100%" }}>
+                {/* {divideWindow ?
+                  <Avatar
                   style={{
                     padding: "10px",
                     overflow: "auto",
@@ -191,6 +197,44 @@ export default function ProfileAvatarModify() {
                     // height: "calc(100vh + 100px)",
                     // width: "100%",
                     width: "calc(100vh + 100px)",
+                    paddingBottom: "75%",
+                  }}
+                  avatarResponse={avatar}
+                  imgWidth={100}
+                  imgHeight={100}
+                  divWidth={100}
+                  divHeight={100}
+                  top={"-2%"}
+                  left={"-2%"}
+                  sizeString="%"
+                />
+                  :
+                  <Avatar
+                    style={{
+                      padding: "10px",
+                      overflow: "auto",
+                      width: "300px",
+                      height: "400px",
+                    }}
+                    avatarResponse={avatar}
+                    imgWidth={300}
+                    imgHeight={400}
+                    divWidth={300}
+                    divHeight={400}
+                    top={"-2%"}
+                    left={"-2%"}
+                    sizeString="px"
+                  />
+                } */}
+                <Avatar
+                  style={{
+                    padding: "10px",
+                    overflow: "auto",
+                    maxWidth: "100%",
+                    height: "100%",
+                    width: "calc(100vh + 100px)",
+                    // width: `${$("#AvatarGrid").innerWidth - 100}px`,
+                    // height: `${$("#AvatarGrid").innerHeight - 300}px`,
                     paddingBottom: "75%",
                   }}
                   avatarResponse={avatar}
