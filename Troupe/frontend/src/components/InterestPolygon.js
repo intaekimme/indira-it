@@ -45,7 +45,6 @@ export default function InterestPolygon(props) {
   //window size가 변할때마다 가로길이, 단위길이 update
   React.useEffect(() => {
     window.addEventListener("resize", changeWidth);
-    console.log(interest);
   }, [window.innerWidth]);
 
   //회전각
