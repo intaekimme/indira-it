@@ -35,6 +35,7 @@ const apiClient = {
   },
   //로그인
   login: (loginInfo) => {
+    console.log(loginInfo);
     return instance
       .post("/member/login", loginInfo)
       .then((response) => {
@@ -47,7 +48,10 @@ const apiClient = {
         );
         console.log("로그인 되었습니다.");
         // alert("로그인 되었습니다.");
-        const href = sessionStorage.getItem("currentHref");
+        let href = sessionStorage.getItem("currentHref");
+        if(!href || href===null || href==="null" ){
+          href = "/";
+        }
         sessionStorage.removeItem("currentHref");
         window.location.href = href;
         return true;
