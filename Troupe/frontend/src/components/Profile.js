@@ -123,30 +123,8 @@ function Profile(props) {
             }}
           >
             {/* Stage start */}
-            <ProfileStage memberNickname={ memberInfo.nickname } memberNo={memberNo}/>
-            <Button
-              onClick={modifyAvatar}
-              style={{
-                display: "flex",
-                left: "25%",
-                top: "-67%",
-              }}
-            >
-              <Avatar
-                avatarResponse={avatar}
-                imgWidth={75 * 4}
-                imgHeight={100 * 4}
-                divWidth={75 * 4}
-                divHeight="100%"
-
-                // style={{
-                //   position: "absolute",
-                //   display: "flex",
-                //   justifyContent: "center",
-                //   alignItems: "center",
-                // }}
-              />
-            </Button>
+            <ProfileStage style={{width:"100%", height:"100%"}} memberNickname={ memberInfo.nickname } memberNo={memberNo}
+            modifyAvatar = {modifyAvatar} avatar={avatar} gridItemxs={gridItemxs}/>
             {/* Stage finish */}
             {/* 방명록 */}
             <GuestBook memberNickname={ memberInfo.nickname } memberNo={memberNo}/>
