@@ -19,6 +19,10 @@ import Theme from "./Theme";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
+
 export default function PerfNew() {
   //공연 포스터
   const [imgUrl, setImgUrl] = React.useState([]);
@@ -88,7 +92,12 @@ export default function PerfNew() {
     if (imageUrlLists.length > 10) {
       imageUrlLists = imageUrlLists.slice(0, 10);
       imageList = imageList.slice(0, 10);
-      alert("최대 10개 까지 업로드 할 수 있습니다");
+      MySwal.fire({
+        icon: 'warning',
+        title: '최대 10개 까지 업로드 할 수 있습니다',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
     }
 
     setImgUrl(imageUrlLists);
@@ -155,7 +164,12 @@ export default function PerfNew() {
   // 공연 제목 길이 체크
   function titleLength(e) {
     if (e.target.value.length > 100) {
-      alert("글자수 초과!");
+      MySwal.fire({
+        icon: 'warning',
+        title: '글자수를 초과하였습니다',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
       e.target.value = e.target.value.substring(0, 100);
       e.target.focus();
     }

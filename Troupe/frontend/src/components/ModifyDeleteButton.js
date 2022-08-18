@@ -5,6 +5,9 @@ import { SvgIcon } from "@mui/material";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 export default function ModifyDeleteButton(props) {
   const [user, setUser] = React.useState(false);
 
@@ -15,7 +18,18 @@ export default function ModifyDeleteButton(props) {
     setUser(!user);
   }
   function onRemove() {
-    apiClient.feedRemove(props.feedNo);
+    Swal.fire({
+      title: '삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+      confirmButtonColor: 'red',
+    }).then((result)=>{
+      if(result.isConfirmed){
+        apiClient.feedRemove(props.feedNo);
+
+      }
+    })
   }
 
   return (

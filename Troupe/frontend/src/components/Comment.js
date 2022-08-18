@@ -16,7 +16,9 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SendIcon from "@mui/icons-material/Send";
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 export default function Comment(props) {
   const [user, setUser] = useState(0);
   // 대댓글 목록
@@ -95,8 +97,8 @@ export default function Comment(props) {
     setCancel(!cancel);
     setIsChild(true);
     if (!sessionStorage.getItem("loginCheck")) {
-      if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
-        sessionStorage.setItem("currentHref", window.location.href);
+      sessionStorage.setItem("currentHref", window.location.href);
+      // if (window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?"))
       window.location.href = `/login`;
     } else {
       setIsChildReviewRegister(true);
@@ -146,26 +148,37 @@ export default function Comment(props) {
 
   //  댓글 삭제
   const deleteComment = () => {
-    if (window.confirm("삭제하시겠습니까?")) {
-      // props.deleteCommentFunc(props.somethingNo, props.reviewNo)
-      //   .then(() => {
-      //     setContent("삭제된 댓글입니다.");
-      //     setDeleted(true);
-      // })
-      if (!props.feedNo) {
-        apiClient
-          .perfReviewDelete(props.performanceNo, props.reviewNo)
-          .then(() => {
+    Swal.fire({
+      title: '삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+      confirmButtonColor: 'red',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (!props.feedNo) {
+          apiClient
+            .perfReviewDelete(props.performanceNo, props.reviewNo)
+            .then(() => {
+              setContent("삭제된 댓글입니다.");
+              setDeleted(true);
+            });
+        } else {
+          apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
             setContent("삭제된 댓글입니다.");
             setDeleted(true);
           });
-      } else {
-        apiClient.feedCommentDelete(props.feedNo, props.reviewNo).then(() => {
-          setContent("삭제된 댓글입니다.");
-          setDeleted(true);
-        });
-      }
-    }
+        }
+      } 
+    })
+    // if (window.confirm("삭제하시겠습니까?")) {
+    //   // props.deleteCommentFunc(props.somethingNo, props.reviewNo)
+    //   //   .then(() => {
+    //   //     setContent("삭제된 댓글입니다.");
+    //   //     setDeleted(true);
+    //   // })
+     
+    // }
   };
 
   //  댓글 등록 취소

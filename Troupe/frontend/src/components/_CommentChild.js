@@ -16,6 +16,9 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SendIcon from "@mui/icons-material/Send";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 
 export default function CommentChild(props) {
   console.log(props);
@@ -65,11 +68,23 @@ export default function CommentChild(props) {
 
   //  댓글 삭제
   const deleteComment = () => {
-    if (window.confirm("삭제하시겠습니까?")) {
-      props.deleteCommentFunc(props.somethingNo, props.childComment.comment.reviewNo);
-      setContent("삭제된 댓글입니다.");
-      setDeleted(true);
-    }
+    Swal.fire({
+      title: '삭제하시겠습니까?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      denyButtonText: `취소`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        Swal.fire('댓글이 삭제되었습니다', '', 'success')
+        props.deleteCommentFunc(props.somethingNo, props.childComment.comment.reviewNo);
+        setContent("삭제된 댓글입니다.");
+        setDeleted(true);
+      } 
+    })
+    // if (window.confirm("삭제하시겠습니까?")) {
+    // }
   };
 
   //  댓글 등록 취소

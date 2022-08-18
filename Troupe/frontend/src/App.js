@@ -64,8 +64,8 @@ function App() {
             <Route path="/profile/:memberNo/modify-avatar" element={<ProfileAvatarModify />}></Route>
             <Route path="/test" element={<Test />}></Route>
             <Route path="/perf/detail/:pfNo" element={<PerfDetail />}></Route>
-            <Route path="/perf/register" element={<PerfRegister />}></Route>
-            <Route path="/perf/modify/:pfNo" element={<PerfModify />}></Route>
+            <Route path="/perf/register" element={loginCheck()? <PerfRegister /> : <Navigate to="/login" />}></Route>
+            <Route path="/perf/modify/:pfNo" element={loginCheck() ? <PerfModify /> :<Navigate to="/login" /> }></Route>
             <Route path="/feed/register" element={ loginCheck() ? <FeedRegister /> : <Navigate to="/login" />}></Route>
             <Route path="/feed/modify/:feedNo" element={loginCheck() ? <FeedModify /> : <Navigate to="/login" />}></Route>
             <Route path="/guestbook/test" element={<GuestBook />}></Route>

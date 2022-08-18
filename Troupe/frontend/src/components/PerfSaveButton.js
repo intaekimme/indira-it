@@ -24,7 +24,6 @@ export default function PerfSaveButton(props) {
 
   const SaveClick = () => {
     if (!sessionStorage.getItem("loginCheck")) {
-      alert("로그인이 필요한 서비스입니다.");
       sessionStorage.setItem("currentHref", window.location.href);
       window.location.href = "/login";
     } else {

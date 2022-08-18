@@ -14,6 +14,9 @@ import { ThemeProvider } from "@mui/material/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Theme from "./Theme";
 import styledButton from "../css/button.module.css";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 export default function Signup() {
   //frontend image update
   const [imgUrl, setImgUrl] = React.useState("");
@@ -53,7 +56,12 @@ export default function Signup() {
   const sameCheck = (string) => {
     if (string === "email") {
       if (emailCheck) {
-        alert("email 중복확인이 이미 완료되었습니다.");
+        MySwal.fire({
+          icon: 'warning',
+          title: 'email 중복확인이 이미 완료되었습니다',
+          confirmButtonColor: '#66cc66',
+          confirmButtonBorder: '#66cc66',
+        })
         return;
       }
       apiClient.existEmail({ email: email }).then((data) => {

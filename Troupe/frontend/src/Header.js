@@ -17,6 +17,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import logo from "./img/logo4.png";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 const useStyles = () => {
   return {
     list: {
@@ -38,13 +41,13 @@ export default function Header() {
   });
   const [login, setLogin] = React.useState(
     window.sessionStorage.getItem("loginCheck") === "true",
-  );
-
-  const [profileImageUrl, setProfileImageUrl] = React.useState(
-    "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/profile/defalut.png",
-  );
-  React.useEffect(() => {
-    // if (login) {
+    );
+    
+    const [profileImageUrl, setProfileImageUrl] = React.useState(
+      "https://s3.ap-northeast-2.amazonaws.com/hongjoo.troupe.project/profile/defalut.png",
+      );
+      React.useEffect(() => {
+    // if (window.sessionStorage.getItem("loginCheck")) {
     //   apiClient.getMyinfo().then((data) => {
     //     if (
     //       data.profileImageUrl &&
@@ -61,9 +64,16 @@ export default function Header() {
     window.sessionStorage.removeItem("loginMember");
     window.sessionStorage.removeItem("accessToken");
     setLogin(false);
-    alert("로그아웃 되었습니다.");
-    console.log(login);
-    window.location.href = window.location.href;
+    MySwal.fire({
+      icon: 'success',
+      title: '로그아웃 되었습니다',
+      confirmButtonColor: '#66cc66',
+      confirmButtonBorder: '#66cc66',
+    }).then(()=>{
+      console.log(login);
+      window.location.href = window.location.href;
+
+    })
   };
   const toggleDrawer = (anchor, open) => (event) => {
     if (
