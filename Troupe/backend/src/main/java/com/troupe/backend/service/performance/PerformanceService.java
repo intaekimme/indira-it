@@ -163,25 +163,27 @@ public class PerformanceService {
      */
     @Transactional(readOnly = true)
     public List<PerformanceResponse> findAll(Pageable pageable){
-        List<Performance> combinedList = new ArrayList<>();
+//        List<Performance> combinedList = new ArrayList<>();
 
-        //  진행중
-        Slice<Performance> performingList =
-                performanceRepository.findAllPerforming(false, pageable).get();
-        for(Performance p : performingList)
-            combinedList.add(p);
+//        //  진행중
+//        Slice<Performance> performingList =
+//                performanceRepository.findAllPerforming(false, pageable).get();
+//        for(Performance p : performingList)
+//            combinedList.add(p);
+//
+//        //  진행 예정
+//        Slice<Performance> upcommingList =
+//                performanceRepository.findAllUpcommingPerformance(false, pageable).get();
+//        for (Performance p : upcommingList)
+//            combinedList.add(p);
+//
+//        //  종료
+//        Slice<Performance> endList =
+//                performanceRepository.findAllPerformanceThatHaveEnded(false,pageable).get();
+//        for (Performance p : endList)
+//            combinedList.add(p);
 
-        //  진행 예정
-        Slice<Performance> upcommingList =
-                performanceRepository.findAllUpcommingPerformance(false, pageable).get();
-        for (Performance p : upcommingList)
-            combinedList.add(p);
-
-        //  종료
-        Slice<Performance> endList =
-                performanceRepository.findAllPerformanceThatHaveEnded(false,pageable).get();
-        for (Performance p : endList)
-            combinedList.add(p);
+        Slice<Performance> combinedList = performanceRepository.findAllCombined(false, pageable).get();
 
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
