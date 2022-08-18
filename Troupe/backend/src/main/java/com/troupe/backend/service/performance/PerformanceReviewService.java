@@ -8,6 +8,7 @@ import com.troupe.backend.dto.performance.response.PfReviewResponse;
 import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.repository.performance.PerformanceRepository;
 import com.troupe.backend.repository.performance.PerformanceReviewRepository;
+import com.troupe.backend.service.member.LikabilityService;
 import com.troupe.backend.util.MyConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,8 @@ public class PerformanceReviewService {
     private final MemberRepository memberRepository;
     private final PerformanceRepository performanceRepository;
     private final PerformanceReviewRepository performanceReviewRepository;
+
+    private final LikabilityService likabilityService;
 
     /**
      * 공연후기 작성
@@ -60,7 +63,7 @@ public class PerformanceReviewService {
                     .content(request.getContent())
                     .parentPerformanceReview(parentReview)
                     .build();
-        }else{
+        } else{
             performanceReview = PerformanceReview.builder()
                     .member(member)
                     .pf(performance)
@@ -73,6 +76,12 @@ public class PerformanceReviewService {
         PfReviewResponse response = null;
         try {
             PerformanceReview savedReview = performanceReviewRepository.save(performanceReview);
+
+
+            int starMemberNo = savedReview.getPf().getMember().getMemberNo();
+            int fanMemberNo = savedReview.getMember().getMemberNo();
+            likabilityService.updateExp(starMemberNo, fanMemberNo, MyConstant.EXP_PERFORMANCE_REVIEW);
+
             response = PfReviewResponse.builder()
                     .reviewNo(savedReview.getId())
                     .pfNo(performance.getId())
@@ -105,6 +114,10 @@ public class PerformanceReviewService {
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다."));
         performanceReview.setRemoved(true);
         performanceReviewRepository.save(performanceReview);
+
+        int starMemberNo = performanceReview.getPf().getMember().getMemberNo();
+        int fanMemberNo = performanceReview.getMember().getMemberNo();
+        likabilityService.updateExp(starMemberNo, fanMemberNo, MyConstant.EXP_PERFORMANCE_REVIEW);
     }
 
     /**

@@ -133,15 +133,17 @@ public class MemberService implements UserDetailsService {
             throw new WrongPasswordException();
         }
 
-        // 기존 프로필 이미지를 서버에서 삭제
-        String oldImageUrl = foundMember.getProfileImageUrl();
-        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-            s3FileUploadService.deleteFile(oldImageUrl);
-        }
-
-        // 새로운 프로필 이미지를 서버에 저장
         String imageUrl = "";
+
+        // 새 파일을 보냈다면
         if (memberModifyForm.getProfileImage() != null && !memberModifyForm.getProfileImage().isEmpty()) {
+            // 기존 프로필 이미지를 서버에서 삭제
+            String oldImageUrl = foundMember.getProfileImageUrl();
+            if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+                s3FileUploadService.deleteFile(oldImageUrl);
+            }
+
+            // 새로운 프로필 이미지를 서버에 저장
             imageUrl = s3FileUploadService.upload(memberModifyForm.getProfileImage(), "profile");
         }
 
@@ -155,12 +157,13 @@ public class MemberService implements UserDetailsService {
         if (memberModifyForm.getNickname() != null && !memberModifyForm.getNickname().isEmpty()) {
             foundMember.setNickname(memberModifyForm.getNickname());
         }
-        if (memberModifyForm.getDescription() != null && !memberModifyForm.getDescription().isEmpty()) {
-            foundMember.setDescription(memberModifyForm.getDescription());
-        }
+
+        foundMember.setDescription(memberModifyForm.getDescription());
+
         if (memberModifyForm.getMemberType() != null) {
             foundMember.setMemberType(memberModifyForm.getMemberType());
         }
+
         if (imageUrl != null && !imageUrl.isEmpty()) {
             foundMember.setProfileImageUrl(imageUrl);
         }

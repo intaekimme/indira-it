@@ -1,7 +1,10 @@
 package com.troupe.backend.service.security;
 
+import com.troupe.backend.domain.member.Member;
 import com.troupe.backend.domain.security.RefreshToken;
+import com.troupe.backend.dto.member.response.MemberInfoResponse;
 import com.troupe.backend.dto.security.TokenResponse;
+import com.troupe.backend.repository.member.MemberRepository;
 import com.troupe.backend.util.MyConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -26,6 +29,8 @@ import java.util.Optional;
 public class JwtTokenProvider {
     private final RefreshTokenService refreshTokenService;
 
+    private final MemberRepository memberRepository;
+
     /**
      * 암호화 키
      */
@@ -35,7 +40,7 @@ public class JwtTokenProvider {
     /**
      * 토큰 유효 시간
      */
-    private long accessTokenValidTime = 30 * 60 * 1000L; // 30분
+    private long accessTokenValidTime = 60 * 60 * 1000L; // 1시간
     private long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14일
 
     private final UserDetailsService userDetailsService;
@@ -78,7 +83,11 @@ public class JwtTokenProvider {
         // 리프레시 토큰을 DB 에 저장
         refreshTokenService.saveRefreshToken(memberNo, refreshToken);
 
-        return TokenResponse.builder().memberNo(memberNo).accessToken(accessToken).refreshToken(refreshToken).build();
+        // 멤버 객체 조회 후 리스폰스 생성
+        Member member = memberRepository.findById(memberNo).get();
+        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(member);
+
+        return TokenResponse.builder().memberNo(memberNo).accessToken(accessToken).refreshToken(refreshToken).memberInfoResponse(memberInfoResponse).build();
     }
 
     /**

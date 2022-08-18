@@ -295,7 +295,7 @@ export default function PerfModify() {
               {imgUrl ? (
                 <span>
                   {imgUrl.map((item, id) => (
-                    <div key={id} className={stylesTag.img}>
+                    <span key={id} className={stylesTag.img}>
                       <img
                         key={id}
                         src={item.url}
@@ -314,7 +314,7 @@ export default function PerfModify() {
                         className={stylesTag.btn1}
                         style={{ top: "-275px" }}
                       ></RemoveCircleOutlineIcon>
-                    </div>
+                    </span>
                   ))}
                 </span>
               ) : (

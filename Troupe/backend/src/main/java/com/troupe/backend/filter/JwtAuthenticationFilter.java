@@ -1,9 +1,11 @@
 package com.troupe.backend.filter;
 
+import com.troupe.backend.exception.InvalidAccessTokenException;
 import com.troupe.backend.service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 // JwtTokenProvider가 검증을 끝낸 Jwt로부터 유저 정보를 조회해와서 UserPasswordAuthenticationFilter 로 전달한다.
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -25,9 +28,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String accessToken = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);
 
         // 액세스 토큰이 유효하면 토큰으로부터 유저 정보를 받아오고, SecurityContext 에 저장한다.
-        if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (accessToken != null && !accessToken.isEmpty() && !accessToken.equals("null") && !accessToken.equals("Null")) {
+            if (jwtTokenProvider.validateAccessToken(accessToken)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            else {
+                throw new InvalidAccessTokenException();
+            }
         }
 
         chain.doFilter(request, response);

@@ -43,7 +43,7 @@ export default function ProfileAnalyze(props) {
     10, 20, 30, 40, 50, 60, 70, 80,
   ]);
   // 이 member에 대한 나의 호감도 data
-  const [myLikeabilityData, setMyLikeabilityData] = React.useState([]);
+  const [myDataWithLikeability, setMyDataWithLikeability] = React.useState([]);
   //이 member의 호감도 data
   const [performerTop3, setPerformerTop3] = React.useState([]);
   React.useEffect(() => {
@@ -52,6 +52,7 @@ export default function ProfileAnalyze(props) {
     }
     //이 member가 호감도가 높은 공연자 탑3
     apiClient.getPerformerTop3({ profileMemberNo: memberNo }).then((data) => {
+      console.log("dkdk");
       console.log(data);
       setPerformerTop3(data.top3Stars);
     });
@@ -85,10 +86,11 @@ export default function ProfileAnalyze(props) {
     });
     //이 member의 호감도 data
     apiClient
-      .getMyLikeabilityData({ profileMemberNo: memberNo })
+      .getMyDataWithLikeability({ profileMemberNo: memberNo })
       .then((data) => {
+        console.log("dkdk");
         console.log(data);
-        setMyLikeabilityData([data]);
+        setMyDataWithLikeability([data]);
       });
   }, [memberNo]);
 
@@ -158,7 +160,7 @@ export default function ProfileAnalyze(props) {
               <LikeabilityRank
                 nickname={props.nickname}
                 likeabilityWithMember={likeabilityWithMember}
-                likeabilityData={myLikeabilityData}
+                likeabilityData={myDataWithLikeability}
                 style={{ position: "absolute", top: "50%" }}
               ></LikeabilityRank>
             </Grid>

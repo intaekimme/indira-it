@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class EmailToken {
-    private static final long EMAIL_TOKEN_AVAILABLE_MINUTE = 10L;
+    private static final long EMAIL_TOKEN_AVAILABLE_MINUTE = 180L;
 
     @Id
     @GeneratedValue(generator = "uuid2")

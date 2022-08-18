@@ -1,5 +1,6 @@
 package com.troupe.backend.config;
 
+import com.troupe.backend.filter.ExceptionHandlerFilter;
 import com.troupe.backend.filter.JwtAuthenticationFilter;
 import com.troupe.backend.service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
+
     // bean 등록
     @Bean
     @Override
@@ -41,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class); // JwtAuthenticationFilter -> UsernamePasswordAuthenticationFilter 순서로 필터를 거친다
 
+        http.addFilterBefore(exceptionHandlerFilter, JwtAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

@@ -19,6 +19,7 @@ import com.troupe.backend.util.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -161,9 +162,27 @@ public class PerformanceService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PerformanceResponse> findAll(Pageable sortedByCreatedTime){
-        Slice<Performance> performanceList =
-                performanceRepository.findAllByIsRemovedOrderByCreatedTimeDesc(false, sortedByCreatedTime).get();
+    public List<PerformanceResponse> findAll(Pageable pageable){
+        List<Performance> combinedList = new ArrayList<>();
+
+        //  진행중
+        Slice<Performance> performingList =
+                performanceRepository.findAllPerforming(false, pageable).get();
+        for(Performance p : performingList)
+            combinedList.add(p);
+
+        //  진행 예정
+        Slice<Performance> upcommingList =
+                performanceRepository.findAllUpcommingPerformance(false, pageable).get();
+        for (Performance p : upcommingList)
+            combinedList.add(p);
+
+        //  종료
+        Slice<Performance> endList =
+                performanceRepository.findAllPerformanceThatHaveEnded(false,pageable).get();
+        for (Performance p : endList)
+            combinedList.add(p);
+
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
 
@@ -172,7 +191,7 @@ public class PerformanceService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        for(Performance p : performanceList){
+        for(Performance p : combinedList){
             //  공연 상태 계산
             StringBuilder sb = new StringBuilder();
             if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
@@ -212,12 +231,37 @@ public class PerformanceService {
         if(keyword.isBlank())
             throw new NoSuchElementException("검색어가 없습니다.");
 
-        List<Performance> performanceList = null;
+        List<Performance> combinedList = new ArrayList<>();
+        List<Performance> performingList = null;
+        List<Performance> upcommingList = null;
+        List<Performance> endList = null;
         // 검색 조건과 질의어로 질의
         if(condition.equals("nickname")){       //  작성자
-            performanceList = performanceRepository.findAllByNickName(keyword);
+            performingList = performanceRepository.findAllByNickNamePerforming(keyword);
+            if (!performingList.isEmpty())
+                for(Performance p : performingList)
+                    combinedList.add(p);
+            upcommingList = performanceRepository.findAllByNickNameUpcommingPerformance(keyword);
+            if(!upcommingList.isEmpty())
+                for(Performance p : upcommingList)
+                    combinedList.add(p);
+            endList = performanceRepository.findAllByNickNamePerformanceThatHaveEnded(keyword);
+            if(!endList.isEmpty())
+                for(Performance p : endList)
+                    combinedList.add(p);
         }else if(condition.equals("title")){    //  제목 + 내용
-            performanceList = performanceRepository.findAllByTitleAndDescription(keyword);
+            performingList = performanceRepository.findAllByTitleAndDescriptionPerforming(keyword);
+            if (!performingList.isEmpty())
+                for(Performance p : performingList)
+                    combinedList.add(p);
+            upcommingList = performanceRepository.findAllByTitleAndDescriptionUpcommingPerformance(keyword);
+            if(!upcommingList.isEmpty())
+                for(Performance p : upcommingList)
+                    combinedList.add(p);
+            endList = performanceRepository.findAllByTitleAndDescriptionPerformanceThatHaveEnded(keyword);
+            if(!endList.isEmpty())
+                for(Performance p : endList)
+                    combinedList.add(p);
         }
 
         // 1. LocalDateTime 객체 생성(현재 시간)
@@ -226,7 +270,7 @@ public class PerformanceService {
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
-        for(Performance p : performanceList){
+        for(Performance p : combinedList){
             //  공연 상태 계산
             StringBuilder sb = new StringBuilder();
             if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
@@ -331,8 +375,28 @@ public class PerformanceService {
      */
     @Transactional(readOnly = true)
     public List<ProfilePfResponse> findRegisteredList(int memberNo, Pageable pageable) {
-        Member member = memberRepository.findById(memberNo).get();
-        Slice<Performance> performanceList = performanceRepository.findByMemberOrderByCreatedTimeDesc(member, pageable);
+        Member member = memberRepository.findById(memberNo)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저 입니다."));
+
+        List<Performance> combinedList = new ArrayList<>();
+
+        //  진행중
+        Slice<Performance> performingList =
+                performanceRepository.findByMemberPerforming(member.getMemberNo(),false, pageable).get();
+        for(Performance p : performingList)
+            combinedList.add(p);
+
+        //  진행 예정
+        Slice<Performance> upcommingList =
+                performanceRepository.findByMemberUpcommingPerformance(member.getMemberNo(),false, pageable).get();
+        for (Performance p : upcommingList)
+            combinedList.add(p);
+
+        //  종료
+        Slice<Performance> endList =
+                performanceRepository.findByMemberPerformanceThatHaveEnded(member.getMemberNo(),false,pageable).get();
+        for (Performance p : endList)
+            combinedList.add(p);
 
         List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
 
@@ -342,7 +406,7 @@ public class PerformanceService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        for(Performance p : performanceList){
+        for(Performance p : combinedList){
             //  공연 상태 계산
             StringBuilder sb = new StringBuilder();
             if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);

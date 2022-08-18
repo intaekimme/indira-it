@@ -44,6 +44,7 @@ const apiClient = {
   },
   //로그인
   login: (loginInfo) => {
+    console.log(loginInfo);
     return instance
       .post("/member/login", loginInfo)
       .then((response) => {
@@ -72,10 +73,14 @@ const apiClient = {
           icon: 'success',
           title: '로그인 성공!!',
           text: "님 어서오세요!"
-        }).then(()=>{
-          const href = sessionStorage.getItem("currentHref");
+        }).then(()=>{        
+          console.log("로그인 되었습니다.");
+          let href = sessionStorage.getItem("currentHref");
+          if(!href || href===null || href==="null" ){
+            href = "/";
+          }
           sessionStorage.removeItem("currentHref");
-          window.location.href = href;         
+          window.location.href = href;
         })
         return true;
       })
@@ -949,6 +954,33 @@ const apiClient = {
         console.log(error);
         console.log("공연자에 대한 나의 호감도 data 불러오기 실패");
         // alert("공연자에 대한 나의 호감도 data 불러오기 실패" + error);
+        return null;
+      });
+  },
+  //공연자에 대한 나의 호감도 data 및 나의 data
+  getMyDataWithLikeability: (data) => {
+    return instance
+      .get(`/profile/${parseInt(data.profileMemberNo)}/likability/mydata`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        console.log("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 성공");
+        // alert("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        console.log(error);
+        console.log("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 실패");
+        // alert("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 실패" + error);
         return null;
       });
   },
