@@ -12,16 +12,18 @@ export default function LikeabilityBar(props) {
   //닉네임 경험치
   const [nickname, setNickname] = React.useState("");
   React.useEffect(() => {
-    console.log(props.likeabilityData);
-    console.log(props.likeabilityData.avatarResponse);
-    console.log(props.likeabilityData.memberInfoResponse);
-    
-    console.log(props.likeabilityData.likabilityResponse.exp);
-    console.log(props.likeabilityData.memberInfoResponse.nickname);
     if (props.likeabilityData) {
       setLikeabilityData(props.likeabilityData);
       setExp(props.likeabilityData.likabilityResponse.exp);
       setNickname(props.likeabilityData.memberInfoResponse.nickname);
+
+      
+      // console.log(props.likeabilityData);
+      // console.log(props.likeabilityData.avatarResponse);
+      // console.log(props.likeabilityData.memberInfoResponse);
+
+      // console.log(props.likeabilityData.likabilityResponse.exp);
+      // console.log(props.likeabilityData.memberInfoResponse.nickname);
     }
   }, [props.likeabilityData]);
   // const likeabilityData = props.likeabilityData;

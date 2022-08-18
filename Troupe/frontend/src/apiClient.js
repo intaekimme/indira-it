@@ -679,6 +679,33 @@ const apiClient = {
         return null;
       });
   },
+  //공연자에 대한 나의 호감도 data 및 나의 data
+  getMyDataWithLikeability: (data) => {
+    return instance
+      .get(`/profile/${parseInt(data.profileMemberNo)}/likability/mydata`, {
+        headers: {
+          accessToken: sessionStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        console.log("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 성공");
+        // alert("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 성공");
+        return response.data;
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          const refresh = apiClient.refreshAccessToken();
+          if (refresh) {
+            alert("잠시 후 다시 시도해 주세요");
+          }
+        }
+        console.log(error);
+        console.log("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 실패");
+        // alert("공연자에 대한 나의 호감도 data 및 나의 data 불러오기 실패" + error);
+        return null;
+      });
+  },
   //아바타 번호, 이미지목록 불러오기
   getAvatarListAll: () => {
     return instance

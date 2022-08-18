@@ -242,8 +242,8 @@ export default function GuestBook(props) {
                         style={{
                           width: "100px",
                           height: "100%",
-                          backgroundColor: "#45E3C6",
-                          color: "black",
+                          backgroundColor: "#66CC66",
+                          color: "white",
                           alignContent: "right",
                         }}
                       >
