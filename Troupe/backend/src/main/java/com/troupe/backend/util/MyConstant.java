@@ -46,6 +46,7 @@ public final class MyConstant {
     public static final int EXP_FEED_SAVE = 3;
     public static final int EXP_FEED_LIKE = 1;
     public static final int EXP_FEED_COMMENT = 1;
+    public static final int EXP_PERFORMANCE_REVIEW = 1;
 
 
     // 파일 서버 주소

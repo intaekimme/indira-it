@@ -56,6 +56,15 @@ public class LikabilityService {
      * 스타 멤버 번호, 팬 멤버 번호, 증가/감소시킬 값을 받아서 호감도를 변경한 후 결과를 리턴
      */
     public Likability updateExp(int starMemberNo, int fanMemberNo, int val) {
+        // 자기 자신이면 DB에 저장하지 않는다
+        if (starMemberNo == fanMemberNo) {
+            return Likability.builder()
+                    .starMember(memberRepository.findById(starMemberNo).get())
+                    .fanMember(memberRepository.findById(fanMemberNo).get())
+                    .exp(0)
+                    .build();
+        }
+
         Optional<Likability> found = findByStarMemberNoAndFanMemberNo(starMemberNo, fanMemberNo);
 
         // 기존 값이 있으면 그로부터 증감
