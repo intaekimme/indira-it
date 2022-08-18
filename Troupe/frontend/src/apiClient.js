@@ -56,7 +56,7 @@ const apiClient = {
           response.data.refreshToken,
         );
         console.log(response.data);
-        // const nickname = response.data.memberInfoResponse.nickname;
+        const nickname = response.data.memberInfoResponse.nickname;
         const Toast = Swal.mixin({
           toast: true,
           position: 'top-end',
@@ -72,7 +72,7 @@ const apiClient = {
         Toast.fire({
           icon: 'success',
           title: '로그인 성공!!',
-          text: "님 어서오세요!"
+          text: nickname+"님 어서오세요!"
         }).then(()=>{        
           console.log("로그인 되었습니다.");
           let href = sessionStorage.getItem("currentHref");

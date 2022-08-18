@@ -118,6 +118,23 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
             "order by end_date desc ")
     List<Performance> findAllByTitleAndDescriptionPerformanceThatHaveEnded(String keyword);
 
+
+    @Query(nativeQuery = true, value = "((select * from tb_performance as pf " +
+            "where is_removed = :isRemoved " +
+            "and current_timestamp() between start_date and end_date " +
+            "order by end_date asc )" +
+            "union " +
+            "(select * from tb_performance as pf " +
+            "where is_removed = :isRemoved " +
+            "and current_timestamp() <= start_date " +
+            "order by start_date asc))" +
+            "union " +
+            "(select * from tb_performance as pf " +
+            "where is_removed = :isRemoved " +
+            "and end_date <= current_timestamp() " +
+            "order by end_date desc) ")
+    Optional<Slice<Performance>> findAllCombined(boolean isRemoved, Pageable pageable);
+
     /**
      * 삭제되지 않은 공연중인 공연, 종료일 오름차순
      * @param isRemoved
