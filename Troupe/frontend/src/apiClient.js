@@ -1109,9 +1109,10 @@ const apiClient = {
       });
   },
   //유저가 등록한/저장한 피드 목록 불러오기
-  getMemberFeedList: async ({ pageParam = 0, memberNo = 378, string = "regist" }) => {
+  getMemberFeedList: async (pageNumber, memberNo, string) => {
+    console.log(memberNo)
     return await instance
-      .get(`/feed/list/${string}?pageNumber=${pageParam}&memberNo=${memberNo}`)
+      .get(`/feed/list/${string}?pageNumber=${pageNumber}&memberNo=${memberNo}`)
       .then((response) => {
         console.log(response.data);
         console.log("피드 불러오기 성공");

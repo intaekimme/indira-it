@@ -42,7 +42,7 @@ async function fetchMore() {
 
     return (
 			<Grid container spacing={4}>
-        {cards.map(card =>
+        {cards.map(card => 
             <Grid item key={`${card.pfNo}`} xs={12} sm={6} md={4}>
               <Card
                 sx={{
