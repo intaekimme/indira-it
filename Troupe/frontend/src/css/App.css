@@ -21,3 +21,7 @@
     /* background-image: url("../img/4.png"); */
     
 } 
+
+.swal2-container {
+    z-index: 20000 !important;
+  }

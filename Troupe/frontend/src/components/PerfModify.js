@@ -20,7 +20,9 @@ import Theme from "./Theme";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 export default function PerfModify() {
   const location1 = useLocation();
   const performanceNo = location1.pathname.split("/")[3];
@@ -124,7 +126,12 @@ export default function PerfModify() {
     if (imageUrlLists.length > 10 - size) {
       imageUrlLists = imageUrlLists.slice(0, 10 - size);
       imageList = imageList.slice(0, 10 - size);
-      alert("최대 10개 까지 업로드 할 수 있습니다");
+      MySwal.fire({
+        icon: 'warning',
+        title: '최대 10개 까지 업로드 할 수 있습니다',
+        confirmButtonColor: '#66cc66',
+        confirmButtonBorder: '#66cc66',
+      })
     }
     setImgUrl(imageUrlLists);
     setImages(imageList);
@@ -188,7 +195,7 @@ export default function PerfModify() {
   // 공연 제목 길이 체크
   function titleLength(e) {
     if (e.target.value.length > 100) {
-      alert("글자수 초과!");
+      
       e.target.value = e.target.value.substring(0, 100);
       e.target.focus();
     }
@@ -229,11 +236,17 @@ export default function PerfModify() {
 
   //  공연 등록 폼 취소
   const cancelForm = () => {
-    if (window.confirm("수정을 취소하시겠습니까?")) {
-      window.location.href = `/perf/detail/${performanceNo}`;
-    } else {
-      return;
-    }
+    Swal.fire({
+      title: '수정을 취소하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+      confirmButtonColor: 'red',
+    }).then((result)=>{
+      if(result.isConfirmed){
+        window.location.href = `/perf/detail/${performanceNo}`;
+      }
+    })
   };
 
   console.log(imgUrl);

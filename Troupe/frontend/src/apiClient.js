@@ -1,6 +1,9 @@
+import React from "react";
 import { type } from "@testing-library/user-event/dist/type";
 import instance from "axios";
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 // const instance = axios.create({
 //   baseURL: process.env.REACT_APP_MAGAZINE_API_BASE_URL,
 // });
@@ -24,6 +27,12 @@ const apiClient = {
           return false;
         } else {
           sessionStorage.setItem("accessToken", response.data.accessToken);
+          MySwal.fire({
+            icon: 'warning',
+            title: '잠시 후 다시 시도해 주세요',
+            confirmButtonColor: '#66cc66',
+            
+          })
           return true;
         }
       })
@@ -45,14 +54,39 @@ const apiClient = {
           "refreshToken",
           response.data.refreshToken,
         );
-        console.log("로그인 되었습니다.");
-        // alert("로그인 되었습니다.");
-        const href = sessionStorage.getItem("currentHref");
-        sessionStorage.removeItem("currentHref");
-        window.location.href = href;
+        console.log(response.data);
+        // const nickname = response.data.memberInfoResponse.nickname;
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+        
+        Toast.fire({
+          icon: 'success',
+          title: '로그인 성공!!',
+          text: "님 어서오세요!"
+        }).then(()=>{
+          const href = sessionStorage.getItem("currentHref");
+          sessionStorage.removeItem("currentHref");
+          window.location.href = href;         
+        })
         return true;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '로그인 실패...',
+          text: '아이디 혹은 비밀번호가 일치하지 않습니다.',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("로그인 실패 error");
         // alert("로그인 실패 : " + error);
@@ -65,20 +99,59 @@ const apiClient = {
   },
   //회원가입
   signup: (data) => {
-    console.log("회원가입 진행중입니다 잠시만 기다려주세요");
+    // console.log("회원가입 진행중입니다 잠시만 기다려주세요");
+  
     // alert("회원가입 진행중입니다 잠시만 기다려주세요");
+    let timerInterval
+      Swal.fire({
+        title: '회원가입 진행중입니다',
+        html: '<b></b> 초만 기다려주세요',
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+          const b = Swal.getHtmlContainer().querySelector('b')
+          timerInterval = setInterval(() => {
+            b.textContent = Swal.getTimerLeft()
+          }, 100)
+        },
+        willClose: () => {
+          clearInterval(timerInterval)
+        }
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+          console.log('I was closed by the timer')
+        }
+      })
+
     return instance
       .post("/member/signup", data)
       .then((response) => {
         console.log(response.data);
         console.log("회원가입 되었습니다.");
         // alert("회원가입 되었습니다." + response.data);
-        window.location.href = "/email";
+        MySwal.fire({
+          icon: 'success',
+          title: '회원가입 성공',
+          text: '님 가입을 축하합니다!',
+          confirmButtonColor: '#66cc66',
+          
+        }).then(()=>{
+          window.location.href = "/email";
+        })
         return true;
       })
       .catch((error) => {
         console.log(error);
         console.log("회원가입 실패");
+        MySwal.fire({
+          icon: 'error',
+          title: '회원가입 실패...',
+          text: '다시 한번 더 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         // alert("회원가입 실패 : " + error);
         return false;
       });
@@ -136,6 +209,22 @@ const apiClient = {
     return instance
       .get(`/confirm-email/${token}`)
       .then((response) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+        
+        Toast.fire({
+          icon: 'success',
+          title: '이메일 인증 성공!!',
+        })
         console.log(response.data);
         console.log("이메일 인증 되었습니다.");
         // alert("이메일 인증 되었습니다." + response.data);
@@ -151,6 +240,28 @@ const apiClient = {
   },
   //request pw
   requestPassword: (email) => {
+    let timerInterval
+      Swal.fire({
+        title: '이메일을 전송중입니다 ',
+        html: '비밀번호 초기화를 위해 <b></b> 초만 기다려주세요',
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+          const b = Swal.getHtmlContainer().querySelector('b')
+          timerInterval = setInterval(() => {
+            b.textContent = Swal.getTimerLeft()
+          }, 100)
+        },
+        willClose: () => {
+          clearInterval(timerInterval)
+        }
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+          console.log('I was closed by the timer')
+        }
+      })
     console.log(
       "비밀번호 초기화를 위해 이메일을 전송중입니다 잠시만 기다려주세요",
     );
@@ -158,6 +269,13 @@ const apiClient = {
     return instance
       .post("/member/request-password", { email: email })
       .then((response) => {
+        MySwal.fire({
+          icon: 'success',
+          title: '이메일 전송 성공',
+          text: '비밀번호 초기화를 위해 이메일을 전송하였습니다.',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(response);
         console.log("비밀번호 초기화를 위해 이메일을 전송하였습니다.");
         sessionStorage.setItem("currentHref", "/");
@@ -166,6 +284,13 @@ const apiClient = {
         return true;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '이메일 전송 실패..',
+          text: '다시 한번더 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("이메일 전송 실패");
         // alert("이메일 전송 실패 : " + error);
@@ -179,12 +304,27 @@ const apiClient = {
       .then((response) => {
         console.log(response);
         console.log("비밀번호가 초기화 되었습니다.");
-        // alert("비밀번호가 초기화되었습니다." + response.data);
-        sessionStorage.setItem("currentHref", "/");
-        window.location.href = "/login";
+        MySwal.fire({
+          icon: 'success',
+          title: '비밀번호가 초기화 성공',
+          text: '다시 로그인 해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        }).then(()=>{
+          // alert("비밀번호가 초기화되었습니다." + response.data);
+          sessionStorage.setItem("currentHref", "/");
+          window.location.href = "/login";
+        })
         return true;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '비밀번호가 초기화 실패..',
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("비밀번호 초기화에 실패하였습니다. 다시 시도해주세요");
         // alert("비밀번호 초기화에 실패하였습니다. 다시 시도해주세요 : " + error);
@@ -205,11 +345,8 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
         console.log(error);
         console.log("pwCurrentCheck 정보를 불러오는데 실패하였습니다");
@@ -226,17 +363,29 @@ const apiClient = {
         },
       })
       .then((response) => {
+        MySwal.fire({
+          icon: 'success',
+          title: '프로필 수정 완료',
+          confirmButtonColor: '#66cc66',          
+        }).then(()=>{
+          window.location.href=`/profile/${sessionStorage.getItem("loginMember")}`;
+
+        })
         console.log(response);
         console.log("프로필수정 되었습니다.");
         // alert("프로필수정 되었습니다." + response.data);
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '프로필 수정 실패..',
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("프로필수정 실패");
         // alert("프로필수정 실패 : " + error);
@@ -251,18 +400,29 @@ const apiClient = {
         },
       })
       .then((response) => {
+        MySwal.fire({
+          icon: 'success',
+          title: '아바타 수정 완료',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(response);
         console.log("아바타 수정 성공");
         // alert("아바타 수정 성공" + response);
         return true;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '아바타 수정 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("아바타 수정 실패");
         // alert("아바타 수정 실패" + error);
@@ -285,6 +445,14 @@ const apiClient = {
         }
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '방명록 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("방명록 목록을 불러오는데 실패하였습니다");
         // alert("방명록 목록을 불러오는데 실패하였습니다 : " + error);
@@ -306,12 +474,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '내가 쓴 방명록 조회 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("내가 쓴 방명록 조회 실패");
         // alert("내가 쓴 방명록 조회 실패 : " + error);
@@ -334,12 +507,16 @@ const apiClient = {
         return true;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '방명록 등록 실패..',
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("방명록 등록 실패");
         // alert("방명록 등록 실패 : " + error);
@@ -361,12 +538,16 @@ const apiClient = {
         return true;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '방명록 수정 실패..',
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log(hostMemberNo + " 방명록 수정 실패");
         // alert("방명록 수정 실패 :" + error + hostMemberNo);
@@ -375,30 +556,45 @@ const apiClient = {
   },
   //방명록 삭제
   deleteGuestBook: (hostMemberNo) => {
-    return instance
-      .patch(`/guestbook/${parseInt(hostMemberNo)}/del`, {} ,{
-        headers: {
-          accessToken: sessionStorage.getItem("accessToken"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        console.log("방명록이 삭제되었습니다");
-        // alert("방명록이 삭제되었습니다" + response.data);
-        return true;
-      })
-      .catch((error) => {
-        if (error.response.status === 500) {
-          const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
-        }
-        console.log(error);
-        console.log("방명록 삭제 실패");
-        // alert("방명록 삭제 실패 + error);
-        return false;
-      });
+    return Swal.fire({
+      title: '삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+      confirmButtonColor: 'red',
+    }).then((result)=>{
+      if(result.isConfirmed){
+        return instance
+          .patch(`/guestbook/${parseInt(hostMemberNo)}/del`, {} ,{
+            headers: {
+              accessToken: sessionStorage.getItem("accessToken"),
+            },
+          })
+          .then((response) => {
+            console.log(response);
+            console.log("방명록이 삭제되었습니다");
+            // alert("방명록이 삭제되었습니다" + response.data);
+            return true;
+          })
+          .catch((error) => {
+            if (error.response.status === 401) {
+              const refresh = apiClient.refreshAccessToken();
+            }
+            MySwal.fire({
+              icon: 'error',
+              title: '방명록 삭제 실패..',
+              timer: 1000,
+              text: '다시 시도해주세요',
+              confirmButtonColor: '#66cc66',
+              
+            })
+            console.log(error);
+            console.log("방명록 삭제 실패");
+            // alert("방명록 삭제 실패 + error);
+            return false;
+          });
+      }
+    })
   },
 
   //팔로워 수 확인
@@ -411,6 +607,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '팔로우 수 불러오기 실패..',
+          timer: 1000,
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("FollowerCount 정보를 불러오는데 실패하였습니다");
         // alert("FollowerCount 정보를 불러오는데 실패하였습니다 : " + error);
@@ -434,12 +638,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '팔로우 정보 불러오기 실패..',
+          timer: 1000,
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("isFollowing 정보를 불러오는데 실패하였습니다");
         // alert("isFollowing 정보를 불러오는데 실패하였습니다 : " + error);
@@ -464,12 +673,17 @@ const apiClient = {
             return true;
           })
           .catch((error) => {
-            if (error.response.status === 500) {
+            if (error.response.status === 401) {
               const refresh = apiClient.refreshAccessToken();
-              if (refresh) {
-                alert("잠시 후 다시 시도해 주세요");
-              }
             }
+            MySwal.fire({
+              icon: 'error',
+              title: '팔로우 취소 실패..',
+              timer: 1000,
+              text: '다시 시도해주세요',
+              confirmButtonColor: '#66cc66',
+              
+            })
             console.log(error);
             console.log("팔로우 취소실패");
             // alert(" 팔로우 취소실패 : " + error);
@@ -492,12 +706,17 @@ const apiClient = {
             return true;
           })
           .catch((error) => {
-            if (error.response.status === 500) {
+            if (error.response.status === 401) {
               const refresh = apiClient.refreshAccessToken();
-              if (refresh) {
-                alert("잠시 후 다시 시도해 주세요");
-              }
             }
+            MySwal.fire({
+              icon: 'error',
+              title: '팔로우 실패..',
+              text: '다시 시도해주세요',
+              timer: 1000,
+              confirmButtonColor: '#66cc66',
+              
+            })
             console.log(error);
             console.log("팔로우실패");
             // alert(" 팔로우실패 : " + error);
@@ -519,12 +738,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '유저 정보 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("Member 정보를 불러오는데 실패하였습니다");
         // alert("Member 정보를 불러오는데 실패하였습니다 : " + error);
@@ -541,6 +765,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '유저 아바타 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("Member Avatar 정보를 불러오는데 실패하였습니다");
         // alert("Member Avatar 정보를 불러오는데 실패하였습니다 : " + error);
@@ -557,6 +789,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '회원 정보 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("Member 정보를 불러오는데 실패하였습니다");
         // alert("Member 정보를 불러오는데 실패하였습니다 : " + error);
@@ -591,6 +831,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '관심 카테고리 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("관심 category 정보를 불러오는데 실패하였습니다");
         // alert("category 정보를 불러오는데 실패하였습니다 : " + error);
@@ -608,6 +856,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '호감도 순위 정보 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("likability data를 불러오는데 실패하였습니다");
         // alert("likability data를 불러오는데 실패하였습니다 : " + error);
@@ -625,6 +881,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '호감도 공연자 Top3 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("호감도 공연자 Top3 불러오기 실패");
         // alert("호감도 공연자 Top3 불러오기 실패" + error);
@@ -642,6 +906,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '호감도 공연자 Top100 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("호감도 공연자 Top100 불러오기 실패");
         // alert("호감도 공연자 Top100 불러오기 실패" + error);
@@ -663,12 +935,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '나의 호감도 data 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연자에 대한 나의 호감도 data 불러오기 실패");
         // alert("공연자에 대한 나의 호감도 data 불러오기 실패" + error);
@@ -685,6 +962,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '아바타 이미지 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("Avatar 이미지 리스트를 불러오는데 실패하였습니다");
         // alert("Avatar 이미지 리스트를 불러오는데 실패하였습니다 : " + error);
@@ -701,6 +986,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '아바타 이미지 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("Avatar 이미지 리스트를 불러오는데 실패하였습니다");
         // alert("Avatar 이미지 리스트를 불러오는데 실패하였습니다 : " + error);
@@ -721,6 +1014,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 목록 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 불러오기 실패");
         // alert("피드 불러오기 실패" + error);
@@ -762,6 +1063,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 목록 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("전체 피드 불러오기 실패");
         // alert("전체 피드 불러오기 실패" + error);
@@ -779,12 +1088,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 불러오기 실패");
         // alert("저장 피드 불러오기 실패" + error);
@@ -805,12 +1119,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '북마크 피드 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("저장 피드 불러오기 실패");
         // alert("저장 피드 불러오기 실패" + error);
@@ -831,12 +1150,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '팔로우 피드 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("팔로우 피드 불러오기 실패");
         // alert("팔로우 피드 불러오기 실패" + error);
@@ -862,6 +1186,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '태그 검색 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("Feed Search 실패");
         return error;
@@ -879,6 +1211,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 좋아요 수 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 좋아요 수 불러오기 실패");
         // alert("피드 좋아요 수 불러오기 실패" + error);
@@ -900,12 +1240,18 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
+
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 좋아요 여부 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 좋아요 여부 조회 실패");
         // alert("피드 좋아요 여부 get 실패" + error);
@@ -927,12 +1273,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 좋아요 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.loog("피드 좋아요 실패");
         // alert("피드 좋아요 실패" + error);
@@ -954,12 +1305,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 저장 여부 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 저장 여부 조회 실패");
         // alert("피드 저장 여부 get 실패" + error);
@@ -981,12 +1337,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 저장  불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 저장 조회 실패");
         // alert("피드 저장 실패" + error);
@@ -1008,12 +1369,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 상세 불러오기 실패");
         // alert("피드 상세 불러오기 실패" + error);
@@ -1037,12 +1403,16 @@ const apiClient = {
         return response;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 등록 실패..',
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 등록 실패");
         // alert("피드 등록 실패" + error);
@@ -1066,12 +1436,16 @@ const apiClient = {
         return response;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '피드 수정 실패..',
+          text: '다시 시도해주세요',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 수정 실패" + error);
         // alert("피드 수정 실패" + error);
@@ -1080,7 +1454,6 @@ const apiClient = {
   },
   //피드 삭제
   feedRemove: (feedNo) => {
-    if (window.confirm("삭제하시겠습니까?")) {
       instance
         .patch(`/feed/${feedNo}/del`)
         .then((response) => {
@@ -1090,14 +1463,20 @@ const apiClient = {
           window.location.href = "/feed/list/all/0";
         })
         .catch((error) => {
+          MySwal.fire({
+            icon: 'error',
+            title: '피드 삭제 실패..',
+            text: '다시 시도해주세요',
+            timer: 1000,
+            confirmButtonColor: '#66cc66',
+            
+          })
           console.log(error);
           console.log(feedNo + " 피드 삭제 실패");
           // alert("피드 삭제 실패 :" + error + feedNo);
           return error;
         });
-    } else {
-      alert("취소합니다.");
-    }
+  
   },
   // 피드 댓글 목록 불러오기(완성)
   getFeedCommentList: (feedNo) => {
@@ -1110,6 +1489,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("피드 댓글 불러오기 실패");
         // alert("피드 댓글 불러오기 실패" + error);
@@ -1126,6 +1513,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '대댓글 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("대댓글 불러오기 실패");
         return null;
@@ -1153,12 +1548,17 @@ const apiClient = {
         refreshFunction(json);
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 등록 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("댓글 등록 실패");
         // alert("댓글 등록 실패 : " + error);
@@ -1179,12 +1579,17 @@ const apiClient = {
         // alert("댓글 수정 성공");
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 수정 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("댓글 수정 실패");
         // alert("댓글 수정 실패 : " + error);
@@ -1205,12 +1610,17 @@ const apiClient = {
         // alert("댓글 삭제 성공");
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 삭제 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("댓글 삭제 실패");
         // alert("댓글 삭제 실패 : " + error);
@@ -1247,12 +1657,17 @@ const apiClient = {
         refreshChildFunction(json);
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '대댓글 등록 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("대댓글 등록 실패");
         // alert("대댓글 등록 실패 : " + error);
@@ -1271,6 +1686,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연 불러오기 실패");
         // alert("공연 불러오기 실패" + error);
@@ -1286,6 +1709,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연 불러오기 실패");
         // alert("공연 불러오기 실패" + error);
@@ -1302,6 +1733,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 검색 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("검색 피드 불러오기 실패");
         // alert("검색 피드 불러오기 실패" + error);
@@ -1321,12 +1760,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 저장 여부 조회 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연 저장 여부 조회 실패");
         return error;
@@ -1347,12 +1791,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 저장 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연 저장 실패");
         // alert("공연 북마크 실패" + error);
@@ -1374,12 +1823,17 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 저장 취소 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연 저장 취소 실패");
         // alert("공연 북마크 취소 실패" + error);
@@ -1396,6 +1850,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연상세 불러 오기 실패 ");
       });
@@ -1417,12 +1879,17 @@ const apiClient = {
         window.location.href = "/perf/list/0";
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 등록 실패..',
+          text: '내용을 정확히 입력해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연등록 실패");
         // alert("공연등록 실패 : " + error);
@@ -1430,8 +1897,15 @@ const apiClient = {
   },
   //공연 삭제하기
   perfRemove: (performanceNo) => {
-    if (window.confirm("삭제하시겠습니까?")) {
-      instance
+    return Swal.fire({
+      title: '삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+      confirmButtonColor: 'red',
+    }).then((result)=>{
+      if(result.isConfirmed){
+        return  instance
         .patch(`/perf/${performanceNo}/del`, null, {
           headers: {
             accessToken: sessionStorage.getItem("accessToken"),
@@ -1444,13 +1918,20 @@ const apiClient = {
           // alert("공연이 삭제되었습니다" + response);
         })
         .catch((error) => {
+          MySwal.fire({
+            icon: 'error',
+            title: '공연 삭제 실패..',
+            text: '다시 시도해주세요',
+            timer: 1000,
+            confirmButtonColor: '#66cc66',
+            
+          })
           console.log(error);
           console.log("공연삭제 실패");
           // alert(data + "공연삭제 실패 :" + error);
         });
-    } else {
-      alert("취소합니다.");
-    }
+      }
+    })
   },
   //  공연 후기 목록 불러오기(완성)
   getPerfReviewList: (performanceNo) => {
@@ -1463,6 +1944,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연 후기 불러오기 실패");
         // alert("공연 후기 불러오기 실패" + error);
@@ -1479,6 +1968,14 @@ const apiClient = {
         return response.data;
       })
       .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: '대댓글 불러오기 실패..',
+          text: '다시 시도해주세요',
+          timer: 1000,
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("대댓글 불러오기 실패");
         return null;
@@ -1499,12 +1996,17 @@ const apiClient = {
         refreshFunction(response.data);
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 등록 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("댓글 등록 실패");
         // alert("댓글 등록 실패 : " + error);
@@ -1533,12 +2035,17 @@ const apiClient = {
         refreshChildFunction(response.data);
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '대댓글 등록 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("대댓글 등록 실패");
         // alert("대댓글 등록 실패 : " + error);
@@ -1557,12 +2064,17 @@ const apiClient = {
         console.log("댓글 수정 성공");
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {         
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 수정 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("댓글 수정 실패");
         // alert("댓글 수정 실패 : " + error);
@@ -1583,12 +2095,17 @@ const apiClient = {
         // alert("댓글 삭제 성공");
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '댓글 삭제 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("댓글 삭제 실패");
         // alert("댓글 삭제 실패 : " + error);
@@ -1611,12 +2128,17 @@ const apiClient = {
         return response;
       })
       .catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.status === 401) {
           const refresh = apiClient.refreshAccessToken();
-          if (refresh) {
-            alert("잠시 후 다시 시도해 주세요");
-          }
         }
+        MySwal.fire({
+          icon: 'error',
+          title: '공연 수정 실패..',
+          text: '다시 시도해주세요',
+          timer: '1000',
+          confirmButtonColor: '#66cc66',
+          
+        })
         console.log(error);
         console.log("공연 수정 실패" + error);
         // alert("피드 수정 실패" + error);
