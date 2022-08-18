@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 
 export default function Avatar(props) {
 	const [avatarResponse, setAvatarResponse] = React.useState(props.avatarResponse);
@@ -9,6 +10,8 @@ export default function Avatar(props) {
   const [divHeight, setDivHeight] = React.useState(50);
   const [left, setLeft] = React.useState(0);
   const [top, setTop] = React.useState(0);
+  //아바타 버튼여부
+  const [button, setButton] = React.useState(false);
   React.useEffect(() => {
     if (props.imgWidth) {
       setImgWidth(props.imgWidth);
@@ -35,9 +38,21 @@ export default function Avatar(props) {
       console.log(props.avatarResponse.avatarShapeResponse)
       setAvatarResponse(props.avatarResponse);
     }
-  },[props.avatarResponse])
+  },[props.avatarResponse]);
+  React.useEffect(() => {
+    if (props.button) {
+      setButton(true);
+    }
+  },[props.button]);
   return avatarResponse ? (
-    <div style={{ position:"relative", width: divWidth, height: divHeight, paddingRight: "30px" }}>
+    <div
+      style={{
+        position: "relative",
+        width: divWidth,
+        height: divHeight,
+        paddingRight: "30px",
+      }}
+    >
       <img
         src={avatarResponse.avatarShapeResponse.shapeUrl}
         alt={avatarResponse.avatarShapeResponse.shapeUrl}
@@ -94,19 +109,41 @@ export default function Avatar(props) {
           height: `${imgHeight}px`,
         }}
       ></img>
-      <img
-        src={avatarResponse.avatarHairResponse.hairUrl}
-        alt={avatarResponse.avatarHairResponse.hairUrl}
-        style={{
-          position: "absolute",
-          top: top,
-          left: left,
-          width: `${imgWidth}px`,
-          height: `${imgHeight}px`,
-        }}
-      ></img>
+      {button ? (
+        <Button
+          style={{
+            position: "absolute",
+            top: top,
+            left: left,
+            width: `${imgWidth}px`,
+            height: `${imgHeight}px`,
+          }}
+          onClick={props.onClick}
+        >
+          <img
+            src={avatarResponse.avatarHairResponse.hairUrl}
+            alt={avatarResponse.avatarHairResponse.hairUrl}
+            style={{
+              width: `${imgWidth}px`,
+              height: `${imgHeight}px`,
+            }}
+          ></img>
+        </Button>
+      ) : (
+        <img
+          src={avatarResponse.avatarHairResponse.hairUrl}
+          alt={avatarResponse.avatarHairResponse.hairUrl}
+          style={{
+            position: "absolute",
+            top: top,
+            left: left,
+            width: `${imgWidth}px`,
+            height: `${imgHeight}px`,
+          }}
+        ></img>
+      )}
     </div>
   ) : (
-      <div style={{ width: divWidth, height: divHeight }}></div>
+    <div style={{ width: divWidth, height: divHeight }}></div>
   );
 }

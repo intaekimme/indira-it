@@ -5,6 +5,12 @@ export default function LikeabilityRank(props) {
   const [rank, setRank] = React.useState(
     props.likeabilityData[0] ? props.likeabilityData[0].rank : -1,
   );
+  React.useEffect(()=>{
+    if(props.likeabilityData[0]){
+      console.log(props.likeabilityData[0]);
+      setRank(props.likeabilityData[0].likabilityResponse.rank);
+    }
+  }, [props.likeabilityData]);
   return (
     <div>
       {props.likeabilityWithMember ? (
