@@ -27,13 +27,19 @@ export default function ProfileStage(props) {
   const currentAvatarTop = "10%";
   //CurrentAvatar left 이동
   const [currentAvatarLeft, setCurrentAvatarLeft] = React.useState(props.gridItemxs===6 ? (window.innerWidth/4)-(imgWidth*(ratioCurrent+1)/2) : (window.innerWidth/2)-(imgWidth*(ratioCurrent+1)/2));
+  //top3Avatar top 이동
+  const top3AvatarTop = "50%";
+  //top3Avatar left 이동
+  const [top3AvatarLeft, setTop3AvatarLeft] = React.useState(props.gridItemxs===6 ? (window.innerWidth/2)-(imgWidth*(ratioTop3+1)) : (window.innerWidth)-(imgWidth*(ratioTop3+1)));
   const handleLeft = () => {
     const size = window.innerWidth;
     if (size < 1000) {
       setCurrentAvatarLeft(size/2-imgWidth*(ratioCurrent+1)/2);
+      setTop3AvatarLeft(size-imgWidth*(ratioTop3+1));
       console.log(size/2-imgWidth*(ratioCurrent+1)/2);
     } else {
       setCurrentAvatarLeft(size/4-imgWidth*(ratioCurrent+1)/2);
+      setTop3AvatarLeft(size/2-imgWidth*(ratioTop3+1));
       console.log(size/4-imgWidth*(ratioCurrent+1)/2);
     }
   };
@@ -136,6 +142,22 @@ export default function ProfileStage(props) {
           // }}
         />
       </Button>
+      {/* <Button
+        style={{
+          display: "absolute",
+          left: top3AvatarLeft,
+          top: top3AvatarTop,
+          zIndex: 5,
+        }}
+      >
+        <Avatar
+          avatarResponse={props.avatar}
+          imgWidth={imgWidth * ratioTop3}
+          imgHeight={imgHeight * ratioTop3}
+          divWidth={imgWidth * ratioTop3}
+          divHeight="100%"
+        />
+      </Button> */}
       <Grid
         alignItems="flex-end"
         container
