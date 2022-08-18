@@ -13,7 +13,6 @@ import com.troupe.backend.dto.member.response.MemberInfoResponse;
 import com.troupe.backend.dto.member.response.MemberWithLikabilityResponse;
 import com.troupe.backend.dto.performance.response.InterestCategoryResponse;
 import com.troupe.backend.dto.performance.response.ProfilePfResponse;
-import com.troupe.backend.dto.performance.response.ProfilePfSaveResponse;
 import com.troupe.backend.service.feed.FeedService;
 import com.troupe.backend.service.member.FollowService;
 import com.troupe.backend.service.member.LikabilityService;
@@ -170,6 +169,19 @@ public class ProfileController {
         return new ResponseEntity(resultMap, HttpStatus.OK);
     }
 
+    @Operation(summary = "프로필 주인과 나의 호감도와 멤버 정보, 아바타 정보를 조회", description = "파라미터 : accessToken(리퀘스트헤더), profileMemberNo(패스배리어블)")
+    @GetMapping("/{profileMemberNo}/likability/mydata")
+    public ResponseEntity getLikabilityAndMyData(Principal principal, @PathVariable int profileMemberNo) {
+        int starMemberNo = profileMemberNo;
+        int fanMemberNo = Integer.parseInt(principal.getName());
+
+        Member fanMember = memberService.findById(fanMemberNo).get();
+        LikabilityResponse likabilityResponse = likabilityService.getLikabilityResponse(starMemberNo, fanMemberNo);
+        MemberWithLikabilityResponse memberWithLikabilityResponse = new MemberWithLikabilityResponse(new MemberInfoResponse(fanMember), new AvatarResponse(fanMember), likabilityResponse);
+
+        return new ResponseEntity(memberWithLikabilityResponse, HttpStatus.OK);
+    }
+
 
     @Operation(summary = "프로필 주인이 가장 관심이 있는 태그 4개를 조회", description = "파라미터 : profileMemberNo(패스배리어블)")
     @GetMapping("/{profileMemberNo}/interest/tag")
@@ -229,12 +241,12 @@ public class ProfileController {
         List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageRequest);
         return ResponseEntity.ok().body(profilePfResponseList);
     }
-    
+
     @Operation(summary = "프로필 주인의 공연 북마크 목록", description = "파라미터: profileMemberNo(패스배리어블)")
     @GetMapping("/{profileMemberNo}/saveperf/list")
     public ResponseEntity<List<ProfilePfResponse>> profilePfSaveList(Principal principal,
-                                                                         @PathVariable int profileMemberNo,
-                                                                         int pageNumber) {
+                                                                     @PathVariable int profileMemberNo,
+                                                                     int pageNumber) {
         //  profile service
         PageRequest pageRequest = PageRequest.of(pageNumber, 6);
         List<ProfilePfResponse> profileResponseList = performanceSaveService.findSavedList(profileMemberNo, pageRequest);
