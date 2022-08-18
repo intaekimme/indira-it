@@ -72,7 +72,7 @@ public class PerformanceImageService {
             for(Integer imageNo : removedImages){
                 //  S3에서 해당 이미지들 삭제하고
                 PerformanceImage deleteImage = performanceImageRepository.findById(imageNo).get();
-                s3FileUploadService.deleteFile(deleteImage.getImageUrl());
+//                s3FileUploadService.deleteFile(deleteImage.getImageUrl());
                 //  테이블에서도 지운다.
                 performanceImageRepository.deleteById(imageNo);
             }
@@ -96,9 +96,9 @@ public class PerformanceImageService {
         //  삭제할 공연 번호에 해당하는 이미지 모두 찾기
         List<PerformanceImage> performanceImageList = performanceImageRepository.findByPf(targetPerformance);
         //  S3에서 해당 이미지들 삭제
-        for(PerformanceImage p : performanceImageList) {
-            s3FileUploadService.deleteFile(p.getImageUrl());
-        }
+//        for(PerformanceImage p : performanceImageList) {
+//            s3FileUploadService.deleteFile(p.getImageUrl());
+//        }
 
         //  해당 좌석들의 정보를 테이블에서 모두 삭제하기
         for (PerformanceImage image : performanceImageList) {

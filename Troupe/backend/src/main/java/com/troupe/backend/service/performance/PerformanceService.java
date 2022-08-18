@@ -195,12 +195,16 @@ public class PerformanceService {
 
         for(Performance p : combinedList){
             //  공연 상태 계산
+//            log.info("title: "+p.getTitle()+", now: "+now.toString()
+//                    + ", startDate: " + p.getStartDate().toString()
+//                    + ", endDate: " + p.getEndDate().toString()
+//                    + ", createdTime: " + p.getCreatedTime());
             StringBuilder sb = new StringBuilder();
             if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
             else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
             else if(now.after(p.getEndDate())) sb.append(MyConstant.END);
 
-            log.info(p.toString());
+//            log.info(p.toString());
             Map<Integer, String> imgUrlList = performanceImageService.findPerformanceImagesByPerformance(p);
             performanceResponseList.add(
                     PerformanceResponse.builder()
@@ -275,6 +279,7 @@ public class PerformanceService {
         for(Performance p : combinedList){
             //  공연 상태 계산
             StringBuilder sb = new StringBuilder();
+            log.info(now.toString() + ", startDate: " + p.getStartDate().toString() + ", endDate: " + p.getEndDate().toString() );
             if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
             else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
             else if(now.after(p.getEndDate())) sb.append(MyConstant.END);
@@ -400,6 +405,8 @@ public class PerformanceService {
         for (Performance p : endList)
             combinedList.add(p);
 
+//        Slice<Performance> combinedList = performanceRepository.findByMemberCombined(member.getMemberNo(), false, pageable).get();
+
         List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
 
         // 공연 상태 계산
@@ -410,6 +417,11 @@ public class PerformanceService {
 
         for(Performance p : combinedList){
             //  공연 상태 계산
+//            log.info(combinedList.getSize() + " title: "+p.getTitle()+", now: "+now.toString()
+//                    + ", startDate: " + p.getStartDate().toString()
+//                    + ", endDate: " + p.getEndDate().toString()
+//                    + ", createdTime: " + p.getCreatedTime());
+
             StringBuilder sb = new StringBuilder();
             if(now.before(p.getStartDate())) sb.append(MyConstant.PREV);
             else if(now.after(p.getStartDate()) && now.before(p.getEndDate())) sb.append(MyConstant.ING);
