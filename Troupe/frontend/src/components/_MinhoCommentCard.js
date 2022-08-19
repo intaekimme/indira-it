@@ -11,6 +11,7 @@ import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import TextField from "@mui/material";
 import { red } from '@mui/material/colors';
@@ -60,30 +61,57 @@ export default function _MinhoCommentCard(props) {
     props.modifyButton(no, comment);
     setModify(false);
   };
-  React.useEffect(() => { console.log(props.memberInfo.memberNo); }, [props]);
+  const [memberInfo, setMemberInfo] = React.useState({});
+  React.useEffect(() => {
+    console.log(props.memberInfo);
+    if (props.memberInfo) {
+      setMemberInfo(props.memberInfo);
+    }
+  }, [props.memberInfo]);
+  const profileImgClick = () => {
+    window.location.href=`/profile/${memberInfo.memberNo}`;
+  }
   return (
     <Card>
       <CardHeader
         avatar={
-          !props.memberInfo.profileImgUrl ||
-          props.memberInfo.profileImgUrl === "" ? (
-            <AccountCircleIcon
-              fontSize="large"
-              sx={{ fontSize: "50px" }}
-            ></AccountCircleIcon>
+          !memberInfo.profileImageUrl ||
+            memberInfo.profileImageUrl === "" ? (
+            <Button onClick={ profileImgClick } style={{
+              width: "50px",
+              height: "50px",
+              objectFit: "cover",
+              borderRadius: "50%",
+              // border: "8px black solid",
+              // boxShadow: "3px 3px 5px #000",
+            }}>
+              <AccountCircleIcon
+                fontSize="large"
+                sx={{ fontSize: "50px" }}
+              ></AccountCircleIcon>
+            </Button>
           ) : (
-            <img
-              src={props.memberInfo.profileImageUrl}
-              alt={props.memberInfo.profileImageUrl}
-              style={{
-                width: "200px",
-                height: "200px",
-                objectFit: "cover",
-                borderRadius: "30%",
-                border: "8px white solid",
-                boxShadow: "3px 3px 5px #000",
-              }}
-            />
+            <Button onClick={ profileImgClick } style={{
+              width: "50px",
+              height: "50px",
+              objectFit: "cover",
+              borderRadius: "50%",
+              // border: "8px black solid",
+              // boxShadow: "3px 3px 5px #000",
+            }}>
+              <img
+                src={memberInfo.profileImageUrl}
+                alt={memberInfo.profileImageUrl}
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                  // border: "8px black solid",
+                  // boxShadow: "3px 3px 5px #000",
+                }}
+              />
+            </Button>
           )
         }
         // action={
@@ -91,7 +119,7 @@ export default function _MinhoCommentCard(props) {
         //     <MoreVertIcon />
         //   </IconButton>
         // }
-        title={props.memberInfo.nickname}
+        title={memberInfo.nickname}
         subheader={createTime}
       />
       {/* <CardMedia image="/static/images/cards/paella.jpg" title="Paella dish" /> */}
@@ -116,7 +144,7 @@ export default function _MinhoCommentCard(props) {
       <CardActions disableSpacing>
         <div style={{ textAlign: "right" }}>
           {parseInt(sessionStorage.getItem("loginMember")) ===
-          props.memberInfo.memberNo ? (
+          memberInfo.memberNo ? (
             props.isRemoved === true ? (
               <div></div>
             ) : (
