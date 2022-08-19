@@ -41,6 +41,12 @@ export default function Avatar(props) {
     }
   }, [props.avatarResponse]);
   React.useEffect(() => {
+    if (props.button) {
+      console.log(props.button);
+      setButton(true);
+    }
+  }, [props.button]);
+  React.useEffect(() => {
     if (props.sizeString) {
       console.log(props.sizeString);
       setSizeString(props.sizeString);
