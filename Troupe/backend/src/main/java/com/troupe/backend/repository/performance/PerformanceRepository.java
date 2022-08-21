@@ -11,28 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PerformanceRepository extends JpaRepository<Performance, Integer> {
-    @Query(nativeQuery = true, value = "((select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
-            "from tb_performance as pf " +
-            "where member_no = :memberNo " +
-            "and is_removed = :isRemoved " +
-            "and date_add(current_timestamp(), interval 9 hour) between start_date and end_date " +
-            "order by end_date asc )" +
-            "union " +
-            "(select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
-            "from tb_performance as pf " +
-            "where member_no = :memberNo " +
-            "and is_removed = :isRemoved " +
-            "and date_add(current_timestamp(), interval 9 hour) <= start_date " +
-            "order by start_date asc))" +
-            "union " +
-            "(select * , date_add(current_timestamp(), interval 9 hour) as cur_time " +
-            "from tb_performance as pf " +
-            "where member_no = :memberNo " +
-            "and is_removed = :isRemoved " +
-            "and end_date <= date_add(current_timestamp(), interval 9 hour) " +
-            "order by end_date desc) ")
-    Optional<Slice<Performance>> findByMemberCombined(int memberNo, boolean isRemoved, Pageable pageable);
-
     /**
      * 유저가 등록한 공연 리스트
      * 삭제되지 않은 공연중인 공연, 종료일 오름차순
@@ -160,6 +138,7 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
             "order by end_date desc) ")
     Optional<Slice<Performance>> findAllCombined(boolean isRemoved, Pageable pageable);
 
+
     /**
      * 삭제되지 않은 공연중인 공연, 종료일 오름차순
      * @param isRemoved
@@ -179,10 +158,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
      * @return
      */
     @Query(nativeQuery = true, value = "select * " +
-    "from tb_performance as pf " +
-    "where pf.is_removed='b0' " +
-    "and current_timestamp() <= start_date " +
-    "order by start_date asc ")
+            "from tb_performance as pf " +
+            "where pf.is_removed='b0' " +
+            "and current_timestamp() <= start_date " +
+            "order by start_date asc ")
     Optional<Slice<Performance>> findAllUpcommingPerformance(boolean isRemoved, Pageable pageable);
 
     /**
@@ -221,7 +200,7 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
      */
     Performance findByTitleLike(String title);
 
-//    Optional<Slice<Performance>> findAllByIsRemovedOrderByCreatedTimeDesc(boolean isRemoved, Pageable pageable);
+    //    Optional<Slice<Performance>> findAllByIsRemovedOrderByCreatedTimeDesc(boolean isRemoved, Pageable pageable);
     Slice<Performance> findByMemberOrderByCreatedTimeDesc(Member member, Pageable pageable);
     List<Performance> findAllByMember(Member member);
     Optional<Performance> findByMemberAndId(Member member, int pfNo);
