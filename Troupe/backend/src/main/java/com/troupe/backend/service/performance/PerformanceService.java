@@ -162,28 +162,42 @@ public class PerformanceService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PerformanceResponse> findAll(Pageable pageable){
-//        List<Performance> combinedList = new ArrayList<>();
+    public List<PerformanceResponse> findAll(Pageable pageable, int pageNumber){
+        List<Performance> combinedList = new ArrayList<>();
 
-//        //  진행중
-//        Slice<Performance> performingList =
-//                performanceRepository.findAllPerforming(false, pageable).get();
-//        for(Performance p : performingList)
-//            combinedList.add(p);
-//
-//        //  진행 예정
-//        Slice<Performance> upcommingList =
-//                performanceRepository.findAllUpcommingPerformance(false, pageable).get();
-//        for (Performance p : upcommingList)
-//            combinedList.add(p);
-//
-//        //  종료
-//        Slice<Performance> endList =
-//                performanceRepository.findAllPerformanceThatHaveEnded(false,pageable).get();
-//        for (Performance p : endList)
-//            combinedList.add(p);
+        //  진행중
+        List<Performance> performingList =
+                performanceRepository.findAllPerforming(false).get();
+        for(Performance p : performingList)
+            combinedList.add(p);
 
-        Slice<Performance> combinedList = performanceRepository.findAllCombined(false, pageable).get();
+        //  진행 예정
+        List<Performance> upcommingList =
+                performanceRepository.findAllUpcommingPerformance(false).get();
+        for (Performance p : upcommingList)
+            combinedList.add(p);
+
+        //  종료
+        List<Performance> endList =
+                performanceRepository.findAllPerformanceThatHaveEnded(false).get();
+        for (Performance p : endList)
+            combinedList.add(p);
+
+        //  combined list paging
+        int startNumber = pageNumber * 6;
+        int endNumber = (pageNumber * 6) - 1;
+
+        List<Performance> pagingList = new ArrayList<>();
+        for(int i = startNumber; i <= endNumber; i++){
+            if(i > combinedList.size()) continue;
+            pagingList.add(combinedList.get(i));
+        }
+//        pageNumber : 0 -> pageNumber * 6 , (pageNumber+1) * 6 - 1
+//                    1 -> 6, 11
+//                    2 -> 12, 17
+//                    3 -> 18, 23
+
+//        Slice<Performance> combinedList = performanceRepository.findAllCombined(false, pageable).get();
 
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();

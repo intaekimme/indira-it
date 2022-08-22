@@ -105,7 +105,7 @@ public class PerformanceController {
     @GetMapping("/list")
     public ResponseEntity<List<PerformanceResponse>> performanceList(int pageNumber){
         PageRequest pageRequest = PageRequest.of(pageNumber, 6);
-        List<PerformanceResponse> performanceResponseList =  performanceService.findAll(pageRequest);
+        List<PerformanceResponse> performanceResponseList =  performanceService.findAll(pageRequest, pageNumber);
         return ResponseEntity.ok().
                 body(performanceResponseList);
     }

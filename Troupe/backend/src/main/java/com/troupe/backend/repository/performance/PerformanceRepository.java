@@ -163,19 +163,17 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
     /**
      * 삭제되지 않은 공연중인 공연, 종료일 오름차순
      * @param isRemoved
-     * @param pageable
      * @return
      */
     @Query(nativeQuery = true, value = "select * from tb_performance as pf " +
             "where is_removed = 'b0' " +
             "and current_timestamp() between start_date and end_date " +
             "order by end_date asc ")
-    Optional<Slice<Performance>> findAllPerforming(boolean isRemoved, Pageable pageable);
+    Optional<List<Performance>> findAllPerforming(boolean isRemoved);
 
     /**
      * 삭제되지 않은 공연예정인 공연, 시작일 오름차순
      * @param isRemoved
-     * @param pageable
      * @return
      */
     @Query(nativeQuery = true, value = "select * " +
@@ -183,12 +181,11 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
     "where pf.is_removed='b0' " +
     "and current_timestamp() <= start_date " +
     "order by start_date asc ")
-    Optional<Slice<Performance>> findAllUpcommingPerformance(boolean isRemoved, Pageable pageable);
+    Optional<List<Performance>> findAllUpcommingPerformance(boolean isRemoved);
 
     /**
      * 삭제되지 않은 종료된 공연, 종료일 내림차순
      * @param isRemoved
-     * @param pageable
      * @return
      */
     @Query(nativeQuery = true, value = "select * " +
@@ -196,7 +193,7 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
             "where pf.is_removed='b0' " +
             "and end_date <= current_timestamp() " +
             "order by end_date desc ")
-    Optional<Slice<Performance>> findAllPerformanceThatHaveEnded(boolean isRemoved, Pageable pageable);
+    Optional<List<Performance>> findAllPerformanceThatHaveEnded(boolean isRemoved);
 
 
 //    =================================================================================================
