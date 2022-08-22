@@ -185,11 +185,11 @@ public class PerformanceService {
 
         //  combined list paging
         int startNumber = pageNumber * 6;
-        int endNumber = (pageNumber * 6) - 1;
+        int endNumber = (pageNumber + 1) * 6 - 1;
 
         List<Performance> pagingList = new ArrayList<>();
         for(int i = startNumber; i <= endNumber; i++){
-            if(i > combinedList.size()) continue;
+            if(i >= combinedList.size()-1) break;
             pagingList.add(combinedList.get(i));
         }
 //        pageNumber : 0 -> pageNumber * 6 , (pageNumber+1) * 6 - 1
@@ -207,7 +207,7 @@ public class PerformanceService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        for(Performance p : combinedList){
+        for(Performance p : pagingList){
             //  공연 상태 계산
 //            log.info("title: "+p.getTitle()+", now: "+now.toString()
 //                    + ", startDate: " + p.getStartDate().toString()
