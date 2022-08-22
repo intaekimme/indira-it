@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
 export default function Avatar(props) {
+  const [sizeString, setSizeString] = React.useState("px");
 	const [avatarResponse, setAvatarResponse] = React.useState(props.avatarResponse);
   const [imgWidth, setImgWidth] = React.useState(75);
   const [imgHeight, setImgHeight] = React.useState(100);
@@ -38,21 +39,21 @@ export default function Avatar(props) {
       console.log(props.avatarResponse.avatarShapeResponse)
       setAvatarResponse(props.avatarResponse);
     }
-  },[props.avatarResponse]);
+  }, [props.avatarResponse]);
   React.useEffect(() => {
     if (props.button) {
+      console.log(props.button);
       setButton(true);
     }
-  },[props.button]);
+  }, [props.button]);
+  React.useEffect(() => {
+    if (props.sizeString) {
+      console.log(props.sizeString);
+      setSizeString(props.sizeString);
+    }
+  }, [props.sizeString]);
   return avatarResponse ? (
-    <div
-      style={{
-        position: "relative",
-        width: divWidth,
-        height: divHeight,
-        paddingRight: "30px",
-      }}
-    >
+    <div style={{ position:"relative", width: `${divWidth}${sizeString}`, height: `${divHeight}${sizeString}`, paddingRight: "30px" }}>
       <img
         src={avatarResponse.avatarShapeResponse.shapeUrl}
         alt={avatarResponse.avatarShapeResponse.shapeUrl}
@@ -60,8 +61,8 @@ export default function Avatar(props) {
           position: "absolute",
           top: top,
           left: left,
-          width: `${imgWidth}px`,
-          height: `${imgHeight}px`,
+          width: `${imgWidth}${sizeString}`,
+          height: `${imgHeight}${sizeString}`,
           filter: "drop-shadow(3px 3px 1.8px #000)",
         }}
       ></img>
@@ -72,8 +73,8 @@ export default function Avatar(props) {
           position: "absolute",
           top: top,
           left: left,
-          width: `${imgWidth}px`,
-          height: `${imgHeight}px`,
+          width: `${imgWidth}${sizeString}`,
+          height: `${imgHeight}${sizeString}`,
         }}
       ></img>
       <img
@@ -83,8 +84,8 @@ export default function Avatar(props) {
           position: "absolute",
           top: top,
           left: left,
-          width: `${imgWidth}px`,
-          height: `${imgHeight}px`,
+          width: `${imgWidth}${sizeString}`,
+          height: `${imgHeight}${sizeString}`,
         }}
       ></img>
       <img
@@ -94,8 +95,8 @@ export default function Avatar(props) {
           position: "absolute",
           top: top,
           left: left,
-          width: `${imgWidth}px`,
-          height: `${imgHeight}px`,
+          width: `${imgWidth}${sizeString}`,
+          height: `${imgHeight}${sizeString}`,
         }}
       ></img>
       <img
@@ -105,8 +106,8 @@ export default function Avatar(props) {
           position: "absolute",
           top: top,
           left: left,
-          width: `${imgWidth}px`,
-          height: `${imgHeight}px`,
+          width: `${imgWidth}${sizeString}`,
+          height: `${imgHeight}${sizeString}`,
         }}
       ></img>
       {button ? (
@@ -115,8 +116,8 @@ export default function Avatar(props) {
             position: "absolute",
             top: top,
             left: left,
-            width: `${imgWidth}px`,
-            height: `${imgHeight}px`,
+            width: `${imgWidth}${sizeString}`,
+            height: `${imgHeight}${sizeString}`,
           }}
           onClick={props.onClick}
         >
@@ -124,8 +125,8 @@ export default function Avatar(props) {
             src={avatarResponse.avatarHairResponse.hairUrl}
             alt={avatarResponse.avatarHairResponse.hairUrl}
             style={{
-              width: `${imgWidth}px`,
-              height: `${imgHeight}px`,
+              width: `${imgWidth}${sizeString}`,
+              height: `${imgHeight}${sizeString}`,
             }}
           ></img>
         </Button>
@@ -137,13 +138,13 @@ export default function Avatar(props) {
             position: "absolute",
             top: top,
             left: left,
-            width: `${imgWidth}px`,
-            height: `${imgHeight}px`,
+            width: `${imgWidth}${sizeString}`,
+            height: `${imgHeight}${sizeString}`,
           }}
         ></img>
       )}
     </div>
   ) : (
-    <div style={{ width: divWidth, height: divHeight }}></div>
+    <div style={{ width: `${divWidth}${sizeString}`, height: `${divHeight}${sizeString}` }}></div>
   );
 }

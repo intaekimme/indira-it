@@ -16,9 +16,24 @@ import PlusButton from "./PlusButton";
 import stylesTag from "../css/tag.module.css";
 
 export default function _MinhoFeedList(props) {
+  //카드이미지 width
+  const [cardWidth, setCardWidth] = React.useState(window.innerWidth/4+window.innerWidth/20);
+
+  //1000보다 큰경우 2화면분할
+  const handleCardWidth = () => {
+    const size = window.innerWidth/4+window.innerWidth/20;
+    setCardWidth(size);
+  };
+  //화면분할 update
+  React.useEffect(() => {
+    window.addEventListener("resize", handleCardWidth);
+  }, [window.innerWidth]);
+
   const [open, setOpen] = React.useState(false);
   const [feedNo, setFeedNo] = React.useState(0);
   const [isHover, setIsHover] = React.useState(-1);
+  const [cards, setCards] = React.useState([]);
+  const [pageNumber, setPageNumber] = React.useState(1);
 
   const [change, setChange] = React.useState(false);
 
@@ -31,33 +46,27 @@ export default function _MinhoFeedList(props) {
     setOpen(false);
     setChange(true);
   }
+  React.useEffect( () =>{
+    if (props.memberInfo) {
+    console.log(props.memberInfo.memberNo)
+    apiClient.getMemberFeedList(0, props.memberInfo.memberNo, props.string).then((data)=>{
+    setCards(data);
+  });}
+  }, [props.memberInfo]);
+  console.log(cards);
 
-  let FeedListAllQuery = useInfiniteQuery(
-		"SaveFeeds",//데이터 식별 쿼리 키
-		()=> apiClient.getMemberFeedList({pageParam:0, memberNo:props.memberInfo.memberNo, string: props.string}),//쿼리 함수
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return pages.length;
-			},
-			getMemberNo: () => {
-				return sessionStorage.getItem("loginMember");
-			},
-		},
-  );
-  console.log(FeedListAllQuery.data);
-  console.log(FeedListAllQuery.isLoading);
+async function fetchMore() {
+  setPageNumber(pageNumber + 1);
+  console.log(pageNumber)
+  apiClient.getMemberFeedList(pageNumber, props.memberInfo.memberNo, props.string).then((data)=>{
+    setCards([...cards, ...data])
+  })}
+  console.log(cards)
 
-  if (!FeedListAllQuery.isLoading && typeof FeedListAllQuery.data.pages[0]) {
     return (
-      <Fragment>
         <Grid container spacing={4}>
-          {FeedListAllQuery.data.pages.length == 0 || !FeedListAllQuery.data.pages[0] || FeedListAllQuery.data.pages[0].length == 0 ?
-            <Grid item xs={12} style={{position:"relative", height:"100px"}}><div style={{position:"relative", top:"50%"}}>리스트가 없습니다</div></Grid>
-            : <div></div>
-          }
-          {FeedListAllQuery.data.pages[0] ? FeedListAllQuery.data.pages.map((page) =>
-            page.map((datum) => (
-              <Grid item key={datum.feedNo} xs={12} sm={6} md={4}>
+          {cards.map(card => 
+              <Grid item key={`${card.feedNo}`} xs={4}>
                 <Card
                   sx={{
                     position: "relative",
@@ -75,10 +84,10 @@ export default function _MinhoFeedList(props) {
                     <Grid ml={1}>
                       <a
                         style={{ textDecoration: "none" }}
-                        href={"/profile/" + datum.memberNo}
+                        href={"/profile/" + card.memberNo}
                       >
                         <img
-                          src={datum.profileImageUrl}
+                          src={card.profileImageUrl}
                           alt=""
                           style={{
                             borderRadius: "70%",
@@ -101,7 +110,7 @@ export default function _MinhoFeedList(props) {
                         }}
                         component="span"
                       >
-                        {datum.nickname}
+                        {card.nickname}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -110,19 +119,19 @@ export default function _MinhoFeedList(props) {
                     sx={{
                       pb: 1,
                       objectFit: "cover",
-                      width: "300px",
-                      height: "300px",
-                      opacity: isHover === datum.feedNo ? 0.5 : null,
-                      transform: isHover === datum.feedNo ? "scale(1.1)" : null,
+                      width: `${cardWidth}px`,
+                      height: `${cardWidth}px`,
+                      opacity: isHover === card.feedNo ? 0.5 : null,
+                      transform: isHover === card.feedNo ? "scale(1.1)" : null,
                       transition: "0.5s",
                     }}
-                    image={Object.values(datum.images)[0]}
+                    image={Object.values(card.images)[0]}
                     alt=""
-                    onClick={() => handleOpen(datum.feedNo)}
-                    onMouseEnter={() => setIsHover(datum.feedNo)}
+                    onClick={() => handleOpen(card.feedNo)}
+                    onMouseEnter={() => setIsHover(card.feedNo)}
                     onMouseLeave={() => setIsHover(-1)}
                   ></CardMedia>
-                  {isHover === datum.feedNo ? (
+                  {isHover === card.feedNo ? (
                     <div
                       style={{
                         marginLeft: "0.5em",
@@ -133,13 +142,13 @@ export default function _MinhoFeedList(props) {
                         color: "black",
                         top: "150px",
                       }}
-                      onMouseEnter={() => setIsHover(datum.feedNo)}
+                      onMouseEnter={() => setIsHover(card.feedNo)}
                       onMouseLeave={() => setIsHover(-1)}
-                      onClick={() => handleOpen(datum.feedNo)}
+                      onClick={() => handleOpen(card.feedNo)}
                     >
                       {" "}
                       <div className={stylesTag.HashWrapOuter}>
-                        {datum.tags.map((tag) => (
+                        {card.tags.map((tag) => (
                           <div className={stylesTag.HashWrapInner}>#{tag}</div>
                         ))}{" "}
                       </div>
@@ -155,13 +164,13 @@ export default function _MinhoFeedList(props) {
                     <Grid>
                       <FeedLikeButton
                         change={change}
-                        feedNo={datum.feedNo}
+                        feedNo={card.feedNo}
                       ></FeedLikeButton>
                     </Grid>
                     <Grid mr={-3}>
                       <FeedSaveButton
                         change={change}
-                        feedNo={datum.feedNo}
+                        feedNo={card.feedNo}
                       ></FeedSaveButton>
                     </Grid>
                   </CardActions>
@@ -184,14 +193,9 @@ export default function _MinhoFeedList(props) {
                   ></FeedDetail>
                 </Modal>
               </Grid>
-            )),
-          ) : <div></div>}
+            )
+          }
+        <PlusButton handleCard={fetchMore}></PlusButton>
         </Grid>
-        <PlusButton handleCard={FeedListAllQuery.fetchNextPage}></PlusButton>
-      </Fragment>
     );
-  }
-  else {
-    return(<div></div>)
-  }
 }

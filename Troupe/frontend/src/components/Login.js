@@ -18,6 +18,18 @@ import Paper from "@mui/material/Paper";
 import SNSLoginFacebook from "./SNSLoginFacebook";
 import Theme from "./Theme";
 export default function Login() {
+  //Height
+  const [height, setHeight] = React.useState(window.innerHeight);
+  //1000보다 큰경우 2화면분할
+  const handleHeight = () => {
+    setHeight(window.innerHeight);
+  };
+  //화면분할 update
+  React.useEffect(() => {
+    console.log(window.innerHeight);
+		window.addEventListener("resize", handleHeight);
+  }, [window.innerHeight]);
+  
   //로그인버튼 클릭
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -51,7 +63,7 @@ export default function Login() {
   return (
     <ThemeProvider theme={Theme}>
       <div id="back" style={{ fontFamily: "SBAggroB" }}>
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{ height: `${height-170}px` }}>
           <CssBaseline />
 
           <Box
@@ -60,7 +72,7 @@ export default function Login() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              paddingBottom: "300px",
+              paddingBottom: "100px",
             }}
           >
             <Avatar sx={{ m: 4, bgcolor: "#66cc66" }}>

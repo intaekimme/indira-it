@@ -13,6 +13,18 @@ import PerfSaveButton from "./PerfSaveButton";
 import { textAlign } from "@mui/system";
 
 export default function _MinhoPerfList(props) {
+  //카드이미지 width
+  const [cardWidth, setCardWidth] = React.useState(window.innerWidth/4+window.innerWidth/20);
+
+  //1000보다 큰경우 2화면분할
+  const handleCardWidth = () => {
+    const size = window.innerWidth/4+window.innerWidth/20;
+    setCardWidth(size);
+  };
+  //화면분할 update
+  React.useEffect(() => {
+    window.addEventListener("resize", handleCardWidth);
+  }, [window.innerWidth]);
 
   const [cards, setCards] = React.useState([]);
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -42,8 +54,8 @@ async function fetchMore() {
 
     return (
 			<Grid container spacing={4}>
-        {cards.map(card =>
-            <Grid item key={`${card.pfNo}`} xs={12} sm={6} md={4}>
+        {cards.map(card => 
+          <Grid item key={`${card.pfNo}`} xs={4}>
               <Card
                 sx={{
                   position: "relative",
@@ -104,8 +116,8 @@ async function fetchMore() {
                       style={{
                         pb: 1,
                         objectFit: "cover",
-                        width: "300px",
-                        height: "300px",
+                        width: `${cardWidth}px`,
+                        height: `${cardWidth}px`,
                         opacity: isHover === card.pfNo ? 0.5 : null,
                         transform: isHover === card.pfNo ? "scale(1.1)" : null,
                         transition: "0.5s",

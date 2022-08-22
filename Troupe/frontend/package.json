@@ -13,12 +13,14 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
+    "chart.js": "^3.9.1",
     "date-fns": "^2.29.1",
     "http-proxy-middleware": "^2.0.6",
     "moment": "^2.29.4",
     "prop-types": "^15.8.1",
     "qs": "^6.11.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^4.3.1",
     "react-dom": "^18.2.0",
     "react-material-ui-carousel": "^3.4.2",
     "react-query": "^3.39.2",
@@ -53,5 +55,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://i7a804.p.ssafy.io:8443"
+  "proxy": "https://localhost:8443"
 }
