@@ -33,13 +33,16 @@ export default function ProfileAnalyze(props) {
 
   //개인분석 결과
   // //이 member의 관심카테고리
-  // const [interestCategory, setInterestCategory] = React.useState("");
+  // const [interestCategoryData, setInterestCategoryData] = React.useState("");
   // React.useEffect(() => {
   //   apiClient.getInterestCategory(memberNo).then((data) => {
-  //     setInterestCategory(data);
+  //     setInterestCategoryData(data);
   //   });
   // });
-  const [interestCategory, setInterestCategory] = React.useState([
+  const [interestCategoryLabel, setInterestCategoryLabel] = React.useState([
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+  ]);
+  const [interestCategoryData, setInterestCategoryData] = React.useState([
     10, 20, 30, 40, 50, 60, 70, 80,
   ]);
   // 이 member에 대한 나의 호감도 data
@@ -60,20 +63,24 @@ export default function ProfileAnalyze(props) {
     apiClient.getInterestCategory(memberNo).then((data) => {
       console.log(data);
       if (data.interestCategoryList && data.interestCategoryList[0]) {
+        let labels = [];
         let counts = [];
         let totalCount = 0;
         data.interestCategoryList.map((object) => {
+          labels.push(object.smallCategory);
           counts.push(object.count);
           totalCount += object.count;
         });
         for (let i = counts.length; i < 8; i++) {
+          labels.push("-");
           counts.push(0);
         }
         for (let i = 0; i < counts.length; i++) {
           counts[i] = counts[i] * 100 / totalCount;
         }
         console.log(counts);
-        setInterestCategory(counts);
+        setInterestCategoryLabel(labels);
+        setInterestCategoryData(counts);
       }
       // {
       //   categoryNo: int, 
@@ -82,13 +89,12 @@ export default function ProfileAnalyze(props) {
       //   codeName: String
       //   count : int
       // }
-      // setInterestCategory(data);
+      // setInterestCategoryData(data);
     });
     //이 member의 호감도 data
     apiClient
       .getMyDataWithLikeability({ profileMemberNo: memberNo })
       .then((data) => {
-        console.log("dkdk");
         console.log(data);
         setMyDataWithLikeability([data]);
       });
@@ -213,7 +219,8 @@ export default function ProfileAnalyze(props) {
             <Grid item xs={6}>
               <InterestPolygon
                 nickname={props.nickname}
-                data={interestCategory}
+                data={interestCategoryData}
+                label={interestCategoryLabel}
               ></InterestPolygon>
             </Grid>
             <Grid item xs={6}>
