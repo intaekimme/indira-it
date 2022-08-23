@@ -15,7 +15,6 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
      * 유저가 등록한 공연 리스트
      * 삭제되지 않은 공연중인 공연, 종료일 오름차순
      * @param isRemoved
-     * @param pageable
      * @return
      */
     @Query(nativeQuery = true, value = "select * from tb_performance as pf " +
@@ -23,13 +22,12 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
             "and is_removed = :isRemoved " +
             "and current_timestamp() between start_date and end_date " +
             "order by end_date asc ")
-    Optional<Slice<Performance>> findByMemberPerforming(int memberNo, boolean isRemoved, Pageable pageable);
+    Optional<List<Performance>> findByMemberPerforming(int memberNo, boolean isRemoved);
 
     /**
      * 유저가 등록한 공연 리스트
      * 삭제되지 않은 공연예정인 공연, 시작일 오름차순
      * @param isRemoved
-     * @param pageable
      * @return
      */
     @Query(nativeQuery = true, value = "select * " +
@@ -38,13 +36,12 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
             "and pf.is_removed = :isRemoved " +
             "and current_timestamp() <= start_date " +
             "order by start_date asc ")
-    Optional<Slice<Performance>> findByMemberUpcommingPerformance(int memberNo, boolean isRemoved, Pageable pageable);
+    Optional<List<Performance>> findByMemberUpcommingPerformance(int memberNo, boolean isRemoved);
 
     /**
      * 유저가 등록한 공연 리스트
      * 삭제되지 않은 종료된 공연, 종료일 내림차순
      * @param isRemoved
-     * @param pageable
      * @return
      */
     @Query(nativeQuery = true, value = "select * " +
@@ -53,7 +50,7 @@ public interface PerformanceRepository extends JpaRepository<Performance, Intege
             "and pf.is_removed = :isRemoved " +
             "and end_date <= current_timestamp() " +
             "order by end_date desc ")
-    Optional<Slice<Performance>> findByMemberPerformanceThatHaveEnded(int memberNo, boolean isRemoved, Pageable pageable);
+    Optional<List<Performance>> findByMemberPerformanceThatHaveEnded(int memberNo, boolean isRemoved);
 
     @Query(nativeQuery = true, value = "select * " +
             "from tb_performance pf join tb_member m " +

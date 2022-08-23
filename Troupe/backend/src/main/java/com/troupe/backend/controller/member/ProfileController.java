@@ -237,8 +237,8 @@ public class ProfileController {
     public ResponseEntity<List<ProfilePfResponse>> profilePfList(Principal principal,
                                                                  @PathVariable int profileMemberNo,
                                                                  int pageNumber) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, 6);
-        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageRequest);
+//        PageRequest pageRequest = PageRequest.of(pageNumber, 6);
+        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageNumber);
         return ResponseEntity.ok().body(profilePfResponseList);
     }
 

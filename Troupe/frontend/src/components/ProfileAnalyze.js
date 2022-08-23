@@ -213,14 +213,14 @@ export default function ProfileAnalyze(props) {
               )}
             </Grid>
             <Grid item xs={6}>
-              {/* <InterestPolygon
+              <InterestPolygon
                 nickname={props.nickname}
                 data={interestCategory}
-              ></InterestPolygon> */}
-              <InterestRadarChart
+              ></InterestPolygon>
+              {/* <InterestRadarChart
                 nickname={props.nickname}
                 data={interestCategory}
-              ></InterestRadarChart>
+              ></InterestRadarChart> */}
             </Grid>
             <Grid item xs={6}>
               <LikeabilityRank
