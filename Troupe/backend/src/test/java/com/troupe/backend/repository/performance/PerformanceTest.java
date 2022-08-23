@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @DataJpaTest
@@ -79,13 +80,96 @@ public class PerformanceTest {
 //        Assertions.assertEquals("공연2", targetPerformance.getTitle());
 //    }
 //
-//    @Test
-//    @DisplayName("공연 리스트 불러오기")
-//    public void findAllTest(){
-//        List<Performance> performanceList = performanceRepository.findAll();
-//
-//        Assertions.assertTrue(performanceList.size() > 0);
-//    }
+    @Test
+    @DisplayName("공연 리스트 불러오기")
+    public void findAllTest(){
+        int pageNumber = 0;
+        for(int j=0; j<10; j++){
+            pageNumber = j;
+
+            List<Performance> combinedList = new ArrayList<>();
+
+            //  진행중
+            List<Performance> performingList =
+                    performanceRepository.findAllPerforming(false).get();
+            for(Performance p : performingList)
+                combinedList.add(p);
+
+            //  진행 예정
+            List<Performance> upcommingList =
+                    performanceRepository.findAllUpcommingPerformance(false).get();
+            for (Performance p : upcommingList)
+                combinedList.add(p);
+
+            //  종료
+            List<Performance> endList =
+                    performanceRepository.findAllPerformanceThatHaveEnded(false).get();
+            for (Performance p : endList)
+                combinedList.add(p);
+
+            //  combined list paging
+            int startNumber = pageNumber * 6;
+            int endNumber = (pageNumber + 1) * 6 - 1;
+
+            List<Performance> pagingList = new ArrayList<>();
+            for(int i = startNumber; i <= endNumber; i++){
+                if(i >= combinedList.size()-1) break;
+                Performance p = combinedList.get(i);
+                System.out.print(p.getId()+" "+p.getTitle()+", ");
+                pagingList.add(combinedList.get(i));
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    @DisplayName("유저가 등록한 공연 리스트 불러오기")
+    public void findAllByMemberTest(){
+        int pageNumber = 0;
+        for(int j=0; j<=3; j++){
+            pageNumber = j;
+
+            List<Performance> combinedList = new ArrayList<>();
+
+            //  진행중
+            List<Performance> performingList =
+                    performanceRepository.findByMemberPerforming(1822,false).get();
+            for(Performance p : performingList)
+                combinedList.add(p);
+
+            //  진행 예정
+            List<Performance> upcommingList =
+                    performanceRepository.findByMemberUpcommingPerformance(1822,false).get();
+            for (Performance p : upcommingList){
+                System.out.println(p.getId()+" "+p.getTitle());
+                combinedList.add(p);
+            }
+
+            //  종료
+            List<Performance> endList =
+                    performanceRepository.findByMemberPerformanceThatHaveEnded(1822,false).get();
+            for (Performance p : endList)
+                combinedList.add(p);
+
+            //  combined list paging
+            int startNumber = pageNumber * 6;
+            int endNumber = (pageNumber + 1) * 6 - 1;
+            System.out.println("==================================");
+            System.out.println(combinedList.size());
+            System.out.println("startNumber: "+startNumber+" endNumber: "+endNumber);
+//            for (Performance p : combinedList)
+//                System.out.println(p.getId() + " " + p.getTitle());
+            System.out.println("==================================");
+            List<Performance> pagingList = new ArrayList<>();
+            for(int i = startNumber; i <= endNumber; i++){
+                if(i > combinedList.size()-1) break;
+                Performance p = combinedList.get(i);
+                System.out.print("i: "+ i +" "+p.getId()+" "+p.getTitle()+", ");
+                pagingList.add(combinedList.get(i));
+            }
+            System.out.println();
+        }
+    }
 //
 //    @Test
 //    @DisplayName("공연 삭제")
