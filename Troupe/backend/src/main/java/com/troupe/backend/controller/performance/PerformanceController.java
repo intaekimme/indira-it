@@ -103,9 +103,8 @@ public class PerformanceController {
             "3. 종료 종료일 내림차순" +
             "순서로 표시", description = "파라미터: 페이지 번호")
     @GetMapping("/list")
-    public ResponseEntity<List<PerformanceResponse>> performanceList(int pageNumber){
-        PageRequest pageRequest = PageRequest.of(pageNumber, 6);
-        List<PerformanceResponse> performanceResponseList =  performanceService.findAll(pageRequest);
+    public ResponseEntity<List<PerformanceResponse>> performanceList(@RequestParam(required = false) int pageNumber){
+        List<PerformanceResponse> performanceResponseList =  performanceService.findAll(pageNumber);
         return ResponseEntity.ok().
                 body(performanceResponseList);
     }
@@ -293,9 +292,9 @@ public class PerformanceController {
     @GetMapping("/{profileMemberNo}/myperf/list")
     public ResponseEntity<List<ProfilePfResponse>> profilePfList(Principal principal,
                                                                  @PathVariable int profileMemberNo,
-                                                                 int pageNumber){
-        PageRequest pageRequest = PageRequest.of(pageNumber,6);
-        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageRequest);
+                                                                 @RequestParam(required = false) int pageNumber){
+//        PageRequest pageRequest = PageRequest.of(pageNumber,6);
+        List<ProfilePfResponse> profilePfResponseList = performanceService.findRegisteredList(profileMemberNo, pageNumber);
         return ResponseEntity.ok().body(profilePfResponseList);
     }
 

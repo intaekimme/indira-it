@@ -162,28 +162,42 @@ public class PerformanceService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<PerformanceResponse> findAll(Pageable pageable){
-//        List<Performance> combinedList = new ArrayList<>();
+    public List<PerformanceResponse> findAll(int pageNumber){
+        List<Performance> combinedList = new ArrayList<>();
 
-//        //  진행중
-//        Slice<Performance> performingList =
-//                performanceRepository.findAllPerforming(false, pageable).get();
-//        for(Performance p : performingList)
-//            combinedList.add(p);
-//
-//        //  진행 예정
-//        Slice<Performance> upcommingList =
-//                performanceRepository.findAllUpcommingPerformance(false, pageable).get();
-//        for (Performance p : upcommingList)
-//            combinedList.add(p);
-//
-//        //  종료
-//        Slice<Performance> endList =
-//                performanceRepository.findAllPerformanceThatHaveEnded(false,pageable).get();
-//        for (Performance p : endList)
-//            combinedList.add(p);
+        //  진행중
+        List<Performance> performingList =
+                performanceRepository.findAllPerforming(false).get();
+        for(Performance p : performingList)
+            combinedList.add(p);
 
-        Slice<Performance> combinedList = performanceRepository.findAllCombined(false, pageable).get();
+        //  진행 예정
+        List<Performance> upcommingList =
+                performanceRepository.findAllUpcommingPerformance(false).get();
+        for (Performance p : upcommingList)
+            combinedList.add(p);
+
+        //  종료
+        List<Performance> endList =
+                performanceRepository.findAllPerformanceThatHaveEnded(false).get();
+        for (Performance p : endList)
+            combinedList.add(p);
+
+        //  combined list paging
+        int startNumber = pageNumber * 6;
+        int endNumber = (pageNumber + 1) * 6 - 1;
+
+        List<Performance> pagingList = new ArrayList<>();
+        for(int i = startNumber; i <= endNumber; i++){
+            if(i > combinedList.size()-1) break;
+            pagingList.add(combinedList.get(i));
+        }
+//        pageNumber : 0 -> pageNumber * 6 , (pageNumber+1) * 6 - 1
+//                    1 -> 6, 11
+//                    2 -> 12, 17
+//                    3 -> 18, 23
+
+//        Slice<Performance> combinedList = performanceRepository.findAllCombined(false, pageable).get();
 
 
         List<PerformanceResponse> performanceResponseList = new ArrayList<>();
@@ -193,7 +207,7 @@ public class PerformanceService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        for(Performance p : combinedList){
+        for(Performance p : pagingList){
             //  공연 상태 계산
 //            log.info("title: "+p.getTitle()+", now: "+now.toString()
 //                    + ", startDate: " + p.getStartDate().toString()
@@ -377,36 +391,54 @@ public class PerformanceService {
     /**
      * 프로필 유저가 등록한 공연 목록 불러오기
      * @param memberNo
-     * @param pageable
+     * @param pageNumber
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ProfilePfResponse> findRegisteredList(int memberNo, Pageable pageable) {
+    public List<ProfilePfResponse> findRegisteredList(int memberNo, int pageNumber) {
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저 입니다."));
 
         List<Performance> combinedList = new ArrayList<>();
 
         //  진행중
-        Slice<Performance> performingList =
-                performanceRepository.findByMemberPerforming(member.getMemberNo(),false, pageable).get();
+        List<Performance> performingList =
+                performanceRepository.findByMemberPerforming(member.getMemberNo(),false).get();
         for(Performance p : performingList)
             combinedList.add(p);
 
         //  진행 예정
-        Slice<Performance> upcommingList =
-                performanceRepository.findByMemberUpcommingPerformance(member.getMemberNo(),false, pageable).get();
+        List<Performance> upcommingList =
+                performanceRepository.findByMemberUpcommingPerformance(member.getMemberNo(),false).get();
         for (Performance p : upcommingList)
             combinedList.add(p);
 
         //  종료
-        Slice<Performance> endList =
-                performanceRepository.findByMemberPerformanceThatHaveEnded(member.getMemberNo(),false,pageable).get();
+        List<Performance> endList =
+                performanceRepository.findByMemberPerformanceThatHaveEnded(member.getMemberNo(),false).get();
         for (Performance p : endList)
             combinedList.add(p);
 
 //        Slice<Performance> combinedList = performanceRepository.findByMemberCombined(member.getMemberNo(), false, pageable).get();
 
+        //  combined list paging
+        int startNumber = pageNumber * 6;
+        int endNumber = (pageNumber + 1) * 6 - 1;
+
+        log.info("combinedlist : ", combinedList.size());
+        log.info("======================");
+        for(Performance p : combinedList)
+            log.info(p.getId()+" "+p.getTitle());
+
+        List<Performance> pagingList = new ArrayList<>();
+        for(int i = startNumber; i <= endNumber; i++){
+            if(i > combinedList.size()-1) break;
+            pagingList.add(combinedList.get(i));
+        }
+        log.info("pagingList ", pagingList.size());
+        log.info("======================");
+        for(Performance p : pagingList)
+            log.info(p.getId()+" "+p.getTitle());
         List<ProfilePfResponse> profilePfResponseList = new ArrayList<>();
 
         // 공연 상태 계산
@@ -415,7 +447,7 @@ public class PerformanceService {
         // 2. LocalDateTime -> Date 변환
         Date now = java.sql.Timestamp.valueOf(localDateTime);
 
-        for(Performance p : combinedList){
+        for(Performance p : pagingList){
             //  공연 상태 계산
 //            log.info(combinedList.getSize() + " title: "+p.getTitle()+", now: "+now.toString()
 //                    + ", startDate: " + p.getStartDate().toString()

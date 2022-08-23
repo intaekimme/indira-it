@@ -11,9 +11,11 @@ import InterestPolygon from "./InterestPolygon";
 import LikeabilityRank from "./LikeabilityRank";
 import styledTooltip from "../css/tooltip.module.css";
 
+import InterestRadarChart from "./InterestRadarChart";
+
 export default function ProfileAnalyze(props) {
   const [loginCheck, setLoginCheck] = React.useState(
-    sessionStorage.getItem("loginCheck"),
+    sessionStorage.getItem("loginCheck")
   );
   React.useEffect(() => {
     setLoginCheck(sessionStorage.getItem("loginCheck"));
@@ -76,14 +78,14 @@ export default function ProfileAnalyze(props) {
           counts.push(0);
         }
         for (let i = 0; i < counts.length; i++) {
-          counts[i] = counts[i] * 100 / totalCount;
+          counts[i] = (counts[i] * 100) / totalCount;
         }
         console.log(counts);
         setInterestCategoryLabel(labels);
         setInterestCategoryData(counts);
       }
       // {
-      //   categoryNo: int, 
+      //   categoryNo: int,
       //   bigCategory : String
       //   smallCategory: String
       //   codeName: String
@@ -222,6 +224,10 @@ export default function ProfileAnalyze(props) {
                 data={interestCategoryData}
                 label={interestCategoryLabel}
               ></InterestPolygon>
+              {/* <InterestRadarChart
+                nickname={props.nickname}
+                data={interestCategory}
+              ></InterestRadarChart> */}
             </Grid>
             <Grid item xs={6}>
               <LikeabilityRank
