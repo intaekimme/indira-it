@@ -35,7 +35,7 @@ export default function InterestPolygon(props) {
 	const options = {
 		scales: {
 			r: {
-				// suggestedMin: 0,
+				suggestedMin: 0,
 				// suggestedMax: 100,
 			},
 		}
