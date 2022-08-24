@@ -117,7 +117,7 @@ export default function MainPerf() {
                     value={"nickname"}
                     style={{ fontFamily: "SBAggroB" }}
                   >
-                    작성자
+                    아티스트
                   </MenuItem>
                 </Select>
               </Grid>
